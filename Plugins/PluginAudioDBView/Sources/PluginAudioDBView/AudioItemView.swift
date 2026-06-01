@@ -300,12 +300,12 @@ extension AudioItemView {
                 }.value
 
                 if Self.verbose {
-                    os_log("\(Self.t)✅ 文件已导出到: \(finalDestinationURL.path)")
+                    os_log("\(Self.t)✅ File exported to: \(finalDestinationURL.path)")
                 }
                 alert_info(String(localized: "File copied to Downloads", table: "Audio-DBView", bundle: .module))
             } catch {
                 if Self.verbose {
-                    os_log("\(Self.t)❌ 导出文件失败: \(error.localizedDescription)")
+                    os_log("\(Self.t)❌ Failed to export file: \(error.localizedDescription)")
                 }
                 alert_error(String(localized: "Export failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
             }
@@ -361,9 +361,9 @@ extension AudioItemView {
     /// 播放音频
     private func playAudio() {
         Task {
-            await playMan.play(url, reason: "音频列表右键菜单")
+            await playMan.play(url, reason: "Audio list context menu")
             if Self.verbose {
-                os_log("\(Self.t)▶️ 播放音频: \(url.lastPathComponent)")
+                os_log("\(Self.t)▶️ Playing audio: \(url.lastPathComponent)")
             }
         }
     }
@@ -373,7 +373,7 @@ extension AudioItemView {
         #if os(macOS)
             NSWorkspace.shared.activateFileViewerSelecting([url])
             if Self.verbose {
-                os_log("\(Self.t)🔍 在 Finder 中显示: \(url.path)")
+                os_log("\(Self.t)🔍 Showing in Finder: \(url.path)")
             }
         #endif
     }
@@ -394,19 +394,19 @@ extension AudioItemView {
                     deletedURLs: [url],
                     isPlaybackControllerHandlingDeletion: true
                 ) {
-                    await playMan.reset(reason: "删除文件")
+                    await playMan.reset(reason: "Delete file")
                     if Self.verbose {
-                        os_log("\(Self.t)⏹️ 停止播放当前文件")
+                        os_log("\(Self.t)⏹️ Stopped playback for current file")
                     }
                 }
 
                 if Self.verbose {
-                    os_log("\(Self.t)🗑️ 文件已删除: \(url.path)")
+                    os_log("\(Self.t)🗑️ File deleted: \(url.path)")
                 }
                 alert_info(String(localized: "File deleted", table: "Audio-DBView", bundle: .module))
             } catch {
                 if Self.verbose {
-                    os_log("\(Self.t)❌ 删除文件失败: \(error.localizedDescription)")
+                    os_log("\(Self.t)❌ Failed to delete file: \(error.localizedDescription)")
                 }
                 alert_error(String(localized: "Delete failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
             }
