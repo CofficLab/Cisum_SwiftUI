@@ -16,8 +16,14 @@ enum BookPlayModeRestorePolicy {
         generation + 1
     }
 
-    static func shouldRestorePlayMode(isActiveScene: Bool, storedMode: MagicPlayMode, currentMode: MagicPlayMode) -> Bool {
-        isActiveScene && storedMode != currentMode
+    static func shouldRestorePlayMode(
+        currentGeneration: Int,
+        requestGeneration: Int,
+        isActiveScene: Bool,
+        storedMode: MagicPlayMode,
+        currentMode: MagicPlayMode
+    ) -> Bool {
+        currentGeneration == requestGeneration && isActiveScene && storedMode != currentMode
     }
 }
 
@@ -106,9 +112,13 @@ private extension BookPlayModeRootView {
     }
 
     func restoreStoredPlayMode() {
+        let generation = playModeChangeGeneration
+
         Task { @MainActor in
             let storedMode = await BookPlayModeStore.shared.getPlayMode()
             guard BookPlayModeRestorePolicy.shouldRestorePlayMode(
+                currentGeneration: playModeChangeGeneration,
+                requestGeneration: generation,
                 isActiveScene: shouldActivatePlayMode,
                 storedMode: storedMode,
                 currentMode: man.playMode

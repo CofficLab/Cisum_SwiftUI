@@ -58,19 +58,32 @@ import Testing
 
 @Test func audioPlayModeRestoreOnlyAppliesInActiveSceneWhenDifferent() {
     #expect(AudioPlayModeQueueUpdatePolicy.shouldRestorePlayMode(
+        currentGeneration: 2,
+        requestGeneration: 2,
         isActiveScene: true,
         storedMode: .shuffle,
         currentMode: .sequence
     ))
     #expect(!AudioPlayModeQueueUpdatePolicy.shouldRestorePlayMode(
+        currentGeneration: 2,
+        requestGeneration: 2,
         isActiveScene: false,
         storedMode: .shuffle,
         currentMode: .sequence
     ))
     #expect(!AudioPlayModeQueueUpdatePolicy.shouldRestorePlayMode(
+        currentGeneration: 2,
+        requestGeneration: 2,
         isActiveScene: true,
         storedMode: .shuffle,
         currentMode: .shuffle
+    ))
+    #expect(!AudioPlayModeQueueUpdatePolicy.shouldRestorePlayMode(
+        currentGeneration: 3,
+        requestGeneration: 2,
+        isActiveScene: true,
+        storedMode: .shuffle,
+        currentMode: .sequence
     ))
 }
 
@@ -98,6 +111,13 @@ import Testing
         requestGeneration: 2,
         requestedModeRawValue: "shuffle",
         currentMode: .shuffle
+    ))
+    #expect(!AudioPlayModeQueueUpdatePolicy.shouldRestorePlayMode(
+        currentGeneration: generation,
+        requestGeneration: 2,
+        isActiveScene: true,
+        storedMode: .shuffle,
+        currentMode: .sequence
     ))
 }
 
