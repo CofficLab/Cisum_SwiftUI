@@ -17,6 +17,12 @@ struct VideoFileActionPolicy {
     }
 }
 
+struct VideoTileAccessibilityPolicy {
+    static func selectionLabel(fileTitle: String) -> String {
+        String(localized: "Select \(fileTitle)", table: "Video", bundle: .module)
+    }
+}
+
 public struct VideoTile: View {
     @Binding private var selection: URL?
     @State private var fileSize: String?
@@ -55,6 +61,13 @@ public struct VideoTile: View {
         .onTapGesture {
             selection = file
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(VideoTileAccessibilityPolicy.selectionLabel(fileTitle: file.title))
+        .accessibilityAddTraits(.isButton)
+        .accessibilityAction {
+            selection = file
+        }
+        .help(VideoTileAccessibilityPolicy.selectionLabel(fileTitle: file.title))
         .task(id: file, priority: .background) {
             await loadFileSize()
         }

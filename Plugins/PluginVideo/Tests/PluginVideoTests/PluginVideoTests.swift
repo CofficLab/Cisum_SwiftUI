@@ -76,3 +76,7 @@ import Testing
     #expect(VideoFileActionPolicy.canOpen(existingFile))
     #expect(!VideoFileActionPolicy.canOpen(missingFile))
 }
+
+@Test func videoTileSelectionUsesReadableAccessibilityLabel() {
+    #expect(VideoTileAccessibilityPolicy.selectionLabel(fileTitle: "Demo.mov") == "Select Demo.mov")
+}
