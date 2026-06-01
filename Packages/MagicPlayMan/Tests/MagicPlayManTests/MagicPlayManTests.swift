@@ -196,6 +196,35 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: cachedURL), Data("audio".utf8))
     }
 
+    func testAssetCacheReportsCachedDataSize() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        let cache = try AssetCache(directory: root)
+        let first = try XCTUnwrap(URL(string: "https://example.com/audio/first.mp3"))
+        let second = try XCTUnwrap(URL(string: "https://example.com/audio/second.mp3"))
+
+        try cache.cache(Data(repeating: 1, count: 12), for: first)
+        try cache.cache(Data(repeating: 2, count: 8), for: second)
+
+        XCTAssertEqual(try cache.size(), 20)
+    }
+
+    func testAssetCacheFileSizePolicyReadsFoundationNumberAttributes() {
+        XCTAssertEqual(AssetCacheFileSizePolicy.fileSize(from: [.size: NSNumber(value: 1234)]), 1234)
+        XCTAssertEqual(AssetCacheFileSizePolicy.fileSize(from: [.size: Int64(5678)]), 5678)
+        XCTAssertEqual(AssetCacheFileSizePolicy.fileSize(from: [.size: Int(90)]), 90)
+        XCTAssertEqual(AssetCacheFileSizePolicy.fileSize(from: [.size: UInt64(42)]), 42)
+    }
+
+    func testAssetCacheFileSizePolicyNormalizesInvalidSizes() {
+        XCTAssertEqual(AssetCacheFileSizePolicy.fileSize(from: [.size: NSNumber(value: -1234)]), 0)
+        XCTAssertEqual(AssetCacheFileSizePolicy.fileSize(from: [:]), 0)
+    }
+
     func testAssetCacheReplacesFileAtCacheDirectory() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)

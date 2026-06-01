@@ -56,7 +56,7 @@ public class AssetCache {
         let contents = try fileManager.contentsOfDirectory(at: cacheDirectory, includingPropertiesForKeys: [.fileSizeKey])
         return try contents.reduce(0) { total, url in
             let attributes = try fileManager.attributesOfItem(atPath: url.path)
-            return total + (attributes[.size] as? UInt64 ?? 0)
+            return total + AssetCacheFileSizePolicy.fileSize(from: attributes)
         }
     }
     
@@ -108,6 +108,33 @@ public class AssetCache {
         try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
     }
 } 
+
+enum AssetCacheFileSizePolicy {
+    static func fileSize(from attributes: [FileAttributeKey: Any]) -> UInt64 {
+        if let number = attributes[.size] as? NSNumber {
+            return normalizedSize(number.int64Value)
+        }
+
+        if let size = attributes[.size] as? Int {
+            return normalizedSize(Int64(size))
+        }
+
+        if let size = attributes[.size] as? Int64 {
+            return normalizedSize(size)
+        }
+
+        if let size = attributes[.size] as? UInt64 {
+            return size
+        }
+
+        return 0
+    }
+
+    private static func normalizedSize(_ size: Int64) -> UInt64 {
+        guard size > 0 else { return 0 }
+        return UInt64(size)
+    }
+}
 
 #Preview("With Logs") {
     MagicPlayMan.getPreviewView()
