@@ -385,13 +385,13 @@ extension BookControlRootView {
     private func activateControl() {
         guard shouldActivateControl else {
             if verbose {
-                os_log("\(self.t)⏭️ 书籍播放控制跳过：当前场景不是书籍场景")
+                os_log("\(self.t)⏭️ Skipping audiobook playback controls: current scene is not Books")
             }
             return
         }
 
         if verbose {
-            os_log("\(self.t)👀 视图已出现，开始初始化书籍播放控制")
+            os_log("\(self.t)👀 View appeared, initializing audiobook playback controls")
         }
 
         // 订阅播放器事件
@@ -521,7 +521,7 @@ extension BookControlRootView {
         guard shouldActivateControl else { return }
 
         if verbose {
-            os_log("\(self.t)⏮️ 请求上一章")
+            os_log("\(self.t)⏮️ Previous chapter requested")
         }
 
         let bookDisk = BookPlugin.getBookDisk()
@@ -552,10 +552,10 @@ extension BookControlRootView {
                 }
                 await man.play(prev, reason: "handlePreviousRequested")
                 if verbose {
-                    os_log("\(self.t)✅ 播放上一章: \(prev.lastPathComponent)")
+                    os_log("\(self.t)✅ Playing previous chapter: \(prev.lastPathComponent)")
                 }
             } else if verbose {
-                os_log("\(self.t)⚠️ 没有上一章")
+                os_log("\(self.t)⚠️ No previous chapter")
             }
         }
     }
@@ -594,7 +594,7 @@ extension BookControlRootView {
         guard shouldActivateControl else { return }
 
         if verbose {
-            os_log("\(self.t)⏭️ 请求下一章")
+            os_log("\(self.t)⏭️ Next chapter requested")
         }
 
         let bookDisk = BookPlugin.getBookDisk()
@@ -625,10 +625,10 @@ extension BookControlRootView {
                 }
                 await man.play(next, reason: "handleNextRequested")
                 if verbose {
-                    os_log("\(self.t)✅ 播放下一章: \(next.lastPathComponent)")
+                    os_log("\(self.t)✅ Playing next chapter: \(next.lastPathComponent)")
                 }
             } else if verbose {
-                os_log("\(self.t)⚠️ 没有下一章")
+                os_log("\(self.t)⚠️ No next chapter")
             }
         }
     }
