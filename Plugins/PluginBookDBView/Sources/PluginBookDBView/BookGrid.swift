@@ -62,6 +62,10 @@ enum BookGridSelectionPolicy {
             representsSelectedBook($0.url, selectedURL: selectedURL)
         }
     }
+
+    static func selectionLabel(bookTitle: String) -> String {
+        String(localized: "Select \(bookTitle)", table: "Book-DBView", bundle: .module)
+    }
 }
 
 enum BookGridPlayableChildrenLoader {
@@ -190,6 +194,13 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
                                     .onTapGesture {
                                         handleBookTap(book: item)
                                     }
+                                    .accessibilityElement(children: .combine)
+                                    .accessibilityLabel(BookGridSelectionPolicy.selectionLabel(bookTitle: item.bookTitle))
+                                    .accessibilityAddTraits(.isButton)
+                                    .accessibilityAction {
+                                        handleBookTap(book: item)
+                                    }
+                                    .help(BookGridSelectionPolicy.selectionLabel(bookTitle: item.bookTitle))
                             }
                         }
                         .padding()

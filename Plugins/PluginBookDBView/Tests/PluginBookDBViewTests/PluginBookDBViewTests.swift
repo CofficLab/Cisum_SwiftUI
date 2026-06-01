@@ -766,3 +766,7 @@ import UniformTypeIdentifiers
         in: [book]
     ))
 }
+
+@Test func bookGridSelectionUsesReadableAccessibilityLabel() {
+    #expect(BookGridSelectionPolicy.selectionLabel(bookTitle: "Novel") == "Select Novel")
+}
