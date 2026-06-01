@@ -18,6 +18,10 @@ import SwiftUI
 /// }
 /// ```
 struct SheetContainer<Content: View>: View {
+    nonisolated static var closeButtonLabel: String {
+        String(localized: "Close", table: "Core")
+    }
+
     @Environment(\.dismiss) private var dismiss
     @LumiTheme private var appTheme
 
@@ -65,6 +69,8 @@ struct SheetContainer<Content: View>: View {
                 .cisumButton {
                     dismiss()
                 }
+                .accessibilityLabel(Self.closeButtonLabel)
+                .help(Self.closeButtonLabel)
                 .cisumHoverScale(105)
         #if os(iOS)
             .scaleEffect(hovered ? 0.95 : 1.0)
