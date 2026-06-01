@@ -99,15 +99,15 @@ public extension Date {
     
     /// 相对时间字符串
     ///
-    /// 将日期转换为相对于当前时间的描述，如"刚刚"、"5分钟前"、"2小时前"、"3天前"等
+    /// 将日期转换为相对于当前时间的描述，如"just now"、"5 minutes ago"、"2 hours ago"、"3 days ago"等
     ///
     /// # 示例
     /// ```swift
     /// let fiveMinutesAgo = Date().addingTimeInterval(-300)
-    /// print(fiveMinutesAgo.relativeTime) // 输出: "5分钟前"
+    /// print(fiveMinutesAgo.relativeTime) // 输出: "5 minutes ago"
     /// 
     /// let twoHoursAgo = Date().addingTimeInterval(-7200)
-    /// print(twoHoursAgo.relativeTime) // 输出: "2小时前"
+    /// print(twoHoursAgo.relativeTime) // 输出: "2 hours ago"
     /// ```
     var relativeTime: String {
         DateRelativeTimePolicy.relativeTime(for: self)
@@ -116,7 +116,7 @@ public extension Date {
     /// 智能相对时间字符串
     ///
     /// 根据时间间隔智能选择最合适的显示格式：
-    /// - 1分钟内：显示"刚刚"
+    /// - 1分钟内：显示"just now"
     /// - 1小时内：显示分钟
     /// - 1天内：显示小时
     /// - 7天内：显示天数
@@ -137,52 +137,52 @@ enum DateRelativeTimePolicy {
 
     static func relativeTime(for date: Date, now: Date = Date()) -> String {
         let timeInterval = now.timeIntervalSince(date)
-        guard timeInterval.isFinite else { return "刚刚" }
+        guard timeInterval.isFinite else { return "just now" }
 
         // 如果是未来时间
         if timeInterval < 0 {
             let futureInterval = -timeInterval
             if futureInterval < 60 {
-                return "即将"
+                return "soon"
             } else if futureInterval < 3600 {
                 let minutes = boundedInt(futureInterval / 60)
-                return "\(minutes)分钟后"
+                return "\(minutes) \(unit("minute", count: minutes)) from now"
             } else if futureInterval < 86400 {
                 let hours = boundedInt(futureInterval / 3600)
-                return "\(hours)小时后"
+                return "\(hours) \(unit("hour", count: hours)) from now"
             } else {
                 let days = boundedInt(futureInterval / 86400)
-                return "\(days)天后"
+                return "\(days) \(unit("day", count: days)) from now"
             }
         }
 
         // 过去时间
         if timeInterval < 60 {
-            return "刚刚"
+            return "just now"
         } else if timeInterval < 3600 {
             let minutes = boundedInt(timeInterval / 60)
-            return "\(minutes)分钟前"
+            return "\(minutes) \(unit("minute", count: minutes)) ago"
         } else if timeInterval < 86400 {
             let hours = boundedInt(timeInterval / 3600)
-            return "\(hours)小时前"
+            return "\(hours) \(unit("hour", count: hours)) ago"
         } else if timeInterval < 604800 {
             let days = boundedInt(timeInterval / 86400)
-            return "\(days)天前"
+            return "\(days) \(unit("day", count: days)) ago"
         } else if timeInterval < 2592000 {
             let weeks = boundedInt(timeInterval / 604800)
-            return "\(weeks)周前"
+            return "\(weeks) \(unit("week", count: weeks)) ago"
         } else if timeInterval < 31536000 {
             let months = boundedInt(timeInterval / 2592000)
-            return "\(months)个月前"
+            return "\(months) \(unit("month", count: months)) ago"
         } else {
             let years = boundedInt(timeInterval / 31536000)
-            return "\(years)年前"
+            return "\(years) \(unit("year", count: years)) ago"
         }
     }
 
     static func smartRelativeTime(for date: Date, now: Date = Date()) -> String {
         let timeInterval = now.timeIntervalSince(date)
-        guard timeInterval.isFinite else { return "刚刚" }
+        guard timeInterval.isFinite else { return "just now" }
 
         if timeInterval < 604800 { // 7天内使用相对时间
             return relativeTime(for: date, now: now)
@@ -196,5 +196,9 @@ enum DateRelativeTimePolicy {
     private static func boundedInt(_ value: TimeInterval) -> Int {
         guard value.isFinite, value > 0 else { return 0 }
         return Int(min(value, TimeInterval(maximumDisplayUnit)))
+    }
+
+    private static func unit(_ singular: String, count: Int) -> String {
+        count == 1 ? singular : "\(singular)s"
     }
 }
