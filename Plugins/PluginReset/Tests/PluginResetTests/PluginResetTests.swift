@@ -11,3 +11,8 @@ import Testing
     #expect(!ResetConfirm.shouldDisableInteractiveDismiss(isResetting: false))
     #expect(ResetConfirm.shouldDisableInteractiveDismiss(isResetting: true))
 }
+
+@Test func resetIconButtonsExposeReadableLabels() {
+    #expect(SystemSetting.resetStorageLocationActionLabel == "Reset Storage Location")
+    #expect(ResetConfirm.closeButtonLabel == "Close")
+}

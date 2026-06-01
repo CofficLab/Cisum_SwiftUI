@@ -7,6 +7,11 @@ public typealias ResetSettingsAction = @Sendable () async -> Void
 public struct SystemSetting: View, SuperLog {
     public nonisolated static let emoji = ResetPluginInfo.emoji
     public nonisolated static let verbose = false
+    nonisolated static let resetStorageLocationActionLabel = String(
+        localized: "Reset Storage Location",
+        table: "Reset",
+        bundle: .module
+    )
 
     @State private var showConfirmSheet = false
 
@@ -46,6 +51,8 @@ public struct SystemSetting: View, SuperLog {
                     .cisumButton {
                         showConfirmSheet = true
                     }
+                    .accessibilityLabel(Self.resetStorageLocationActionLabel)
+                    .help(Self.resetStorageLocationActionLabel)
             }
         }
         .sheet(isPresented: $showConfirmSheet) {

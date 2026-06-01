@@ -3,6 +3,12 @@ import OSLog
 import SwiftUI
 
 public struct ResetConfirm: View {
+    nonisolated static let closeButtonLabel = String(
+        localized: "Close",
+        table: "Reset",
+        bundle: .module
+    )
+
     @Environment(\.dismiss) private var dismiss
 
     @State private var isResetting = false
@@ -121,6 +127,8 @@ public struct ResetConfirm: View {
             .cisumButton {
                 dismiss()
             }
+            .accessibilityLabel(Self.closeButtonLabel)
+            .help(Self.closeButtonLabel)
             .cisumHoverScale(105)
     }
 }
