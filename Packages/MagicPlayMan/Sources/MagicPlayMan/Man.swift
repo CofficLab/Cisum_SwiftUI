@@ -234,6 +234,8 @@ extension MagicPlayMan {
     /// - Parameter observers: 下载监听器元组（进度观察者和完成观察者）
     @MainActor
     func setCurrentDownloadObservers(_ observers: (asset: URL, progressObserver: AnyCancellable, finishObserver: AnyCancellable)?) {
+        currentDownloadObservers?.progressObserver.cancel()
+        currentDownloadObservers?.finishObserver.cancel()
         currentDownloadObservers = observers
     }
 

@@ -1,4 +1,5 @@
 import AVFoundation
+import Combine
 @testable import MagicPlayMan
 import XCTest
 
@@ -139,6 +140,46 @@ final class MagicPlayManTests: XCTestCase {
             requestedAsset: linkedAsset,
             observedAsset: realAsset
         ))
+    }
+
+    @MainActor
+    func testReplacingDownloadObserversCancelsPreviousObservers() {
+        let man = MagicPlayMan()
+        let previousCancellations = CancellationCounter()
+        let nextCancellations = CancellationCounter()
+
+        man.setCurrentDownloadObservers((
+            asset: URL(fileURLWithPath: "/tmp/previous.mp3"),
+            progressObserver: AnyCancellable { previousCancellations.increment() },
+            finishObserver: AnyCancellable { previousCancellations.increment() }
+        ))
+
+        man.setCurrentDownloadObservers((
+            asset: URL(fileURLWithPath: "/tmp/next.mp3"),
+            progressObserver: AnyCancellable { nextCancellations.increment() },
+            finishObserver: AnyCancellable { nextCancellations.increment() }
+        ))
+
+        XCTAssertEqual(previousCancellations.value, 2)
+        XCTAssertEqual(nextCancellations.value, 0)
+        XCTAssertEqual(man.currentDownloadObservers?.asset, URL(fileURLWithPath: "/tmp/next.mp3"))
+    }
+
+    @MainActor
+    func testResetClearsDownloadObservers() async {
+        let man = MagicPlayMan()
+        let cancellations = CancellationCounter()
+
+        man.setCurrentDownloadObservers((
+            asset: URL(fileURLWithPath: "/tmp/current.mp3"),
+            progressObserver: AnyCancellable { cancellations.increment() },
+            finishObserver: AnyCancellable { cancellations.increment() }
+        ))
+
+        await man.reset(reason: "test")
+
+        XCTAssertNil(man.currentDownloadObservers)
+        XCTAssertEqual(cancellations.value, 2)
     }
 
     func testRemoteAssetsStillRequireExactURLIdentity() throws {
@@ -820,5 +861,22 @@ final class MagicPlayManTests: XCTestCase {
                 }
             }
         }
+    }
+}
+
+private final class CancellationCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var count = 0
+
+    var value: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return count
+    }
+
+    func increment() {
+        lock.lock()
+        defer { lock.unlock() }
+        count += 1
     }
 }

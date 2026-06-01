@@ -142,6 +142,7 @@ public extension MagicPlayMan {
 
         // 立即暂停当前播放，避免显示新歌信息但还在放旧歌
         _player.pause()
+        setCurrentDownloadObservers(nil)
 
         if let validationError = MagicPlayManPlaybackRequestPolicy.basicValidationError(for: url) {
             await clearCurrentAssetAfterFailedPlayback(reason: reason + ".validation")
@@ -206,6 +207,7 @@ public extension MagicPlayMan {
 
     @MainActor
     func clearCurrentAssetAfterFailedPlayback(reason: String) async {
+        setCurrentDownloadObservers(nil)
         _player.replaceCurrentItem(with: nil)
         setCurrentURL(nil)
         setCurrentTime(0, reason: reason)
@@ -321,6 +323,7 @@ public extension MagicPlayMan {
         beginPlayRequest()
 
         _player.pause()
+        setCurrentDownloadObservers(nil)
         await _player.seek(to: .zero)
         setCurrentTime(0, reason: reason)
         setProgress(0)
@@ -340,6 +343,7 @@ public extension MagicPlayMan {
 
         // 停止播放
         _player.pause()
+        setCurrentDownloadObservers(nil)
 
         // 清除 AVPlayer 的当前项
         _player.replaceCurrentItem(with: nil)
