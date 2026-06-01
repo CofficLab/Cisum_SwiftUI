@@ -127,6 +127,37 @@ import UniformTypeIdentifiers
     #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 90, currentPage: 3, pageSize: 50) == 150)
 }
 
+@Test func audioListDeletionRebasesPaginationToRemainingDisplayedRows() {
+    #expect(AudioListLoadPolicy.currentPageAfterDeletingDisplayedItems(
+        remainingDisplayedCount: 20,
+        pageSize: 50
+    ) == 0)
+    #expect(AudioListLoadPolicy.nextLoadOffset(
+        loadedCount: 20,
+        currentPage: AudioListLoadPolicy.currentPageAfterDeletingDisplayedItems(
+            remainingDisplayedCount: 20,
+            pageSize: 50
+        ),
+        pageSize: 50
+    ) == 20)
+    #expect(AudioListLoadPolicy.currentPageAfterDeletingDisplayedItems(
+        remainingDisplayedCount: 80,
+        pageSize: 50
+    ) == 1)
+    #expect(AudioListLoadPolicy.nextLoadOffset(
+        loadedCount: 80,
+        currentPage: AudioListLoadPolicy.currentPageAfterDeletingDisplayedItems(
+            remainingDisplayedCount: 80,
+            pageSize: 50
+        ),
+        pageSize: 50
+    ) == 80)
+    #expect(AudioListLoadPolicy.currentPageAfterDeletingDisplayedItems(
+        remainingDisplayedCount: 10,
+        pageSize: 0
+    ) == 0)
+}
+
 @Test func audioListLoadMoreOffsetAdvancesByFetchedPagesAfterDeduplication() {
     #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 50, currentPage: 2, pageSize: 50) == 100)
     #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 115, currentPage: 2, pageSize: 50) == 115)

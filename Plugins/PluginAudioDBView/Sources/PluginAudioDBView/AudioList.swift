@@ -81,6 +81,14 @@ enum AudioListLoadPolicy {
         generation + 1
     }
 
+    static func currentPageAfterDeletingDisplayedItems(remainingDisplayedCount: Int, pageSize: Int) -> Int {
+        guard remainingDisplayedCount > 0, pageSize > 0 else {
+            return 0
+        }
+
+        return remainingDisplayedCount / pageSize
+    }
+
     static func nextLoadOffset(loadedCount: Int, currentPage: Int, pageSize: Int) -> Int {
         max(0, max(loadedCount, currentPage * pageSize))
     }
@@ -668,6 +676,11 @@ extension AudioList {
                 currentTotal: totalCount,
                 deletedURLs: urlsToDelete
             )
+            currentPage = AudioListLoadPolicy.currentPageAfterDeletingDisplayedItems(
+                remainingDisplayedCount: urls.count,
+                pageSize: pageSize
+            )
+            hasMore = totalCount > urls.count
 
             // 如果删除的是当前选中的文件，清除选中状态
             if let selected = selection,
