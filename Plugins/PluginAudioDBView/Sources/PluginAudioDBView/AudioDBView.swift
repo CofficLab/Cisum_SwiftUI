@@ -35,7 +35,7 @@ public struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
 
     public var body: some View {
         if Self.verbose {
-            os_log("\(self.t)📺 开始渲染")
+            os_log("\(self.t)📺 Rendering")
         }
 
         return Group {
@@ -116,7 +116,7 @@ extension AudioDBView {
     ///   - storageRoot: 目标存储根目录
     private func copyFiles(_ urls: [URL], to storageRoot: URL) async throws -> [URL] {
         if Self.verbose {
-            os_log("\(self.t)📋 准备复制 \(urls.count) 个文件")
+            os_log("\(self.t)📋 Preparing to copy \(urls.count) files")
         }
 
         // 发送复制文件事件
@@ -141,7 +141,7 @@ extension AudioDBView {
                 let destination = Self.uniqueDestination(for: url, in: storageRoot)
 
                 if Self.verbose {
-                    os_log("\(Self.t)📄 复制: \(url.lastPathComponent)")
+                    os_log("\(Self.t)📄 Copying: \(url.lastPathComponent)")
                 }
 
                 try await copySecurityScopedFile(url, to: destination)
@@ -155,7 +155,7 @@ extension AudioDBView {
         }
 
         if Self.verbose {
-            os_log("\(Self.t)✅ 全部文件复制完成")
+            os_log("\(Self.t)✅ All files copied")
         }
 
         return copiedURLs
@@ -358,7 +358,7 @@ extension AudioDBView {
 
     private func importFiles(_ urls: [URL]) async {
         if Self.verbose {
-            os_log("\(self.t)📥 处理文件导入，文件数量: \(urls.count)")
+            os_log("\(self.t)📥 Handling file import, count: \(urls.count)")
         }
 
         guard Self.shouldStartImport(isImporting: isImportingFiles) else {
@@ -400,7 +400,7 @@ extension AudioDBView {
 
             await repo.sync(copiedURLs, isFirst: false)
         } catch {
-            os_log(.error, "\(self.t)❌ 复制文件失败: \(error.localizedDescription)")
+            os_log(.error, "\(self.t)❌ Failed to copy files: \(error.localizedDescription)")
             alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
         }
     }
@@ -422,7 +422,7 @@ extension AudioDBView {
                 await importFiles(urls)
 
             case let .failure(error):
-                os_log(.error, "\(self.t)❌ 导入文件失败: \(error.localizedDescription)")
+                os_log(.error, "\(self.t)❌ File import failed: \(error.localizedDescription)")
                 alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
             }
         }
@@ -431,7 +431,7 @@ extension AudioDBView {
     /// 处理用户将音频文件拖入仓库视图。
     func handleDrop(_ providers: [NSItemProvider]) -> Bool {
         if Self.verbose {
-            os_log("\(self.t)🎯 处理文件拖拽，提供者数量: \(providers.count)")
+            os_log("\(self.t)🎯 Handling file drop, provider count: \(providers.count)")
         }
 
         Task {
@@ -439,10 +439,10 @@ extension AudioDBView {
 
             if Self.shouldReportDroppedURLLoadFailure(droppedFiles.urls, errors: droppedFiles.errors),
                let error = droppedFiles.errors.first {
-                os_log(.error, "\(self.t)⚠️ 加载文件失败: \(error.localizedDescription)")
+                os_log(.error, "\(self.t)⚠️ Failed to load dropped file: \(error.localizedDescription)")
                 alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
             } else if Self.shouldReportPartialDroppedURLLoadFailure(droppedFiles.urls, errors: droppedFiles.errors) {
-                os_log(.error, "\(self.t)⚠️ 部分拖拽文件加载失败")
+                os_log(.error, "\(self.t)⚠️ Some dropped files failed to load")
                 alert_warning(String(localized: "Some dropped files could not be loaded", table: "Audio-DBView", bundle: .module))
             }
 
@@ -463,7 +463,7 @@ extension AudioDBView {
     /// - Parameter notification: 包含排序模式信息的通知
     func handleSorting(_ notification: Notification) {
         if Self.verbose {
-            os_log("\(self.t)🔄 开始排序")
+            os_log("\(self.t)🔄 Sorting started")
         }
 
         withAnimation {
@@ -474,7 +474,7 @@ extension AudioDBView {
             sortMode = Self.sortMode(from: mode)
 
             if Self.verbose {
-                os_log("\(self.t)📋 排序模式: \(mode)")
+                os_log("\(self.t)📋 Sort mode: \(mode)")
             }
         }
     }
@@ -486,7 +486,7 @@ extension AudioDBView {
     /// - Parameter notification: 排序完成的通知
     func handleSortDone(_ notification: Notification) {
         if Self.verbose {
-            os_log("\(self.t)✅ 排序完成")
+            os_log("\(self.t)✅ Sorting finished")
         }
 
         withAnimation {
