@@ -49,6 +49,34 @@ import Foundation
     ))
 }
 
+@Test func audioDownloadDoesNotStartDuplicateActiveDownload() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realAsset = root.appendingPathComponent("track.mp3")
+    let linkedAsset = root.appendingPathComponent("linked.mp3")
+    let otherAsset = root.appendingPathComponent("other.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: realAsset)
+    try FileManager.default.createSymbolicLink(at: linkedAsset, withDestinationURL: realAsset)
+
+    #expect(!AudioDownloadRequestPolicy.shouldStartDownload(
+        isSceneActive: true,
+        asset: linkedAsset,
+        isNotDownloaded: true,
+        activeDownloads: [realAsset]
+    ))
+    #expect(AudioDownloadRequestPolicy.shouldStartDownload(
+        isSceneActive: true,
+        asset: otherAsset,
+        isNotDownloaded: true,
+        activeDownloads: [realAsset]
+    ))
+}
+
 @Test func audioDownloadOnlyAppliesCurrentAssetResults() {
     let asset = URL(fileURLWithPath: "/tmp/cisum-audio-download/track.mp3")
     let other = URL(fileURLWithPath: "/tmp/cisum-audio-download/other.mp3")

@@ -7,8 +7,17 @@ import SwiftUI
 public typealias AudioDownloadCurrentSceneProvider = @MainActor () -> String?
 
 enum AudioDownloadRequestPolicy {
-    static func shouldStartDownload(isSceneActive: Bool, asset: URL?, isNotDownloaded: Bool) -> Bool {
-        isSceneActive && asset != nil && isNotDownloaded
+    static func shouldStartDownload(
+        isSceneActive: Bool,
+        asset: URL?,
+        isNotDownloaded: Bool,
+        activeDownloads: [URL] = []
+    ) -> Bool {
+        guard isSceneActive, let asset, isNotDownloaded else {
+            return false
+        }
+
+        return !activeDownloads.contains { representsSameFile($0, asset) }
     }
 
     static func shouldCheckCurrentAsset(isSceneActive: Bool, asset: URL?) -> Bool {
@@ -49,6 +58,7 @@ public struct AudioDownloadRootView<Content>: View, SuperLog where Content: View
 
     @EnvironmentObject private var man: MagicPlayMan
     @State private var downloadGeneration = 0
+    @State private var activeDownloadAssets: [URL] = []
     private let currentSceneName: AudioDownloadCurrentSceneProvider
     private var content: Content
 
@@ -115,11 +125,23 @@ extension AudioDownloadRootView {
         guard AudioDownloadRequestPolicy.shouldStartDownload(
             isSceneActive: shouldActivateDownload,
             asset: url,
-            isNotDownloaded: url?.isNotDownloaded == true
+            isNotDownloaded: url?.isNotDownloaded == true,
+            activeDownloads: activeDownloadAssets
         ), let url else { return }
 
         let generation = downloadGeneration
+        activeDownloadAssets.append(url)
         Task { @MainActor in
+            defer {
+                activeDownloadAssets.removeAll { activeAsset in
+                    AudioDownloadRequestPolicy.shouldApplyDownloadResult(
+                        requestedAsset: activeAsset,
+                        currentAsset: url,
+                        isSceneActive: true
+                    )
+                }
+            }
+
             guard AudioDownloadRequestPolicy.shouldApplyDownloadResult(
                 requestedAsset: url,
                 currentAsset: man.currentAsset,
