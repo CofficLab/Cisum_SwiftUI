@@ -20,7 +20,7 @@ let package = Package(
         .target(
             name: "CisumUI",
             dependencies: ["MagicKit"],
-            path: "Sources/CisumUI",
+            path: "Sources",
             exclude: [
                 "App",
                 "App+Preview.swift",
@@ -127,7 +127,7 @@ let package = Package(
         .testTarget(
             name: "CisumUITests",
             dependencies: ["CisumUI"],
-            path: "Tests/CisumUITests",
+            path: "Tests",
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency=minimal"),
             ]

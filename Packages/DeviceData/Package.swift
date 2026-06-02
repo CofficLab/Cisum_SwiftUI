@@ -16,11 +16,13 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "CisumDeviceData"
+            name: "CisumDeviceData",
+            path: "Sources"
         ),
         .testTarget(
             name: "CisumDeviceDataTests",
-            dependencies: ["CisumDeviceData"]
+            dependencies: ["CisumDeviceData"],
+            path: "Tests"
         )
     ]
 )

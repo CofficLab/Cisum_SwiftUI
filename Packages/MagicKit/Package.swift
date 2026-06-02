@@ -27,6 +27,7 @@ let package = Package(
                "ID3TagEditor",
                "ZIPFoundation",
            ],
+           path: "Sources",
            resources: [.process("Icons.xcassets")],
            swiftSettings: [
                .enableExperimentalFeature("StrictConcurrency=minimal"),
@@ -35,6 +36,7 @@ let package = Package(
        .testTarget(
            name: "Tests",
            dependencies: ["MagicKit"],
+           path: "Tests",
            swiftSettings: [
                .enableExperimentalFeature("StrictConcurrency=minimal"),
            ]
