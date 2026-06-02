@@ -28,6 +28,11 @@ enum BookSettingsFileCountTextPolicy {
 /// 有声书设置视图：展示仓库大小、位置与文件数量。
 public struct BookSettingsView: View, SuperLog {
     public nonisolated static var emoji: String { BookSettingsPluginInfo.emoji }
+    nonisolated static let openLibraryActionLabel = String(
+        localized: "Open Library",
+        table: "Book-Settings",
+        bundle: .module
+    )
 
     @State private var diskSize: String?
     @State private var description: String = ""
@@ -46,52 +51,62 @@ public struct BookSettingsView: View, SuperLog {
     public var body: some View {
         Group {
             if let disk = disk {
-                AppSettingsSection(title: String(localized: "Audiobook Library", table: "Book-Settings", bundle: .module)) {
-                    AppSettingsInfoRow(
+                CisumUI.MagicSettingSection(title: String(localized: "Audiobook Library", table: "Book-Settings", bundle: .module)) {
+                    CisumUI.MagicSettingRow(
                         title: String(localized: "Library Size", table: "Book-Settings", bundle: .module),
                         description: description,
-                        systemImage: .cisumIconMusicLibrary
+                        icon: .cisumIconMusicLibrary
                     ) {
                         if let diskSize = diskSize {
                             Text(diskSize)
+                                .font(.footnote)
                         }
                     }
 
                     #if os(macOS)
                         if Self.shouldShowOpenLibraryAction(for: disk) {
-                            AppSettingsInfoRow(
+                            CisumUI.MagicSettingRow(
                                 title: String(localized: "Open Library", table: "Book-Settings", bundle: .module),
                                 description: String(localized: "View in Finder", table: "Book-Settings", bundle: .module),
-                                systemImage: .cisumIconShowInFinder,
-                                action: {
-                                    disk.openInFinder()
-                                }
+                                icon: .cisumIconShowInFinder
                             ) {
                                 Image(systemName: .cisumIconShowInFinder)
+                                    .frame(width: 28, height: 28)
+                                    .background(.regularMaterial, in: Circle())
+                                    .cisumShadowSm()
+                                    .cisumHoverScale(105)
+                                    .cisumButton {
+                                        disk.openInFinder()
+                                    }
+                                    .accessibilityLabel(Self.openLibraryActionLabel)
+                                    .help(Self.openLibraryActionLabel)
                             }
                         }
                     #endif
 
-                    AppSettingsInfoRow(
+                    CisumUI.MagicSettingRow(
                         title: String(localized: "File Count", table: "Book-Settings", bundle: .module),
                         description: String(localized: "Total files in library", table: "Book-Settings", bundle: .module),
-                        systemImage: .cisumIconDocument
+                        icon: .cisumIconDocument
                     ) {
                         if Self.shouldUseSingularFileCount(fileCount) {
                             Text("\(fileCount) file", tableName: "Book-Settings", bundle: .module)
+                                .font(.footnote)
                         } else {
                             Text("\(fileCount) files", tableName: "Book-Settings", bundle: .module)
+                                .font(.footnote)
                         }
                     }
                 }
             } else {
-                AppSettingsSection(title: String(localized: "Audiobook Library", table: "Book-Settings", bundle: .module)) {
-                    AppSettingsInfoRow(
+                CisumUI.MagicSettingSection(title: String(localized: "Audiobook Library", table: "Book-Settings", bundle: .module)) {
+                    CisumUI.MagicSettingRow(
                         title: String(localized: "Error", table: "Book-Settings", bundle: .module),
                         description: description,
-                        systemImage: .cisumIconMusicLibrary
+                        icon: .cisumIconMusicLibrary
                     ) {
                         Text("Cannot get audiobook library information", tableName: "Book-Settings", bundle: .module)
+                            .font(.footnote)
                     }
                 }
             }
