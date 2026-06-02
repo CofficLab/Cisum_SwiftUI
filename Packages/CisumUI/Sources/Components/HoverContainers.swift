@@ -5,7 +5,7 @@ import SwiftUI
 #endif
 
 public enum StatusBarHoverContainerAccessibilityPolicy {
-    public static let showDetailsHint = String(localized: "Show details")
+    public static let showDetailsHint = String(localized: "Show details", table: "Localizable", bundle: .module)
 }
 
 @MainActor

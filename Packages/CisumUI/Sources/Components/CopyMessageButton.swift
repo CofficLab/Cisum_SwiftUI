@@ -6,9 +6,9 @@ import SwiftUI
 #endif
 
 public struct CopyMessageButton: View {
-    static let copiedLabel = "Copied"
-    static let accessibilityLabel = "Copy message content"
-    static let helpText = "Copy message content"
+    static let copiedLabel = String(localized: "Copied", table: "Localizable", bundle: .module)
+    static let accessibilityLabel = String(localized: "Copy message content", table: "Localizable", bundle: .module)
+    static let helpText = String(localized: "Copy message content", table: "Localizable", bundle: .module)
 
     @LumiMotionPreferenceReader private var motionPreference
     @LumiTheme private var theme

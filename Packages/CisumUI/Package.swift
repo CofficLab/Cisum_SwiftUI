@@ -3,6 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "CisumUI",
+    defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
         .iOS(.v17)
@@ -119,6 +120,9 @@ let package = Package(
                 "Plugin",
                 "Support",
                 "Theme",
+            ],
+            resources: [
+                .process("Resources"),
             ],
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency=minimal"),

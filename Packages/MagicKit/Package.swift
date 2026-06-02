@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "MagicKit",  // 包名称
+    defaultLocalization: "en",
     platforms: [
         .macOS(.v14),  // 最低支持 macOS 14
         .iOS(.v17)     // 最低支持 iOS 17
@@ -28,7 +29,7 @@ let package = Package(
                "ZIPFoundation",
            ],
            path: "Sources",
-           resources: [.process("Icons.xcassets")],
+           resources: [.process("Icons.xcassets"), .process("Resources")],
            swiftSettings: [
                .enableExperimentalFeature("StrictConcurrency=minimal"),
            ]

@@ -4,6 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "MagicPlayMan",
+    defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
         .iOS(.v17)
@@ -27,7 +28,10 @@ let package = Package(
                 .product(name: "CisumUI", package: "CisumUI"),
                 .product(name: "MagicAlert", package: "MagicAlert"),
             ],
-            path: "Sources"
+            path: "Sources",
+            resources: [
+                .process("Resources"),
+            ]
         ),
         .testTarget(
             name: "MagicPlayManTests",

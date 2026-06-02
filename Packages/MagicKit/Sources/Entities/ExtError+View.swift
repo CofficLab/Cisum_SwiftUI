@@ -9,7 +9,7 @@ public extension Error {
                 .foregroundColor(.red)
                 .accessibilityHidden(true)
 
-            Text("An error occurred")
+            Text(String(localized: "An error occurred", table: "Localizable", bundle: .module))
                 .font(.headline)
 
             Text(localizedDescription)
