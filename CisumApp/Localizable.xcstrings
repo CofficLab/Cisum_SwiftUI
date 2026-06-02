@@ -4,23 +4,6 @@
     "" : {
 
     },
-    "  • %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "  • %@"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "  • %@"
-          }
-        }
-      }
-    },
     "--:--" : {
       "localizations" : {
         "zh-Hans" : {
@@ -37,23 +20,6 @@
         }
       }
     },
-    "(%lld 个订阅)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "(%lld 个订阅)"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "(%lld 個訂閱)"
-          }
-        }
-      }
-    },
     "%@" : {
       "localizations" : {
         "zh-Hans" : {
@@ -66,29 +32,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@"
-          }
-        }
-      }
-    },
-    "%@ (%lld)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ (%2$lld)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ (%2$lld)"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ (%2$lld)"
           }
         }
       }
@@ -125,9 +68,6 @@
         }
       }
     },
-    "2个订阅选项" : {
-
-    },
     "3:45" : {
       "localizations" : {
         "zh-Hans" : {
@@ -160,23 +100,6 @@
         }
       }
     },
-    "All Statuses (%lld)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "所有状态 (%lld)"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "所有狀態 (%lld)"
-          }
-        }
-      }
-    },
     "App Container" : {
       "localizations" : {
         "zh-Hans" : {
@@ -193,48 +116,53 @@
         }
       }
     },
-    "APP 容器" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APP 容器"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APP 容器"
-          }
-        }
-      }
-    },
-    "Cars (%lld)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Car (%lld)"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Car (%lld)"
-          }
-        }
-      }
-    },
     "Cisum" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cisum"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cisum"
+          }
+        }
+      }
     },
     "Cisum Pro" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cisum Pro"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cisum Pro"
+          }
+        }
+      }
     },
     "Close" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "關閉"
+          }
+        }
+      }
     },
     "Copied" : {
       "localizations" : {
@@ -317,7 +245,20 @@
       }
     },
     "Finish Setup" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成设置"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成設置"
+          }
+        }
+      }
     },
     "Folders" : {
       "localizations" : {
@@ -352,78 +293,36 @@
       }
     },
     "Goes to the previous track." : {
-
-    },
-    "Highest Product:" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "最高产品:"
+            "value" : "跳到上一首曲目。"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "最高產品:"
-          }
-        }
-      }
-    },
-    "Highest Product: 无" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最高产品: 无"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最高產品: 無"
-          }
-        }
-      }
-    },
-    "Highest Status:" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最高状态:"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最高狀態:"
-          }
-        }
-      }
-    },
-    "Highest Status: 无" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最高状态: 无"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最高狀態: 無"
+            "value" : "跳到上一首曲目。"
           }
         }
       }
     },
     "iCloud" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud"
+          }
+        }
+      }
     },
     "iCloud Drive Enabled" : {
       "localizations" : {
@@ -473,37 +372,53 @@
         }
       }
     },
-    "iCloud 同步" : {
-
-    },
-    "ID: %@" : {
-      "extractionState" : "stale",
+    "ID: CISUM001" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ID: %@"
+            "value" : "ID: CISUM001"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ID: %@"
+            "value" : "ID: CISUM001"
           }
         }
       }
     },
-    "ID: CISUM001" : {
-
-    },
-    "macOS 上也精彩" : {
-
-    },
     "Next" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下一步"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下一步"
+          }
+        }
+      }
     },
     "Next Track" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下一首曲目"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下一首曲目"
+          }
+        }
+      }
     },
     "No" : {
       "localizations" : {
@@ -533,23 +448,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未找到匹配的鍵值對"
-          }
-        }
-      }
-    },
-    "NonRenewables (%lld)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "非续费订阅 (%lld)"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "非續費訂閱 (%lld)"
           }
         }
       }
@@ -603,7 +501,20 @@
       }
     },
     "Play/Pause" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放/暂停"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放/暫停"
+          }
+        }
+      }
     },
     "Please quit the app, then open it again." : {
       "localizations" : {
@@ -638,41 +549,33 @@
       }
     },
     "Previous" : {
-
-    },
-    "Previous Track" : {
-
-    },
-    "Products" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "产品"
+            "value" : "上一步"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "產品"
+            "value" : "上一步"
           }
         }
       }
     },
-    "Purchased" : {
-      "extractionState" : "stale",
+    "Previous Track" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已购买"
+            "value" : "上一首曲目"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已購買"
+            "value" : "上一首曲目"
           }
         }
       }
@@ -790,38 +693,17 @@
       }
     },
     "Skips to the next track." : {
-
-    },
-    "state=" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "状态="
+            "value" : "跳到下一首曲目。"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "狀態="
-          }
-        }
-      }
-    },
-    "state=%lld" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "状态=%lld"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "狀態=%lld"
+            "value" : "跳到下一首曲目。"
           }
         }
       }
@@ -838,57 +720,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "倉庫位置"
-          }
-        }
-      }
-    },
-    "Subscription Groups (%lld)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "订阅组 (%lld)"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "訂閱組 (%lld)"
-          }
-        }
-      }
-    },
-    "Subscription Status" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "订阅状态"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "訂閱狀態"
-          }
-        }
-      }
-    },
-    "Subscriptions (%lld)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "订阅 (%lld)"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "訂閱 (%lld)"
           }
         }
       }
@@ -910,7 +741,20 @@
       }
     },
     "Toggles playback state." : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "切换播放状态。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "切換播放狀態。"
+          }
+        }
+      }
     },
     "Total: %lld items" : {
       "localizations" : {
@@ -992,356 +836,213 @@
         }
       }
     },
+    "iCloud 同步" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 同步"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 同步"
+          }
+        }
+      }
+    },
     "专辑封面" : {
-
-    },
-    "仓库位置" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "仓库位置"
+            "value" : "专辑封面"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "倉庫位置"
+            "value" : "專輯封面"
           }
         }
       }
     },
-    "否" : {
+    "2个订阅选项" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "否"
+            "value" : "2个订阅选项"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "否"
-          }
-        }
-      }
-    },
-    "启用iCloud云盘" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "启用 iCloud 云盘"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "啟用 iCloud 雲盤"
+            "value" : "2個訂閱選項"
           }
         }
       }
     },
     "如果您之前在其他设备上购买过订阅,可以通过点击下方的\"恢复购买\"按钮来恢复您的订阅。请确保您使用的是购买时所用的Apple ID 账号。" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果您之前在其他设备上购买过订阅,可以通过点击下方的\"恢复购买\"按钮来恢复您的订阅。请确保您使用的是购买时所用的Apple ID 账号。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果您之前在其他裝置上購買過訂閱,可以通過點擊下方的「恢復購買」按鈕來恢復您的訂閱。請確保您使用的是購買時所用的 Apple ID 帳號。"
+          }
+        }
+      }
     },
     "完美支持 iCloud" : {
-
-    },
-    "尚未加载产品" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "尚未加载产品"
+            "value" : "完美支持 iCloud"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "尚未加載產品"
-          }
-        }
-      }
-    },
-    "恢复购买" : {
-
-    },
-    "恢复默认设置" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "恢复默认设置"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "恢復默認設置"
-          }
-        }
-      }
-    },
-    "提示" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "提示"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "提示"
-          }
-        }
-      }
-    },
-    "数据库文件夹" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "数据库文件夹"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "數據庫文件夾"
-          }
-        }
-      }
-    },
-    "是" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "是"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "是"
-          }
-        }
-      }
-    },
-    "未设置" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未设置"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未設置"
+            "value" : "完美支援 iCloud"
           }
         }
       }
     },
     "极简设计" : {
-
-    },
-    "正在从 iCloud 下载" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正在从 iCloud 下载"
+            "value" : "极简设计"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正在從 iCloud 下載"
-          }
-        }
-      }
-    },
-    "清空" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "清空"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "清空"
-          }
-        }
-      }
-    },
-    "清风徐来" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "清风徐来"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "清風徐來"
-          }
-        }
-      }
-    },
-    "登录 iCloud" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "登录 iCloud"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "登錄 iCloud"
-          }
-        }
-      }
-    },
-    "确定" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "确定"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "確定"
-          }
-        }
-      }
-    },
-    "空" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "空"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "空"
+            "value" : "極簡設計"
           }
         }
       }
     },
     "简单纯粹的音乐播放器" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "简单纯粹的音乐播放器"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "簡單純粹的音樂播放器"
+          }
+        }
+      }
     },
     "自动获取专辑封面" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自动获取专辑封面"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自動獲取專輯封面"
+          }
+        }
+      }
     },
     "许可协议" : {
-
-    },
-    "设置" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "设置"
+            "value" : "许可协议"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "設置"
+            "value" : "許可協議"
           }
         }
       }
     },
-    "请退出 APP，再重新打开" : {
-      "extractionState" : "stale",
+    "恢复购买" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "请退出 APP，再重新打开"
+            "value" : "恢复购买"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請退出 APP，再重新打開"
-          }
-        }
-      }
-    },
-    "退出" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "退出"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "退出"
+            "value" : "恢復購買"
           }
         }
       }
     },
     "适配 iOS" : {
-
-    },
-    "遇到问题无法继续运行" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "遇到问题无法继续运行"
+            "value" : "适配 iOS"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "遇到問題無法繼續運行"
+            "value" : "適配 iOS"
           }
         }
       }
     },
     "隐私政策" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隐私政策"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隱私政策"
+          }
+        }
+      }
+    },
+    "macOS 上也精彩" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS 上也精彩"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS 上也精彩"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
