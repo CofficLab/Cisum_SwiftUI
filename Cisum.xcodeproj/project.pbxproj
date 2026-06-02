@@ -7,38 +7,37 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A1C163002FD900000000000 /* CisumPluginRegistry in Frameworks */ = {isa = PBXBuildFile; productRef = A1C163022FD900000000000 /* CisumPluginRegistry */; };
-		0000000000000000A1C16201 /* PluginOpenButton in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16101 /* PluginOpenButton */; };
-		0000000000000000A1C16202 /* PluginLikeButton in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16102 /* PluginLikeButton */; };
-		0000000000000000A1C16203 /* PluginAudioWidgetControl in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16103 /* PluginAudioWidgetControl */; };
-		0000000000000000A1C16204 /* PluginAudioControl in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16104 /* PluginAudioControl */; };
-		0000000000000000A1C16205 /* PluginAudioDemo in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16105 /* PluginAudioDemo */; };
-		0000000000000000A1C16206 /* PluginDevice in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16106 /* PluginDevice */; };
-		0000000000000000A1C16207 /* PluginBookControl in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16107 /* PluginBookControl */; };
-		0000000000000000A1C16208 /* PluginBookPlayMode in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16108 /* PluginBookPlayMode */; };
-		0000000000000000A1C16209 /* PluginBookSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16109 /* PluginBookSettings */; };
-		0000000000000000A1C16210 /* PluginBookLike in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16110 /* PluginBookLike */; };
-		0000000000000000A1C16211 /* PluginBookProgress in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16111 /* PluginBookProgress */; };
-		0000000000000000A1C16212 /* PluginBookScene in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16112 /* PluginBookScene */; };
-		0000000000000000A1C16213 /* PluginThemeSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16113 /* PluginThemeSettings */; };
-		0000000000000000A1C16214 /* PluginAudioDownload in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16114 /* PluginAudioDownload */; };
-		0000000000000000A1C16215 /* PluginAudioSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16115 /* PluginAudioSettings */; };
-		0000000000000000A1C16216 /* PluginAudioScene in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16116 /* PluginAudioScene */; };
-		0000000000000000A1C16217 /* PluginAudioPlayMode in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16117 /* PluginAudioPlayMode */; };
-		0000000000000000A1C16218 /* PluginAudioLike in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16118 /* PluginAudioLike */; };
-		0000000000000000A1C16219 /* PluginReset in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16119 /* PluginReset */; };
-		0000000000000000A1C16220 /* PluginWelcome in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16120 /* PluginWelcome */; };
-		0000000000000000A1C16221 /* PluginMigrate in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16121 /* PluginMigrate */; };
-		0000000000000000A1C16222 /* PluginVideo in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16122 /* PluginVideo */; };
-		0000000000000000A1C16223 /* PluginAudioJob in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16123 /* PluginAudioJob */; };
-		0000000000000000A1C16224 /* PluginBook in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16124 /* PluginBook */; };
-		0000000000000000A1C16225 /* PluginAudio in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16125 /* PluginAudio */; };
-		0000000000000000A1C16226 /* PluginAudioProgress in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16126 /* PluginAudioProgress */; };
-		0000000000000000A1C16227 /* PluginAudioDBView in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16127 /* PluginAudioDBView */; };
-		0000000000000000A1C16228 /* PluginStore in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16128 /* PluginStore */; };
-		0000000000000000A1C16229 /* PluginAudioCopy in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16129 /* PluginAudioCopy */; };
-		0000000000000000A1C16230 /* PluginBookDBView in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16130 /* PluginBookDBView */; };
-		0000000000000000A1C16231 /* PluginStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16131 /* PluginStorage */; };
+		0000000000000000A1C16201 /* OpenButtonPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16101 /* OpenButtonPlugin */; };
+		0000000000000000A1C16202 /* LikeButtonPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16102 /* LikeButtonPlugin */; };
+		0000000000000000A1C16203 /* AudioWidgetControlPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16103 /* AudioWidgetControlPlugin */; };
+		0000000000000000A1C16204 /* AudioControlPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16104 /* AudioControlPlugin */; };
+		0000000000000000A1C16205 /* AudioDemoPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16105 /* AudioDemoPlugin */; };
+		0000000000000000A1C16206 /* DevicePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16106 /* DevicePlugin */; };
+		0000000000000000A1C16207 /* BookControlPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16107 /* BookControlPlugin */; };
+		0000000000000000A1C16208 /* BookPlayModePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16108 /* BookPlayModePlugin */; };
+		0000000000000000A1C16209 /* BookSettingsPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16109 /* BookSettingsPlugin */; };
+		0000000000000000A1C16210 /* BookLikePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16110 /* BookLikePlugin */; };
+		0000000000000000A1C16211 /* BookProgressPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16111 /* BookProgressPlugin */; };
+		0000000000000000A1C16212 /* BookScenePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16112 /* BookScenePlugin */; };
+		0000000000000000A1C16213 /* ThemeSettingsPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16113 /* ThemeSettingsPlugin */; };
+		0000000000000000A1C16214 /* AudioDownloadPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16114 /* AudioDownloadPlugin */; };
+		0000000000000000A1C16215 /* AudioSettingsPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16115 /* AudioSettingsPlugin */; };
+		0000000000000000A1C16216 /* AudioScenePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16116 /* AudioScenePlugin */; };
+		0000000000000000A1C16217 /* AudioPlayModePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16117 /* AudioPlayModePlugin */; };
+		0000000000000000A1C16218 /* AudioLikePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16118 /* AudioLikePlugin */; };
+		0000000000000000A1C16219 /* ResetPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16119 /* ResetPlugin */; };
+		0000000000000000A1C16220 /* WelcomePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16120 /* WelcomePlugin */; };
+		0000000000000000A1C16221 /* MigratePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16121 /* MigratePlugin */; };
+		0000000000000000A1C16222 /* VideoPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16122 /* VideoPlugin */; };
+		0000000000000000A1C16223 /* AudioJobPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16123 /* AudioJobPlugin */; };
+		0000000000000000A1C16224 /* BookPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16124 /* BookPlugin */; };
+		0000000000000000A1C16225 /* AudioPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16125 /* AudioPlugin */; };
+		0000000000000000A1C16226 /* AudioProgressPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16126 /* AudioProgressPlugin */; };
+		0000000000000000A1C16227 /* AudioDBViewPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16127 /* AudioDBViewPlugin */; };
+		0000000000000000A1C16228 /* StorePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16128 /* StorePlugin */; };
+		0000000000000000A1C16229 /* AudioCopyPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16129 /* AudioCopyPlugin */; };
+		0000000000000000A1C16230 /* BookDBViewPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16130 /* BookDBViewPlugin */; };
+		0000000000000000A1C16231 /* StoragePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16131 /* StoragePlugin */; };
 		0B06275C2F1E591800AF071F /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0B06275B2F1E591800AF071F /* MagicPlayMan */; };
 		0B0627622F1E5F8500AF071F /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0B0627612F1E5F8500AF071F /* MagicPlayMan */; };
 		0B0627682F1E7BDE00AF071F /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0B0627672F1E7BDE00AF071F /* MagicPlayMan */; };
@@ -58,19 +57,20 @@
 		0BD3F81C2E67255A00E533B7 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0BD3F81B2E67255A00E533B7 /* MagicPlayMan */; };
 		0BE0A5FF2E5E037700A9BE9C /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0BE0A5FE2E5E037700A9BE9C /* MagicPlayMan */; };
 		0C6A1A012FD1000100A10001 /* CisumDeviceData in Frameworks */ = {isa = PBXBuildFile; productRef = 0C6A1A032FD1000100A10001 /* CisumDeviceData */; };
-		A1C1520012FD900000000000 /* PluginFileLog in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510012FD900000000000 /* PluginFileLog */; };
-		A1C1520022FD900000000000 /* PluginThemeAurora in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510022FD900000000000 /* PluginThemeAurora */; };
-		A1C1520032FD900000000000 /* PluginThemeCisum in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510032FD900000000000 /* PluginThemeCisum */; };
-		A1C1520042FD900000000000 /* PluginThemeDaylightSilver in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510042FD900000000000 /* PluginThemeDaylightSilver */; };
-		A1C1520052FD900000000000 /* PluginThemeForest in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510052FD900000000000 /* PluginThemeForest */; };
-		A1C1520062FD900000000000 /* PluginThemeGraphiteBlack in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510062FD900000000000 /* PluginThemeGraphiteBlack */; };
-		A1C1520072FD900000000000 /* PluginThemeMidnight in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510072FD900000000000 /* PluginThemeMidnight */; };
-		A1C1520082FD900000000000 /* PluginThemeMono in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510082FD900000000000 /* PluginThemeMono */; };
-		A1C1520092FD900000000000 /* PluginThemeNebula in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510092FD900000000000 /* PluginThemeNebula */; };
-		A1C15200A2FD900000000000 /* PluginThemeOcean in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100A2FD900000000000 /* PluginThemeOcean */; };
-		A1C15200B2FD900000000000 /* PluginThemePaper in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100B2FD900000000000 /* PluginThemePaper */; };
-		A1C15200C2FD900000000000 /* PluginThemeStudioBlue in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100C2FD900000000000 /* PluginThemeStudioBlue */; };
-		A1C15200D2FD900000000000 /* PluginThemeSunset in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100D2FD900000000000 /* PluginThemeSunset */; };
+		A1C1520012FD900000000000 /* FileLogPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510012FD900000000000 /* FileLogPlugin */; };
+		A1C1520022FD900000000000 /* ThemeAuroraPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510022FD900000000000 /* ThemeAuroraPlugin */; };
+		A1C1520032FD900000000000 /* ThemeCisumPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510032FD900000000000 /* ThemeCisumPlugin */; };
+		A1C1520042FD900000000000 /* ThemeDaylightSilverPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510042FD900000000000 /* ThemeDaylightSilverPlugin */; };
+		A1C1520052FD900000000000 /* ThemeForestPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510052FD900000000000 /* ThemeForestPlugin */; };
+		A1C1520062FD900000000000 /* ThemeGraphiteBlackPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510062FD900000000000 /* ThemeGraphiteBlackPlugin */; };
+		A1C1520072FD900000000000 /* ThemeMidnightPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510072FD900000000000 /* ThemeMidnightPlugin */; };
+		A1C1520082FD900000000000 /* ThemeMonoPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510082FD900000000000 /* ThemeMonoPlugin */; };
+		A1C1520092FD900000000000 /* ThemeNebulaPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510092FD900000000000 /* ThemeNebulaPlugin */; };
+		A1C15200A2FD900000000000 /* ThemeOceanPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100A2FD900000000000 /* ThemeOceanPlugin */; };
+		A1C15200B2FD900000000000 /* ThemePaperPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100B2FD900000000000 /* ThemePaperPlugin */; };
+		A1C15200C2FD900000000000 /* ThemeStudioBluePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100C2FD900000000000 /* ThemeStudioBluePlugin */; };
+		A1C15200D2FD900000000000 /* ThemeSunsetPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100D2FD900000000000 /* ThemeSunsetPlugin */; };
+		A1C163002FD900000000000 /* CisumPluginRegistry in Frameworks */ = {isa = PBXBuildFile; productRef = A1C163022FD900000000000 /* CisumPluginRegistry */; };
 		F51482C92F2C6A6700CEB80D /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F51482C82F2C6A6700CEB80D /* MagicKit */; };
 		F51BCCDC2F21EC7B00A5E3E5 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F51BCCDB2F21EC7B00A5E3E5 /* MagicPlayMan */; };
 		F51BD2AC2F220B4900A5E3E5 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F51BD2AB2F220B4900A5E3E5 /* MagicKit */; };
@@ -550,6 +550,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		F50253842FCE69730042F6A5 /* Plugins */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Plugins; sourceTree = "<group>"; };
 		F5826E6E2F3578070079B285 /* CisumWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (F5826E792F3578080079B285 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = CisumWidget; sourceTree = "<group>"; };
 		F5D8424B2FADC1A20058CC8D /* Packages */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Packages; sourceTree = "<group>"; };
 		F5F6D0682F396BC700857743 /* CisumApp */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CisumApp; sourceTree = "<group>"; };
@@ -562,50 +563,50 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1C163002FD900000000000 /* CisumPluginRegistry in Frameworks */,
-				0000000000000000A1C16201 /* PluginOpenButton in Frameworks */,
-				0000000000000000A1C16202 /* PluginLikeButton in Frameworks */,
-				0000000000000000A1C16203 /* PluginAudioWidgetControl in Frameworks */,
-				0000000000000000A1C16204 /* PluginAudioControl in Frameworks */,
-				0000000000000000A1C16205 /* PluginAudioDemo in Frameworks */,
-				0000000000000000A1C16206 /* PluginDevice in Frameworks */,
-				0000000000000000A1C16207 /* PluginBookControl in Frameworks */,
-				0000000000000000A1C16208 /* PluginBookPlayMode in Frameworks */,
-				0000000000000000A1C16209 /* PluginBookSettings in Frameworks */,
-				0000000000000000A1C16210 /* PluginBookLike in Frameworks */,
-				0000000000000000A1C16211 /* PluginBookProgress in Frameworks */,
-				0000000000000000A1C16212 /* PluginBookScene in Frameworks */,
-				0000000000000000A1C16213 /* PluginThemeSettings in Frameworks */,
-				0000000000000000A1C16214 /* PluginAudioDownload in Frameworks */,
-				0000000000000000A1C16215 /* PluginAudioSettings in Frameworks */,
-				0000000000000000A1C16216 /* PluginAudioScene in Frameworks */,
-				0000000000000000A1C16217 /* PluginAudioPlayMode in Frameworks */,
-				0000000000000000A1C16218 /* PluginAudioLike in Frameworks */,
-				0000000000000000A1C16219 /* PluginReset in Frameworks */,
-				0000000000000000A1C16220 /* PluginWelcome in Frameworks */,
-				0000000000000000A1C16221 /* PluginMigrate in Frameworks */,
-				0000000000000000A1C16222 /* PluginVideo in Frameworks */,
-				0000000000000000A1C16223 /* PluginAudioJob in Frameworks */,
-				0000000000000000A1C16224 /* PluginBook in Frameworks */,
-				0000000000000000A1C16225 /* PluginAudio in Frameworks */,
-				0000000000000000A1C16226 /* PluginAudioProgress in Frameworks */,
-				0000000000000000A1C16227 /* PluginAudioDBView in Frameworks */,
-				0000000000000000A1C16228 /* PluginStore in Frameworks */,
-				0000000000000000A1C16229 /* PluginAudioCopy in Frameworks */,
-				0000000000000000A1C16230 /* PluginBookDBView in Frameworks */,
-				0000000000000000A1C16231 /* PluginStorage in Frameworks */,
-				A1C1520012FD900000000000 /* PluginFileLog in Frameworks */,
-				A1C1520022FD900000000000 /* PluginThemeAurora in Frameworks */,
-				A1C1520032FD900000000000 /* PluginThemeCisum in Frameworks */,
-				A1C1520042FD900000000000 /* PluginThemeDaylightSilver in Frameworks */,
-				A1C1520052FD900000000000 /* PluginThemeForest in Frameworks */,
-				A1C1520062FD900000000000 /* PluginThemeGraphiteBlack in Frameworks */,
-				A1C1520072FD900000000000 /* PluginThemeMidnight in Frameworks */,
-				A1C1520082FD900000000000 /* PluginThemeMono in Frameworks */,
-				A1C1520092FD900000000000 /* PluginThemeNebula in Frameworks */,
-				A1C15200A2FD900000000000 /* PluginThemeOcean in Frameworks */,
-				A1C15200B2FD900000000000 /* PluginThemePaper in Frameworks */,
-				A1C15200C2FD900000000000 /* PluginThemeStudioBlue in Frameworks */,
-				A1C15200D2FD900000000000 /* PluginThemeSunset in Frameworks */,
+				0000000000000000A1C16201 /* OpenButtonPlugin in Frameworks */,
+				0000000000000000A1C16202 /* LikeButtonPlugin in Frameworks */,
+				0000000000000000A1C16203 /* AudioWidgetControlPlugin in Frameworks */,
+				0000000000000000A1C16204 /* AudioControlPlugin in Frameworks */,
+				0000000000000000A1C16205 /* AudioDemoPlugin in Frameworks */,
+				0000000000000000A1C16206 /* DevicePlugin in Frameworks */,
+				0000000000000000A1C16207 /* BookControlPlugin in Frameworks */,
+				0000000000000000A1C16208 /* BookPlayModePlugin in Frameworks */,
+				0000000000000000A1C16209 /* BookSettingsPlugin in Frameworks */,
+				0000000000000000A1C16210 /* BookLikePlugin in Frameworks */,
+				0000000000000000A1C16211 /* BookProgressPlugin in Frameworks */,
+				0000000000000000A1C16212 /* BookScenePlugin in Frameworks */,
+				0000000000000000A1C16213 /* ThemeSettingsPlugin in Frameworks */,
+				0000000000000000A1C16214 /* AudioDownloadPlugin in Frameworks */,
+				0000000000000000A1C16215 /* AudioSettingsPlugin in Frameworks */,
+				0000000000000000A1C16216 /* AudioScenePlugin in Frameworks */,
+				0000000000000000A1C16217 /* AudioPlayModePlugin in Frameworks */,
+				0000000000000000A1C16218 /* AudioLikePlugin in Frameworks */,
+				0000000000000000A1C16219 /* ResetPlugin in Frameworks */,
+				0000000000000000A1C16220 /* WelcomePlugin in Frameworks */,
+				0000000000000000A1C16221 /* MigratePlugin in Frameworks */,
+				0000000000000000A1C16222 /* VideoPlugin in Frameworks */,
+				0000000000000000A1C16223 /* AudioJobPlugin in Frameworks */,
+				0000000000000000A1C16224 /* BookPlugin in Frameworks */,
+				0000000000000000A1C16225 /* AudioPlugin in Frameworks */,
+				0000000000000000A1C16226 /* AudioProgressPlugin in Frameworks */,
+				0000000000000000A1C16227 /* AudioDBViewPlugin in Frameworks */,
+				0000000000000000A1C16228 /* StorePlugin in Frameworks */,
+				0000000000000000A1C16229 /* AudioCopyPlugin in Frameworks */,
+				0000000000000000A1C16230 /* BookDBViewPlugin in Frameworks */,
+				0000000000000000A1C16231 /* StoragePlugin in Frameworks */,
+				A1C1520012FD900000000000 /* FileLogPlugin in Frameworks */,
+				A1C1520022FD900000000000 /* ThemeAuroraPlugin in Frameworks */,
+				A1C1520032FD900000000000 /* ThemeCisumPlugin in Frameworks */,
+				A1C1520042FD900000000000 /* ThemeDaylightSilverPlugin in Frameworks */,
+				A1C1520052FD900000000000 /* ThemeForestPlugin in Frameworks */,
+				A1C1520062FD900000000000 /* ThemeGraphiteBlackPlugin in Frameworks */,
+				A1C1520072FD900000000000 /* ThemeMidnightPlugin in Frameworks */,
+				A1C1520082FD900000000000 /* ThemeMonoPlugin in Frameworks */,
+				A1C1520092FD900000000000 /* ThemeNebulaPlugin in Frameworks */,
+				A1C15200A2FD900000000000 /* ThemeOceanPlugin in Frameworks */,
+				A1C15200B2FD900000000000 /* ThemePaperPlugin in Frameworks */,
+				A1C15200C2FD900000000000 /* ThemeStudioBluePlugin in Frameworks */,
+				A1C15200D2FD900000000000 /* ThemeSunsetPlugin in Frameworks */,
 				F541F4782FBFFC1200C98C03 /* CisumUI in Frameworks */,
 				0C6A1A012FD1000100A10001 /* CisumDeviceData in Frameworks */,
 				F5EFA8F52F2C5634000A0054 /* MagicKit in Frameworks */,
@@ -666,6 +667,7 @@
 		0B9C1C342AAF18FE001A26AF = {
 			isa = PBXGroup;
 			children = (
+				F50253842FCE69730042F6A5 /* Plugins */,
 				F5D8424B2FADC1A20058CC8D /* Packages */,
 				F5F6D24B2F396D7A00857743 /* Shared */,
 				F5F6D0682F396BC700857743 /* CisumApp */,
@@ -847,56 +849,57 @@
 				F5826E772F3578080079B285 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				F50253842FCE69730042F6A5 /* Plugins */,
 				F5F6D0682F396BC700857743 /* CisumApp */,
 				F5F6D24B2F396D7A00857743 /* Shared */,
 			);
 			name = Cisum;
 			packageProductDependencies = (
 				A1C163022FD900000000000 /* CisumPluginRegistry */,
-				0000000000000000A1C16101 /* PluginOpenButton */,
-				0000000000000000A1C16102 /* PluginLikeButton */,
-				0000000000000000A1C16103 /* PluginAudioWidgetControl */,
-				0000000000000000A1C16104 /* PluginAudioControl */,
-				0000000000000000A1C16105 /* PluginAudioDemo */,
-				0000000000000000A1C16106 /* PluginDevice */,
-				0000000000000000A1C16107 /* PluginBookControl */,
-				0000000000000000A1C16108 /* PluginBookPlayMode */,
-				0000000000000000A1C16109 /* PluginBookSettings */,
-				0000000000000000A1C16110 /* PluginBookLike */,
-				0000000000000000A1C16111 /* PluginBookProgress */,
-				0000000000000000A1C16112 /* PluginBookScene */,
-				0000000000000000A1C16113 /* PluginThemeSettings */,
-				0000000000000000A1C16114 /* PluginAudioDownload */,
-				0000000000000000A1C16115 /* PluginAudioSettings */,
-				0000000000000000A1C16116 /* PluginAudioScene */,
-				0000000000000000A1C16117 /* PluginAudioPlayMode */,
-				0000000000000000A1C16118 /* PluginAudioLike */,
-				0000000000000000A1C16119 /* PluginReset */,
-				0000000000000000A1C16120 /* PluginWelcome */,
-				0000000000000000A1C16121 /* PluginMigrate */,
-				0000000000000000A1C16122 /* PluginVideo */,
-				0000000000000000A1C16123 /* PluginAudioJob */,
-				0000000000000000A1C16124 /* PluginBook */,
-				0000000000000000A1C16125 /* PluginAudio */,
-				0000000000000000A1C16126 /* PluginAudioProgress */,
-				0000000000000000A1C16127 /* PluginAudioDBView */,
-				0000000000000000A1C16128 /* PluginStore */,
-				0000000000000000A1C16129 /* PluginAudioCopy */,
-				0000000000000000A1C16130 /* PluginBookDBView */,
-				0000000000000000A1C16131 /* PluginStorage */,
-				A1C1510012FD900000000000 /* PluginFileLog */,
-				A1C1510022FD900000000000 /* PluginThemeAurora */,
-				A1C1510032FD900000000000 /* PluginThemeCisum */,
-				A1C1510042FD900000000000 /* PluginThemeDaylightSilver */,
-				A1C1510052FD900000000000 /* PluginThemeForest */,
-				A1C1510062FD900000000000 /* PluginThemeGraphiteBlack */,
-				A1C1510072FD900000000000 /* PluginThemeMidnight */,
-				A1C1510082FD900000000000 /* PluginThemeMono */,
-				A1C1510092FD900000000000 /* PluginThemeNebula */,
-				A1C15100A2FD900000000000 /* PluginThemeOcean */,
-				A1C15100B2FD900000000000 /* PluginThemePaper */,
-				A1C15100C2FD900000000000 /* PluginThemeStudioBlue */,
-				A1C15100D2FD900000000000 /* PluginThemeSunset */,
+				0000000000000000A1C16101 /* OpenButtonPlugin */,
+				0000000000000000A1C16102 /* LikeButtonPlugin */,
+				0000000000000000A1C16103 /* AudioWidgetControlPlugin */,
+				0000000000000000A1C16104 /* AudioControlPlugin */,
+				0000000000000000A1C16105 /* AudioDemoPlugin */,
+				0000000000000000A1C16106 /* DevicePlugin */,
+				0000000000000000A1C16107 /* BookControlPlugin */,
+				0000000000000000A1C16108 /* BookPlayModePlugin */,
+				0000000000000000A1C16109 /* BookSettingsPlugin */,
+				0000000000000000A1C16110 /* BookLikePlugin */,
+				0000000000000000A1C16111 /* BookProgressPlugin */,
+				0000000000000000A1C16112 /* BookScenePlugin */,
+				0000000000000000A1C16113 /* ThemeSettingsPlugin */,
+				0000000000000000A1C16114 /* AudioDownloadPlugin */,
+				0000000000000000A1C16115 /* AudioSettingsPlugin */,
+				0000000000000000A1C16116 /* AudioScenePlugin */,
+				0000000000000000A1C16117 /* AudioPlayModePlugin */,
+				0000000000000000A1C16118 /* AudioLikePlugin */,
+				0000000000000000A1C16119 /* ResetPlugin */,
+				0000000000000000A1C16120 /* WelcomePlugin */,
+				0000000000000000A1C16121 /* MigratePlugin */,
+				0000000000000000A1C16122 /* VideoPlugin */,
+				0000000000000000A1C16123 /* AudioJobPlugin */,
+				0000000000000000A1C16124 /* BookPlugin */,
+				0000000000000000A1C16125 /* AudioPlugin */,
+				0000000000000000A1C16126 /* AudioProgressPlugin */,
+				0000000000000000A1C16127 /* AudioDBViewPlugin */,
+				0000000000000000A1C16128 /* StorePlugin */,
+				0000000000000000A1C16129 /* AudioCopyPlugin */,
+				0000000000000000A1C16130 /* BookDBViewPlugin */,
+				0000000000000000A1C16131 /* StoragePlugin */,
+				A1C1510012FD900000000000 /* FileLogPlugin */,
+				A1C1510022FD900000000000 /* ThemeAuroraPlugin */,
+				A1C1510032FD900000000000 /* ThemeCisumPlugin */,
+				A1C1510042FD900000000000 /* ThemeDaylightSilverPlugin */,
+				A1C1510052FD900000000000 /* ThemeForestPlugin */,
+				A1C1510062FD900000000000 /* ThemeGraphiteBlackPlugin */,
+				A1C1510072FD900000000000 /* ThemeMidnightPlugin */,
+				A1C1510082FD900000000000 /* ThemeMonoPlugin */,
+				A1C1510092FD900000000000 /* ThemeNebulaPlugin */,
+				A1C15100A2FD900000000000 /* ThemeOceanPlugin */,
+				A1C15100B2FD900000000000 /* ThemePaperPlugin */,
+				A1C15100C2FD900000000000 /* ThemeStudioBluePlugin */,
+				A1C15100D2FD900000000000 /* ThemeSunsetPlugin */,
 				0C6A1A032FD1000100A10001 /* CisumDeviceData */,
 				880796BABF18425591568C62 /* CisumUI */,
 				0BDA9C6A2D2578D300A99623 /* MagicPlayMan */,
@@ -998,50 +1001,50 @@
 			);
 			mainGroup = 0B9C1C342AAF18FE001A26AF;
 			packageReferences = (
-				0000000000000000A1C16001 /* XCLocalSwiftPackageReference "Plugins/PluginOpenButton" */,
-				0000000000000000A1C16002 /* XCLocalSwiftPackageReference "Plugins/PluginLikeButton" */,
-				0000000000000000A1C16003 /* XCLocalSwiftPackageReference "Plugins/PluginAudioWidgetControl" */,
-				0000000000000000A1C16004 /* XCLocalSwiftPackageReference "Plugins/PluginAudioControl" */,
-				0000000000000000A1C16005 /* XCLocalSwiftPackageReference "Plugins/PluginAudioDemo" */,
-				0000000000000000A1C16006 /* XCLocalSwiftPackageReference "Plugins/PluginDevice" */,
-				0000000000000000A1C16007 /* XCLocalSwiftPackageReference "Plugins/PluginBookControl" */,
-				0000000000000000A1C16008 /* XCLocalSwiftPackageReference "Plugins/PluginBookPlayMode" */,
-				0000000000000000A1C16009 /* XCLocalSwiftPackageReference "Plugins/PluginBookSettings" */,
-				0000000000000000A1C16010 /* XCLocalSwiftPackageReference "Plugins/PluginBookLike" */,
-				0000000000000000A1C16011 /* XCLocalSwiftPackageReference "Plugins/PluginBookProgress" */,
-				0000000000000000A1C16012 /* XCLocalSwiftPackageReference "Plugins/PluginBookScene" */,
-				0000000000000000A1C16013 /* XCLocalSwiftPackageReference "Plugins/PluginThemeSettings" */,
-				0000000000000000A1C16014 /* XCLocalSwiftPackageReference "Plugins/PluginAudioDownload" */,
-				0000000000000000A1C16015 /* XCLocalSwiftPackageReference "Plugins/PluginAudioSettings" */,
-				0000000000000000A1C16016 /* XCLocalSwiftPackageReference "Plugins/PluginAudioScene" */,
-				0000000000000000A1C16017 /* XCLocalSwiftPackageReference "Plugins/PluginAudioPlayMode" */,
-				0000000000000000A1C16018 /* XCLocalSwiftPackageReference "Plugins/PluginAudioLike" */,
-				0000000000000000A1C16019 /* XCLocalSwiftPackageReference "Plugins/PluginReset" */,
-				0000000000000000A1C16020 /* XCLocalSwiftPackageReference "Plugins/PluginWelcome" */,
-				0000000000000000A1C16021 /* XCLocalSwiftPackageReference "Plugins/PluginMigrate" */,
-				0000000000000000A1C16022 /* XCLocalSwiftPackageReference "Plugins/PluginVideo" */,
-				0000000000000000A1C16023 /* XCLocalSwiftPackageReference "Plugins/PluginAudioJob" */,
-				0000000000000000A1C16024 /* XCLocalSwiftPackageReference "Plugins/PluginBook" */,
-				0000000000000000A1C16025 /* XCLocalSwiftPackageReference "Plugins/PluginAudio" */,
-				0000000000000000A1C16026 /* XCLocalSwiftPackageReference "Plugins/PluginAudioProgress" */,
-				0000000000000000A1C16027 /* XCLocalSwiftPackageReference "Plugins/PluginAudioDBView" */,
-				0000000000000000A1C16028 /* XCLocalSwiftPackageReference "Plugins/PluginStore" */,
-				0000000000000000A1C16029 /* XCLocalSwiftPackageReference "Plugins/PluginAudioCopy" */,
-				0000000000000000A1C16030 /* XCLocalSwiftPackageReference "Plugins/PluginBookDBView" */,
-				0000000000000000A1C16031 /* XCLocalSwiftPackageReference "Plugins/PluginStorage" */,
-				A1C1500012FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginFileLog" */,
-				A1C1500022FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeAurora" */,
-				A1C1500032FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeCisum" */,
-				A1C1500042FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeDaylightSilver" */,
-				A1C1500052FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeForest" */,
-				A1C1500062FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeGraphiteBlack" */,
-				A1C1500072FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeMidnight" */,
-				A1C1500082FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeMono" */,
-				A1C1500092FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeNebula" */,
-				A1C15000A2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeOcean" */,
-				A1C15000B2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemePaper" */,
-				A1C15000C2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeStudioBlue" */,
-				A1C15000D2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeSunset" */,
+				0000000000000000A1C16001 /* XCLocalSwiftPackageReference "Plugins/OpenButtonPlugin" */,
+				0000000000000000A1C16002 /* XCLocalSwiftPackageReference "Plugins/LikeButtonPlugin" */,
+				0000000000000000A1C16003 /* XCLocalSwiftPackageReference "Plugins/AudioWidgetControlPlugin" */,
+				0000000000000000A1C16004 /* XCLocalSwiftPackageReference "Plugins/AudioControlPlugin" */,
+				0000000000000000A1C16005 /* XCLocalSwiftPackageReference "Plugins/AudioDemoPlugin" */,
+				0000000000000000A1C16006 /* XCLocalSwiftPackageReference "Plugins/DevicePlugin" */,
+				0000000000000000A1C16007 /* XCLocalSwiftPackageReference "Plugins/BookControlPlugin" */,
+				0000000000000000A1C16008 /* XCLocalSwiftPackageReference "Plugins/BookPlayModePlugin" */,
+				0000000000000000A1C16009 /* XCLocalSwiftPackageReference "Plugins/BookSettingsPlugin" */,
+				0000000000000000A1C16010 /* XCLocalSwiftPackageReference "Plugins/BookLikePlugin" */,
+				0000000000000000A1C16011 /* XCLocalSwiftPackageReference "Plugins/BookProgressPlugin" */,
+				0000000000000000A1C16012 /* XCLocalSwiftPackageReference "Plugins/BookScenePlugin" */,
+				0000000000000000A1C16013 /* XCLocalSwiftPackageReference "Plugins/ThemeSettingsPlugin" */,
+				0000000000000000A1C16014 /* XCLocalSwiftPackageReference "Plugins/AudioDownloadPlugin" */,
+				0000000000000000A1C16015 /* XCLocalSwiftPackageReference "Plugins/AudioSettingsPlugin" */,
+				0000000000000000A1C16016 /* XCLocalSwiftPackageReference "Plugins/AudioScenePlugin" */,
+				0000000000000000A1C16017 /* XCLocalSwiftPackageReference "Plugins/AudioPlayModePlugin" */,
+				0000000000000000A1C16018 /* XCLocalSwiftPackageReference "Plugins/AudioLikePlugin" */,
+				0000000000000000A1C16019 /* XCLocalSwiftPackageReference "Plugins/ResetPlugin" */,
+				0000000000000000A1C16020 /* XCLocalSwiftPackageReference "Plugins/WelcomePlugin" */,
+				0000000000000000A1C16021 /* XCLocalSwiftPackageReference "Plugins/MigratePlugin" */,
+				0000000000000000A1C16022 /* XCLocalSwiftPackageReference "Plugins/VideoPlugin" */,
+				0000000000000000A1C16023 /* XCLocalSwiftPackageReference "Plugins/AudioJobPlugin" */,
+				0000000000000000A1C16024 /* XCLocalSwiftPackageReference "Plugins/BookPlugin" */,
+				0000000000000000A1C16025 /* XCLocalSwiftPackageReference "Plugins/AudioPlugin" */,
+				0000000000000000A1C16026 /* XCLocalSwiftPackageReference "Plugins/AudioProgressPlugin" */,
+				0000000000000000A1C16027 /* XCLocalSwiftPackageReference "Plugins/AudioDBViewPlugin" */,
+				0000000000000000A1C16028 /* XCLocalSwiftPackageReference "Plugins/StorePlugin" */,
+				0000000000000000A1C16029 /* XCLocalSwiftPackageReference "Plugins/AudioCopyPlugin" */,
+				0000000000000000A1C16030 /* XCLocalSwiftPackageReference "Plugins/BookDBViewPlugin" */,
+				0000000000000000A1C16031 /* XCLocalSwiftPackageReference "Plugins/StoragePlugin" */,
+				A1C1500012FD900000000000 /* XCLocalSwiftPackageReference "Plugins/FileLogPlugin" */,
+				A1C1500022FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeAuroraPlugin" */,
+				A1C1500032FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeCisumPlugin" */,
+				A1C1500042FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeDaylightSilverPlugin" */,
+				A1C1500052FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeForestPlugin" */,
+				A1C1500062FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeGraphiteBlackPlugin" */,
+				A1C1500072FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeMidnightPlugin" */,
+				A1C1500082FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeMonoPlugin" */,
+				A1C1500092FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeNebulaPlugin" */,
+				A1C15000A2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeOceanPlugin" */,
+				A1C15000B2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemePaperPlugin" */,
+				A1C15000C2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeStudioBluePlugin" */,
+				A1C15000D2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeSunsetPlugin" */,
 				A1C163012FD900000000000 /* XCLocalSwiftPackageReference "Packages/CisumPluginRegistry" */,
 				0C6A1A022FD1000100A10001 /* XCLocalSwiftPackageReference "Packages/DeviceData" */,
 				A4EDBFBBFC934FE4853CA0E4 /* XCLocalSwiftPackageReference "Packages/CisumUI" */,
@@ -1920,185 +1923,185 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		0000000000000000A1C16001 /* XCLocalSwiftPackageReference "Plugins/PluginOpenButton" */ = {
+		0000000000000000A1C16001 /* XCLocalSwiftPackageReference "Plugins/OpenButtonPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginOpenButton;
+			relativePath = Plugins/OpenButtonPlugin;
 		};
-		0000000000000000A1C16002 /* XCLocalSwiftPackageReference "Plugins/PluginLikeButton" */ = {
+		0000000000000000A1C16002 /* XCLocalSwiftPackageReference "Plugins/LikeButtonPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginLikeButton;
+			relativePath = Plugins/LikeButtonPlugin;
 		};
-		0000000000000000A1C16003 /* XCLocalSwiftPackageReference "Plugins/PluginAudioWidgetControl" */ = {
+		0000000000000000A1C16003 /* XCLocalSwiftPackageReference "Plugins/AudioWidgetControlPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginAudioWidgetControl;
+			relativePath = Plugins/AudioWidgetControlPlugin;
 		};
-		0000000000000000A1C16004 /* XCLocalSwiftPackageReference "Plugins/PluginAudioControl" */ = {
+		0000000000000000A1C16004 /* XCLocalSwiftPackageReference "Plugins/AudioControlPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginAudioControl;
+			relativePath = Plugins/AudioControlPlugin;
 		};
-		0000000000000000A1C16005 /* XCLocalSwiftPackageReference "Plugins/PluginAudioDemo" */ = {
+		0000000000000000A1C16005 /* XCLocalSwiftPackageReference "Plugins/AudioDemoPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginAudioDemo;
+			relativePath = Plugins/AudioDemoPlugin;
 		};
-		0000000000000000A1C16006 /* XCLocalSwiftPackageReference "Plugins/PluginDevice" */ = {
+		0000000000000000A1C16006 /* XCLocalSwiftPackageReference "Plugins/DevicePlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginDevice;
+			relativePath = Plugins/DevicePlugin;
 		};
-		0000000000000000A1C16007 /* XCLocalSwiftPackageReference "Plugins/PluginBookControl" */ = {
+		0000000000000000A1C16007 /* XCLocalSwiftPackageReference "Plugins/BookControlPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginBookControl;
+			relativePath = Plugins/BookControlPlugin;
 		};
-		0000000000000000A1C16008 /* XCLocalSwiftPackageReference "Plugins/PluginBookPlayMode" */ = {
+		0000000000000000A1C16008 /* XCLocalSwiftPackageReference "Plugins/BookPlayModePlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginBookPlayMode;
+			relativePath = Plugins/BookPlayModePlugin;
 		};
-		0000000000000000A1C16009 /* XCLocalSwiftPackageReference "Plugins/PluginBookSettings" */ = {
+		0000000000000000A1C16009 /* XCLocalSwiftPackageReference "Plugins/BookSettingsPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginBookSettings;
+			relativePath = Plugins/BookSettingsPlugin;
 		};
-		0000000000000000A1C16010 /* XCLocalSwiftPackageReference "Plugins/PluginBookLike" */ = {
+		0000000000000000A1C16010 /* XCLocalSwiftPackageReference "Plugins/BookLikePlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginBookLike;
+			relativePath = Plugins/BookLikePlugin;
 		};
-		0000000000000000A1C16011 /* XCLocalSwiftPackageReference "Plugins/PluginBookProgress" */ = {
+		0000000000000000A1C16011 /* XCLocalSwiftPackageReference "Plugins/BookProgressPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginBookProgress;
+			relativePath = Plugins/BookProgressPlugin;
 		};
-		0000000000000000A1C16012 /* XCLocalSwiftPackageReference "Plugins/PluginBookScene" */ = {
+		0000000000000000A1C16012 /* XCLocalSwiftPackageReference "Plugins/BookScenePlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginBookScene;
+			relativePath = Plugins/BookScenePlugin;
 		};
-		0000000000000000A1C16013 /* XCLocalSwiftPackageReference "Plugins/PluginThemeSettings" */ = {
+		0000000000000000A1C16013 /* XCLocalSwiftPackageReference "Plugins/ThemeSettingsPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginThemeSettings;
+			relativePath = Plugins/ThemeSettingsPlugin;
 		};
-		0000000000000000A1C16014 /* XCLocalSwiftPackageReference "Plugins/PluginAudioDownload" */ = {
+		0000000000000000A1C16014 /* XCLocalSwiftPackageReference "Plugins/AudioDownloadPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginAudioDownload;
+			relativePath = Plugins/AudioDownloadPlugin;
 		};
-		0000000000000000A1C16015 /* XCLocalSwiftPackageReference "Plugins/PluginAudioSettings" */ = {
+		0000000000000000A1C16015 /* XCLocalSwiftPackageReference "Plugins/AudioSettingsPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginAudioSettings;
+			relativePath = Plugins/AudioSettingsPlugin;
 		};
-		0000000000000000A1C16016 /* XCLocalSwiftPackageReference "Plugins/PluginAudioScene" */ = {
+		0000000000000000A1C16016 /* XCLocalSwiftPackageReference "Plugins/AudioScenePlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginAudioScene;
+			relativePath = Plugins/AudioScenePlugin;
 		};
-		0000000000000000A1C16017 /* XCLocalSwiftPackageReference "Plugins/PluginAudioPlayMode" */ = {
+		0000000000000000A1C16017 /* XCLocalSwiftPackageReference "Plugins/AudioPlayModePlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginAudioPlayMode;
+			relativePath = Plugins/AudioPlayModePlugin;
 		};
-		0000000000000000A1C16018 /* XCLocalSwiftPackageReference "Plugins/PluginAudioLike" */ = {
+		0000000000000000A1C16018 /* XCLocalSwiftPackageReference "Plugins/AudioLikePlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginAudioLike;
+			relativePath = Plugins/AudioLikePlugin;
 		};
-		0000000000000000A1C16019 /* XCLocalSwiftPackageReference "Plugins/PluginReset" */ = {
+		0000000000000000A1C16019 /* XCLocalSwiftPackageReference "Plugins/ResetPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginReset;
+			relativePath = Plugins/ResetPlugin;
 		};
-		0000000000000000A1C16020 /* XCLocalSwiftPackageReference "Plugins/PluginWelcome" */ = {
+		0000000000000000A1C16020 /* XCLocalSwiftPackageReference "Plugins/WelcomePlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginWelcome;
+			relativePath = Plugins/WelcomePlugin;
 		};
-		0000000000000000A1C16021 /* XCLocalSwiftPackageReference "Plugins/PluginMigrate" */ = {
+		0000000000000000A1C16021 /* XCLocalSwiftPackageReference "Plugins/MigratePlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginMigrate;
+			relativePath = Plugins/MigratePlugin;
 		};
-		0000000000000000A1C16022 /* XCLocalSwiftPackageReference "Plugins/PluginVideo" */ = {
+		0000000000000000A1C16022 /* XCLocalSwiftPackageReference "Plugins/VideoPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginVideo;
+			relativePath = Plugins/VideoPlugin;
 		};
-		0000000000000000A1C16023 /* XCLocalSwiftPackageReference "Plugins/PluginAudioJob" */ = {
+		0000000000000000A1C16023 /* XCLocalSwiftPackageReference "Plugins/AudioJobPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginAudioJob;
+			relativePath = Plugins/AudioJobPlugin;
 		};
-		0000000000000000A1C16024 /* XCLocalSwiftPackageReference "Plugins/PluginBook" */ = {
+		0000000000000000A1C16024 /* XCLocalSwiftPackageReference "Plugins/BookPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginBook;
+			relativePath = Plugins/BookPlugin;
 		};
-		0000000000000000A1C16025 /* XCLocalSwiftPackageReference "Plugins/PluginAudio" */ = {
+		0000000000000000A1C16025 /* XCLocalSwiftPackageReference "Plugins/AudioPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginAudio;
+			relativePath = Plugins/AudioPlugin;
 		};
-		0000000000000000A1C16026 /* XCLocalSwiftPackageReference "Plugins/PluginAudioProgress" */ = {
+		0000000000000000A1C16026 /* XCLocalSwiftPackageReference "Plugins/AudioProgressPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginAudioProgress;
+			relativePath = Plugins/AudioProgressPlugin;
 		};
-		0000000000000000A1C16027 /* XCLocalSwiftPackageReference "Plugins/PluginAudioDBView" */ = {
+		0000000000000000A1C16027 /* XCLocalSwiftPackageReference "Plugins/AudioDBViewPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginAudioDBView;
+			relativePath = Plugins/AudioDBViewPlugin;
 		};
-		0000000000000000A1C16028 /* XCLocalSwiftPackageReference "Plugins/PluginStore" */ = {
+		0000000000000000A1C16028 /* XCLocalSwiftPackageReference "Plugins/StorePlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginStore;
+			relativePath = Plugins/StorePlugin;
 		};
-		0000000000000000A1C16029 /* XCLocalSwiftPackageReference "Plugins/PluginAudioCopy" */ = {
+		0000000000000000A1C16029 /* XCLocalSwiftPackageReference "Plugins/AudioCopyPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginAudioCopy;
+			relativePath = Plugins/AudioCopyPlugin;
 		};
-		0000000000000000A1C16030 /* XCLocalSwiftPackageReference "Plugins/PluginBookDBView" */ = {
+		0000000000000000A1C16030 /* XCLocalSwiftPackageReference "Plugins/BookDBViewPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginBookDBView;
+			relativePath = Plugins/BookDBViewPlugin;
 		};
-		0000000000000000A1C16031 /* XCLocalSwiftPackageReference "Plugins/PluginStorage" */ = {
+		0000000000000000A1C16031 /* XCLocalSwiftPackageReference "Plugins/StoragePlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginStorage;
+			relativePath = Plugins/StoragePlugin;
 		};
 		0C6A1A022FD1000100A10001 /* XCLocalSwiftPackageReference "Packages/DeviceData" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/DeviceData;
 		};
-		A1C1500012FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginFileLog" */ = {
+		A1C1500012FD900000000000 /* XCLocalSwiftPackageReference "Plugins/FileLogPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginFileLog;
+			relativePath = Plugins/FileLogPlugin;
 		};
-		A1C1500022FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeAurora" */ = {
+		A1C1500022FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeAuroraPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginThemeAurora;
+			relativePath = Plugins/ThemeAuroraPlugin;
 		};
-		A1C1500032FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeCisum" */ = {
+		A1C1500032FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeCisumPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginThemeCisum;
+			relativePath = Plugins/ThemeCisumPlugin;
 		};
-		A1C1500042FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeDaylightSilver" */ = {
+		A1C1500042FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeDaylightSilverPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginThemeDaylightSilver;
+			relativePath = Plugins/ThemeDaylightSilverPlugin;
 		};
-		A1C1500052FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeForest" */ = {
+		A1C1500052FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeForestPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginThemeForest;
+			relativePath = Plugins/ThemeForestPlugin;
 		};
-		A1C1500062FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeGraphiteBlack" */ = {
+		A1C1500062FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeGraphiteBlackPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginThemeGraphiteBlack;
+			relativePath = Plugins/ThemeGraphiteBlackPlugin;
 		};
-		A1C1500072FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeMidnight" */ = {
+		A1C1500072FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeMidnightPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginThemeMidnight;
+			relativePath = Plugins/ThemeMidnightPlugin;
 		};
-		A1C1500082FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeMono" */ = {
+		A1C1500082FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeMonoPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginThemeMono;
+			relativePath = Plugins/ThemeMonoPlugin;
 		};
-		A1C1500092FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeNebula" */ = {
+		A1C1500092FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeNebulaPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginThemeNebula;
+			relativePath = Plugins/ThemeNebulaPlugin;
 		};
-		A1C15000A2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeOcean" */ = {
+		A1C15000A2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeOceanPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginThemeOcean;
+			relativePath = Plugins/ThemeOceanPlugin;
 		};
-		A1C15000B2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemePaper" */ = {
+		A1C15000B2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemePaperPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginThemePaper;
+			relativePath = Plugins/ThemePaperPlugin;
 		};
-		A1C15000C2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeStudioBlue" */ = {
+		A1C15000C2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeStudioBluePlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginThemeStudioBlue;
+			relativePath = Plugins/ThemeStudioBluePlugin;
 		};
-		A1C15000D2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeSunset" */ = {
+		A1C15000D2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeSunsetPlugin" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Plugins/PluginThemeSunset;
+			relativePath = Plugins/ThemeSunsetPlugin;
 		};
 		A1C163012FD900000000000 /* XCLocalSwiftPackageReference "Packages/CisumPluginRegistry" */ = {
 			isa = XCLocalSwiftPackageReference;
@@ -2119,160 +2122,160 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0000000000000000A1C16101 /* PluginOpenButton */ = {
+		0000000000000000A1C16101 /* OpenButtonPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16001 /* XCLocalSwiftPackageReference "Plugins/PluginOpenButton" */;
-			productName = PluginOpenButton;
+			package = 0000000000000000A1C16001 /* XCLocalSwiftPackageReference "Plugins/OpenButtonPlugin" */;
+			productName = OpenButtonPlugin;
 		};
-		0000000000000000A1C16102 /* PluginLikeButton */ = {
+		0000000000000000A1C16102 /* LikeButtonPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16002 /* XCLocalSwiftPackageReference "Plugins/PluginLikeButton" */;
-			productName = PluginLikeButton;
+			package = 0000000000000000A1C16002 /* XCLocalSwiftPackageReference "Plugins/LikeButtonPlugin" */;
+			productName = LikeButtonPlugin;
 		};
-		0000000000000000A1C16103 /* PluginAudioWidgetControl */ = {
+		0000000000000000A1C16103 /* AudioWidgetControlPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16003 /* XCLocalSwiftPackageReference "Plugins/PluginAudioWidgetControl" */;
-			productName = PluginAudioWidgetControl;
+			package = 0000000000000000A1C16003 /* XCLocalSwiftPackageReference "Plugins/AudioWidgetControlPlugin" */;
+			productName = AudioWidgetControlPlugin;
 		};
-		0000000000000000A1C16104 /* PluginAudioControl */ = {
+		0000000000000000A1C16104 /* AudioControlPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16004 /* XCLocalSwiftPackageReference "Plugins/PluginAudioControl" */;
-			productName = PluginAudioControl;
+			package = 0000000000000000A1C16004 /* XCLocalSwiftPackageReference "Plugins/AudioControlPlugin" */;
+			productName = AudioControlPlugin;
 		};
-		0000000000000000A1C16105 /* PluginAudioDemo */ = {
+		0000000000000000A1C16105 /* AudioDemoPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16005 /* XCLocalSwiftPackageReference "Plugins/PluginAudioDemo" */;
-			productName = PluginAudioDemo;
+			package = 0000000000000000A1C16005 /* XCLocalSwiftPackageReference "Plugins/AudioDemoPlugin" */;
+			productName = AudioDemoPlugin;
 		};
-		0000000000000000A1C16106 /* PluginDevice */ = {
+		0000000000000000A1C16106 /* DevicePlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16006 /* XCLocalSwiftPackageReference "Plugins/PluginDevice" */;
-			productName = PluginDevice;
+			package = 0000000000000000A1C16006 /* XCLocalSwiftPackageReference "Plugins/DevicePlugin" */;
+			productName = DevicePlugin;
 		};
-		0000000000000000A1C16107 /* PluginBookControl */ = {
+		0000000000000000A1C16107 /* BookControlPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16007 /* XCLocalSwiftPackageReference "Plugins/PluginBookControl" */;
-			productName = PluginBookControl;
+			package = 0000000000000000A1C16007 /* XCLocalSwiftPackageReference "Plugins/BookControlPlugin" */;
+			productName = BookControlPlugin;
 		};
-		0000000000000000A1C16108 /* PluginBookPlayMode */ = {
+		0000000000000000A1C16108 /* BookPlayModePlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16008 /* XCLocalSwiftPackageReference "Plugins/PluginBookPlayMode" */;
-			productName = PluginBookPlayMode;
+			package = 0000000000000000A1C16008 /* XCLocalSwiftPackageReference "Plugins/BookPlayModePlugin" */;
+			productName = BookPlayModePlugin;
 		};
-		0000000000000000A1C16109 /* PluginBookSettings */ = {
+		0000000000000000A1C16109 /* BookSettingsPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16009 /* XCLocalSwiftPackageReference "Plugins/PluginBookSettings" */;
-			productName = PluginBookSettings;
+			package = 0000000000000000A1C16009 /* XCLocalSwiftPackageReference "Plugins/BookSettingsPlugin" */;
+			productName = BookSettingsPlugin;
 		};
-		0000000000000000A1C16110 /* PluginBookLike */ = {
+		0000000000000000A1C16110 /* BookLikePlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16010 /* XCLocalSwiftPackageReference "Plugins/PluginBookLike" */;
-			productName = PluginBookLike;
+			package = 0000000000000000A1C16010 /* XCLocalSwiftPackageReference "Plugins/BookLikePlugin" */;
+			productName = BookLikePlugin;
 		};
-		0000000000000000A1C16111 /* PluginBookProgress */ = {
+		0000000000000000A1C16111 /* BookProgressPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16011 /* XCLocalSwiftPackageReference "Plugins/PluginBookProgress" */;
-			productName = PluginBookProgress;
+			package = 0000000000000000A1C16011 /* XCLocalSwiftPackageReference "Plugins/BookProgressPlugin" */;
+			productName = BookProgressPlugin;
 		};
-		0000000000000000A1C16112 /* PluginBookScene */ = {
+		0000000000000000A1C16112 /* BookScenePlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16012 /* XCLocalSwiftPackageReference "Plugins/PluginBookScene" */;
-			productName = PluginBookScene;
+			package = 0000000000000000A1C16012 /* XCLocalSwiftPackageReference "Plugins/BookScenePlugin" */;
+			productName = BookScenePlugin;
 		};
-		0000000000000000A1C16113 /* PluginThemeSettings */ = {
+		0000000000000000A1C16113 /* ThemeSettingsPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16013 /* XCLocalSwiftPackageReference "Plugins/PluginThemeSettings" */;
-			productName = PluginThemeSettings;
+			package = 0000000000000000A1C16013 /* XCLocalSwiftPackageReference "Plugins/ThemeSettingsPlugin" */;
+			productName = ThemeSettingsPlugin;
 		};
-		0000000000000000A1C16114 /* PluginAudioDownload */ = {
+		0000000000000000A1C16114 /* AudioDownloadPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16014 /* XCLocalSwiftPackageReference "Plugins/PluginAudioDownload" */;
-			productName = PluginAudioDownload;
+			package = 0000000000000000A1C16014 /* XCLocalSwiftPackageReference "Plugins/AudioDownloadPlugin" */;
+			productName = AudioDownloadPlugin;
 		};
-		0000000000000000A1C16115 /* PluginAudioSettings */ = {
+		0000000000000000A1C16115 /* AudioSettingsPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16015 /* XCLocalSwiftPackageReference "Plugins/PluginAudioSettings" */;
-			productName = PluginAudioSettings;
+			package = 0000000000000000A1C16015 /* XCLocalSwiftPackageReference "Plugins/AudioSettingsPlugin" */;
+			productName = AudioSettingsPlugin;
 		};
-		0000000000000000A1C16116 /* PluginAudioScene */ = {
+		0000000000000000A1C16116 /* AudioScenePlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16016 /* XCLocalSwiftPackageReference "Plugins/PluginAudioScene" */;
-			productName = PluginAudioScene;
+			package = 0000000000000000A1C16016 /* XCLocalSwiftPackageReference "Plugins/AudioScenePlugin" */;
+			productName = AudioScenePlugin;
 		};
-		0000000000000000A1C16117 /* PluginAudioPlayMode */ = {
+		0000000000000000A1C16117 /* AudioPlayModePlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16017 /* XCLocalSwiftPackageReference "Plugins/PluginAudioPlayMode" */;
-			productName = PluginAudioPlayMode;
+			package = 0000000000000000A1C16017 /* XCLocalSwiftPackageReference "Plugins/AudioPlayModePlugin" */;
+			productName = AudioPlayModePlugin;
 		};
-		0000000000000000A1C16118 /* PluginAudioLike */ = {
+		0000000000000000A1C16118 /* AudioLikePlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16018 /* XCLocalSwiftPackageReference "Plugins/PluginAudioLike" */;
-			productName = PluginAudioLike;
+			package = 0000000000000000A1C16018 /* XCLocalSwiftPackageReference "Plugins/AudioLikePlugin" */;
+			productName = AudioLikePlugin;
 		};
-		0000000000000000A1C16119 /* PluginReset */ = {
+		0000000000000000A1C16119 /* ResetPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16019 /* XCLocalSwiftPackageReference "Plugins/PluginReset" */;
-			productName = PluginReset;
+			package = 0000000000000000A1C16019 /* XCLocalSwiftPackageReference "Plugins/ResetPlugin" */;
+			productName = ResetPlugin;
 		};
-		0000000000000000A1C16120 /* PluginWelcome */ = {
+		0000000000000000A1C16120 /* WelcomePlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16020 /* XCLocalSwiftPackageReference "Plugins/PluginWelcome" */;
-			productName = PluginWelcome;
+			package = 0000000000000000A1C16020 /* XCLocalSwiftPackageReference "Plugins/WelcomePlugin" */;
+			productName = WelcomePlugin;
 		};
-		0000000000000000A1C16121 /* PluginMigrate */ = {
+		0000000000000000A1C16121 /* MigratePlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16021 /* XCLocalSwiftPackageReference "Plugins/PluginMigrate" */;
-			productName = PluginMigrate;
+			package = 0000000000000000A1C16021 /* XCLocalSwiftPackageReference "Plugins/MigratePlugin" */;
+			productName = MigratePlugin;
 		};
-		0000000000000000A1C16122 /* PluginVideo */ = {
+		0000000000000000A1C16122 /* VideoPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16022 /* XCLocalSwiftPackageReference "Plugins/PluginVideo" */;
-			productName = PluginVideo;
+			package = 0000000000000000A1C16022 /* XCLocalSwiftPackageReference "Plugins/VideoPlugin" */;
+			productName = VideoPlugin;
 		};
-		0000000000000000A1C16123 /* PluginAudioJob */ = {
+		0000000000000000A1C16123 /* AudioJobPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16023 /* XCLocalSwiftPackageReference "Plugins/PluginAudioJob" */;
-			productName = PluginAudioJob;
+			package = 0000000000000000A1C16023 /* XCLocalSwiftPackageReference "Plugins/AudioJobPlugin" */;
+			productName = AudioJobPlugin;
 		};
-		0000000000000000A1C16124 /* PluginBook */ = {
+		0000000000000000A1C16124 /* BookPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16024 /* XCLocalSwiftPackageReference "Plugins/PluginBook" */;
-			productName = PluginBook;
+			package = 0000000000000000A1C16024 /* XCLocalSwiftPackageReference "Plugins/BookPlugin" */;
+			productName = BookPlugin;
 		};
-		0000000000000000A1C16125 /* PluginAudio */ = {
+		0000000000000000A1C16125 /* AudioPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16025 /* XCLocalSwiftPackageReference "Plugins/PluginAudio" */;
-			productName = PluginAudio;
+			package = 0000000000000000A1C16025 /* XCLocalSwiftPackageReference "Plugins/AudioPlugin" */;
+			productName = AudioPlugin;
 		};
-		0000000000000000A1C16126 /* PluginAudioProgress */ = {
+		0000000000000000A1C16126 /* AudioProgressPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16026 /* XCLocalSwiftPackageReference "Plugins/PluginAudioProgress" */;
-			productName = PluginAudioProgress;
+			package = 0000000000000000A1C16026 /* XCLocalSwiftPackageReference "Plugins/AudioProgressPlugin" */;
+			productName = AudioProgressPlugin;
 		};
-		0000000000000000A1C16127 /* PluginAudioDBView */ = {
+		0000000000000000A1C16127 /* AudioDBViewPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16027 /* XCLocalSwiftPackageReference "Plugins/PluginAudioDBView" */;
-			productName = PluginAudioDBView;
+			package = 0000000000000000A1C16027 /* XCLocalSwiftPackageReference "Plugins/AudioDBViewPlugin" */;
+			productName = AudioDBViewPlugin;
 		};
-		0000000000000000A1C16128 /* PluginStore */ = {
+		0000000000000000A1C16128 /* StorePlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16028 /* XCLocalSwiftPackageReference "Plugins/PluginStore" */;
-			productName = PluginStore;
+			package = 0000000000000000A1C16028 /* XCLocalSwiftPackageReference "Plugins/StorePlugin" */;
+			productName = StorePlugin;
 		};
-		0000000000000000A1C16129 /* PluginAudioCopy */ = {
+		0000000000000000A1C16129 /* AudioCopyPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16029 /* XCLocalSwiftPackageReference "Plugins/PluginAudioCopy" */;
-			productName = PluginAudioCopy;
+			package = 0000000000000000A1C16029 /* XCLocalSwiftPackageReference "Plugins/AudioCopyPlugin" */;
+			productName = AudioCopyPlugin;
 		};
-		0000000000000000A1C16130 /* PluginBookDBView */ = {
+		0000000000000000A1C16130 /* BookDBViewPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16030 /* XCLocalSwiftPackageReference "Plugins/PluginBookDBView" */;
-			productName = PluginBookDBView;
+			package = 0000000000000000A1C16030 /* XCLocalSwiftPackageReference "Plugins/BookDBViewPlugin" */;
+			productName = BookDBViewPlugin;
 		};
-		0000000000000000A1C16131 /* PluginStorage */ = {
+		0000000000000000A1C16131 /* StoragePlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0000000000000000A1C16031 /* XCLocalSwiftPackageReference "Plugins/PluginStorage" */;
-			productName = PluginStorage;
+			package = 0000000000000000A1C16031 /* XCLocalSwiftPackageReference "Plugins/StoragePlugin" */;
+			productName = StoragePlugin;
 		};
 		0B06275B2F1E591800AF071F /* MagicPlayMan */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -2345,70 +2348,70 @@
 			package = A4EDBFBBFC934FE4853CA0E4 /* XCLocalSwiftPackageReference "Packages/CisumUI" */;
 			productName = CisumUI;
 		};
-		A1C1510012FD900000000000 /* PluginFileLog */ = {
+		A1C1510012FD900000000000 /* FileLogPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C1500012FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginFileLog" */;
-			productName = PluginFileLog;
+			package = A1C1500012FD900000000000 /* XCLocalSwiftPackageReference "Plugins/FileLogPlugin" */;
+			productName = FileLogPlugin;
 		};
-		A1C1510022FD900000000000 /* PluginThemeAurora */ = {
+		A1C1510022FD900000000000 /* ThemeAuroraPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C1500022FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeAurora" */;
-			productName = PluginThemeAurora;
+			package = A1C1500022FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeAuroraPlugin" */;
+			productName = ThemeAuroraPlugin;
 		};
-		A1C1510032FD900000000000 /* PluginThemeCisum */ = {
+		A1C1510032FD900000000000 /* ThemeCisumPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C1500032FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeCisum" */;
-			productName = PluginThemeCisum;
+			package = A1C1500032FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeCisumPlugin" */;
+			productName = ThemeCisumPlugin;
 		};
-		A1C1510042FD900000000000 /* PluginThemeDaylightSilver */ = {
+		A1C1510042FD900000000000 /* ThemeDaylightSilverPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C1500042FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeDaylightSilver" */;
-			productName = PluginThemeDaylightSilver;
+			package = A1C1500042FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeDaylightSilverPlugin" */;
+			productName = ThemeDaylightSilverPlugin;
 		};
-		A1C1510052FD900000000000 /* PluginThemeForest */ = {
+		A1C1510052FD900000000000 /* ThemeForestPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C1500052FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeForest" */;
-			productName = PluginThemeForest;
+			package = A1C1500052FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeForestPlugin" */;
+			productName = ThemeForestPlugin;
 		};
-		A1C1510062FD900000000000 /* PluginThemeGraphiteBlack */ = {
+		A1C1510062FD900000000000 /* ThemeGraphiteBlackPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C1500062FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeGraphiteBlack" */;
-			productName = PluginThemeGraphiteBlack;
+			package = A1C1500062FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeGraphiteBlackPlugin" */;
+			productName = ThemeGraphiteBlackPlugin;
 		};
-		A1C1510072FD900000000000 /* PluginThemeMidnight */ = {
+		A1C1510072FD900000000000 /* ThemeMidnightPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C1500072FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeMidnight" */;
-			productName = PluginThemeMidnight;
+			package = A1C1500072FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeMidnightPlugin" */;
+			productName = ThemeMidnightPlugin;
 		};
-		A1C1510082FD900000000000 /* PluginThemeMono */ = {
+		A1C1510082FD900000000000 /* ThemeMonoPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C1500082FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeMono" */;
-			productName = PluginThemeMono;
+			package = A1C1500082FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeMonoPlugin" */;
+			productName = ThemeMonoPlugin;
 		};
-		A1C1510092FD900000000000 /* PluginThemeNebula */ = {
+		A1C1510092FD900000000000 /* ThemeNebulaPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C1500092FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeNebula" */;
-			productName = PluginThemeNebula;
+			package = A1C1500092FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeNebulaPlugin" */;
+			productName = ThemeNebulaPlugin;
 		};
-		A1C15100A2FD900000000000 /* PluginThemeOcean */ = {
+		A1C15100A2FD900000000000 /* ThemeOceanPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C15000A2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeOcean" */;
-			productName = PluginThemeOcean;
+			package = A1C15000A2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeOceanPlugin" */;
+			productName = ThemeOceanPlugin;
 		};
-		A1C15100B2FD900000000000 /* PluginThemePaper */ = {
+		A1C15100B2FD900000000000 /* ThemePaperPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C15000B2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemePaper" */;
-			productName = PluginThemePaper;
+			package = A1C15000B2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemePaperPlugin" */;
+			productName = ThemePaperPlugin;
 		};
-		A1C15100C2FD900000000000 /* PluginThemeStudioBlue */ = {
+		A1C15100C2FD900000000000 /* ThemeStudioBluePlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C15000C2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeStudioBlue" */;
-			productName = PluginThemeStudioBlue;
+			package = A1C15000C2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeStudioBluePlugin" */;
+			productName = ThemeStudioBluePlugin;
 		};
-		A1C15100D2FD900000000000 /* PluginThemeSunset */ = {
+		A1C15100D2FD900000000000 /* ThemeSunsetPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C15000D2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/PluginThemeSunset" */;
-			productName = PluginThemeSunset;
+			package = A1C15000D2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeSunsetPlugin" */;
+			productName = ThemeSunsetPlugin;
 		};
 		A1C163022FD900000000000 /* CisumPluginRegistry */ = {
 			isa = XCSwiftPackageProductDependency;

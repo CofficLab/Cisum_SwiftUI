@@ -1,5 +1,5 @@
 import Foundation
-import PluginAudio
+import AudioPlugin
 import SwiftUI
 
 /// SwiftUI View 扩展，提供便捷的音频数据库同步事件监听

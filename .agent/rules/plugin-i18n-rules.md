@@ -19,26 +19,26 @@
 
 ```
 Packages/
-├── PluginAudioPlayMode/
+├── AudioPlayModePlugin/
 │   ├── Package.swift
 │   ├── Sources/
-│   │   └── PluginAudioPlayMode/
+│   │   └── AudioPlayModePlugin/
 │   │       ├── AudioPlayModeRootView.swift
 │   │       ├── AudioPlayModePluginInfo.swift
 │   │       └── Resources/
 │   │           └── Audio-PlayMode.xcstrings    ← 国际化文件在这里
 │   └── Tests/
-│       └── PluginAudioPlayModeTests/
-├── PluginAudioDownload/
+│       └── AudioPlayModePluginTests/
+├── AudioDownloadPlugin/
 │   ├── Package.swift
 │   ├── Sources/
-│   │   └── PluginAudioDownload/
+│   │   └── AudioDownloadPlugin/
 │   │       ├── ...
 │   │       └── Resources/
 │   │           └── Audio-Download.xcstrings
-├── PluginThemeCisum/
+├── ThemeCisumPlugin/
 │   ├── ...
-│   └── Sources/PluginThemeCisum/Resources/Theme-Cisum.xcstrings
+│   └── Sources/ThemeCisumPlugin/Resources/Theme-Cisum.xcstrings
 └── ...
 ```
 
@@ -53,7 +53,7 @@ Packages/
 import PackageDescription
 
 let package = Package(
-    name: "PluginAudioPlayMode",
+    name: "AudioPlayModePlugin",
     defaultLocalization: "en",                    // ← 必须：设置默认本地化语言
     platforms: [
         .macOS(.v14),
@@ -61,8 +61,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "PluginAudioPlayMode",
-            targets: ["PluginAudioPlayMode"]
+            name: "AudioPlayModePlugin",
+            targets: ["AudioPlayModePlugin"]
         )
     ],
     dependencies: [
@@ -70,19 +70,19 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "PluginAudioPlayMode",
+            name: "AudioPlayModePlugin",
             dependencies: [
                 // ...
             ],
-            path: "Sources/PluginAudioPlayMode",
+            path: "Sources/AudioPlayModePlugin",
             resources: [
                 .process("Resources")              // ← 必须：包含 Resources 目录
             ]
         ),
         .testTarget(
-            name: "PluginAudioPlayModeTests",
-            dependencies: ["PluginAudioPlayMode"],
-            path: "Tests/PluginAudioPlayModeTests"
+            name: "AudioPlayModePluginTests",
+            dependencies: ["AudioPlayModePlugin"],
+            path: "Tests/AudioPlayModePluginTests"
         )
     ]
 )
@@ -182,13 +182,13 @@ let package = Package(
 
 | 插件包名 | xcstrings 文件名 | table 参数 |
 |---------|-----------------|-----------|
-| `PluginAudio` | `Audio.xcstrings` | `"Audio"` |
-| `PluginAudioPlayMode` | `Audio-PlayMode.xcstrings` | `"Audio-PlayMode"` |
-| `PluginAudioDownload` | `Audio-Download.xcstrings` | `"Audio-Download"` |
-| `PluginBookSettings` | `Book-Settings.xcstrings` | `"Book-Settings"` |
-| `PluginThemeCisum` | `Theme-Cisum.xcstrings` | `"Theme-Cisum"` |
-| `PluginWelcome` | `Welcome.xcstrings` | `"Welcome"` |
-| `PluginStorage` | `Storage.xcstrings` | `"Storage"` |
+| `AudioPlugin` | `Audio.xcstrings` | `"Audio"` |
+| `AudioPlayModePlugin` | `Audio-PlayMode.xcstrings` | `"Audio-PlayMode"` |
+| `AudioDownloadPlugin` | `Audio-Download.xcstrings` | `"Audio-Download"` |
+| `BookSettingsPlugin` | `Book-Settings.xcstrings` | `"Book-Settings"` |
+| `ThemeCisumPlugin` | `Theme-Cisum.xcstrings` | `"Theme-Cisum"` |
+| `WelcomePlugin` | `Welcome.xcstrings` | `"Welcome"` |
+| `StoragePlugin` | `Storage.xcstrings` | `"Storage"` |
 
 ### 文件位置
 
@@ -198,9 +198,9 @@ Packages/<PluginPackageName>/Sources/<TargetName>/Resources/<TableName>.xcstring
 
 **完整示例**：
 ```
-Packages/PluginAudioPlayMode/Sources/PluginAudioPlayMode/Resources/Audio-PlayMode.xcstrings
-Packages/PluginBookSettings/Sources/PluginBookSettings/Resources/Book-Settings.xcstrings
-Packages/PluginThemeCisum/Sources/PluginThemeCisum/Resources/Theme-Cisum.xcstrings
+Packages/AudioPlayModePlugin/Sources/AudioPlayModePlugin/Resources/Audio-PlayMode.xcstrings
+Packages/BookSettingsPlugin/Sources/BookSettingsPlugin/Resources/Book-Settings.xcstrings
+Packages/ThemeCisumPlugin/Sources/ThemeCisumPlugin/Resources/Theme-Cisum.xcstrings
 ```
 
 ---

@@ -1,11 +1,11 @@
 import CisumUI
 import MagicKit
 import OSLog
-import PluginAudio
-import PluginAudioProgress
-import PluginBook
-import PluginStorage
-import PluginWelcome
+import AudioPlugin
+import AudioProgressPlugin
+import BookPlugin
+import StoragePlugin
+import WelcomePlugin
 import SwiftUI
 
 struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
@@ -180,7 +180,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 }
 
 private extension StorageLocation {
-    var pluginStorageLocation: PluginStorageLocation {
+    var pluginStorageLocation: StoragePluginLocation {
         switch self {
         case .icloud:
             return .icloud
@@ -192,7 +192,7 @@ private extension StorageLocation {
     }
 }
 
-private extension PluginStorageLocation {
+private extension StoragePluginLocation {
     var appStorageLocation: StorageLocation {
         switch self {
         case .icloud:

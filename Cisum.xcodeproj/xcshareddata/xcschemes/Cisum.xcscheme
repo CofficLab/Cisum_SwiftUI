@@ -35,7 +35,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "Tests"
-               BuildableName = "Tests.xctest"
+               BuildableName = "Tests"
                BlueprintName = "Tests"
                ReferencedContainer = "container:Packages/MagicKit">
             </BuildableReference>

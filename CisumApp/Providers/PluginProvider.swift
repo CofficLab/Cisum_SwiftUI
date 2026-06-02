@@ -373,7 +373,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     
     /// 自动发现并注册所有插件。
     ///
-    /// 插件注册表由构建脚本扫描 `Plugins/Plugin*` 生成，
+    /// 插件注册表由构建脚本扫描 `Plugins/*Plugin` 生成，
     /// 避免依赖 Objective-C runtime 枚举 Swift actor 类型。
     private func autoDiscoverAndRegisterPlugins() {
         clearRegisteredPlugins()

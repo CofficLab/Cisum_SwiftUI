@@ -1,0 +1,124 @@
+@testable import WelcomePlugin
+import Testing
+
+@Test func pluginInfoExportsRegistrationMetadata() {
+    #expect(WelcomePluginInfo.iconName == "hand.wave")
+    #expect(WelcomePluginInfo.emoji == "👏")
+    #expect(WelcomePluginInfo.order == -100)
+}
+
+@Test func storageSelectionDefaultsToICloudWhenAvailable() {
+    #expect(WelcomeStorageSelectionPolicy.defaultSelection(
+        currentStorageSelection: nil,
+        isICloudAvailable: true
+    ) == .icloud)
+    #expect(WelcomeStorageSelectionPolicy.displayedSelection(
+        currentStorageSelection: nil,
+        isICloudAvailable: true
+    ) == .icloud)
+}
+
+@Test func storageSelectionFallsBackToLocalWhenICloudUnavailable() {
+    #expect(WelcomeStorageSelectionPolicy.defaultSelection(
+        currentStorageSelection: .icloud,
+        isICloudAvailable: false
+    ) == .local)
+    #expect(WelcomeStorageSelectionPolicy.validatedSelection(
+        .icloud,
+        isICloudAvailable: false
+    ) == .local)
+    #expect(WelcomeStorageSelectionPolicy.displayedSelection(
+        currentStorageSelection: .icloud,
+        isICloudAvailable: false
+    ) == .local)
+}
+
+@Test func storageSelectionDisplaysLocalWhenItIsTheOnlyAvailableOption() {
+    #expect(WelcomeStorageSelectionPolicy.displayedSelection(
+        currentStorageSelection: nil,
+        isICloudAvailable: false
+    ) == .local)
+    #expect(WelcomeStorageSelectionPolicy.defaultSelection(
+        currentStorageSelection: nil,
+        isICloudAvailable: false
+    ) == .local)
+}
+
+@Test func storageSelectionDoesNotPersistInitialDefaultBeforeUserChooses() {
+    #expect(!WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnAppear(
+        currentStorageSelection: nil,
+        displayedSelection: .icloud
+    ))
+    #expect(!WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnAppear(
+        currentStorageSelection: nil,
+        displayedSelection: .local
+    ))
+}
+
+@Test func storageSelectionPersistsOnlyExistingUnavailableSelectionFallback() {
+    #expect(WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnAppear(
+        currentStorageSelection: .icloud,
+        displayedSelection: .local
+    ))
+    #expect(!WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnAppear(
+        currentStorageSelection: .local,
+        displayedSelection: .local
+    ))
+}
+
+@Test func storageSelectionDoesNotPersistInitialDefaultOnDisappear() {
+    #expect(!WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnDisappear(
+        currentStorageSelection: nil,
+        displayedSelection: .icloud
+    ))
+    #expect(!WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnDisappear(
+        currentStorageSelection: nil,
+        displayedSelection: .local
+    ))
+    #expect(WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnDisappear(
+        currentStorageSelection: .icloud,
+        displayedSelection: .local
+    ))
+}
+
+@Test @MainActor func completingWelcomeGuidePersistsDisplayedDefaultSelection() {
+    var storedSelection: WelcomeStorageSelection?
+
+    WelcomePluginHost.configure(
+        hasStorageLocation: {
+            storedSelection != nil
+        },
+        isICloudAvailable: {
+            true
+        },
+        currentStorageSelection: {
+            storedSelection
+        },
+        updateStorageSelection: { selection in
+            storedSelection = selection
+        }
+    )
+
+    #expect(WelcomePlugin.shared.completeGuidePage())
+    #expect(storedSelection == .icloud)
+
+    storedSelection = nil
+
+    WelcomePluginHost.configure(
+        hasStorageLocation: {
+            storedSelection != nil
+        },
+        isICloudAvailable: {
+            false
+        },
+        currentStorageSelection: {
+            storedSelection
+        },
+        updateStorageSelection: { selection in
+            storedSelection = selection
+        }
+    )
+
+    #expect(WelcomePlugin.shared.completeGuidePage())
+    #expect(storedSelection == .local)
+}
