@@ -1,4 +1,5 @@
 import CisumUI
+import CisumPluginRegistry
 import Foundation
 import MagicKit
 import OSLog
