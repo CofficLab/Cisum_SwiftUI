@@ -78,11 +78,11 @@ public struct AppIconButton: View {
 
     private var borderColor: Color {
         if isActive {
-            theme.textSecondary.opacity(0.22)
+            theme.textPrimary.opacity(0.15)
         } else if isHovered {
-            theme.textSecondary.opacity(0.14)
+            theme.textPrimary.opacity(0.10)
         } else {
-            .clear
+            theme.textPrimary.opacity(0.06)
         }
     }
 
