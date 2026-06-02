@@ -23,7 +23,7 @@ let package = Package(
             dependencies: [
                 .product(name: "MagicKit", package: "MagicKit")
             ],
-            path: "Sources/PluginMigrate",
+            path: "Sources",
             resources: [
                 .process("Resources")
             ]

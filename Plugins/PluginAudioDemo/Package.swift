@@ -25,7 +25,7 @@ let package = Package(
                 .product(name: "CisumUI", package: "CisumUI"),
                 .product(name: "PluginAudioScene", package: "PluginAudioScene")
             ],
-            path: "Sources/PluginAudioDemo",
+            path: "Sources",
             resources: [
                 .process("Resources")
             ]

@@ -21,7 +21,7 @@ let package = Package(
         .target(
             name: "PluginThemeSettings",
             dependencies: ["CisumUI"],
-            path: "Sources/PluginThemeSettings",
+            path: "Sources",
             resources: [
                 .process("Resources")
             ]

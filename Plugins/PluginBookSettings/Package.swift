@@ -27,7 +27,7 @@ let package = Package(
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "PluginBook", package: "PluginBook")
             ],
-            path: "Sources/PluginBookSettings",
+            path: "Sources",
             resources: [
                 .process("Resources")
             ]

@@ -27,7 +27,7 @@ let package = Package(
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "PluginAudio", package: "PluginAudio")
             ],
-            path: "Sources/PluginAudioSettings",
+            path: "Sources",
             resources: [
                 .process("Resources")
             ]

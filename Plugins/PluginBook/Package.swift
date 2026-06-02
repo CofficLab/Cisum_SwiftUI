@@ -25,7 +25,7 @@ let package = Package(
                 .product(name: "CisumUI", package: "CisumUI"),
                 .product(name: "MagicKit", package: "MagicKit")
             ],
-            path: "Sources/PluginBook",
+            path: "Sources",
             resources: [
                 .process("Resources")
             ]

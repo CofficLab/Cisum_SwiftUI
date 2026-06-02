@@ -38,6 +38,7 @@ let package = Package(
                 "MagicPlayMan",
                 .product(name: "MagicAlert", package: "MagicAlert"),
             ],
+            path: "Sources",
             resources: [
                 .process("Resources/Book-DBView.xcstrings"),
             ]

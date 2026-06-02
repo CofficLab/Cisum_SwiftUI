@@ -26,6 +26,7 @@ let package = Package(
                 "CisumUI",
                 "MagicKit",
             ],
+            path: "Sources",
             resources: [
                 .process("Resources/Storage.xcstrings"),
             ]

@@ -25,7 +25,7 @@ let package = Package(
                 "CisumUI",
                 .product(name: "MagicKit", package: "MagicKit")
             ],
-            path: "Sources/PluginReset",
+            path: "Sources",
             resources: [
                 .process("Resources")
             ]

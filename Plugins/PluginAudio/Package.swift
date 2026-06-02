@@ -29,7 +29,7 @@ let package = Package(
                 .product(name: "PluginAudioLike", package: "PluginAudioLike"),
                 .product(name: "MagicAlert", package: "MagicAlert")
             ],
-            path: "Sources/PluginAudio",
+            path: "Sources",
             resources: [
                 .process("Resources")
             ]

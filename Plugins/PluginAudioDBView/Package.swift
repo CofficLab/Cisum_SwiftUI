@@ -33,7 +33,7 @@ let package = Package(
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
                 .product(name: "MagicAlert", package: "MagicAlert")
             ],
-            path: "Sources/PluginAudioDBView",
+            path: "Sources",
             resources: [
                 .process("Resources")
             ]

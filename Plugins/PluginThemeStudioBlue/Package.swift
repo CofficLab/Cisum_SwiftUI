@@ -23,7 +23,7 @@ let package = Package(
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI")
             ],
-            path: "Sources/PluginThemeStudioBlue",
+            path: "Sources",
             resources: [
                 .process("Resources")
             ]

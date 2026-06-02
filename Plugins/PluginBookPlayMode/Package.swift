@@ -31,7 +31,7 @@ let package = Package(
                 .product(name: "MagicAlert", package: "MagicAlert"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan")
             ],
-            path: "Sources/PluginBookPlayMode",
+            path: "Sources",
             resources: [
                 .process("Resources")
             ]

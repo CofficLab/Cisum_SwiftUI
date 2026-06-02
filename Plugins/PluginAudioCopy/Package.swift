@@ -32,6 +32,7 @@ let package = Package(
                 "PluginStore",
                 "MagicAlert",
             ],
+            path: "Sources",
             resources: [
                 .process("Audio-Copy-macOS.xcstrings"),
             ]
