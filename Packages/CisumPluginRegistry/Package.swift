@@ -104,7 +104,7 @@ let package = Package(
                 "ThemeSunsetPlugin",
                 "WelcomePlugin",
             ],
-            path: "Sources/CisumPluginRegistry"
+            path: "Sources"
         ),
     ]
 )
