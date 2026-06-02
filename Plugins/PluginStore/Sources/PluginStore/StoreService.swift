@@ -21,7 +21,7 @@ public enum StoreService: SuperLog {
 
     // MARK: - Bootstrap
 
-    /// 开始监听交易更新，APP启动时应该调用这个方法
+    /// Starts listening for transaction updates. Call this when the app starts.
     public static func bootstrap() {
         startTransactionListener()
         Task { await StoreState.calibrateFromCurrentEntitlements() }
@@ -29,27 +29,31 @@ public enum StoreService: SuperLog {
 
     // MARK: - Transaction Updates
 
-    /// 开始监听交易更新，APP启动时应该调用这个方法
-    /// 这是 StoreKit 2 的最佳实践，确保不会错过任何交易
+    /// Starts listening for transaction updates. Call this when the app starts.
+    /// This follows StoreKit 2 best practice so no transactions are missed.
     public static func startTransactionListener() {
         Task {
             guard await StoreTransactionListenerState.shared.markStartedIfNeeded() else { return }
 
             if verbose {
-                os_log("\(self.t)👀 开始监听交易更新")
+                os_log("\(self.t)👀 Starting transaction update listener")
             }
             for await result in Transaction.updates {
                 do {
                     let transaction = try checkVerified(result)
-                    os_log("\(self.t)📱 收到交易更新: \(transaction.productID)")
+                    if verbose {
+                        os_log("\(self.t)📱 Received transaction update: \(transaction.productID)")
+                    }
 
-                    // 处理交易更新
+                    // Handle the transaction update.
                     await handleTransactionUpdate(transaction)
 
-                    // 完成交易
+                    // Finish the transaction.
                     await transaction.finish()
                 } catch {
-                    os_log(.error, "\(self.t)❌ 交易更新验证失败: \(error.localizedDescription)")
+                    if verbose {
+                        os_log(.error, "\(self.t)❌ Transaction update verification failed: \(error.localizedDescription)")
+                    }
                 }
             }
         }
@@ -59,9 +63,11 @@ public enum StoreService: SuperLog {
         !isStarted
     }
 
-    /// 处理交易更新
+    /// Handles a transaction update.
     private static func handleTransactionUpdate(_ transaction: Transaction) async {
-        os_log("\(self.t)✅ 处理交易更新: \(transaction.productID)")
+        if verbose {
+            os_log("\(self.t)✅ Handling transaction update: \(transaction.productID)")
+        }
         let tier = tier(for: transaction.productID)
         let expires: Date? = transaction.expirationDate
         await MainActor.run {
@@ -72,12 +78,14 @@ public enum StoreService: SuperLog {
 
     // MARK: - Store State Updates
 
-    /// 支付成功后更新 StoreState
+    /// Updates StoreState after a successful purchase.
     private static func updateStoreStateAfterPurchase(_ transaction: Transaction) async {
         let tier = tier(for: transaction.productID)
         let expiresAt = transaction.expirationDate
 
-        os_log("\(self.t)🔄 更新 StoreState")
+        if verbose {
+            os_log("\(self.t)🔄 Updating StoreState")
+        }
 
         await MainActor.run {
             StoreState.update(entitlement: PurchaseInfo(tier: tier, expiresAt: expiresAt))
@@ -92,7 +100,7 @@ public enum StoreService: SuperLog {
 
     // MARK: - Public State Accessors
 
-    /// 获取当前购买信息（会触发一次云端权益同步）
+    /// Gets current purchase information and triggers one cloud entitlement sync.
     public static func getPurchaseInfo() async -> PurchaseInfo {
         await StoreState.calibrateFromCurrentEntitlements()
         return cachedPurchaseInfo()
@@ -106,44 +114,44 @@ public enum StoreService: SuperLog {
         cachedPurchaseInfo().effectiveTier
     }
 
-    /// 从本地缓存读取过期时间
+    /// Reads the expiration date from the local cache.
     public static func expiresAtCached() -> Date? {
         cachedPurchaseInfo().expiresAt
     }
 
     // MARK: - Data Sources
 
-    /// 全部商品 ID 列表
+    /// All product IDs.
     private static func allProductIds() -> [String] {
         StoreConfig.allProductIds
     }
 
     // MARK: - Product Fetching
 
-    // 获取产品列表有缓存
-    // 因为联网获取后，再断网，一段时间内仍然能得到列表
-    // 出现过的情况：
-    //  断网，报错
-    //  联网得到2个产品，断网，依然得到两个产品
-    //  联网得到2个产品，断网，依然得到两个产品，再等等，不报错，得到0个产品
+    // Product list fetching is cached.
+    // After fetching online, the list can still be available briefly while offline.
+    // Observed cases:
+    //  Offline: error.
+    //  Online fetch returns two products, then offline still returns two products.
+    //  Online fetch returns two products, then offline returns two products, then later returns zero without an error.
     private static func requestProducts(productIds: some Sequence<String>) async throws -> ProductGroupsDTO {
         let idsArray = Array(productIds)
         let storeProducts = try await Product.products(for: idsArray)
         return ProductGroupsDTO(products: storeProducts)
     }
 
-    /// 获取“全部”商品的封装：先读取产品 ID 清单，再按清单请求详情并分组。
+    /// Fetches all configured products by reading the product ID list, then requesting details and grouping them.
     ///
-    /// - Note: 本方法并非真正从服务器“枚举全部商品”，而是以本地/远端配置的产品 ID 清单为准。
-    /// - Returns: `StoreProductGroupsDTO`，包含 cars / subscriptions / nonRenewables / fuel 等分组。
+    /// - Note: This does not enumerate all products from the server. It uses the locally or remotely configured product ID list.
+    /// - Returns: `StoreProductGroupsDTO` containing cars, subscriptions, nonRenewables, fuel, and other groups.
     public static func fetchAllProducts() async throws -> ProductGroupsDTO {
         try await Self.requestProducts(productIds: Self.allProductIds())
     }
 
-    /// 获取所有订阅组（按订阅组 ID 聚合订阅类商品）。
+    /// Fetches all subscription groups by grouping subscription products by subscription group ID.
     ///
-    /// - Returns: 字典：`[SubscriptionGroupDTO]`。
-    /// - Note: 依赖 `fetchAllProducts()`，因此实际结果受产品 ID 清单约束。
+    /// - Returns: `[SubscriptionGroupDTO]`.
+    /// - Note: Depends on `fetchAllProducts()`, so results are constrained by the product ID list.
     public static func fetchAllSubscriptionGroups() async throws -> [SubscriptionGroupDTO] {
         let products = try await fetchAllProducts()
         return products.subscriptionGroups
@@ -151,23 +159,23 @@ public enum StoreService: SuperLog {
 
     // MARK: - Purchased Fetching
 
-    /// 根据当前账户的交易凭据（Transaction.currentEntitlements）筛选并归类“已购”产品列表。
+    /// Filters and categorizes purchased products from the current account's `Transaction.currentEntitlements`.
     ///
-    /// - Important: 该方法不会主动拉取产品，请先通过 `requestProducts(productIds:)` 获取到完整的产品分组，
-    ///   再将各分组传入本方法进行过滤与匹配。
+    /// - Important: This method does not fetch products. First fetch complete product groups with
+    ///   `requestProducts(productIds:)`, then pass each group here for filtering and matching.
     ///
     /// - Parameters:
-    ///   - cars: 已获取到的非消耗型（如一次性解锁）产品列表。
-    ///   - subscriptions: 已获取到的自动续订订阅产品列表。
-    ///   - nonRenewables: 已获取到的非续订订阅产品列表。
+    ///   - cars: Already fetched non-consumable products, such as one-time unlocks.
+    ///   - subscriptions: Already fetched auto-renewable subscription products.
+    ///   - nonRenewables: Already fetched non-renewing subscription products.
     ///
-    /// - Returns: 按交易凭据过滤后的三类“已购清单”元组：
-    ///   `(cars: [StoreProductDTO], nonRenewables: [StoreProductDTO], subscriptions: [StoreProductDTO])`。
+    /// - Returns: Purchased product lists filtered by transactions:
+    ///   `(cars: [StoreProductDTO], nonRenewables: [StoreProductDTO], subscriptions: [StoreProductDTO])`.
     ///
     /// - Note:
-    ///   - 未通过验证的交易会被忽略（使用 `checkVerified` 校验）。
-    ///   - 非续订订阅仅在 `productID == "nonRenewing.standard"` 且“购买日起一年内未过期”时计入。
-    ///   - 方法为 `async`，因为 `Transaction.currentEntitlements` 为异步序列。
+    ///   - Unverified transactions are ignored after `checkVerified` validation.
+    ///   - Non-renewing subscriptions count only when `productID == "nonRenewing.standard"` and the purchase is within one year.
+    ///   - This method is async because `Transaction.currentEntitlements` is an async sequence.
     public static func fetchPurchasedLists(
         cars: [ProductDTO],
         subscriptions: [ProductDTO],
@@ -273,7 +281,9 @@ public enum StoreService: SuperLog {
     // MARK: - Pay
 
     private static func purchase(_ product: Product) async throws -> Transaction? {
-        os_log("\(self.t)🏬 去支付")
+        if verbose {
+            os_log("\(self.t)🏬 Starting purchase")
+        }
 
         #if os(visionOS)
             return nil
@@ -283,14 +293,18 @@ public enum StoreService: SuperLog {
 
             switch result {
             case let .success(verification):
-                os_log("\(self.t)🧐 支付成功，验证")
+                if verbose {
+                    os_log("\(self.t)🧐 Purchase succeeded, verifying")
+                }
                 // Check whether the transaction is verified. If it isn't,
                 // this function rethrows the verification error.
                 let transaction = try checkVerified(verification)
 
-                os_log("\(self.t)✅ 支付成功，验证成功")
+                if verbose {
+                    os_log("\(self.t)✅ Purchase verification succeeded")
+                }
 
-                // 更新 StoreState
+                // Update StoreState.
                 await updateStoreStateAfterPurchase(transaction)
 
                 // Always finish a transaction.
@@ -298,10 +312,14 @@ public enum StoreService: SuperLog {
 
                 return transaction
             case .userCancelled, .pending:
-                os_log("\(self.t)取消或pending")
+                if verbose {
+                    os_log("\(self.t)Purchase was canceled or is pending")
+                }
                 return nil
             default:
-                os_log("\(self.t)支付结果 \(String(describing: result))")
+                if verbose {
+                    os_log("\(self.t)Purchase result: \(String(describing: result))")
+                }
                 return nil
             }
         #endif
@@ -313,16 +331,16 @@ public enum StoreService: SuperLog {
         return try await purchase(storekitProduct)
     }
 
-    /// 巡检订阅组状态并返回有价值的数据（订阅产品、状态明细、最高等级条目）。
+    /// Inspects subscription group status and returns useful data: subscription products, status details, and highest-tier entries.
     ///
     /// - Parameters:
-    ///   - reason: 调用原因，便于日志排查。
-    ///   - verbose: 是否输出详细日志。
-    /// - Returns: 三元组 `(subscriptions, statuses, highestProduct, highestStatus)`：
-    ///   - `subscriptions`: 当前可用的订阅类产品（同一组）。
-    ///   - `statuses`: 来自订阅组的状态数组（已映射为 `StoreSubscriptionStatusDTO`）。
-    ///   - `highestProduct`: 当前最高等级对应的产品（若能判定）。
-    ///   - `highestStatus`: 当前最高等级对应的状态（若能判定）。
+    ///   - reason: Call reason used for diagnostics.
+    ///   - verbose: Whether detailed logs should be emitted.
+    /// - Returns: Tuple `(subscriptions, statuses, highestProduct, highestStatus)`:
+    ///   - `subscriptions`: Current available subscription products in the same group.
+    ///   - `statuses`: Status array from the subscription group, mapped to `StoreSubscriptionStatusDTO`.
+    ///   - `highestProduct`: Product for the current highest tier, when it can be determined.
+    ///   - `highestStatus`: Status for the current highest tier, when it can be determined.
     static func inspectSubscriptionStatus(_ reason: String, verbose: Bool = true) async throws -> (
         subscriptions: [ProductDTO],
         statuses: [StoreSubscriptionStatusDTO],
@@ -330,20 +348,20 @@ public enum StoreService: SuperLog {
         highestStatus: StoreSubscriptionStatusDTO?
     ) {
         if verbose {
-            os_log("\(self.t)检查订阅状态，因为 -> \(reason)")
+            os_log("\(self.t)Checking subscription status, reason: \(reason)")
         }
 
-        // 订阅组可以多个
-        //  1. 专业版订阅计划
-        //    1.1 按年，ID: com.coffic.pro.year
-        //    1.2 按月，ID: com.coffic.pro.month
-        //  2. 旗舰版订阅计划
-        //    2.1 按年，ID: com.coffic.ultmate.year
-        //    2.2 按月，ID: com.coffic.ultmate.month
+        // Multiple subscription groups can exist:
+        //  1. Pro subscription plan
+        //    1.1 Yearly, ID: com.coffic.pro.year
+        //    1.2 Monthly, ID: com.coffic.pro.month
+        //  2. Ultimate subscription plan
+        //    2.1 Yearly, ID: com.coffic.ultmate.year
+        //    2.2 Monthly, ID: com.coffic.ultmate.month
 
         let products = try await Self.requestProducts(productIds: StoreService.allProductIds())
 
-        // 获取当前的可订阅的产品列表，也就是
+        // Get the current subscribable product list, such as:
         /// - com.coffic.pro.year
         /// - com.coffic.pro.month
         /// - com.coffic.ultmate.year
@@ -360,20 +378,20 @@ public enum StoreService: SuperLog {
         guard let subscription = subscriptions.first,
               let statuses = subscription.subscription?.status else {
             if verbose {
-                os_log("\(self.t)订阅产品没有可用的订阅状态")
+                os_log("\(self.t)Subscription product has no available subscription status")
             }
             return (subscriptions: subscriptions, statuses: [], highestProduct: nil, highestStatus: nil)
         }
 
         if statuses.isEmpty {
             if verbose {
-                os_log("\(self.t)订阅组当前没有订阅状态")
+                os_log("\(self.t)Subscription group currently has no status")
             }
             return (subscriptions: subscriptions, statuses: [], highestProduct: nil, highestStatus: nil)
         }
 
         if verbose {
-            os_log("\(self.t)StoreManger 检查订阅状态，statuses.count -> \(statuses.count)")
+            os_log("\(self.t)StoreManager checked subscription status, statuses.count -> \(statuses.count)")
         }
 
         let snapshots = statuses.map {
