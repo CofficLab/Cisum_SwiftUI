@@ -1,6 +1,6 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
+  "sourceLanguage" : "en",
+  "strings" : {
     "Calculating..." : {
       "localizations" : {
         "zh-Hans" : {
@@ -32,6 +32,9 @@
           }
         }
       }
+    },
+    "Select %@" : {
+
     },
     "Unavailable" : {
       "localizations" : {
@@ -66,5 +69,5 @@
       }
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }

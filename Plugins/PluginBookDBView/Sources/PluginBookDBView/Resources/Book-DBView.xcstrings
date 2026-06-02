@@ -99,6 +99,54 @@
         }
       }
     },
+    "Import destination cannot be inside the original folder" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入目标不能位于原始文件夹内"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "匯入目標不能位於原始資料夾內"
+          }
+        }
+      }
+    },
+    "Import failed: %@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入失败：%@"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "匯入失敗：%@"
+          }
+        }
+      }
+    },
+    "Import is already in progress" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在导入，请稍候"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在匯入，請稍候"
+          }
+        }
+      }
+    },
     "Last played" : {
       "localizations" : {
         "zh-Hans" : {
@@ -115,18 +163,34 @@
         }
       }
     },
-    "上次播放" : {
+    "No files were added" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "上次播放"
+            "value" : "没有添加文件"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "上次播放"
+            "value" : "沒有加入檔案"
+          }
+        }
+      }
+    },
+    "No playable chapters found" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有找到可播放章节"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有找到可播放章節"
           }
         }
       }
@@ -163,18 +227,18 @@
         }
       }
     },
-    "共 %lld" : {
+    "Permission to access the original file was denied" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "共 %lld"
+            "value" : "没有权限访问原始文件"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "共 %lld"
+            "value" : "沒有權限存取原始檔案"
           }
         }
       }
@@ -211,133 +275,8 @@
         }
       }
     },
-    "或" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "或"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "或"
-          }
-        }
-      }
-    },
-    "Permission to access the original file was denied" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "没有权限访问原始文件"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "沒有權限存取原始檔案"
-          }
-        }
-      }
-    },
-    "打开仓库目录并放入文件" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "打开仓库目录并放入文件"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "打開倉庫目錄並放入檔案"
-          }
-        }
-      }
-    },
-    "Import failed: %@" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导入失败：%@"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "匯入失敗：%@"
-          }
-        }
-      }
-    },
-    "Import destination cannot be inside the original folder" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导入目标不能位于原始文件夹内"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "匯入目標不能位於原始資料夾內"
-          }
-        }
-      }
-    },
-    "Import is already in progress" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在导入，请稍候"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在匯入，請稍候"
-          }
-        }
-      }
-    },
-    "No playable chapters found" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "没有找到可播放章节"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "沒有找到可播放章節"
-          }
-        }
-      }
-    },
-    "No files were added" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "没有添加文件"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "沒有加入檔案"
-          }
-        }
-      }
+    "Select %@" : {
+
     },
     "Some dropped files could not be loaded" : {
       "localizations" : {
@@ -419,7 +358,76 @@
         }
       }
     },
+    "上次播放" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次播放"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次播放"
+          }
+        }
+      }
+    },
+    "共 %lld" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共 %lld"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共 %lld"
+          }
+        }
+      }
+    },
+    "或" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "或"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "或"
+          }
+        }
+      }
+    },
+    "打开仓库目录并放入文件" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开仓库目录并放入文件"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打開倉庫目錄並放入檔案"
+          }
+        }
+      }
+    },
     "支持的格式：%@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -436,6 +444,7 @@
       }
     },
     "正在读取仓库" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -452,7 +461,14 @@
       }
     },
     "添加" : {
+      "extractionState" : "stale",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -463,12 +479,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "添加"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add"
           }
         }
       }

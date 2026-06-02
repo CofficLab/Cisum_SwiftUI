@@ -33,18 +33,18 @@
         }
       }
     },
-    "%lld subscription options" : {
+    "%lld months" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld 个订阅选项"
+            "value" : "%lld 个月"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld 個訂閱選項"
+            "value" : "%lld 個月"
           }
         }
       }
@@ -65,18 +65,18 @@
         }
       }
     },
-    "%lld months" : {
+    "%lld subscription options" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld 个月"
+            "value" : "%lld 个订阅选项"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld 個月"
+            "value" : "%lld 個訂閱選項"
           }
         }
       }
@@ -114,6 +114,7 @@
       }
     },
     "%lld 个订阅选项" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -161,6 +162,9 @@
         }
       }
     },
+    "App Store verification failed" : {
+
+    },
     "Apple ID Verification" : {
       "localizations" : {
         "zh-Hans" : {
@@ -192,6 +196,12 @@
           }
         }
       }
+    },
+    "Close" : {
+
+    },
+    "Could not load products from the App Store" : {
+
     },
     "Cross-Device Restore" : {
       "localizations" : {
@@ -274,22 +284,6 @@
         }
       }
     },
-    "Expiration Date" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "到期日期"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "到期日期"
-          }
-        }
-      }
-    },
     "Early access to future features" : {
       "localizations" : {
         "zh-Hans" : {
@@ -302,6 +296,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未來新功能優先體驗"
+          }
+        }
+      }
+    },
+    "Expiration Date" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "到期日期"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "到期日期"
           }
         }
       }
@@ -596,22 +606,6 @@
         }
       }
     },
-    "Processing..." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "处理中..."
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "處理中..."
-          }
-        }
-      }
-    },
     "Pro version" : {
       "localizations" : {
         "zh-Hans" : {
@@ -624,6 +618,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "專業版"
+          }
+        }
+      }
+    },
+    "Processing..." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "处理中..."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "處理中..."
           }
         }
       }
@@ -777,22 +787,6 @@
         }
       }
     },
-    "Support ongoing development" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "支持我们做得更好"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "支持我們做得更好"
-          }
-        }
-      }
-    },
     "Subscription expiration date" : {
       "localizations" : {
         "zh-Hans" : {
@@ -890,8 +884,23 @@
         }
       }
     },
+    "Support ongoing development" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "支持我们做得更好"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "支持我們做得更好"
+          }
+        }
+      }
+    },
     "Try Again" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -903,6 +912,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試"
+          }
+        }
+      }
+    },
+    "Ultimate version" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "旗舰版"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "旗艦版"
           }
         }
       }
@@ -1020,6 +1045,7 @@
       }
     },
     "专业版" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1036,6 +1062,7 @@
       }
     },
     "免费版" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1052,6 +1079,7 @@
       }
     },
     "最多 %lld 首音频" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1068,6 +1096,7 @@
       }
     },
     "支持我们做得更好" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1084,6 +1113,7 @@
       }
     },
     "无限制音频" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1100,6 +1130,7 @@
       }
     },
     "暂无订阅选项" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1116,6 +1147,7 @@
       }
     },
     "未来新功能优先体验" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1132,6 +1164,7 @@
       }
     },
     "解锁完整体验" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1143,22 +1176,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "解鎖完整體驗"
-          }
-        }
-      }
-    },
-    "Ultimate version" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "旗舰版"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "旗艦版"
           }
         }
       }
