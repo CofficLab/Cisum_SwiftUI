@@ -1,19 +1,39 @@
+# ========================
+# macOS
+# ========================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ========================
+# Xcode
+# ========================
 ## User settings
 xcuserdata/
 
 ## Xcode 8 and earlier
 *.xcscmblueprint
 *.xccheckout
-*.xcuserstate 
-.DS_Store
+*.xcuserstate
 
-*.log
-.build/
+## Build artifacts
+DerivedData/
+build/
+*.ipa
+*.dSYM.zip
+*.dSYM
 
-## Generated reports
-.reports/
-
-## Swift Package Manager
+# ========================
+# Swift Package Manager
+# ========================
 .swiftpm/
-Plugins/*/Package.resolved
-Packages/*/Package.resolved
+.build/
+Package.resolved
+
+# ========================
+# Generated / Temporary
+# ========================
+.reports/
+temp/
+*.log
