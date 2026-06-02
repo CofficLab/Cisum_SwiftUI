@@ -28,7 +28,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Resources/Storage.xcstrings"),
+                .process("Storage.xcstrings"),
             ]
         ),
         .testTarget(

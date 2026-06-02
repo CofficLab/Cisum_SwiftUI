@@ -27,7 +27,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Resources")
+                .process("Welcome.xcstrings")
             ]
         ),
         .testTarget(

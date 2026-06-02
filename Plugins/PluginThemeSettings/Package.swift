@@ -23,7 +23,7 @@ let package = Package(
             dependencies: ["CisumUI"],
             path: "Sources",
             resources: [
-                .process("Resources")
+                .process("Theme-Settings.xcstrings")
             ]
         ),
         .testTarget(

@@ -40,7 +40,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Resources/Book-DBView.xcstrings"),
+                .process("Book-DBView.xcstrings"),
             ]
         ),
         .testTarget(

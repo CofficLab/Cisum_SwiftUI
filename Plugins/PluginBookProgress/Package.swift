@@ -35,7 +35,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Resources")
+                .process("Book-Progress.xcstrings")
             ]
         ),
         .testTarget(

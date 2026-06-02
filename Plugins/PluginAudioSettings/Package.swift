@@ -29,7 +29,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Resources")
+                .process("Audio-Settings.xcstrings")
             ]
         ),
         .testTarget(

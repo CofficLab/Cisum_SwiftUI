@@ -25,7 +25,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Resources")
+                .process("Theme-Mono.xcstrings")
             ]
         ),
         .testTarget(
