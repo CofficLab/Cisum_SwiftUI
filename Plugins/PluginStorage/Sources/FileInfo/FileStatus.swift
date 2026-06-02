@@ -76,33 +76,33 @@ struct FileStatus: Identifiable {
         var description: String {
             switch self {
             case .local:
-                return String(localized: "Local File", table: "Storage", bundle: .module)
+                return String(localized: "Local File", bundle: .module)
             case .downloaded:
-                return String(localized: "Downloaded", table: "Storage", bundle: .module)
+                return String(localized: "Downloaded", bundle: .module)
             case .notDownloaded:
-                return String(localized: "Not Downloaded", table: "Storage", bundle: .module)
+                return String(localized: "Not Downloaded", bundle: .module)
             case .downloading(let progress):
-                return String(localized: "Downloading \(Self.percentText(for: progress))", table: "Storage", bundle: .module)
+                return String(localized: "Downloading \(Self.percentText(for: progress))", bundle: .module)
             case .checking(let current, let total):
                 if total > 0 {
-                    return String(localized: "Checking (\(current)/\(total))", table: "Storage", bundle: .module)
+                    return String(localized: "Checking (\(current)/\(total))", bundle: .module)
                 } else {
-                    return String(localized: "Checking...", table: "Storage", bundle: .module)
+                    return String(localized: "Checking...", bundle: .module)
                 }
             case .checkingDirectory(let name, let current, let total):
-                return String(localized: "Checking folder \(name) (\(current)/\(total))", table: "Storage", bundle: .module)
+                return String(localized: "Checking folder \(name) (\(current)/\(total))", bundle: .module)
             case .directoryStatus(_, let downloaded, let downloading, let notDownloaded):
                 var parts: [String] = []
                 if downloaded > 0 {
-                    parts.append(String(localized: "\(downloaded) downloaded", table: "Storage", bundle: .module))
+                    parts.append(String(localized: "\(downloaded) downloaded", bundle: .module))
                 }
                 if downloading > 0 {
-                    parts.append(String(localized: "\(downloading) downloading", table: "Storage", bundle: .module))
+                    parts.append(String(localized: "\(downloading) downloading", bundle: .module))
                 }
                 if notDownloaded > 0 {
-                    parts.append(String(localized: "\(notDownloaded) not downloaded", table: "Storage", bundle: .module))
+                    parts.append(String(localized: "\(notDownloaded) not downloaded", bundle: .module))
                 }
-                return parts.isEmpty ? String(localized: "Empty Folder", table: "Storage", bundle: .module) : parts.joined(separator: ", ")
+                return parts.isEmpty ? String(localized: "Empty Folder", bundle: .module) : parts.joined(separator: ", ")
             }
         }
     }

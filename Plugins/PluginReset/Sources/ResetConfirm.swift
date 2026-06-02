@@ -5,7 +5,6 @@ import SwiftUI
 public struct ResetConfirm: View {
     nonisolated static let closeButtonLabel = String(
         localized: "Close",
-        table: "Reset",
         bundle: .module
     )
 
@@ -39,36 +38,36 @@ public struct ResetConfirm: View {
                     VStack(spacing: 16) {
                         AppSheetIconHeader(
                             systemImage: .cisumIconReset,
-                            title: String(localized: "Reset Storage Location", table: "Reset", bundle: .module),
+                            title: String(localized: "Reset Storage Location", bundle: .module),
                             tint: .orange
                         )
 
                         if isResetting {
                             AppStatusBanner(
                                 kind: .loading,
-                                title: String(localized: "Resetting…", table: "Reset", bundle: .module),
-                                message: String(localized: "Restoring storage selection, please wait", table: "Reset", bundle: .module)
+                                title: String(localized: "Resetting…", bundle: .module),
+                                message: String(localized: "Restoring storage selection, please wait", bundle: .module)
                             )
                         } else {
                             VStack(alignment: .leading, spacing: 12) {
                                 AppInfoRow(
                                     icon: "externaldrive.fill",
-                                    title: String(localized: "Storage Location Reset", table: "Reset", bundle: .module),
-                                    description: String(localized: "The media storage selection will be cleared", table: "Reset", bundle: .module),
+                                    title: String(localized: "Storage Location Reset", bundle: .module),
+                                    description: String(localized: "The media storage selection will be cleared", bundle: .module),
                                     tint: .orange
                                 )
 
                                 AppInfoRow(
                                     icon: "slider.horizontal.3",
-                                    title: String(localized: "Preferences Kept", table: "Reset", bundle: .module),
-                                    description: String(localized: "Playback, theme, and library records are not deleted", table: "Reset", bundle: .module),
+                                    title: String(localized: "Preferences Kept", bundle: .module),
+                                    description: String(localized: "Playback, theme, and library records are not deleted", bundle: .module),
                                     tint: .orange
                                 )
 
                                 AppInfoRow(
                                     icon: "exclamationmark.triangle.fill",
-                                    title: String(localized: "Irreversible", table: "Reset", bundle: .module),
-                                    description: String(localized: "This action cannot be undone, proceed with caution", table: "Reset", bundle: .module),
+                                    title: String(localized: "Irreversible", bundle: .module),
+                                    description: String(localized: "This action cannot be undone, proceed with caution", bundle: .module),
                                     tint: .orange
                                 )
                             }
@@ -78,7 +77,7 @@ public struct ResetConfirm: View {
                 }
 
                 AppSheetActionButton(
-                    title: String(localized: "Continue Reset", table: "Reset", bundle: .module),
+                    title: String(localized: "Continue Reset", bundle: .module),
                     systemImage: "checkmark"
                 ) {
                     performReset()

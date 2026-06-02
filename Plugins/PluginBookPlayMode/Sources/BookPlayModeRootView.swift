@@ -174,19 +174,19 @@ private extension BookPlayModeRootView {
             if verbose {
                 os_log("\(self.t)🔁 Repeat one mode - audiobook will repeat the current chapter")
             }
-            alert_info(String(localized: "Repeat One", table: "Book-PlayMode", bundle: .module))
+            alert_info(String(localized: "Repeat One", bundle: .module))
 
         case .sequence, .repeatAll:
             if verbose {
                 os_log("\(self.t)📋 Sequential play mode - audiobook will follow chapter order")
             }
-            alert_info(String(localized: "Sequential Play", table: "Book-PlayMode", bundle: .module))
+            alert_info(String(localized: "Sequential Play", bundle: .module))
 
         case .shuffle:
             if verbose {
                 os_log("\(self.t)🔀 Shuffle mode - audiobook chapters will play randomly")
             }
-            alert_info(String(localized: "Shuffle", table: "Book-PlayMode", bundle: .module))
+            alert_info(String(localized: "Shuffle", bundle: .module))
         }
     }
 }

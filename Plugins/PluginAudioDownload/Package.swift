@@ -29,7 +29,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Audio-Download.xcstrings")
+                .process("Localizable.xcstrings")
             ]
         ),
         .testTarget(

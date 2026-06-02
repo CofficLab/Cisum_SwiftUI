@@ -25,7 +25,7 @@ struct AudioCopyTips: View {
                         .font(.system(size: 48))
                         .foregroundStyle(.blue.opacity(0.6))
 
-                    Text("Drag and drop music files here", tableName: "Audio-Copy-macOS", bundle: .module)
+                    Text("Drag and drop music files here", bundle: .module)
                         .font(.title3)
                         .foregroundStyle(.primary)
 
@@ -50,7 +50,7 @@ struct AudioCopyTips: View {
                     HStack {
                         Image.cisumInfo
                             .foregroundStyle(.blue)
-                        Text("Basic plan supports up to \(AudioPluginInfo.maxAudioCount) files", tableName: "Audio-Copy-macOS", bundle: .module)
+                        Text("Basic plan supports up to \(AudioPluginInfo.maxAudioCount) files", bundle: .module)
                             .font(.title3)
                     }
 
@@ -58,7 +58,7 @@ struct AudioCopyTips: View {
                     formatChipsView
 
                     HStack {
-                        Text("Current subscription: ", tableName: "Audio-Copy-macOS", bundle: .module) + Text(StoreService.tierCached().displayName)
+                        Text("Current subscription: ", bundle: .module) + Text(StoreService.tierCached().displayName)
                     }
                 }
             }
@@ -70,7 +70,7 @@ struct AudioCopyTips: View {
     /// 格式标签视图
     private var formatChipsView: some View {
         VStack(spacing: 8) {
-            Text("Supported Formats", tableName: "Audio-Copy-macOS", bundle: .module)
+            Text("Supported Formats", bundle: .module)
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .padding(.bottom, 8)

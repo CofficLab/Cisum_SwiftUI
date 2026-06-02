@@ -16,12 +16,10 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
     public nonisolated static let emoji = "💰"
     nonisolated static let purchaseActionLabel = String(
         localized: "In-App Purchase",
-        table: "Store",
         bundle: .module
     )
     nonisolated static let restorePurchaseActionLabel = String(
         localized: "Restore Purchase",
-        table: "Store",
         bundle: .module
     )
 
@@ -35,9 +33,9 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
     public init() {}
 
     public var body: some View {
-        CisumUI.MagicSettingSection(title: String(localized: "Subscription Information", table: "Store", bundle: .module), content: {
+        CisumUI.MagicSettingSection(title: String(localized: "Subscription Information", bundle: .module), content: {
             // Current version
-            CisumUI.MagicSettingRow(title: String(localized: "Current Version", table: "Store", bundle: .module), description: String(localized: "Version you are using", table: "Store", bundle: .module), icon: "star.fill", content: {
+            CisumUI.MagicSettingRow(title: String(localized: "Current Version", bundle: .module), description: String(localized: "Version you are using", bundle: .module), icon: "star.fill", content: {
                 HStack {
                     Text(tierDisplayName)
                         .font(.footnote)
@@ -45,20 +43,20 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
             })
 
             // Subscription status
-            CisumUI.MagicSettingRow(title: String(localized: "Subscription Status", table: "Store", bundle: .module), description: statusDescription, icon: "info.circle", content: {
+            CisumUI.MagicSettingRow(title: String(localized: "Subscription Status", bundle: .module), description: statusDescription, icon: "info.circle", content: {
                 HStack {
                     if purchaseInfo.isProOrHigher {
                         if purchaseInfo.isExpired {
-                            Text("Expired", tableName: "Store", bundle: .module)
+                            Text("Expired", bundle: .module)
                                 .font(.footnote)
                                 .foregroundStyle(.red)
                         } else {
-                            Text("Active", tableName: "Store", bundle: .module)
+                            Text("Active", bundle: .module)
                                 .font(.footnote)
                                 .foregroundStyle(.green)
                         }
                     } else {
-                        Text("Free", tableName: "Store", bundle: .module)
+                        Text("Free", bundle: .module)
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
@@ -67,7 +65,7 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
 
             // Expiration date (if has subscription)
             if let expiresAt = purchaseInfo.expiresAt {
-                CisumUI.MagicSettingRow(title: String(localized: "Expiration Date", table: "Store", bundle: .module), description: String(localized: "Subscription expiration date", table: "Store", bundle: .module), icon: "calendar", content: {
+                CisumUI.MagicSettingRow(title: String(localized: "Expiration Date", bundle: .module), description: String(localized: "Subscription expiration date", bundle: .module), icon: "calendar", content: {
                     HStack {
                         Text(expiresAt.fullDateTime)
                             .font(.footnote)
@@ -76,7 +74,7 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
             }
 
             // Purchase entry
-            CisumUI.MagicSettingRow(title: String(localized: "In-App Purchase", table: "Store", bundle: .module), description: String(localized: "Subscribe to Pro to unlock all features", table: "Store", bundle: .module), icon: "cart", content: {
+            CisumUI.MagicSettingRow(title: String(localized: "In-App Purchase", bundle: .module), description: String(localized: "Subscribe to Pro to unlock all features", bundle: .module), icon: "cart", content: {
                 Image.cisumAppStore
                     .frame(width: 28)
                     .frame(height: 28)
@@ -91,7 +89,7 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
             })
 
             // Restore purchase
-            CisumUI.MagicSettingRow(title: String(localized: "Restore Purchase", table: "Store", bundle: .module), description: String(localized: "Restore purchases made on other devices", table: "Store", bundle: .module), icon: "arrow.clockwise", content: {
+            CisumUI.MagicSettingRow(title: String(localized: "Restore Purchase", bundle: .module), description: String(localized: "Restore purchases made on other devices", bundle: .module), icon: "arrow.clockwise", content: {
                 Image.cisumReset
                     .frame(width: 28)
                     .frame(height: 28)
@@ -143,12 +141,12 @@ extension StoreSetting {
 
                 if info.isProOrHigher {
                     if info.isExpired {
-                        self.statusDescription = String(localized: "Subscription has expired, please renew to continue using Pro features", table: "Store", bundle: .module)
+                        self.statusDescription = String(localized: "Subscription has expired, please renew to continue using Pro features", bundle: .module)
                     } else {
-                        self.statusDescription = String(localized: "Subscription is active, thank you for your support", table: "Store", bundle: .module)
+                        self.statusDescription = String(localized: "Subscription is active, thank you for your support", bundle: .module)
                     }
                 } else {
-                    self.statusDescription = String(localized: "Currently using free version", table: "Store", bundle: .module)
+                    self.statusDescription = String(localized: "Currently using free version", bundle: .module)
                 }
             }
         }

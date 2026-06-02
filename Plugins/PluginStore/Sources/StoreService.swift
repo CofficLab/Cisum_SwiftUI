@@ -462,9 +462,9 @@ public enum StoreError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .failedVerification:
-            String(localized: "App Store verification failed", table: "Store", bundle: .module)
+            String(localized: "App Store verification failed", bundle: .module)
         case .canNotGetProducts:
-            String(localized: "Could not load products from the App Store", table: "Store", bundle: .module)
+            String(localized: "Could not load products from the App Store", bundle: .module)
         }
     }
 }

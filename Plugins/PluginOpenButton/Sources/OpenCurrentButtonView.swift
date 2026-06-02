@@ -9,7 +9,7 @@ import SwiftUI
 public struct OpenCurrentButtonView: View, SuperLog {
     public nonisolated static let emoji = "😜"
     public static let verbose = false
-    nonisolated static let accessibilityTitle = String(localized: "Show in Finder", table: "OpenButton", bundle: .module)
+    nonisolated static let accessibilityTitle = String(localized: "Show in Finder", bundle: .module)
     public static var order: Int { 20 }
 
     @EnvironmentObject var man: MagicPlayMan

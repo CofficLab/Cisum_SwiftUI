@@ -26,7 +26,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("LikeButton.xcstrings")
+                .process("Localizable.xcstrings")
             ]
         ),
         .testTarget(

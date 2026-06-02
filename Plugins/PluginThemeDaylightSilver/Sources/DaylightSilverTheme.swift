@@ -4,8 +4,8 @@ import SwiftUI
 public struct DaylightSilverTheme: LumiAppChromeTheme {
     public init() {}
     public let identifier = "daylight-silver"
-    public let displayName = String(localized: "Daylight Silver", table: "Theme-DaylightSilver", bundle: .module)
-    public let description = String(localized: "Silver-white light gray interface, ideal for daytime office", table: "Theme-DaylightSilver", bundle: .module)
+    public let displayName = String(localized: "Daylight Silver", bundle: .module)
+    public let description = String(localized: "Silver-white light gray interface, ideal for daytime office", bundle: .module)
     public let iconName = "sun.max.fill"
     public let iconColor = Color.adaptive(light: "0A84FF", dark: "64D2FF")
     public let isDarkTheme = false

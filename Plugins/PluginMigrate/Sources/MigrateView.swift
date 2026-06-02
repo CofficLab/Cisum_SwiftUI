@@ -7,7 +7,7 @@ public struct MigrateView: View, SuperThread {
     public var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                Text("Migrate", tableName: "Migrate", bundle: .module)
+                Text("Migrate", bundle: .module)
             }
         }
     }

@@ -64,7 +64,7 @@ enum BookGridSelectionPolicy {
     }
 
     static func selectionLabel(bookTitle: String) -> String {
-        String(localized: "Select \(bookTitle)", table: "Book-DBView", bundle: .module)
+        String(localized: "Select \(bookTitle)", bundle: .module)
     }
 }
 
@@ -155,13 +155,13 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
             } else {
                 VStack(spacing: 0) {
                     HStack {
-                        Text("Total \(total)", tableName: "Book-DBView", bundle: .module)
+                        Text("Total \(total)", bundle: .module)
                         Spacer()
                         if isSyncing {
                             HStack(spacing: 6) {
                                 ProgressView()
                                     .controlSize(.small)
-                                Text("Reading repository", tableName: "Book-DBView", bundle: .module)
+                                Text("Reading repository", bundle: .module)
                                     .font(.footnote)
                                     .foregroundStyle(.secondary)
                             }
@@ -396,7 +396,7 @@ extension BookGrid {
                 if Self.verbose {
                     os_log("\(self.t)⚠️ No playable chapters: \(book.bookTitle)")
                 }
-                alert_error(String(localized: "No playable chapters found", table: "Book-DBView", bundle: .module))
+                alert_error(String(localized: "No playable chapters found", bundle: .module))
                 return
             }
 

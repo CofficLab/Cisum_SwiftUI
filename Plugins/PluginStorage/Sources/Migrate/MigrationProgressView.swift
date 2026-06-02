@@ -77,7 +77,7 @@ struct MigrationProgressView: View {
     }
 
     private nonisolated static func localizedCompletionMessage(for key: String) -> String {
-        String(localized: String.LocalizationValue(key), table: "Storage", bundle: .module)
+        String(localized: String.LocalizationValue(key), bundle: .module)
     }
 
     nonisolated static var migrationWarningTitleKey: String { "Important:" }
@@ -98,7 +98,7 @@ struct MigrationProgressView: View {
     }
 
     private nonisolated static func localizedStorageText(_ key: String) -> String {
-        String(localized: String.LocalizationValue(key), table: "Storage", bundle: .module)
+        String(localized: String.LocalizationValue(key), bundle: .module)
     }
 
     nonisolated static func shouldPerformMigration(sourceURL: URL?, targetURL: URL?, requestedMigration: Bool) -> Bool {
@@ -166,7 +166,7 @@ struct MigrationProgressView: View {
         VStack(spacing: 5) {
             GroupBox {
                 RepositoryInfoView(
-                    title: String(localized: "Source Library", table: "Storage", bundle: .module),
+                    title: String(localized: "Source Library", bundle: .module),
                     location: sourceLocation,
                     url: sourceURL
                 ).frame(height: 200)
@@ -183,7 +183,7 @@ struct MigrationProgressView: View {
 
             GroupBox {
                 RepositoryInfoView(
-                    title: String(localized: "Target Library", table: "Storage", bundle: .module),
+                    title: String(localized: "Target Library", bundle: .module),
                     location: targetLocation,
                     url: targetURL
                 ).frame(height: 200)
@@ -300,7 +300,7 @@ struct MigrationProgressView: View {
                 ) else { return }
                 self.cancellationRequested = false
                 self.migrationCancelled = true
-                self.currentMigratingFile = String(localized: "Migration Cancelled", table: "Storage", bundle: .module)
+                self.currentMigratingFile = String(localized: "Migration Cancelled", bundle: .module)
             }
         } catch {
             await MainActor.run {
@@ -438,10 +438,10 @@ struct MigrationProgressView: View {
             Button {
                 onDismiss()
             } label: {
-                Text("Cancel", tableName: "Storage", bundle: .module)
+                Text("Cancel", bundle: .module)
             }
             .buttonStyle(.bordered)
-            .help(String(localized: "Keep the original location unchanged", table: "Storage", bundle: .module))
+            .help(String(localized: "Keep the original location unchanged", bundle: .module))
 
             Button {
                 showConfirmation = false
@@ -450,10 +450,10 @@ struct MigrationProgressView: View {
                     await startMigration(shouldMigrate: false)
                 }
             } label: {
-                Text("Use Directly", tableName: "Storage", bundle: .module)
+                Text("Use Directly", bundle: .module)
             }
             .buttonStyle(.borderedProminent)
-            .help(String(localized: "Use the new location directly and keep existing data unchanged", table: "Storage", bundle: .module))
+            .help(String(localized: "Use the new location directly and keep existing data unchanged", bundle: .module))
 
             if Self.canMigrateExistingData(sourceLocation: sourceLocation, sourceURL: sourceURL) {
                 Button {
@@ -463,10 +463,10 @@ struct MigrationProgressView: View {
                         await startMigration(shouldMigrate: true)
                     }
                 } label: {
-                    Text("Migrate Data", tableName: "Storage", bundle: .module)
+                    Text("Migrate Data", bundle: .module)
                 }
                 .buttonStyle(.bordered)
-                .help(String(localized: "Move existing data to the new location", table: "Storage", bundle: .module))
+                .help(String(localized: "Move existing data to the new location", bundle: .module))
             }
         }
         .padding()
@@ -480,29 +480,29 @@ struct MigrationProgressView: View {
                     Button {
                         onDismiss()
                     } label: {
-                        Text("Done", tableName: "Storage", bundle: .module)
+                        Text("Done", bundle: .module)
                     }
                     .buttonStyle(.borderedProminent)
                 } else {
                     Button {
                         showCancelConfirmation = true
                     } label: {
-                        Text(cancellationRequested ? "Cancelling..." : "Cancel Migration", tableName: "Storage", bundle: .module)
+                        Text(cancellationRequested ? "Cancelling..." : "Cancel Migration", bundle: .module)
                     }
                     .buttonStyle(.borderless)
                     .disabled(cancellationRequested)
-                    .alert(Text("Cancel migration?", tableName: "Storage", bundle: .module), isPresented: $showCancelConfirmation) {
+                    .alert(Text("Cancel migration?", bundle: .module), isPresented: $showCancelConfirmation) {
                         Button(role: .cancel) { } label: {
-                            Text("Continue Migration", tableName: "Storage", bundle: .module)
+                            Text("Continue Migration", bundle: .module)
                         }
                         Button(role: .destructive) {
                             cancellationRequested = true
                             migrationManager.cancelMigration()
                         } label: {
-                            Text("Confirm Cancel", tableName: "Storage", bundle: .module)
+                            Text("Confirm Cancel", bundle: .module)
                         }
                     } message: {
-                        Text("Cancelling migration may leave data incomplete. Waiting for migration to finish is recommended.", tableName: "Storage", bundle: .module)
+                        Text("Cancelling migration may leave data incomplete. Waiting for migration to finish is recommended.", bundle: .module)
                     }
                 }
             } else {
@@ -511,14 +511,14 @@ struct MigrationProgressView: View {
                         prepareForRetry()
                         showConfirmation = true
                     } label: {
-                        Text("Retry", tableName: "Storage", bundle: .module)
+                        Text("Retry", bundle: .module)
                     }
                     .buttonStyle(.borderedProminent)
 
                     Button {
                         onDismiss()
                     } label: {
-                        Text("Give Up", tableName: "Storage", bundle: .module)
+                        Text("Give Up", bundle: .module)
                     }
                     .buttonStyle(.bordered)
                 }
@@ -531,7 +531,7 @@ struct MigrationProgressView: View {
     private var migrationStatusView: some View {
         GroupBox {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Migration Status", tableName: "Storage", bundle: .module)
+                Text("Migration Status", bundle: .module)
                     .font(.headline)
                     .foregroundColor(.primary)
 
@@ -541,7 +541,7 @@ struct MigrationProgressView: View {
                         .foregroundColor(.green)
                 } else if migrationCancelled {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Migration Cancelled", tableName: "Storage", bundle: .module)
+                        Text("Migration Cancelled", bundle: .module)
                             .font(.subheadline)
                             .foregroundColor(.orange)
 
@@ -549,16 +549,16 @@ struct MigrationProgressView: View {
                             prepareForRetry()
                             showConfirmation = true
                         } label: {
-                            Text("Retry Migration", tableName: "Storage", bundle: .module)
+                            Text("Retry Migration", bundle: .module)
                         }
                         .buttonStyle(.borderedProminent)
                     }
                 } else if let errorMessage = errorMessage {
-                    Text("Migration failed: \(errorMessage)", tableName: "Storage", bundle: .module)
+                    Text("Migration failed: \(errorMessage)", bundle: .module)
                         .font(.subheadline)
                         .foregroundColor(.red)
                 } else {
-                    Text(cancellationRequested ? "Cancelling..." : "Migrating...", tableName: "Storage", bundle: .module)
+                    Text(cancellationRequested ? "Cancelling..." : "Migrating...", bundle: .module)
                         .font(.subheadline)
                         .foregroundColor(.blue)
                 }

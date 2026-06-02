@@ -12,7 +12,7 @@ public struct BookLikeSettingsView: View, SuperLog {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Liked Books", tableName: "Book-Like", bundle: .module)
+            Text("Liked Books", bundle: .module)
                 .font(.headline)
 
             if isLoading {
@@ -25,7 +25,7 @@ public struct BookLikeSettingsView: View, SuperLog {
                     Image(systemName: "heart.slash")
                         .font(.largeTitle)
                         .foregroundColor(.secondary)
-                    Text("No liked books yet", tableName: "Book-Like", bundle: .module)
+                    Text("No liked books yet", bundle: .module)
                         .foregroundColor(.secondary)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -68,6 +68,6 @@ extension BookLikeSettingsView {
     nonisolated static var loadingTextKey: String { "Loading..." }
 
     private static var loadingText: String {
-        String(localized: String.LocalizationValue(loadingTextKey), table: "Book-Like", bundle: .module)
+        String(localized: String.LocalizationValue(loadingTextKey), bundle: .module)
     }
 }

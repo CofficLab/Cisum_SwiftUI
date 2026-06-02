@@ -19,7 +19,7 @@ public struct ThemeSettingsRootView: View {
     }
 
     public var body: some View {
-        MagicSettingSection(title: String(localized: "Theme Style", table: "Theme-Settings", bundle: .module)) {
+        MagicSettingSection(title: String(localized: "Theme Style", bundle: .module)) {
             ForEach(themes) { theme in
                 let isSelected = currentThemeId == theme.id
                 MagicSettingRow(

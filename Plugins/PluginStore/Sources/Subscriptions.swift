@@ -88,9 +88,9 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
 
                                         Group {
                                             if Self.shouldUseSingularSubscriptionCount(group.subscriptions.count) {
-                                                Text("\(group.subscriptions.count) subscription option", tableName: "Store", bundle: .module)
+                                                Text("\(group.subscriptions.count) subscription option", bundle: .module)
                                             } else {
-                                                Text("\(group.subscriptions.count) subscription options", tableName: "Store", bundle: .module)
+                                                Text("\(group.subscriptions.count) subscription options", bundle: .module)
                                             }
                                         }
                                         .font(.caption)
@@ -134,7 +134,7 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                 .font(.system(size: 64))
                 .foregroundStyle(.tertiary)
                 .accessibilityHidden(true)
-            Text("No subscription options available", tableName: "Store", bundle: .module)
+            Text("No subscription options available", bundle: .module)
                 .font(.headline)
                 .foregroundStyle(.secondary)
         }
@@ -144,7 +144,7 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
     private var loadingStateView: some View {
         VStack(spacing: 12) {
             ProgressView()
-            Text("Loading subscription options...", tableName: "Store", bundle: .module)
+            Text("Loading subscription options...", bundle: .module)
                 .font(.headline)
                 .foregroundStyle(.secondary)
         }
@@ -155,12 +155,12 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
         VStack(spacing: 16) {
             AppStatusBanner(
                 kind: .error,
-                title: String(localized: "Cannot load subscription options", table: "Store", bundle: .module),
-                message: error?.localizedDescription ?? String(localized: "Please check your network and try again.", table: "Store", bundle: .module)
+                title: String(localized: "Cannot load subscription options", bundle: .module),
+                message: error?.localizedDescription ?? String(localized: "Please check your network and try again.", bundle: .module)
             )
 
             AppSheetActionButton(
-                title: String(localized: "Try Again", table: "Store", bundle: .module),
+                title: String(localized: "Try Again", bundle: .module),
                 systemImage: "arrow.clockwise"
             ) {
                 getProducts("Retry after load failure")

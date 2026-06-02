@@ -14,8 +14,8 @@ struct AudioRootErrorPresentation: Equatable {
     static func make(error: AudioPluginError?) -> AudioRootErrorPresentation {
         guard let error else {
             return AudioRootErrorPresentation(
-                title: String(localized: "Audio Library Initialization Failed", table: "Audio", bundle: .module),
-                message: String(localized: "Try reopening the app or checking media library settings.", table: "Audio", bundle: .module),
+                title: String(localized: "Audio Library Initialization Failed", bundle: .module),
+                message: String(localized: "Try reopening the app or checking media library settings.", bundle: .module),
                 detail: nil
             )
         }
@@ -23,14 +23,14 @@ struct AudioRootErrorPresentation: Equatable {
         switch error {
         case .initialization(let reason) where reason == AudioRootErrorPresentation.storageMissingReason:
             return AudioRootErrorPresentation(
-                title: String(localized: "Storage Location Not Set", table: "Audio", bundle: .module),
-                message: String(localized: "Set the media library storage location first.", table: "Audio", bundle: .module),
+                title: String(localized: "Storage Location Not Set", bundle: .module),
+                message: String(localized: "Set the media library storage location first.", bundle: .module),
                 detail: nil
             )
         default:
             return AudioRootErrorPresentation(
-                title: String(localized: "Audio Library Initialization Failed", table: "Audio", bundle: .module),
-                message: error.recoverySuggestion ?? String(localized: "Try reopening the app or checking media library settings.", table: "Audio", bundle: .module),
+                title: String(localized: "Audio Library Initialization Failed", bundle: .module),
+                message: error.recoverySuggestion ?? String(localized: "Try reopening the app or checking media library settings.", bundle: .module),
                 detail: error.localizedDescription
             )
         }
@@ -191,7 +191,7 @@ extension AudioRootView {
             os_log("\(self.t)📂 存储位置已变化")
         }
 
-        alert_info(String(localized: "Storage location has changed", table: "Audio", bundle: .module))
+        alert_info(String(localized: "Storage location has changed", bundle: .module))
     }
 
     /// 处理视图消失事件

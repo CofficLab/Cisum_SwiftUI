@@ -31,7 +31,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Book-Like.xcstrings")
+                .process("Localizable.xcstrings")
             ]
         ),
         .testTarget(

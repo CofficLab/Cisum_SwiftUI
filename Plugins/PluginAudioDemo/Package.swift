@@ -27,7 +27,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Audio-Demo.xcstrings")
+                .process("Localizable.xcstrings")
             ]
         ),
         .testTarget(

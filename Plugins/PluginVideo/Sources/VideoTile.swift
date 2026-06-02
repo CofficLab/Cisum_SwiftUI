@@ -19,7 +19,7 @@ struct VideoFileActionPolicy {
 
 struct VideoTileAccessibilityPolicy {
     static func selectionLabel(fileTitle: String) -> String {
-        String(localized: "Select \(fileTitle)", table: "Video", bundle: .module)
+        String(localized: "Select \(fileTitle)", bundle: .module)
     }
 }
 
@@ -75,10 +75,10 @@ public struct VideoTile: View {
 
     private var fileSizeText: String {
         if fileUnavailable {
-            return String(localized: "Unavailable", table: "Video", bundle: .module)
+            return String(localized: "Unavailable", bundle: .module)
         }
 
-        return fileSize ?? String(localized: "Calculating...", table: "Video", bundle: .module)
+        return fileSize ?? String(localized: "Calculating...", bundle: .module)
     }
 
     private func loadFileSize() async {

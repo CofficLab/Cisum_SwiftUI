@@ -93,7 +93,7 @@ struct ProductCell: View, SuperLog {
         )
         .cisumShadowSm()
         .alert(isPresented: $isShowingError, content: {
-            Alert(title: Text(LocalizedStringKey(errorTitle), tableName: "Store", bundle: .module), message: nil, dismissButton: .default(Text("OK", tableName: "Store", bundle: .module)))
+            Alert(title: Text(LocalizedStringKey(errorTitle), bundle: .module), message: nil, dismissButton: .default(Text("OK", bundle: .module)))
         })
         .onChange(of: initiallyPurchased) { _, newValue in
             isPurchased = newValue
@@ -128,15 +128,15 @@ struct ProductCell: View, SuperLog {
         let plural = 1 < period.value
         switch period.unit {
         case "day":
-            return plural ? String(localized: "\(period.value) days", table: "Store", bundle: .module) : String(localized: "day", table: "Store", bundle: .module)
+            return plural ? String(localized: "\(period.value) days", bundle: .module) : String(localized: "day", bundle: .module)
         case "week":
-            return plural ? String(localized: "\(period.value) weeks", table: "Store", bundle: .module) : String(localized: "week", table: "Store", bundle: .module)
+            return plural ? String(localized: "\(period.value) weeks", bundle: .module) : String(localized: "week", bundle: .module)
         case "month":
-            return plural ? String(localized: "\(period.value) months", table: "Store", bundle: .module) : String(localized: "month", table: "Store", bundle: .module)
+            return plural ? String(localized: "\(period.value) months", bundle: .module) : String(localized: "month", bundle: .module)
         case "year":
-            return plural ? String(localized: "\(period.value) years", table: "Store", bundle: .module) : String(localized: "year", table: "Store", bundle: .module)
+            return plural ? String(localized: "\(period.value) years", bundle: .module) : String(localized: "year", bundle: .module)
         default:
-            return String(localized: "period", table: "Store", bundle: .module)
+            return String(localized: "period", bundle: .module)
         }
     }
 
@@ -148,26 +148,26 @@ struct ProductCell: View, SuperLog {
 
         switch offer.subscriptionPeriod.unit {
         case "day":
-            periodText = plural ? String(localized: "\(offer.subscriptionPeriod.value) days", table: "Store", bundle: .module) : String(localized: "day", table: "Store", bundle: .module)
+            periodText = plural ? String(localized: "\(offer.subscriptionPeriod.value) days", bundle: .module) : String(localized: "day", bundle: .module)
         case "week":
-            periodText = plural ? String(localized: "\(offer.subscriptionPeriod.value) weeks", table: "Store", bundle: .module) : String(localized: "week", table: "Store", bundle: .module)
+            periodText = plural ? String(localized: "\(offer.subscriptionPeriod.value) weeks", bundle: .module) : String(localized: "week", bundle: .module)
         case "month":
-            periodText = plural ? String(localized: "\(offer.subscriptionPeriod.value) months", table: "Store", bundle: .module) : String(localized: "month", table: "Store", bundle: .module)
+            periodText = plural ? String(localized: "\(offer.subscriptionPeriod.value) months", bundle: .module) : String(localized: "month", bundle: .module)
         case "year":
-            periodText = plural ? String(localized: "\(offer.subscriptionPeriod.value) years", table: "Store", bundle: .module) : String(localized: "year", table: "Store", bundle: .module)
+            periodText = plural ? String(localized: "\(offer.subscriptionPeriod.value) years", bundle: .module) : String(localized: "year", bundle: .module)
         default:
-            periodText = String(localized: "period", table: "Store", bundle: .module)
+            periodText = String(localized: "period", bundle: .module)
         }
 
         switch offer.paymentMode {
         case "FreeTrial":
-            return String(localized: "Free for \(periodText)", table: "Store", bundle: .module)
+            return String(localized: "Free for \(periodText)", bundle: .module)
         case "PayAsYouGo":
-            return String(localized: "\(offer.displayPrice) for first \(periodText)", table: "Store", bundle: .module)
+            return String(localized: "\(offer.displayPrice) for first \(periodText)", bundle: .module)
         case "PayUpFront":
-            return String(localized: "Pay \(offer.displayPrice) for first \(periodText)", table: "Store", bundle: .module)
+            return String(localized: "Pay \(offer.displayPrice) for first \(periodText)", bundle: .module)
         default:
-            return String(localized: "Special offer for \(periodText)", table: "Store", bundle: .module)
+            return String(localized: "Special offer for \(periodText)", bundle: .module)
         }
     }
 
@@ -178,11 +178,11 @@ struct ProductCell: View, SuperLog {
             if purchasing {
                 ProgressView()
                     .scaleEffect(0.8)
-                Text("Processing...", tableName: "Store", bundle: .module)
+                Text("Processing...", bundle: .module)
             } else if isPurchased {
-                Text(product.kind == .autoRenewable ? "Subscribed" : "Purchased", tableName: "Store", bundle: .module)
+                Text(product.kind == .autoRenewable ? "Subscribed" : "Purchased", bundle: .module)
             } else {
-                Text(product.kind == .autoRenewable ? "Subscribe" : "Purchase", tableName: "Store", bundle: .module)
+                Text(product.kind == .autoRenewable ? "Subscribe" : "Purchase", bundle: .module)
             }
         }
         .fontWeight(.semibold)

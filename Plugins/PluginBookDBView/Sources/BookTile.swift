@@ -84,7 +84,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                     Spacer()
 
                     if childCount > 0, noCover {
-                        Text("Total \(childCount)", tableName: "Book-DBView", bundle: .module)
+                        Text("Total \(childCount)", bundle: .module)
                     }
 
                     Spacer()
@@ -92,7 +92,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                         VStack(spacing: 0) {
                             HStack {
                                 Image(systemName: "info")
-                                Text("Last played", tableName: "Book-DBView", bundle: .module)
+                                Text("Last played", bundle: .module)
                             }
                             Text(lastPlayedTitle)
                                 .multilineTextAlignment(.center)

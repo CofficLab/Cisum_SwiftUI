@@ -5,7 +5,6 @@ import Testing
 
 @Test func audioProgressInfoExportsMetadata() {
     #expect(AudioProgressPluginInfo.titleKey == "Audio Progress")
-    #expect(AudioProgressPluginInfo.table == "Audio-Progress")
 }
 
 @Test func leavingAudioScenePersistsProgress() {

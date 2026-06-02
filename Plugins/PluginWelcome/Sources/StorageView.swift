@@ -25,13 +25,13 @@ public struct StorageView: View {
 
     public var body: some View {
         CisumUI.MagicSettingSection(
-            title: String(localized: "Media Storage Location", table: "Welcome", bundle: .module),
+            title: String(localized: "Media Storage Location", bundle: .module),
             titleAlignment: .center
         ) {
             VStack(spacing: 12) {
                 CisumUI.MagicSettingRow(
-                    title: String(localized: "iCloud Drive", table: "Welcome", bundle: .module),
-                    description: String(localized: "Files stored in iCloud\nAccessible on other devices\nEnsure sufficient iCloud storage", table: "Welcome", bundle: .module),
+                    title: String(localized: "iCloud Drive", bundle: .module),
+                    description: String(localized: "Files stored in iCloud\nAccessible on other devices\nEnsure sufficient iCloud storage", bundle: .module),
                     icon: .cisumIconCloud,
                     action: {
                         if isICloudAvailable {
@@ -44,7 +44,7 @@ public struct StorageView: View {
                             Image(systemName: .cisumIconCheckmarkSimple)
                                 .foregroundColor(.accentColor)
                         } else {
-                            Text("Recommended", tableName: "Welcome", bundle: .module)
+                            Text("Recommended", bundle: .module)
                                 .font(.footnote)
                                 .foregroundColor(.secondary)
                         }
@@ -58,7 +58,7 @@ public struct StorageView: View {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundColor(.orange)
                             .imageScale(.small)
-                        Text("Sign in to iCloud in System Settings to use this option", tableName: "Welcome", bundle: .module)
+                        Text("Sign in to iCloud in System Settings to use this option", bundle: .module)
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -69,8 +69,8 @@ public struct StorageView: View {
                 Divider()
 
                 CisumUI.MagicSettingRow(
-                    title: String(localized: "App Local Storage", table: "Welcome", bundle: .module),
-                    description: String(localized: "Stored within the app, data will be lost if app is deleted", table: "Welcome", bundle: .module),
+                    title: String(localized: "App Local Storage", bundle: .module),
+                    description: String(localized: "Stored within the app, data will be lost if app is deleted", bundle: .module),
                     icon: .cisumIconFolder,
                     action: {
                         updateSelection(.local)

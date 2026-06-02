@@ -9,7 +9,6 @@ public struct SystemSetting: View, SuperLog {
     public nonisolated static let verbose = false
     nonisolated static let resetStorageLocationActionLabel = String(
         localized: "Reset Storage Location",
-        table: "Reset",
         bundle: .module
     )
 
@@ -27,10 +26,10 @@ public struct SystemSetting: View, SuperLog {
     }
 
     public var body: some View {
-        CisumUI.MagicSettingSection(title: String(localized: "App Information", table: "Reset", bundle: .module)) {
+        CisumUI.MagicSettingSection(title: String(localized: "App Information", bundle: .module)) {
             CisumUI.MagicSettingRow(
-                title: String(localized: "Current Version", table: "Reset", bundle: .module),
-                description: String(localized: "App version", table: "Reset", bundle: .module),
+                title: String(localized: "Current Version", bundle: .module),
+                description: String(localized: "App version", bundle: .module),
                 icon: "info.circle",
                 content: {
                     Text(appVersion)
@@ -39,8 +38,8 @@ public struct SystemSetting: View, SuperLog {
             )
 
             CisumUI.MagicSettingRow(
-                title: String(localized: "Reset Storage Location", table: "Reset", bundle: .module),
-                description: String(localized: "Clear the media storage selection", table: "Reset", bundle: .module),
+                title: String(localized: "Reset Storage Location", bundle: .module),
+                description: String(localized: "Clear the media storage selection", bundle: .module),
                 icon: .cisumIconReset
             ) {
                 Image.cisumReset

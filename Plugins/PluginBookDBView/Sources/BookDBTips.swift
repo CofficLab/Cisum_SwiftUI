@@ -30,14 +30,14 @@ struct BookDBTips: View {
                 AppEmptyState(
                     icon: "book.closed",
                     title: dependencies.isDesktop
-                        ? String(localized: "Drop audiobook folders here to add them", table: "Book-DBView", bundle: .module)
-                        : String(localized: "Repository is empty", table: "Book-DBView", bundle: .module),
-                    description: String(localized: "Supported formats: \(supportedFormats)", table: "Book-DBView", bundle: .module)
+                        ? String(localized: "Drop audiobook folders here to add them", bundle: .module)
+                        : String(localized: "Repository is empty", bundle: .module),
+                    description: String(localized: "Supported formats: \(supportedFormats)", bundle: .module)
                 )
                 .frame(minHeight: 160)
 
                 #if os(macOS)
-                    Text("Or", tableName: "Book-DBView", bundle: .module)
+                    Text("Or", bundle: .module)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Button(
@@ -47,7 +47,7 @@ struct BookDBTips: View {
                             }
                         },
                         label: {
-                            Label { Text("Open repository folder and add files", tableName: "Book-DBView", bundle: .module) } icon: { Image(systemName: "doc.viewfinder.fill") }
+                            Label { Text("Open repository folder and add files", bundle: .module) } icon: { Image(systemName: "doc.viewfinder.fill") }
                         }
                     )
                 #endif
@@ -57,7 +57,7 @@ struct BookDBTips: View {
                         action: requestImport,
                         label: {
                             Label(
-                                title: { Text("Add", tableName: "Book-DBView", bundle: .module) },
+                                title: { Text("Add", bundle: .module) },
                                 icon: { Image(systemName: "plus.circle") }
                             )
                         }
@@ -65,9 +65,9 @@ struct BookDBTips: View {
                     .buttonStyle(.bordered)
                 }
             case .loading:
-                AppLoadingOverlay(message: LocalizedStringKey(String(localized: "Reading repository", table: "Book-DBView", bundle: .module)), size: .large)
+                AppLoadingOverlay(message: LocalizedStringKey(String(localized: "Reading repository", bundle: .module)), size: .large)
                     .frame(height: 120)
-                Text("Supported formats: \(supportedFormats)", tableName: "Book-DBView", bundle: .module)
+                Text("Supported formats: \(supportedFormats)", bundle: .module)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }

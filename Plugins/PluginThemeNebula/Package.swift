@@ -25,7 +25,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Theme-Nebula.xcstrings")
+                .process("Localizable.xcstrings")
             ]
         ),
         .testTarget(

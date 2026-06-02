@@ -5,7 +5,7 @@ public struct PaperTheme: LumiAppChromeTheme {
     public init() {}
     public let identifier = "paper"
     public let displayName = "Paper"
-    public let description = String(localized: "Warm white paper background, ideal for audiobooks", table: "Theme-Paper", bundle: .module)
+    public let description = String(localized: "Warm white paper background, ideal for audiobooks", bundle: .module)
     public let iconName = "book.closed.fill"
     public let iconColor = Color.adaptive(light: "A15C38", dark: "D8A06B")
     public let isDarkTheme = false

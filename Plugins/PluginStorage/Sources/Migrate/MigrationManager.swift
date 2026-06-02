@@ -48,7 +48,7 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
                 return
             }
             guard !Self.isTargetNestedInSource(sourceRoot: sourceRoot, targetRoot: targetRoot) else {
-                throw MigrationError.fileOperationFailed(String(localized: "Target folder cannot be inside the source folder", table: "Storage", bundle: .module))
+                throw MigrationError.fileOperationFailed(String(localized: "Target folder cannot be inside the source folder", bundle: .module))
             }
 
             // Get all files and filter out .DS_Store.

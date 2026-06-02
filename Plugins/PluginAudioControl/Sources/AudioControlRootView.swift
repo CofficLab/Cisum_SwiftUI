@@ -236,7 +236,7 @@ private extension AudioControlRootView {
                         return
                     }
                     await man.reset(reason: "AudioControlRootView.emptyLibrary")
-                    alert_info(String(localized: "No files in library", table: "Audio-Control", bundle: .module))
+                    alert_info(String(localized: "No files in library", bundle: .module))
                 }
             } catch {
                 guard AudioControlPlaybackRequestPolicy.shouldReportNavigationFailure(
@@ -251,7 +251,7 @@ private extension AudioControlRootView {
                 if AudioControlRuntime.verbose {
                     AudioControlRuntime.log.error("Failed to get previous asset: \(error.localizedDescription)")
                 }
-                alert_error(String(localized: "Cannot play previous: \(error.localizedDescription)", table: "Audio-Control", bundle: .module))
+                alert_error(String(localized: "Cannot play previous: \(error.localizedDescription)", bundle: .module))
             }
         }
     }
@@ -290,7 +290,7 @@ private extension AudioControlRootView {
                     ) else {
                         return
                     }
-                    alert_info(String(localized: "Reached the last track, playing the first", table: "Audio-Control", bundle: .module))
+                    alert_info(String(localized: "Reached the last track, playing the first", bundle: .module))
                     await man.play(first, autoPlay: true, reason: "AudioControlRootView.loop")
                 } else {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
@@ -303,7 +303,7 @@ private extension AudioControlRootView {
                         return
                     }
                     await man.reset(reason: "AudioControlRootView.emptyLibrary")
-                    alert_info(String(localized: "No files in library", table: "Audio-Control", bundle: .module))
+                    alert_info(String(localized: "No files in library", bundle: .module))
                 }
             } catch {
                 guard AudioControlPlaybackRequestPolicy.shouldReportNavigationFailure(
@@ -318,7 +318,7 @@ private extension AudioControlRootView {
                 if AudioControlRuntime.verbose {
                     AudioControlRuntime.log.error("Failed to get next asset: \(error.localizedDescription)")
                 }
-                alert_error(String(localized: "Cannot play next: \(error.localizedDescription)", table: "Audio-Control", bundle: .module))
+                alert_error(String(localized: "Cannot play next: \(error.localizedDescription)", bundle: .module))
             }
         }
     }
@@ -383,7 +383,7 @@ private extension AudioControlRootView {
                     ) else {
                         return
                     }
-                    alert_warning(String(localized: "Current file was deleted, playing the first", table: "Audio-Control", bundle: .module))
+                    alert_warning(String(localized: "Current file was deleted, playing the first", bundle: .module))
                     await man.play(first, autoPlay: true, reason: "AudioControlRootView")
                 } else {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
@@ -395,7 +395,7 @@ private extension AudioControlRootView {
                         return
                     }
                     await man.reset(reason: "AudioControlRootView.emptyLibrary")
-                    alert_info(String(localized: "No files in library", table: "Audio-Control", bundle: .module))
+                    alert_info(String(localized: "No files in library", bundle: .module))
                 }
             } catch {
                 guard AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
@@ -407,7 +407,7 @@ private extension AudioControlRootView {
                     return
                 }
                 await man.reset(reason: "AudioControlRootView.getFirstFailed")
-                alert_error(String(localized: "Cannot play next: \(error.localizedDescription)", table: "Audio-Control", bundle: .module))
+                alert_error(String(localized: "Cannot play next: \(error.localizedDescription)", bundle: .module))
             }
         }
     }

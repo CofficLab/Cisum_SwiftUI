@@ -29,7 +29,7 @@ struct PurchaseView: View, SuperLog {
                     HStack(spacing: 20) {
                         Link(destination: privacyURL) {
                             Label {
-                                Text("Privacy Policy", tableName: "Store", bundle: .module)
+                                Text("Privacy Policy", bundle: .module)
                             } icon: {
                                 Image(systemName: "hand.raised.fill")
                             }
@@ -41,7 +41,7 @@ struct PurchaseView: View, SuperLog {
 
                         Link(destination: licenseURL) {
                             Label {
-                                Text("License Agreement", tableName: "Store", bundle: .module)
+                                Text("License Agreement", bundle: .module)
                             } icon: {
                                 Image(systemName: "doc.text.fill")
                             }

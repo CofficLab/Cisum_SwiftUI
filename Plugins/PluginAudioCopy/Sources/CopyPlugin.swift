@@ -9,7 +9,7 @@ import SwiftUI
         public static var order: Int { 0 }
 
         public nonisolated var description: String {
-            String(localized: String.LocalizationValue(AudioCopyPluginInfo.descriptionKey), table: AudioCopyPluginInfo.table, bundle: .module)
+            String(localized: String.LocalizationValue(AudioCopyPluginInfo.descriptionKey), bundle: .module)
         }
 
         public nonisolated var iconName: String { AudioCopyPluginInfo.iconName }

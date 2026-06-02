@@ -4,8 +4,8 @@ import SwiftUI
 public struct OceanTheme: LumiAppChromeTheme {
     public init() {}
     public let identifier = "ocean"
-    public let displayName = String(localized: "Ocean Blue", table: "Theme-Ocean", bundle: .module)
-    public let description = String(localized: "Fresh blue-cyan accents, adapts to system light/dark mode", table: "Theme-Ocean", bundle: .module)
+    public let displayName = String(localized: "Ocean Blue", bundle: .module)
+    public let description = String(localized: "Fresh blue-cyan accents, adapts to system light/dark mode", bundle: .module)
     public let iconName = "water.waves"
     public let iconColor = Color.adaptive(light: "0284C7", dark: "38BDF8")
     public let isDarkTheme = false

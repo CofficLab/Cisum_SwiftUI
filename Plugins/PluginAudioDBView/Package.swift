@@ -35,7 +35,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Audio-DBView.xcstrings")
+                .process("Localizable.xcstrings")
             ]
         ),
         .testTarget(

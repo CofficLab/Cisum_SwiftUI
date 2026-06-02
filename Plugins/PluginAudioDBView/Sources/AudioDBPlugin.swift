@@ -8,8 +8,8 @@ public actor AudioDBPlugin: SuperPlugin {
     public static var shouldRegister: Bool { true }
     public static var order: Int { 1 }
 
-    public nonisolated var title: String { String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), table: AudioDBPluginInfo.table, bundle: .module) }
-    public nonisolated var description: String { String(localized: String.LocalizationValue(AudioDBPluginInfo.descriptionKey), table: AudioDBPluginInfo.table, bundle: .module) }
+    public nonisolated var title: String { String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), bundle: .module) }
+    public nonisolated var description: String { String(localized: String.LocalizationValue(AudioDBPluginInfo.descriptionKey), bundle: .module) }
     public let iconName = "externaldrive"
 
     @MainActor
@@ -22,7 +22,7 @@ public actor AudioDBPlugin: SuperPlugin {
         guard currentSceneName == AudioScenePlugin.sceneName else { return nil }
         guard demoMode == false else { return nil }
 
-        return (AnyView(AudioDBPluginTabView(demoMode: demoMode)), String(localized: "Music Repository", table: "Audio-DBView", bundle: .module))
+        return (AnyView(AudioDBPluginTabView(demoMode: demoMode)), String(localized: "Music Repository", bundle: .module))
     }
 }
 

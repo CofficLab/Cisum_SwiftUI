@@ -51,7 +51,7 @@ public struct BookPosterView: View {
             }) {
                 HStack(spacing: 8) {
                     Image(systemName: .cisumIconArrowUpCircle)
-                    Text("Enter Audiobook Library", tableName: "Book-Scene", bundle: .module)
+                    Text("Enter Audiobook Library", bundle: .module)
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                 }

@@ -30,7 +30,6 @@ public struct BookSettingsView: View, SuperLog {
     public nonisolated static var emoji: String { BookSettingsPluginInfo.emoji }
     nonisolated static let openLibraryActionLabel = String(
         localized: "Open Library",
-        table: "Book-Settings",
         bundle: .module
     )
 
@@ -51,9 +50,9 @@ public struct BookSettingsView: View, SuperLog {
     public var body: some View {
         Group {
             if let disk = disk {
-                CisumUI.MagicSettingSection(title: String(localized: "Audiobook Library", table: "Book-Settings", bundle: .module)) {
+                CisumUI.MagicSettingSection(title: String(localized: "Audiobook Library", bundle: .module)) {
                     CisumUI.MagicSettingRow(
-                        title: String(localized: "Library Size", table: "Book-Settings", bundle: .module),
+                        title: String(localized: "Library Size", bundle: .module),
                         description: description,
                         icon: .cisumIconMusicLibrary
                     ) {
@@ -66,8 +65,8 @@ public struct BookSettingsView: View, SuperLog {
                     #if os(macOS)
                         if Self.shouldShowOpenLibraryAction(for: disk) {
                             CisumUI.MagicSettingRow(
-                                title: String(localized: "Open Library", table: "Book-Settings", bundle: .module),
-                                description: String(localized: "View in Finder", table: "Book-Settings", bundle: .module),
+                                title: String(localized: "Open Library", bundle: .module),
+                                description: String(localized: "View in Finder", bundle: .module),
                                 icon: .cisumIconShowInFinder
                             ) {
                                 Image(systemName: .cisumIconShowInFinder)
@@ -85,27 +84,27 @@ public struct BookSettingsView: View, SuperLog {
                     #endif
 
                     CisumUI.MagicSettingRow(
-                        title: String(localized: "File Count", table: "Book-Settings", bundle: .module),
-                        description: String(localized: "Total files in library", table: "Book-Settings", bundle: .module),
+                        title: String(localized: "File Count", bundle: .module),
+                        description: String(localized: "Total files in library", bundle: .module),
                         icon: .cisumIconDocument
                     ) {
                         if Self.shouldUseSingularFileCount(fileCount) {
-                            Text("\(fileCount) file", tableName: "Book-Settings", bundle: .module)
+                            Text("\(fileCount) file", bundle: .module)
                                 .font(.footnote)
                         } else {
-                            Text("\(fileCount) files", tableName: "Book-Settings", bundle: .module)
+                            Text("\(fileCount) files", bundle: .module)
                                 .font(.footnote)
                         }
                     }
                 }
             } else {
-                CisumUI.MagicSettingSection(title: String(localized: "Audiobook Library", table: "Book-Settings", bundle: .module)) {
+                CisumUI.MagicSettingSection(title: String(localized: "Audiobook Library", bundle: .module)) {
                     CisumUI.MagicSettingRow(
-                        title: String(localized: "Error", table: "Book-Settings", bundle: .module),
+                        title: String(localized: "Error", bundle: .module),
                         description: description,
                         icon: .cisumIconMusicLibrary
                     ) {
-                        Text("Cannot get audiobook library information", tableName: "Book-Settings", bundle: .module)
+                        Text("Cannot get audiobook library information", bundle: .module)
                             .font(.footnote)
                     }
                 }
@@ -166,9 +165,9 @@ private extension BookSettingsView {
         }
 
         if disk.checkIsICloud(verbose: false) {
-            description = String(localized: "iCloud Drive, will sync", table: "Book-Settings", bundle: .module)
+            description = String(localized: "iCloud Drive, will sync", bundle: .module)
         } else {
-            description = String(localized: "Local directory, will not sync", table: "Book-Settings", bundle: .module)
+            description = String(localized: "Local directory, will not sync", bundle: .module)
         }
     }
 

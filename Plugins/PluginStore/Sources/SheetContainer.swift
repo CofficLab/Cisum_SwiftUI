@@ -3,7 +3,7 @@ import SwiftUI
 
 struct SheetContainer<Content: View>: View {
     nonisolated static var closeButtonLabel: String {
-        String(localized: "Close", table: "Store", bundle: .module)
+        String(localized: "Close", bundle: .module)
     }
 
     @Environment(\.dismiss) private var dismiss

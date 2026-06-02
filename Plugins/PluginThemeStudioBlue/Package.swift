@@ -25,7 +25,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Theme-StudioBlue.xcstrings")
+                .process("Localizable.xcstrings")
             ]
         ),
         .testTarget(

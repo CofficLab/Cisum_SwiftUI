@@ -89,7 +89,7 @@ public struct AudioPosterView: View {
             }) {
                 HStack(spacing: 4) {
                     Image(systemName: "arrow.up.circle")
-                    Text("Enter Music Repository", tableName: "Audio-Scene", bundle: .module)
+                    Text("Enter Music Repository", bundle: .module)
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                 }

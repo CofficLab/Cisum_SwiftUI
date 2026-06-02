@@ -57,7 +57,7 @@ struct CopyList: View, SuperLog, SuperThread {
     private var emptyView: some View {
         AppEmptyState(
             icon: "tray",
-            title: String(localized: "No copy tasks", table: "Audio-Copy-macOS", bundle: .module)
+            title: String(localized: "No copy tasks", bundle: .module)
         )
         .frame(minHeight: 160)
     }
@@ -97,12 +97,12 @@ struct CopyList: View, SuperLog, SuperThread {
 
     private func deleteTasks(at offsets: IndexSet) {
         guard let container = AudioCopyService.container else {
-            alert_error(String(localized: "Copy service is unavailable", table: "Audio-Copy-macOS", bundle: .module))
+            alert_error(String(localized: "Copy service is unavailable", bundle: .module))
             return
         }
 
         guard let tasksToDelete = Self.tasksToDelete(from: offsets, in: tasks) else {
-            alert_error(String(localized: "Delete failed: copy task list changed. Please try again.", table: "Audio-Copy-macOS", bundle: .module))
+            alert_error(String(localized: "Delete failed: copy task list changed. Please try again.", bundle: .module))
             return
         }
 
@@ -111,7 +111,7 @@ struct CopyList: View, SuperLog, SuperThread {
             refreshTasks(postCountChanged: true)
         } catch {
             os_log(.error, "\(self.t)Delete failed: \(error.localizedDescription)")
-            alert_error(String(localized: "Delete failed: \(error.localizedDescription)", table: "Audio-Copy-macOS", bundle: .module))
+            alert_error(String(localized: "Delete failed: \(error.localizedDescription)", bundle: .module))
         }
     }
 

@@ -10,11 +10,11 @@ public actor BookDBPlugin: SuperPlugin {
     public static var order: Int { 12 }
 
     public nonisolated var title: String {
-        String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), table: BookDBPluginInfo.table, bundle: .module)
+        String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), bundle: .module)
     }
 
     public nonisolated var description: String {
-        String(localized: String.LocalizationValue(BookDBPluginInfo.descriptionKey), table: BookDBPluginInfo.table, bundle: .module)
+        String(localized: String.LocalizationValue(BookDBPluginInfo.descriptionKey), bundle: .module)
     }
 
     public nonisolated var iconName: String { BookDBPluginInfo.iconName }
@@ -22,7 +22,7 @@ public actor BookDBPlugin: SuperPlugin {
     @MainActor
     public func addTabView(reason: String, currentSceneName: String?, demoMode: Bool = false) -> (view: AnyView, label: String)? {
         guard currentSceneName == BookScenePlugin.sceneName else { return nil }
-        let label = String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), table: BookDBPluginInfo.table, bundle: .module)
+        let label = String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), bundle: .module)
         let dbRoot: URL
 
         do {
@@ -51,8 +51,8 @@ private struct BookDBUnavailableView: View {
     var body: some View {
         AppEmptyState(
             icon: "exclamationmark.triangle",
-            title: String(localized: "Book repository is unavailable", table: BookDBPluginInfo.table, bundle: .module),
-            description: String(localized: "Database location could not be opened: \(errorDescription)", table: BookDBPluginInfo.table, bundle: .module)
+            title: String(localized: "Book repository is unavailable", bundle: .module),
+            description: String(localized: "Database location could not be opened: \(errorDescription)", bundle: .module)
         )
     }
 }

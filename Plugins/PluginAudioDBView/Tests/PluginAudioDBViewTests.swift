@@ -5,7 +5,6 @@ import UniformTypeIdentifiers
 
 @Test func audioDBInfoExportsMetadata() {
     #expect(AudioDBPluginInfo.titleKey == "Audio Repository")
-    #expect(AudioDBPluginInfo.table == "Audio-DBView")
 }
 
 @Test func audioDBSortModeRestoresTrimmedNotificationValues() {

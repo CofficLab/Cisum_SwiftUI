@@ -19,11 +19,11 @@ public actor AudioPlugin: SuperPlugin {
     #endif
 
     public nonisolated var title: String {
-        String(localized: String.LocalizationValue(AudioPluginInfo.titleKey), table: AudioPluginInfo.table, bundle: .module)
+        String(localized: String.LocalizationValue(AudioPluginInfo.titleKey), bundle: .module)
     }
 
     public nonisolated var description: String {
-        String(localized: String.LocalizationValue(AudioPluginInfo.descriptionKey), table: AudioPluginInfo.table, bundle: .module)
+        String(localized: String.LocalizationValue(AudioPluginInfo.descriptionKey), bundle: .module)
     }
 
     public nonisolated var iconName: String { .cisumIconMusicNote }

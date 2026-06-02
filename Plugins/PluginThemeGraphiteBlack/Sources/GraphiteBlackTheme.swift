@@ -4,8 +4,8 @@ import SwiftUI
 public struct GraphiteBlackTheme: LumiAppChromeTheme {
     public init() {}
     public let identifier = "graphite-black"
-    public let displayName = String(localized: "Graphite Black", table: "Theme-GraphiteBlack", bundle: .module)
-    public let description = String(localized: "Neutral black-gray layers, ideal for extended night listening", table: "Theme-GraphiteBlack", bundle: .module)
+    public let displayName = String(localized: "Graphite Black", bundle: .module)
+    public let description = String(localized: "Neutral black-gray layers, ideal for extended night listening", bundle: .module)
     public let iconName = "circle.lefthalf.filled"
     public let iconColor = Color.adaptive(light: "3A3A3C", dark: "D1D1D6")
     public let isDarkTheme = false

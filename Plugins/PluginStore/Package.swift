@@ -31,7 +31,8 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Resources")
+                .process("Localizable.xcstrings"),
+                .process("Resources/Products.storekit")
             ]
         ),
         .testTarget(

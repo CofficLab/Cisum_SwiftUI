@@ -10,7 +10,6 @@ enum CopyStatePresentation {
     static func detailsButtonLabel(isShowing: Bool) -> String {
         String(
             localized: isShowing ? "Hide copy details" : "Show copy details",
-            table: "Audio-Copy-macOS",
             bundle: .module
         )
     }
@@ -19,7 +18,6 @@ enum CopyStatePresentation {
         if pendingCount > 0, failedCount > 0 {
             return String(
                 localized: "Copying \(pendingCount) \(fileLabel(for: pendingCount)), \(failedCount) failed",
-                table: "Audio-Copy-macOS",
                 bundle: .module
             )
         }
@@ -27,7 +25,6 @@ enum CopyStatePresentation {
         if pendingCount > 0 {
             return String(
                 localized: "Copying \(pendingCount) \(fileLabel(for: pendingCount))",
-                table: "Audio-Copy-macOS",
                 bundle: .module
             )
         }
@@ -35,7 +32,6 @@ enum CopyStatePresentation {
         if failedCount > 0 {
             return String(
                 localized: "\(failedCount) \(taskLabel(for: failedCount)) failed",
-                table: "Audio-Copy-macOS",
                 bundle: .module
             )
         }
@@ -44,11 +40,11 @@ enum CopyStatePresentation {
     }
 
     private static func fileLabel(for count: Int) -> String {
-        count == 1 ? String(localized: "file", table: "Audio-Copy-macOS", bundle: .module) : String(localized: "files", table: "Audio-Copy-macOS", bundle: .module)
+        count == 1 ? String(localized: "file", bundle: .module) : String(localized: "files", bundle: .module)
     }
 
     private static func taskLabel(for count: Int) -> String {
-        count == 1 ? String(localized: "copy task", table: "Audio-Copy-macOS", bundle: .module) : String(localized: "copy tasks", table: "Audio-Copy-macOS", bundle: .module)
+        count == 1 ? String(localized: "copy task", bundle: .module) : String(localized: "copy tasks", bundle: .module)
     }
 }
 
@@ -145,7 +141,7 @@ extension CopyStateView {
         taskCount = 0
         pendingCount = 0
         failedCount = 0
-        alert_info(String(localized: "Copy completed", table: "Audio-Copy-macOS", bundle: .module))
+        alert_info(String(localized: "Copy completed", bundle: .module))
     }
 
     @discardableResult

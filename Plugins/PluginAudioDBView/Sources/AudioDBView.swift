@@ -87,9 +87,9 @@ public struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
         /// 排序模式对应的描述文本
         var description: String {
             switch self {
-            case .random: return String(localized: "Shuffling...", table: "Audio-DBView", bundle: .module)
-            case .order: return String(localized: "Sorting in Order...", table: "Audio-DBView", bundle: .module)
-            case .none: return String(localized: "Sorting...", table: "Audio-DBView", bundle: .module)
+            case .random: return String(localized: "Shuffling...", bundle: .module)
+            case .order: return String(localized: "Sorting in Order...", bundle: .module)
+            case .none: return String(localized: "Sorting...", bundle: .module)
             }
         }
     }
@@ -321,7 +321,7 @@ extension AudioDBView {
                 domain: "AudioDBView",
                 code: 1,
                 userInfo: [
-                    NSLocalizedDescriptionKey: String(localized: "Permission to access the original file was denied", table: "Audio-DBView", bundle: .module)
+                    NSLocalizedDescriptionKey: String(localized: "Permission to access the original file was denied", bundle: .module)
                 ]
             )
         }
@@ -362,7 +362,7 @@ extension AudioDBView {
         }
 
         guard Self.shouldStartImport(isImporting: isImportingFiles) else {
-            alert_warning(String(localized: "Import is already in progress", table: "Audio-DBView", bundle: .module))
+            alert_warning(String(localized: "Import is already in progress", bundle: .module))
             return
         }
 
@@ -377,16 +377,16 @@ extension AudioDBView {
         )
 
         guard !importableURLs.isEmpty else {
-            alert_error(String(localized: "No files were added", table: "Audio-DBView", bundle: .module))
+            alert_error(String(localized: "No files were added", bundle: .module))
             return
         }
 
         if importableURLs.count < urls.count {
-            alert_warning(String(localized: "Some files were skipped because they are not supported audio files", table: "Audio-DBView", bundle: .module))
+            alert_warning(String(localized: "Some files were skipped because they are not supported audio files", bundle: .module))
         }
 
         guard let storageRoot = await fetchStorageRoot() else {
-            alert_error(String(localized: "Storage location is unavailable", table: "Audio-DBView", bundle: .module))
+            alert_error(String(localized: "Storage location is unavailable", bundle: .module))
             return
         }
 
@@ -394,14 +394,14 @@ extension AudioDBView {
             let copiedURLs = try await copyFiles(importableURLs, to: storageRoot)
             guard let repo = dependencies.audioRepo() else {
                 Self.cleanUpCopiedFiles(copiedURLs)
-                alert_error(String(localized: "Import failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
+                alert_error(String(localized: "Import failed: audio repository is unavailable", bundle: .module))
                 return
             }
 
             await repo.sync(copiedURLs, isFirst: false)
         } catch {
             os_log(.error, "\(self.t)❌ Failed to copy files: \(error.localizedDescription)")
-            alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
+            alert_error(String(localized: "Import failed: \(error.localizedDescription)", bundle: .module))
         }
     }
 }
@@ -423,7 +423,7 @@ extension AudioDBView {
 
             case let .failure(error):
                 os_log(.error, "\(self.t)❌ File import failed: \(error.localizedDescription)")
-                alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
+                alert_error(String(localized: "Import failed: \(error.localizedDescription)", bundle: .module))
             }
         }
     }
@@ -440,10 +440,10 @@ extension AudioDBView {
             if Self.shouldReportDroppedURLLoadFailure(droppedFiles.urls, errors: droppedFiles.errors),
                let error = droppedFiles.errors.first {
                 os_log(.error, "\(self.t)⚠️ Failed to load dropped file: \(error.localizedDescription)")
-                alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
+                alert_error(String(localized: "Import failed: \(error.localizedDescription)", bundle: .module))
             } else if Self.shouldReportPartialDroppedURLLoadFailure(droppedFiles.urls, errors: droppedFiles.errors) {
                 os_log(.error, "\(self.t)⚠️ Some dropped files failed to load")
-                alert_warning(String(localized: "Some dropped files could not be loaded", table: "Audio-DBView", bundle: .module))
+                alert_warning(String(localized: "Some dropped files could not be loaded", bundle: .module))
             }
 
             guard Self.shouldImportDroppedURLs(droppedFiles.urls, after: droppedFiles.errors) else {

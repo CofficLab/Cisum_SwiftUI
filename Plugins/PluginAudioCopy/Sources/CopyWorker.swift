@@ -102,7 +102,7 @@
                                     domain: "CopyWorker",
                                     code: 0,
                                     userInfo: [
-                                        NSLocalizedDescriptionKey: String(localized: "The original file can no longer be accessed", table: "Audio-Copy-macOS", bundle: .module)
+                                        NSLocalizedDescriptionKey: String(localized: "The original file can no longer be accessed", bundle: .module)
                                     ]
                                 )
                             }
@@ -113,7 +113,7 @@
                                     domain: "CopyWorker",
                                     code: 1,
                                     userInfo: [
-                                        NSLocalizedDescriptionKey: String(localized: "Permission to access the original file was denied", table: "Audio-Copy-macOS", bundle: .module)
+                                        NSLocalizedDescriptionKey: String(localized: "Permission to access the original file was denied", bundle: .module)
                                     ]
                                 )
                             }

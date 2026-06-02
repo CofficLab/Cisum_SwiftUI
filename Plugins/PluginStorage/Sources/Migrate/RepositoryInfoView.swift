@@ -43,7 +43,7 @@ struct RepositoryInfoView: View {
             Text(title)
                 .font(.headline)
                 .foregroundColor(.primary)
-            Text(location?.emojiTitle ?? String(localized: "Not Set", table: "Storage", bundle: .module))
+            Text(location?.emojiTitle ?? String(localized: "Not Set", bundle: .module))
                 .font(.caption)
                 .foregroundColor(.secondary)
             Spacer()

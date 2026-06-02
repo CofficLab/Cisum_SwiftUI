@@ -211,18 +211,18 @@ private extension AudioPlayModeRootView {
                     if verbose {
                         os_log("\(Self.t)🔁 Repeat one mode")
                     }
-                    alert_info(String(localized: "Repeat One", table: "Audio-PlayMode", bundle: .module))
+                    alert_info(String(localized: "Repeat One", bundle: .module))
                 case .sequence, .repeatAll:
                     if verbose {
                         os_log("\(Self.t)📋 Sequential play, sorting queue")
                     }
-                    alert_info(String(localized: "Sequential Play", table: "Audio-PlayMode", bundle: .module))
+                    alert_info(String(localized: "Sequential Play", bundle: .module))
                     try await sort(currentURL)
                 case .shuffle:
                     if verbose {
                         os_log("\(Self.t)🔀 Shuffle play, shuffling queue")
                     }
-                    alert_info(String(localized: "Shuffle", table: "Audio-PlayMode", bundle: .module))
+                    alert_info(String(localized: "Shuffle", bundle: .module))
                     try await shuffle(currentURL)
                 }
             } catch {
@@ -237,7 +237,7 @@ private extension AudioPlayModeRootView {
                 if verbose {
                     os_log("\(Self.t)⚠️ Failed to update play queue: \(error.localizedDescription)")
                 }
-                alert_error(String(localized: "Cannot update play queue: \(error.localizedDescription)", table: "Audio-PlayMode", bundle: .module))
+                alert_error(String(localized: "Cannot update play queue: \(error.localizedDescription)", bundle: .module))
             }
         }
     }

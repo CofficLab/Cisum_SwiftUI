@@ -7,7 +7,6 @@ import UniformTypeIdentifiers
 
 @Test func audioCopyInfoExportsMetadata() {
     #expect(AudioCopyPluginInfo.iconName == "music.note")
-    #expect(AudioCopyPluginInfo.table == "Audio-Copy-macOS")
 }
 
 #if os(macOS)

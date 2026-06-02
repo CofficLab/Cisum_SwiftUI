@@ -34,10 +34,10 @@ extension VideoGrid {
     nonisolated static var emptyStateDescriptionKey: String { "No video files available" }
 
     private static var emptyStateTitle: String {
-        String(localized: String.LocalizationValue(emptyStateTitleKey), table: "Video", bundle: .module)
+        String(localized: String.LocalizationValue(emptyStateTitleKey), bundle: .module)
     }
 
     private static var emptyStateDescription: String {
-        String(localized: String.LocalizationValue(emptyStateDescriptionKey), table: "Video", bundle: .module)
+        String(localized: String.LocalizationValue(emptyStateDescriptionKey), bundle: .module)
     }
 }

@@ -28,12 +28,12 @@ public struct WelcomeView: View {
                     .foregroundStyle(.white.opacity(0.95))
                     .shadow(color: .black.opacity(0.2), radius: 10, y: 8)
 
-                Text("Good Things Are Coming", tableName: "Welcome", bundle: .module)
+                Text("Good Things Are Coming", bundle: .module)
                     .font(.system(size: 34, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
                     .accessibilityAddTraits(.isHeader)
 
-                Text("Ready to explore your music world", tableName: "Welcome", bundle: .module)
+                Text("Ready to explore your music world", bundle: .module)
                     .font(.title3)
                     .foregroundStyle(.white.opacity(0.9))
                     .multilineTextAlignment(.center)

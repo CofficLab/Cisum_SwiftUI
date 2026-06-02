@@ -521,7 +521,7 @@ private extension BookProgressRootView {
                         return
                     }
                     os_log(.error, "\(self.t)❌ Audiobook file download failed: \(error.localizedDescription)")
-                    alert_error(String(localized: "Download failed: \(error.localizedDescription)", table: "Book-Progress", bundle: .module))
+                    alert_error(String(localized: "Download failed: \(error.localizedDescription)", bundle: .module))
                 }
             }
         }

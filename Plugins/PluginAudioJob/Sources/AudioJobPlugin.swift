@@ -17,7 +17,7 @@ public actor AudioJobPlugin: SuperPlugin {
     public static var order: Int { 5 }
 
     public nonisolated var description: String {
-        String(localized: "Background tasks for audio files", table: "Audio-Job", bundle: .module)
+        String(localized: "Background tasks for audio files", bundle: .module)
     }
 
     public nonisolated var iconName: String { "gearshape.2" }

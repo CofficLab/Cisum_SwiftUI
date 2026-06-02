@@ -6,7 +6,6 @@ import SwiftData
 import UniformTypeIdentifiers
 
 @Test func bookDBInfoExportsMetadata() {
-    #expect(BookDBPluginInfo.table == "Book-DBView")
     #expect(BookDBPluginInfo.iconName == "books.vertical")
 }
 

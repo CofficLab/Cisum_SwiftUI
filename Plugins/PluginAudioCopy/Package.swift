@@ -34,7 +34,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Audio-Copy-macOS.xcstrings"),
+                .process("Localizable.xcstrings"),
             ]
         ),
         .testTarget(

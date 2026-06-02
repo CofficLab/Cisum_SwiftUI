@@ -12,8 +12,8 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
     public static let verbose = false
 
     public nonisolated let identifier = "com.cisum.audio.job.filesystem-monitor"
-    public nonisolated let name = String(localized: "File System Monitor", table: "Audio-Job", bundle: .module)
-    public nonisolated let description = String(localized: "Monitor audio file system changes and sync to database", table: "Audio-Job", bundle: .module)
+    public nonisolated let name = String(localized: "File System Monitor", bundle: .module)
+    public nonisolated let description = String(localized: "Monitor audio file system changes and sync to database", bundle: .module)
 
     private var monitor: Cancellable?
     private let state = State()

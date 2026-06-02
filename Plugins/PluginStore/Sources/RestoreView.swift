@@ -142,7 +142,7 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
 
 private extension RestoreView {
     func localized(_ key: String.LocalizationValue) -> String {
-        String(localized: key, table: "Store", bundle: .module)
+        String(localized: key, bundle: .module)
     }
 }
 

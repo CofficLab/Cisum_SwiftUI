@@ -17,13 +17,13 @@ public struct StorageSettingView: View, SuperLog {
     }
 
     public var body: some View {
-        CisumUI.MagicSettingSection(title: String(localized: "Media Storage Location", table: "Storage", bundle: .module)) {
+        CisumUI.MagicSettingSection(title: String(localized: "Media Storage Location", bundle: .module)) {
             VStack(spacing: 0) {
                 CisumUI.MagicSettingRow(
-                    title: String(localized: "iCloud Drive", table: "Storage", bundle: .module),
+                    title: String(localized: "iCloud Drive", bundle: .module),
                     description: isICloudAvailable
-                        ? String(localized: "Store media files in iCloud Drive", table: "Storage", bundle: .module)
-                        : String(localized: "iCloud Drive is unavailable", table: "Storage", bundle: .module),
+                        ? String(localized: "Store media files in iCloud Drive", bundle: .module)
+                        : String(localized: "iCloud Drive is unavailable", bundle: .module),
                     icon: .cisumIconCloud,
                     action: isICloudAvailable ? {
                         beginMigration(to: .icloud)
@@ -33,17 +33,17 @@ public struct StorageSettingView: View, SuperLog {
                         Image(systemName: .cisumIconCheckmarkSimple)
                             .foregroundColor(.accentColor)
                     } else if !isICloudAvailable {
-                        Text("Unavailable", tableName: "Storage", bundle: .module)
+                        Text("Unavailable", bundle: .module)
                             .font(.footnote)
                     }
                 }
                 .opacity(isICloudAvailable ? 1 : 0.5)
 
                 CisumUI.MagicSettingRow(
-                    title: String(localized: "Local", table: "Storage", bundle: .module),
+                    title: String(localized: "Local", bundle: .module),
                     description: isLocalStorageAvailable
-                        ? String(localized: "Store within app, data will be lost if app is deleted", table: "Storage", bundle: .module)
-                        : String(localized: "Local storage is unavailable", table: "Storage", bundle: .module),
+                        ? String(localized: "Store within app, data will be lost if app is deleted", bundle: .module)
+                        : String(localized: "Local storage is unavailable", bundle: .module),
                     icon: .cisumIconFolder,
                     action: isLocalStorageAvailable ? {
                         beginMigration(to: .local)
@@ -53,7 +53,7 @@ public struct StorageSettingView: View, SuperLog {
                         Image(systemName: .cisumIconCheckmarkSimple)
                             .foregroundColor(.accentColor)
                     } else if !isLocalStorageAvailable {
-                        Text("Unavailable", tableName: "Storage", bundle: .module)
+                        Text("Unavailable", bundle: .module)
                             .font(.footnote)
                     }
                 }

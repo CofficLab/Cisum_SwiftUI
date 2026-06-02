@@ -245,13 +245,13 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     private var audioListView: some View {
         List(selection: $selection) {
             Section(header: HStack {
-                Text("Total \(totalCount.description)", tableName: "Audio-DBView", bundle: .module)
+                Text("Total \(totalCount.description)", bundle: .module)
                 Spacer()
                 if isSyncing {
                     HStack(spacing: 6) {
                         ProgressView()
                             .controlSize(.small)
-                        Text("Reading repository", tableName: "Audio-DBView", bundle: .module)
+                        Text("Reading repository", bundle: .module)
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
@@ -281,7 +281,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                         Spacer()
                         ProgressView()
                             .controlSize(.small)
-                        Text("Loading more...", tableName: "Audio-DBView", bundle: .module)
+                        Text("Loading more...", bundle: .module)
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                         Spacer()
@@ -310,7 +310,7 @@ extension AudioList {
 
         guard let repo = dependencies.audioRepo() else {
             isLoading = false
-            alert_error(String(localized: "Load failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
+            alert_error(String(localized: "Load failed: audio repository is unavailable", bundle: .module))
             return
         }
 
@@ -377,7 +377,7 @@ extension AudioList {
 
         guard let repo = dependencies.audioRepo() else {
             isLoadingMore = false
-            alert_error(String(localized: "Load failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
+            alert_error(String(localized: "Load failed: audio repository is unavailable", bundle: .module))
             return
         }
 
@@ -497,7 +497,7 @@ extension AudioList {
     /// Loads the current page data to refresh already loaded content.
     private func loadCurrentPageData(reason: String) {
         guard let repo = dependencies.audioRepo() else {
-            alert_error(String(localized: "Refresh failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
+            alert_error(String(localized: "Refresh failed: audio repository is unavailable", bundle: .module))
             return
         }
 
@@ -719,7 +719,7 @@ extension AudioList {
     func handleDeleteItems(at offsets: IndexSet) {
         // Get the URLs to delete.
         guard let urlsToDelete = Self.urlsToDelete(from: offsets, in: urls) else {
-            alert_error(String(localized: "Delete failed: the audio list changed. Please try again.", table: "Audio-DBView", bundle: .module))
+            alert_error(String(localized: "Delete failed: the audio list changed. Please try again.", bundle: .module))
             return
         }
 
@@ -729,7 +729,7 @@ extension AudioList {
 
         Task {
             guard let repo = dependencies.audioRepo() else {
-                alert_error(String(localized: "Delete failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
+                alert_error(String(localized: "Delete failed: audio repository is unavailable", bundle: .module))
                 return
             }
 
@@ -743,10 +743,10 @@ extension AudioList {
                     await playManController.reset(reason: "Delete file")
                 }
                 for url in urlsToDelete {
-                    alert_info(String(localized: "Deleted \(url.title)", table: "Audio-DBView", bundle: .module))
+                    alert_info(String(localized: "Deleted \(url.title)", bundle: .module))
                 }
             } catch {
-                alert_error(String(localized: "Delete failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
+                alert_error(String(localized: "Delete failed: \(error.localizedDescription)", bundle: .module))
             }
         }
     }

@@ -29,7 +29,7 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("Book-Settings.xcstrings")
+                .process("Localizable.xcstrings")
             ]
         ),
         .testTarget(

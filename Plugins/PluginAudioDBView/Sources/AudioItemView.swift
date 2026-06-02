@@ -175,7 +175,7 @@ extension AudioItemView {
                         case .size(let fileSize):
                             AppSizeLabel(bytes: fileSize)
                         case .unavailable:
-                            Text("Unavailable", tableName: "Audio-DBView", bundle: .module)
+                            Text("Unavailable", bundle: .module)
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         case .loading:
@@ -197,7 +197,7 @@ extension AudioItemView {
             .contextMenu {
                 Button(action: playAudio) {
                     Label {
-                        Text("Play", tableName: "Audio-DBView", bundle: .module)
+                        Text("Play", bundle: .module)
                     } icon: {
                         Image(systemName: "play.fill")
                     }
@@ -208,7 +208,7 @@ extension AudioItemView {
                         showInFinder()
                     } label: {
                         Label {
-                            Text("Show in Finder", tableName: "Audio-DBView", bundle: .module)
+                            Text("Show in Finder", bundle: .module)
                         } icon: {
                             Image(systemName: "finder")
                         }
@@ -219,7 +219,7 @@ extension AudioItemView {
                     exportToDownloads()
                 } label: {
                     Label {
-                        Text("Export to Downloads", tableName: "Audio-DBView", bundle: .module)
+                        Text("Export to Downloads", bundle: .module)
                     } icon: {
                         Image(systemName: "arrow.down.doc")
                     }
@@ -231,7 +231,7 @@ extension AudioItemView {
                     showDeleteConfirmation = true
                 } label: {
                     Label {
-                        Text("Delete", tableName: "Audio-DBView", bundle: .module)
+                        Text("Delete", bundle: .module)
                     } icon: {
                         Image(systemName: "trash")
                     }
@@ -239,17 +239,17 @@ extension AudioItemView {
             }
         #endif
             .confirmationDialog(
-                Text("Delete this file?", tableName: "Audio-DBView", bundle: .module),
+                Text("Delete this file?", bundle: .module),
                 isPresented: $showDeleteConfirmation,
                 titleVisibility: .visible
             ) {
                 Button(role: .cancel) {} label: {
-                    Text("Cancel", tableName: "Audio-DBView", bundle: .module)
+                    Text("Cancel", bundle: .module)
                 }
                 Button(role: .destructive) {
                     deleteFile()
                 } label: {
-                    Text("Delete", tableName: "Audio-DBView", bundle: .module)
+                    Text("Delete", bundle: .module)
                 }
             } message: {
                 Text(url.lastPathComponent)
@@ -302,12 +302,12 @@ extension AudioItemView {
                 if Self.verbose {
                     os_log("\(Self.t)✅ File exported to: \(finalDestinationURL.path)")
                 }
-                alert_info(String(localized: "File copied to Downloads", table: "Audio-DBView", bundle: .module))
+                alert_info(String(localized: "File copied to Downloads", bundle: .module))
             } catch {
                 if Self.verbose {
                     os_log("\(Self.t)❌ Failed to export file: \(error.localizedDescription)")
                 }
-                alert_error(String(localized: "Export failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
+                alert_error(String(localized: "Export failed: \(error.localizedDescription)", bundle: .module))
             }
         }
     }
@@ -383,7 +383,7 @@ extension AudioItemView {
         Task {
             do {
                 guard let repo = dependencies.audioRepo() else {
-                    alert_error(String(localized: "Delete failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
+                    alert_error(String(localized: "Delete failed: audio repository is unavailable", bundle: .module))
                     return
                 }
 
@@ -403,12 +403,12 @@ extension AudioItemView {
                 if Self.verbose {
                     os_log("\(Self.t)🗑️ File deleted: \(url.path)")
                 }
-                alert_info(String(localized: "File deleted", table: "Audio-DBView", bundle: .module))
+                alert_info(String(localized: "File deleted", bundle: .module))
             } catch {
                 if Self.verbose {
                     os_log("\(Self.t)❌ Failed to delete file: \(error.localizedDescription)")
                 }
-                alert_error(String(localized: "Delete failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
+                alert_error(String(localized: "Delete failed: \(error.localizedDescription)", bundle: .module))
             }
         }
     }
