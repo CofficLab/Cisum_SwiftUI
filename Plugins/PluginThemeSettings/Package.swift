@@ -29,7 +29,7 @@ let package = Package(
         .testTarget(
             name: "PluginThemeSettingsTests",
             dependencies: ["PluginThemeSettings"],
-            path: "Tests/PluginThemeSettingsTests"
+            path: "Tests"
         )
     ]
 )

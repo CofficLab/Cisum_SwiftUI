@@ -33,7 +33,7 @@ let package = Package(
         .testTarget(
             name: "PluginBookTests",
             dependencies: ["PluginBook"],
-            path: "Tests/PluginBookTests"
+            path: "Tests"
         )
     ]
 )

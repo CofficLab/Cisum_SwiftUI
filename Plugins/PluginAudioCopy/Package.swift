@@ -38,7 +38,8 @@ let package = Package(
         ),
         .testTarget(
             name: "PluginAudioCopyTests",
-            dependencies: ["PluginAudioCopy"]
+            dependencies: ["PluginAudioCopy"],
+            path: "Tests"
         ),
     ]
 )

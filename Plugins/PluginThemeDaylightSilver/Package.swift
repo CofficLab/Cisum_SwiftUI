@@ -31,7 +31,7 @@ let package = Package(
         .testTarget(
             name: "PluginThemeDaylightSilverTests",
             dependencies: ["PluginThemeDaylightSilver"],
-            path: "Tests/PluginThemeDaylightSilverTests"
+            path: "Tests"
         )
     ]
 )

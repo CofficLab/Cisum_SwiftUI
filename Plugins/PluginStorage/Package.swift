@@ -32,7 +32,8 @@ let package = Package(
         ),
         .testTarget(
             name: "PluginStorageTests",
-            dependencies: ["PluginStorage"]
+            dependencies: ["PluginStorage"],
+            path: "Tests"
         ),
     ]
 )

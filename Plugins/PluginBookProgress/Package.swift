@@ -44,7 +44,7 @@ let package = Package(
                 "PluginBookProgress",
                 .product(name: "PluginBook", package: "PluginBook")
             ],
-            path: "Tests/PluginBookProgressTests"
+            path: "Tests"
         )
     ]
 )

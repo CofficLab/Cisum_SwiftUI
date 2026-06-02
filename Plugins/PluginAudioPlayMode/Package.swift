@@ -41,7 +41,7 @@ let package = Package(
         .testTarget(
             name: "PluginAudioPlayModeTests",
             dependencies: ["PluginAudioPlayMode"],
-            path: "Tests/PluginAudioPlayModeTests"
+            path: "Tests"
         )
     ]
 )

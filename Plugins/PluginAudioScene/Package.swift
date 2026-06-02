@@ -35,7 +35,7 @@ let package = Package(
         .testTarget(
             name: "PluginAudioSceneTests",
             dependencies: ["PluginAudioScene"],
-            path: "Tests/PluginAudioSceneTests"
+            path: "Tests"
         )
     ]
 )

@@ -43,7 +43,7 @@ let package = Package(
         .testTarget(
             name: "PluginAudioProgressTests",
             dependencies: ["PluginAudioProgress"],
-            path: "Tests/PluginAudioProgressTests"
+            path: "Tests"
         )
     ]
 )

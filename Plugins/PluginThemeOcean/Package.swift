@@ -31,7 +31,7 @@ let package = Package(
         .testTarget(
             name: "PluginThemeOceanTests",
             dependencies: ["PluginThemeOcean"],
-            path: "Tests/PluginThemeOceanTests"
+            path: "Tests"
         )
     ]
 )

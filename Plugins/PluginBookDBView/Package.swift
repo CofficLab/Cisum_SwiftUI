@@ -44,7 +44,8 @@ let package = Package(
         ),
         .testTarget(
             name: "PluginBookDBViewTests",
-            dependencies: ["PluginBookDBView"]
+            dependencies: ["PluginBookDBView"],
+            path: "Tests"
         ),
     ]
 )
