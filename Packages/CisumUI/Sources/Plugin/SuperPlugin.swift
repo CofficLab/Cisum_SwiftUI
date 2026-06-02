@@ -1,5 +1,63 @@
 import SwiftUI
 
+public enum PluginPolicy: String, Sendable, Codable {
+    case alwaysOn
+    case optOut
+    case optIn
+    case disabled
+
+    public var shouldRegister: Bool {
+        self != .disabled
+    }
+
+    public var allowUserToggle: Bool {
+        switch self {
+        case .alwaysOn, .disabled:
+            false
+        case .optOut, .optIn:
+            true
+        }
+    }
+
+    public var defaultEnabled: Bool {
+        switch self {
+        case .alwaysOn, .optOut:
+            true
+        case .optIn, .disabled:
+            false
+        }
+    }
+}
+
+public struct PluginMetadata: Equatable, Sendable {
+    public let id: String
+    public let displayName: String
+    public let description: String
+    public let iconName: String
+    public let order: Int
+    public let policy: PluginPolicy
+
+    public var shouldRegister: Bool {
+        policy.shouldRegister
+    }
+
+    public init(
+        id: String,
+        displayName: String,
+        description: String,
+        iconName: String = "puzzlepiece.extension",
+        order: Int = 9999,
+        policy: PluginPolicy = .alwaysOn
+    ) {
+        self.id = id
+        self.displayName = displayName
+        self.description = description
+        self.iconName = iconName
+        self.order = order
+        self.policy = policy
+    }
+}
+
 public struct PluginSettingNavigationItem: Identifiable {
     public let id: String
     public let title: String
@@ -27,6 +85,7 @@ public struct PluginSettingNavigationItem: Identifiable {
 
 public protocol SuperPlugin: Actor {
     static var shared: Self { get }
+    static var metadata: PluginMetadata { get }
 
     nonisolated var id: String { get }
     nonisolated var label: String { get }
@@ -56,11 +115,23 @@ public protocol SuperPlugin: Actor {
 }
 
 public extension SuperPlugin {
-    nonisolated var id: String { label }
-    nonisolated var label: String { String(describing: type(of: self)) }
-    nonisolated var title: String { label }
-    static var order: Int { 9999 }
-    static var shouldRegister: Bool { true }
+    static var metadata: PluginMetadata {
+        PluginMetadata(
+            id: String(describing: Self.self),
+            displayName: String(describing: Self.self),
+            description: "",
+            order: 9999,
+            policy: .alwaysOn
+        )
+    }
+
+    nonisolated var id: String { Self.metadata.id }
+    nonisolated var label: String { Self.metadata.id }
+    nonisolated var title: String { Self.metadata.displayName }
+    nonisolated var description: String { Self.metadata.description }
+    nonisolated var iconName: String { Self.metadata.iconName }
+    static var order: Int { metadata.order }
+    static var shouldRegister: Bool { metadata.shouldRegister }
 
     @MainActor func addSceneItem() -> String? { nil }
     nonisolated func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View { nil }

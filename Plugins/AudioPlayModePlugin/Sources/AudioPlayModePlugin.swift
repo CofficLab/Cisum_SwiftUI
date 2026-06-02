@@ -5,12 +5,13 @@ import SwiftUI
 
 public actor AudioPlayModePlugin: SuperPlugin {
     public static let shared = AudioPlayModePlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { AudioPlayModePluginInfo.order }
-
-    public nonisolated var title: String { AudioPlayModePluginInfo.title }
-    public nonisolated var description: String { AudioPlayModePluginInfo.description }
-    public nonisolated var iconName: String { AudioPlayModePluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "AudioPlayModePlugin",
+        displayName: AudioPlayModePluginInfo.title,
+        description: AudioPlayModePluginInfo.description,
+        iconName: AudioPlayModePluginInfo.iconName,
+        order: AudioPlayModePluginInfo.order
+    )
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {

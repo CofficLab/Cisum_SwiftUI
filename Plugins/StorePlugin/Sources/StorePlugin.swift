@@ -3,12 +3,13 @@ import SwiftUI
 
 public actor StorePlugin: SuperPlugin {
     public static let shared = StorePlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { 80 }
-
-    public nonisolated var title: String { String(localized: String.LocalizationValue(StorePluginInfo.titleKey), bundle: .module) }
-    public nonisolated var description: String { String(localized: String.LocalizationValue(StorePluginInfo.descriptionKey), bundle: .module) }
-    public nonisolated var iconName: String { StorePluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "StorePlugin",
+        displayName: String(localized: String.LocalizationValue(StorePluginInfo.titleKey), bundle: .module),
+        description: String(localized: String.LocalizationValue(StorePluginInfo.descriptionKey), bundle: .module),
+        iconName: StorePluginInfo.iconName,
+        order: 80
+    )
 
     @MainActor
     public func addSettingView() -> AnyView? {

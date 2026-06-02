@@ -3,10 +3,12 @@ import SwiftUI
 
 public actor OpenButtonPlugin: SuperPlugin {
     public static let shared = OpenButtonPlugin()
-    public static var shouldRegister: Bool { true }
-
-    public nonisolated var description: String { OpenButtonPluginInfo.description }
-    public nonisolated var iconName: String { OpenButtonPluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "OpenButtonPlugin",
+        displayName: String(localized: "Open Current", bundle: .module),
+        description: OpenButtonPluginInfo.description,
+        iconName: OpenButtonPluginInfo.iconName
+    )
 
     #if os(macOS)
         @MainActor

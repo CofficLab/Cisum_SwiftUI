@@ -4,12 +4,13 @@ import SwiftUI
 
 public actor BookPlayModePlugin: SuperPlugin {
     public static let shared = BookPlayModePlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { BookPlayModePluginInfo.order }
-
-    public nonisolated var title: String { BookPlayModePluginInfo.title }
-    public nonisolated var description: String { BookPlayModePluginInfo.description }
-    public nonisolated var iconName: String { BookPlayModePluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "BookPlayModePlugin",
+        displayName: BookPlayModePluginInfo.title,
+        description: BookPlayModePluginInfo.description,
+        iconName: BookPlayModePluginInfo.iconName,
+        order: BookPlayModePluginInfo.order
+    )
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {

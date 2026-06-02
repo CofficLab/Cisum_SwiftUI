@@ -4,12 +4,13 @@ import SwiftUI
 
 public actor AudioSettingsPlugin: SuperPlugin {
     public static let shared = AudioSettingsPlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { AudioSettingsPluginInfo.order }
-
-    public nonisolated var title: String { AudioSettingsPluginInfo.title }
-    public nonisolated var description: String { AudioSettingsPluginInfo.description }
-    public nonisolated var iconName: String { AudioSettingsPluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "AudioSettingsPlugin",
+        displayName: AudioSettingsPluginInfo.title,
+        description: AudioSettingsPluginInfo.description,
+        iconName: AudioSettingsPluginInfo.iconName,
+        order: AudioSettingsPluginInfo.order
+    )
 
     @MainActor
     public func addSettingView() -> AnyView? {

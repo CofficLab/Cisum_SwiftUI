@@ -4,13 +4,13 @@ import SwiftUI
 
 public actor AudioDemoPlugin: SuperPlugin {
     public static let shared = AudioDemoPlugin()
-
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { 1 }
-
-    public nonisolated var title: String { AudioDemoPluginInfo.title }
-    public nonisolated var description: String { AudioDemoPluginInfo.description }
-    public nonisolated var iconName: String { AudioDemoPluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "AudioDemoPlugin",
+        displayName: AudioDemoPluginInfo.title,
+        description: AudioDemoPluginInfo.description,
+        iconName: AudioDemoPluginInfo.iconName,
+        order: 1
+    )
 
     @MainActor
     public func addTabView(reason: String, currentSceneName: String?, demoMode: Bool = false) -> (view: AnyView, label: String)? {

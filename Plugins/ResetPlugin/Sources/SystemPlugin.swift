@@ -4,12 +4,13 @@ import SwiftUI
 
 public actor SystemPlugin: SuperPlugin {
     public static let shared = SystemPlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { ResetPluginInfo.order }
-
-    public nonisolated var title: String { ResetPluginInfo.title }
-    public nonisolated var description: String { ResetPluginInfo.description }
-    public nonisolated var iconName: String { ResetPluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "SystemPlugin",
+        displayName: ResetPluginInfo.title,
+        description: ResetPluginInfo.description,
+        iconName: ResetPluginInfo.iconName,
+        order: ResetPluginInfo.order
+    )
 
     @MainActor
     public func addSettingView() -> AnyView? {

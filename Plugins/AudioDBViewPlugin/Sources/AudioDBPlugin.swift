@@ -5,12 +5,13 @@ import SwiftUI
 
 public actor AudioDBPlugin: SuperPlugin {
     public static let shared = AudioDBPlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { 1 }
-
-    public nonisolated var title: String { String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), bundle: .module) }
-    public nonisolated var description: String { String(localized: String.LocalizationValue(AudioDBPluginInfo.descriptionKey), bundle: .module) }
-    public let iconName = "externaldrive"
+    public static let metadata = PluginMetadata(
+        id: "AudioDBPlugin",
+        displayName: String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), bundle: .module),
+        description: String(localized: String.LocalizationValue(AudioDBPluginInfo.descriptionKey), bundle: .module),
+        iconName: "externaldrive",
+        order: 1
+    )
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {

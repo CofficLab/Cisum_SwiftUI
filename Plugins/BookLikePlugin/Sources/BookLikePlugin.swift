@@ -4,12 +4,13 @@ import SwiftUI
 
 public actor BookLikePlugin: SuperPlugin {
     public static let shared = BookLikePlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { BookLikePluginInfo.order }
-
-    public nonisolated var title: String { BookLikePluginInfo.title }
-    public nonisolated var description: String { BookLikePluginInfo.description }
-    public nonisolated var iconName: String { BookLikePluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "BookLikePlugin",
+        displayName: BookLikePluginInfo.title,
+        description: BookLikePluginInfo.description,
+        iconName: BookLikePluginInfo.iconName,
+        order: BookLikePluginInfo.order
+    )
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
@@ -26,9 +27,9 @@ public actor BookLikePlugin: SuperPlugin {
         PluginSettingNavigationItem(
             id: "liked-books",
             title: String(localized: "Liked Books", bundle: .module),
-            description: BookLikePluginInfo.description,
-            iconName: BookLikePluginInfo.iconName,
-            order: BookLikePluginInfo.order,
+            description: Self.metadata.description,
+            iconName: Self.metadata.iconName,
+            order: Self.metadata.order,
             destination: AnyView(BookLikeSettingsView())
         )
     }

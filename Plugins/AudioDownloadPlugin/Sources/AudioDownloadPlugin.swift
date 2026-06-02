@@ -3,12 +3,13 @@ import SwiftUI
 
 public actor AudioDownloadPlugin: SuperPlugin {
     public static let shared = AudioDownloadPlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { AudioDownloadPluginInfo.order }
-
-    public nonisolated var title: String { AudioDownloadPluginInfo.title }
-    public nonisolated var description: String { AudioDownloadPluginInfo.description }
-    public nonisolated var iconName: String { AudioDownloadPluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "AudioDownloadPlugin",
+        displayName: AudioDownloadPluginInfo.title,
+        description: AudioDownloadPluginInfo.description,
+        iconName: AudioDownloadPluginInfo.iconName,
+        order: AudioDownloadPluginInfo.order
+    )
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {

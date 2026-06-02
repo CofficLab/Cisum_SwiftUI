@@ -13,14 +13,13 @@ private final class AudioJobNotificationObserverHolder {
 
 public actor AudioJobPlugin: SuperPlugin {
     public static let shared = AudioJobPlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { 5 }
-
-    public nonisolated var description: String {
-        String(localized: "Background tasks for audio files", bundle: .module)
-    }
-
-    public nonisolated var iconName: String { "gearshape.2" }
+    public static let metadata = PluginMetadata(
+        id: "AudioJobPlugin",
+        displayName: String(localized: "Audio Jobs", bundle: .module),
+        description: String(localized: "Background tasks for audio files", bundle: .module),
+        iconName: "gearshape.2",
+        order: 5
+    )
 
     public nonisolated func onRegister() {
         Task {

@@ -4,14 +4,14 @@ import SwiftUI
 
 public actor AudioWidgetControlPlugin: SuperPlugin {
     public static let shared = AudioWidgetControlPlugin()
-    public static let order = 100
-    public static var shouldRegister: Bool { true }
-
-    public nonisolated var id: String { "AudioWidgetControlPlugin" }
+    public static let metadata = PluginMetadata(
+        id: "AudioWidgetControlPlugin",
+        displayName: AudioWidgetControlPluginInfo.title,
+        description: AudioWidgetControlPluginInfo.description,
+        iconName: AudioWidgetControlPluginInfo.iconName,
+        order: 100
+    )
     public nonisolated var label: String { "widgetControl" }
-    public nonisolated var title: String { AudioWidgetControlPluginInfo.title }
-    public nonisolated var description: String { AudioWidgetControlPluginInfo.description }
-    public nonisolated var iconName: String { AudioWidgetControlPluginInfo.iconName }
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {

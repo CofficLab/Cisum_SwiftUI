@@ -7,12 +7,13 @@ import SwiftUI
 
 public actor BookProgressPlugin: SuperPlugin {
     public static let shared = BookProgressPlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { BookProgressPluginInfo.order }
-
-    public nonisolated var title: String { BookProgressPluginInfo.title }
-    public nonisolated var description: String { BookProgressPluginInfo.description }
-    public nonisolated var iconName: String { BookProgressPluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "BookProgressPlugin",
+        displayName: BookProgressPluginInfo.title,
+        description: BookProgressPluginInfo.description,
+        iconName: BookProgressPluginInfo.iconName,
+        order: BookProgressPluginInfo.order
+    )
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {

@@ -3,10 +3,13 @@ import SwiftUI
 
 public actor LikeButtonPlugin: SuperPlugin {
     public static let shared = LikeButtonPlugin()
-    public static var shouldRegister: Bool { false }
-
-    public nonisolated var description: String { LikeButtonPluginInfo.description }
-    public nonisolated var iconName: String { LikeButtonPluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "LikeButtonPlugin",
+        displayName: String(localized: "Like Button", bundle: .module),
+        description: LikeButtonPluginInfo.description,
+        iconName: LikeButtonPluginInfo.iconName,
+        policy: .disabled
+    )
 
     @MainActor
     public func addToolBarButtons() -> [(id: String, view: AnyView)] {

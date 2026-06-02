@@ -4,12 +4,13 @@ import SwiftUI
 
 public actor AudioLikePlugin: SuperPlugin {
     public static let shared = AudioLikePlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { AudioLikePluginInfo.order }
-
-    public nonisolated var title: String { AudioLikePluginInfo.title }
-    public nonisolated var description: String { AudioLikePluginInfo.description }
-    public nonisolated var iconName: String { AudioLikePluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "AudioLikePlugin",
+        displayName: AudioLikePluginInfo.title,
+        description: AudioLikePluginInfo.description,
+        iconName: AudioLikePluginInfo.iconName,
+        order: AudioLikePluginInfo.order
+    )
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
@@ -26,9 +27,9 @@ public actor AudioLikePlugin: SuperPlugin {
         PluginSettingNavigationItem(
             id: "liked-audio",
             title: String(localized: "Liked audio", bundle: .module),
-            description: AudioLikePluginInfo.description,
-            iconName: AudioLikePluginInfo.iconName,
-            order: AudioLikePluginInfo.order,
+            description: Self.metadata.description,
+            iconName: Self.metadata.iconName,
+            order: Self.metadata.order,
             destination: AnyView(AudioLikeSettingsView())
         )
     }

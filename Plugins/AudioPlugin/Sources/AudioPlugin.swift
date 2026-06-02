@@ -6,8 +6,13 @@ import SwiftUI
 
 public actor AudioPlugin: SuperPlugin {
     public static let shared = AudioPlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { 1 }
+    public static let metadata = PluginMetadata(
+        id: "AudioPlugin",
+        displayName: String(localized: String.LocalizationValue(AudioPluginInfo.titleKey), bundle: .module),
+        description: String(localized: String.LocalizationValue(AudioPluginInfo.descriptionKey), bundle: .module),
+        iconName: .cisumIconMusicNote,
+        order: 1
+    )
 
     public static let maxAudioCount = AudioPluginInfo.maxAudioCount
     public static let supportedExtensions = AudioPluginInfo.supportedExtensions
@@ -17,16 +22,6 @@ public actor AudioPlugin: SuperPlugin {
     #else
         public static let dbDirName = AudioPluginInfo.dbDirName
     #endif
-
-    public nonisolated var title: String {
-        String(localized: String.LocalizationValue(AudioPluginInfo.titleKey), bundle: .module)
-    }
-
-    public nonisolated var description: String {
-        String(localized: String.LocalizationValue(AudioPluginInfo.descriptionKey), bundle: .module)
-    }
-
-    public nonisolated var iconName: String { .cisumIconMusicNote }
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {

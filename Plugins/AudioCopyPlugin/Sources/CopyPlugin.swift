@@ -5,14 +5,13 @@ import SwiftUI
 #if os(macOS)
     public actor CopyPlugin: SuperPlugin {
         public static let shared = CopyPlugin()
-        public static var shouldRegister: Bool { true }
-        public static var order: Int { 0 }
-
-        public nonisolated var description: String {
-            String(localized: String.LocalizationValue(AudioCopyPluginInfo.descriptionKey), bundle: .module)
-        }
-
-        public nonisolated var iconName: String { AudioCopyPluginInfo.iconName }
+        public static let metadata = PluginMetadata(
+            id: "CopyPlugin",
+            displayName: String(localized: "Copy", bundle: .module),
+            description: String(localized: String.LocalizationValue(AudioCopyPluginInfo.descriptionKey), bundle: .module),
+            iconName: AudioCopyPluginInfo.iconName,
+            order: 0
+        )
 
         @MainActor
         public func addStateView(currentSceneName: String?) -> AnyView? {

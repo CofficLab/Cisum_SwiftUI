@@ -382,8 +382,8 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
             let pluginType = type(of: instance)
             let pluginOrder = pluginType.order
 
-            if !pluginType.shouldRegister {
-                if Self.verbose { os_log("\(self.t)⏭️ Skipping plugin (shouldRegister=false): \(String(describing: pluginType))") }
+            if !pluginType.metadata.shouldRegister {
+                if Self.verbose { os_log("\(self.t)⏭️ Skipping plugin (policy=\(pluginType.metadata.policy.rawValue)): \(String(describing: pluginType))") }
                 continue
             }
 

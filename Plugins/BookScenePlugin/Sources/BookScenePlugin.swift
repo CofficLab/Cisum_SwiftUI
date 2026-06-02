@@ -3,12 +3,13 @@ import SwiftUI
 
 public actor BookScenePlugin: SuperPlugin {
     public static let shared = BookScenePlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { BookScenePluginInfo.order }
-
-    public nonisolated var title: String { BookScenePluginInfo.title }
-    public nonisolated var description: String { BookScenePluginInfo.description }
-    public nonisolated var iconName: String { BookScenePluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "BookScenePlugin",
+        displayName: BookScenePluginInfo.title,
+        description: BookScenePluginInfo.description,
+        iconName: BookScenePluginInfo.iconName,
+        order: BookScenePluginInfo.order
+    )
     public static let sceneName = BookScenePluginInfo.sceneName
 
     @MainActor

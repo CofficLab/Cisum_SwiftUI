@@ -3,14 +3,13 @@ import SwiftUI
 
 public actor ThemeMidnightPlugin: SuperPlugin {
     public static let shared = ThemeMidnightPlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { 160 }
-
-    private nonisolated var theme: MidnightTheme { MidnightTheme() }
-
-    public nonisolated var title: String { theme.displayName }
-    public nonisolated var description: String { theme.description }
-    public nonisolated var iconName: String { theme.iconName }
+    public static let metadata = PluginMetadata(
+        id: "ThemeMidnightPlugin",
+        displayName: MidnightTheme().displayName,
+        description: MidnightTheme().description,
+        iconName: MidnightTheme().iconName,
+        order: 160
+    )
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {

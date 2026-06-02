@@ -7,12 +7,13 @@ public actor StoragePlugin: SuperPlugin, SuperLog {
     public static let shared = StoragePlugin()
     public nonisolated static let emoji = "💾"
     public static let verbose = true
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { 10 }
-
-    public nonisolated var title: String { String(localized: String.LocalizationValue(StoragePluginInfo.titleKey), bundle: .module) }
-    public nonisolated var description: String { String(localized: String.LocalizationValue(StoragePluginInfo.descriptionKey), bundle: .module) }
-    public let iconName = StoragePluginInfo.iconName
+    public static let metadata = PluginMetadata(
+        id: "StoragePlugin",
+        displayName: String(localized: String.LocalizationValue(StoragePluginInfo.titleKey), bundle: .module),
+        description: String(localized: String.LocalizationValue(StoragePluginInfo.descriptionKey), bundle: .module),
+        iconName: StoragePluginInfo.iconName,
+        order: 10
+    )
 
     @MainActor
     public func addSettingView() -> AnyView? {

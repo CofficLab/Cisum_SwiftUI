@@ -3,12 +3,13 @@ import SwiftUI
 
 public actor AudioScenePlugin: SuperPlugin {
     public static let shared = AudioScenePlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { AudioScenePluginInfo.order }
-
-    public nonisolated var title: String { AudioScenePluginInfo.title }
-    public nonisolated var description: String { AudioScenePluginInfo.description }
-    public nonisolated var iconName: String { AudioScenePluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "AudioScenePlugin",
+        displayName: AudioScenePluginInfo.title,
+        description: AudioScenePluginInfo.description,
+        iconName: AudioScenePluginInfo.iconName,
+        order: AudioScenePluginInfo.order
+    )
     public static let sceneName = AudioScenePluginInfo.sceneName
 
     @MainActor

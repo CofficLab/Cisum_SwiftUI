@@ -3,12 +3,13 @@ import SwiftUI
 
 public actor ThemeSettingsPlugin: SuperPlugin {
     public static let shared = ThemeSettingsPlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { ThemeSettingsPluginInfo.order }
-
-    public nonisolated var title: String { ThemeSettingsPluginInfo.title }
-    public nonisolated var description: String { ThemeSettingsPluginInfo.description }
-    public nonisolated var iconName: String { ThemeSettingsPluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "ThemeSettingsPlugin",
+        displayName: ThemeSettingsPluginInfo.title,
+        description: ThemeSettingsPluginInfo.description,
+        iconName: ThemeSettingsPluginInfo.iconName,
+        order: ThemeSettingsPluginInfo.order
+    )
 
     @MainActor
     public func addSettingView() -> AnyView? {

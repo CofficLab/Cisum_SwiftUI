@@ -7,12 +7,13 @@ import OSLog
 
 public actor FileLogPlugin: SuperPlugin {
     public static let shared = FileLogPlugin()
-    public static var order: Int { 1 }
-    public static var shouldRegister: Bool { true }
-
-    public nonisolated var title: String { FileLogPluginInfo.title }
-    public nonisolated var description: String { FileLogPluginInfo.description }
-    public nonisolated var iconName: String { FileLogPluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "FileLogPlugin",
+        displayName: FileLogPluginInfo.title,
+        description: FileLogPluginInfo.description,
+        iconName: FileLogPluginInfo.iconName,
+        order: 1
+    )
 
     public nonisolated func onRegister() {
         FileLogCoordinator.shared.configuration = AppFileLogConfiguration()

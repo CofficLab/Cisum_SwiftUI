@@ -6,18 +6,13 @@ import SwiftUI
 
 public actor BookDBPlugin: SuperPlugin {
     public static let shared = BookDBPlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { 12 }
-
-    public nonisolated var title: String {
-        String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), bundle: .module)
-    }
-
-    public nonisolated var description: String {
-        String(localized: String.LocalizationValue(BookDBPluginInfo.descriptionKey), bundle: .module)
-    }
-
-    public nonisolated var iconName: String { BookDBPluginInfo.iconName }
+    public static let metadata = PluginMetadata(
+        id: "BookDBPlugin",
+        displayName: String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), bundle: .module),
+        description: String(localized: String.LocalizationValue(BookDBPluginInfo.descriptionKey), bundle: .module),
+        iconName: BookDBPluginInfo.iconName,
+        order: 12
+    )
 
     @MainActor
     public func addTabView(reason: String, currentSceneName: String?, demoMode: Bool = false) -> (view: AnyView, label: String)? {

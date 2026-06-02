@@ -5,17 +5,18 @@ import SwiftUI
 
 public actor BookPlugin: SuperPlugin {
     public static let shared = BookPlugin()
-    public static var shouldRegister: Bool { true }
-    public static var order: Int { 1 }
+    public static let metadata = PluginMetadata(
+        id: "BookPlugin",
+        displayName: BookPluginInfo.title,
+        description: BookPluginInfo.description,
+        iconName: BookPluginInfo.iconName,
+        order: 1
+    )
 
     public static let keyOfCurrentBookURL = BookPluginInfo.keyOfCurrentBookURL
     public static let keyOfCurrentBookTime = BookPluginInfo.keyOfCurrentBookTime
     public static let dirName = BookPluginInfo.dirName
     public static let supportedExtensions = BookPluginInfo.supportedExtensions
-
-    public nonisolated var title: String { BookPluginInfo.title }
-    public nonisolated var description: String { BookPluginInfo.description }
-    public nonisolated var iconName: String { BookPluginInfo.iconName }
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
