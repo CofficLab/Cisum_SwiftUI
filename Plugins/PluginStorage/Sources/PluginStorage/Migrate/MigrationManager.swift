@@ -37,55 +37,55 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
         downloadProgressCallback: DownloadProgressCallback?,
         verbose: Bool
     ) throws {
-        os_log(.info, "\(self.t)开始迁移任务")
+        os_log(.info, "\(self.t)Starting migration task")
 
         let targetRootExistedBeforeMigration = FileManager.default.fileExists(atPath: targetRoot.path)
 
         do {
             if Self.resolvedStandardizedPath(for: sourceRoot) == Self.resolvedStandardizedPath(for: targetRoot) {
                 progressCallback?(1.0, "")
-                os_log(.info, "\(self.t)源目录与目标目录相同，跳过迁移")
+                os_log(.info, "\(self.t)Source and target directories are the same, skipping migration")
                 return
             }
             guard !Self.isTargetNestedInSource(sourceRoot: sourceRoot, targetRoot: targetRoot) else {
                 throw MigrationError.fileOperationFailed(String(localized: "Target folder cannot be inside the source folder", table: "Storage", bundle: .module))
             }
 
-            // 获取所有文件并过滤掉 .DS_Store
+            // Get all files and filter out .DS_Store.
             var files = try FileManager.default.contentsOfDirectory(
                 at: sourceRoot,
                 includingPropertiesForKeys: nil
             ).filter { $0.lastPathComponent != ".DS_Store" }
 
             files.sort { $0.lastPathComponent < $1.lastPathComponent }
-            os_log(.info, "\(self.t)找到 \(files.count) 个待迁移文件（已排除 .DS_Store）")
+            os_log(.info, "\(self.t)Found \(files.count) files to migrate, excluding .DS_Store")
 
             try FileManager.default.createDirectory(
                 at: targetRoot,
                 withIntermediateDirectories: true
             )
-            os_log(.info, "\(self.t)已创建目标目录")
+            os_log(.info, "\(self.t)Created target directory")
 
             guard !files.isEmpty else {
                 progressCallback?(1.0, "")
-                os_log(.info, "\(self.t)源目录为空，迁移完成")
+                os_log(.info, "\(self.t)Source directory is empty, migration completed")
                 return
             }
 
             for (index, sourceFile) in files.enumerated() {
                 if self.isCancelled {
-                    os_log(.info, "\(self.t)迁移任务被取消")
+                    os_log(.info, "\(self.t)Migration task was canceled")
                     throw MigrationError.migrationCancelled
                 }
 
                 let fileName = sourceFile.lastPathComponent
 
-                os_log(.info, "\(self.t)开始迁移文件: \(fileName) (\(index + 1)/\(files.count))")
+                os_log(.info, "\(self.t)Migrating file: \(fileName) (\(index + 1)/\(files.count))")
 
                 progressCallback?(Double(index) / Double(files.count), fileName)
 
                 if self.isCancelled {
-                    os_log(.info, "\(self.t)迁移任务被取消")
+                    os_log(.info, "\(self.t)Migration task was canceled")
                     throw MigrationError.migrationCancelled
                 }
 
@@ -95,30 +95,30 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
                 )
 
                 if self.isCancelled {
-                    os_log(.info, "\(self.t)迁移任务被取消")
+                    os_log(.info, "\(self.t)Migration task was canceled")
                     throw MigrationError.migrationCancelled
                 }
 
                 let targetFile = uniqueDestination(for: sourceFile, in: targetRoot)
                 do {
                     try migrateItem(from: sourceFile, to: targetFile)
-                    os_log(.info, "\(self.t)成功迁移: \(fileName) -> \(targetFile.lastPathComponent)")
+                    os_log(.info, "\(self.t)Migrated successfully: \(fileName) -> \(targetFile.lastPathComponent)")
                     progressCallback?(Double(index + 1) / Double(files.count), fileName)
                 } catch {
-                    os_log(.error, "\(self.t)迁移失败: \(fileName) - \(error.localizedDescription)")
+                    os_log(.error, "\(self.t)Migration failed: \(fileName) - \(error.localizedDescription)")
                     throw MigrationError.fileOperationFailed("\(fileName): \(error.localizedDescription)")
                 }
             }
 
             if self.isCancelled {
-                os_log(.info, "\(self.t)迁移任务被取消")
+                os_log(.info, "\(self.t)Migration task was canceled")
                 throw MigrationError.migrationCancelled
             }
 
-            os_log(.info, "\(self.t)保留源目录")
-            os_log(.info, "\(self.t)迁移完成，共处理 \(files.count) 个文件")
+            os_log(.info, "\(self.t)Keeping source directory")
+            os_log(.info, "\(self.t)Migration completed, processed \(files.count) files")
         } catch {
-            os_log(.error, "\(self.t)迁移错误: \(error.localizedDescription)")
+            os_log(.error, "\(self.t)Migration error: \(error.localizedDescription)")
             Self.removeEmptyTargetDirectoryCreatedForFailedMigration(
                 targetRoot,
                 targetRootExistedBeforeMigration: targetRootExistedBeforeMigration
@@ -130,7 +130,7 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
             }
         }
 
-        os_log(.info, "\(self.t)迁移任务结束")
+        os_log(.info, "\(self.t)Migration task finished")
     }
 
     static func isTargetNestedInSource(sourceRoot: URL, targetRoot: URL) -> Bool {
