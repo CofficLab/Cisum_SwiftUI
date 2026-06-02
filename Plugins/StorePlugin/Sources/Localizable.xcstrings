@@ -1,6 +1,25 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "  • %@" : {
+
+    },
+    "(%lld 个订阅)" : {
+
+    },
+    "/" : {
+
+    },
+    "%@ (%lld)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$lld)"
+          }
+        }
+      }
+    },
     "%@ for first %@" : {
       "localizations" : {
         "zh-Hans" : {
@@ -16,6 +35,9 @@
           }
         }
       }
+    },
+    "%lld" : {
+
     },
     "%lld days" : {
       "localizations" : {
@@ -146,6 +168,9 @@
         }
       }
     },
+    "All Statuses (%lld)" : {
+
+    },
     "An error occurred while restoring, please try again later" : {
       "localizations" : {
         "zh-Hans" : {
@@ -196,6 +221,9 @@
           }
         }
       }
+    },
+    "Cars (%lld)" : {
+
     },
     "Close" : {
 
@@ -268,7 +296,6 @@
       }
     },
     "Done" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -412,6 +439,21 @@
         }
       }
     },
+    "Highest Product:" : {
+
+    },
+    "Highest Product: 无" : {
+
+    },
+    "Highest Status:" : {
+
+    },
+    "Highest Status: 无" : {
+
+    },
+    "ID: %@" : {
+
+    },
     "In-App Purchase" : {
       "localizations" : {
         "zh-Hans" : {
@@ -509,6 +551,9 @@
         }
       }
     },
+    "NonRenewables (%lld)" : {
+
+    },
     "OK" : {
       "localizations" : {
         "zh-Hans" : {
@@ -574,7 +619,6 @@
       }
     },
     "Please wait, verifying your purchase records..." : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -638,8 +682,16 @@
         }
       }
     },
+    "Products" : {
+
+    },
+    "Purchase" : {
+
+    },
+    "Purchased" : {
+
+    },
     "Restore Failed" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -688,7 +740,6 @@
       }
     },
     "Restore Successful" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -705,7 +756,6 @@
       }
     },
     "Restoring Purchase" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -722,7 +772,6 @@
       }
     },
     "Retry Restore" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -754,6 +803,12 @@
         }
       }
     },
+    "state=" : {
+
+    },
+    "state=%lld" : {
+
+    },
     "Store" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -771,6 +826,9 @@
         }
       }
     },
+    "Subscribe" : {
+
+    },
     "Subscribe to Pro to unlock all features" : {
       "localizations" : {
         "zh-Hans" : {
@@ -787,6 +845,9 @@
         }
       }
     },
+    "Subscribed" : {
+
+    },
     "Subscription expiration date" : {
       "localizations" : {
         "zh-Hans" : {
@@ -802,6 +863,9 @@
           }
         }
       }
+    },
+    "Subscription Groups (%lld)" : {
+
     },
     "Subscription has expired, please renew to continue using Pro features" : {
       "localizations" : {
@@ -867,8 +931,10 @@
         }
       }
     },
+    "Subscriptions (%lld)" : {
+
+    },
     "Successfully restored your purchase records, all features unlocked" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1095,6 +1161,15 @@
         }
       }
     },
+    "加载中…" : {
+
+    },
+    "加载产品" : {
+
+    },
+    "尚未加载产品" : {
+
+    },
     "支持我们做得更好" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1146,6 +1221,9 @@
         }
       }
     },
+    "更新订阅状态" : {
+
+    },
     "未来新功能优先体验" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1162,6 +1240,15 @@
           }
         }
       }
+    },
+    "测试已购" : {
+
+    },
+    "清空" : {
+
+    },
+    "空" : {
+
     },
     "解锁完整体验" : {
       "extractionState" : "stale",
