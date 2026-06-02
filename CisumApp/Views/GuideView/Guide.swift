@@ -6,9 +6,9 @@ import SwiftUI
 struct Guide: View, SuperLog {
     nonisolated static let emoji = "🧭"
     nonisolated static let verbose = false
-    nonisolated static let previousPageLabel = String(localized: "Previous", table: "Core")
-    nonisolated static let nextPageLabel = String(localized: "Next", table: "Core")
-    nonisolated static let finishSetupLabel = String(localized: "Finish Setup", table: "Core")
+    nonisolated static let previousPageLabel = String(localized: "Previous")
+    nonisolated static let nextPageLabel = String(localized: "Next")
+    nonisolated static let finishSetupLabel = String(localized: "Finish Setup")
 
     @EnvironmentObject var pluginProvider: PluginProvider
     @State var currentGuidePageIndex: Int = 0

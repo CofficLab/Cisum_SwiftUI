@@ -8,14 +8,14 @@ struct PluginRepoDebugView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Plugin Repo Debug View", tableName: "Core").font(.headline)
+            Text("Plugin Repo Debug View").font(.headline)
 
             Divider()
 
             Group {
-                Text("Current Plugin ID: \(currentPluginId)", tableName: "Core").bold()
-                Text("UserDefaults value: \(userDefaultsValue)", tableName: "Core")
-                Text("iCloud value: \(iCloudValue)", tableName: "Core")
+                Text("Current Plugin ID: \(currentPluginId)").bold()
+                Text("UserDefaults value: \(userDefaultsValue)")
+                Text("iCloud value: \(iCloudValue)")
             }
             .font(.system(.body, design: .monospaced))
             
@@ -24,7 +24,7 @@ struct PluginRepoDebugView: View {
             Button {
                 refreshData()
             } label: {
-                Text("Refresh Data", tableName: "Core")
+                Text("Refresh Data")
             }
             .buttonStyle(.borderedProminent)
         }

@@ -45,7 +45,7 @@ struct BootApp: App, SuperLog {
             .defaultSize(width: Config.minWidth, height: Config.defaultHeight)
             .commands {
                 CommandGroup(replacing: .newItem) {
-                    Button(String(localized: "Show Cisum", table: "Core")) {
+                    Button(String(localized: "Show Cisum")) {
                         if !AppWindowController.showExistingMainWindow() {
                             openWindow(id: AppWindowController.mainWindowID)
                         }

@@ -38,13 +38,13 @@ struct PlayingProgressView: View {
 
             // 时间标签（显示为未知）
             HStack {
-                Text("--:--", tableName: "Core")
+                Text("--:--")
                     .font(.system(size: 12))
                     .foregroundColor(appTheme.textTertiary)
 
                 Spacer()
 
-                Text("--:--", tableName: "Core")
+                Text("--:--")
                     .font(.system(size: 12))
                     .foregroundColor(appTheme.textTertiary)
             }
@@ -73,13 +73,13 @@ struct PlayingProgressView: View {
 
             // 时间标签
             HStack {
-                Text("1:24", tableName: "Core")
+                Text("1:24")
                     .font(.system(size: 12))
                     .foregroundColor(appTheme.textTertiary)
 
                 Spacer()
 
-                Text("3:45", tableName: "Core")
+                Text("3:45")
                     .font(.system(size: 12))
                     .foregroundColor(appTheme.textTertiary)
             }

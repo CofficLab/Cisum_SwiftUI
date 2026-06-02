@@ -74,11 +74,11 @@ extension HeroView {
 
             // 中心文字
             VStack(spacing: 8) {
-                Text("50%", tableName: "Core")
+                Text("50%")
                     .font(.system(size: 36, weight: .bold, design: .rounded))
                     .foregroundColor(appTheme.textPrimary)
 
-                Text("Downloading from iCloud", tableName: "Core")
+                Text("Downloading from iCloud")
                     .font(.system(size: 14))
                     .foregroundColor(appTheme.textSecondary)
             }

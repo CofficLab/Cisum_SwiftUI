@@ -19,7 +19,7 @@ import SwiftUI
 /// ```
 struct SheetContainer<Content: View>: View {
     nonisolated static var closeButtonLabel: String {
-        String(localized: "Close", table: "Core")
+        String(localized: "Close")
     }
 
     @Environment(\.dismiss) private var dismiss

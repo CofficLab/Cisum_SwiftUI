@@ -26,7 +26,7 @@ struct CrashedView: View {
                 Spacer()
 
                 VStack {
-                    Text("Unable to continue", tableName: "Core")
+                    Text("Unable to continue")
                         .font(.title)
                         .padding(.bottom, 10)
 
@@ -36,7 +36,7 @@ struct CrashedView: View {
                             .padding(.bottom, 20)
                             .font(.title2)
 
-                        Text("\(error.localizedDescription)", tableName: "Core")
+                        Text("\(error.localizedDescription)")
                             .font(.subheadline)
                             .foregroundStyle(.red)
                             .padding(.bottom, 10)
@@ -48,7 +48,7 @@ struct CrashedView: View {
                             HStack {
                                 Image(systemName: isCopied ? "checkmark.circle.fill" : "doc.on.doc")
                                     .foregroundColor(isCopied ? .green : .blue)
-                                Text(isCopied ? "Copied" : "Copy Error Details", tableName: "Core")
+                                Text(isCopied ? "Copied" : "Copy Error Details")
                                     .foregroundColor(isCopied ? .green : .blue)
                             }
                             .padding(.horizontal, 16)
@@ -74,7 +74,7 @@ struct CrashedView: View {
                         Button {
                             NSApplication.shared.terminate(self)
                         } label: {
-                            Text("Quit", tableName: "Core")
+                            Text("Quit")
                         }.controlSize(.extraLarge)
 
                         Spacer()
@@ -90,22 +90,22 @@ struct CrashedView: View {
         VStack(spacing: 10) {
             Section(content: {
                 GroupBox {
-                    makeKeyValueItem(key: String(localized: "iCloud Drive Enabled", table: "Core"), value: MagicApp.isICloudAvailable() ? String(localized: "Yes", table: "Core") : String(localized: "No", table: "Core"))
+                    makeKeyValueItem(key: String(localized: "iCloud Drive Enabled"), value: MagicApp.isICloudAvailable() ? String(localized: "Yes") : String(localized: "No"))
                     Divider()
-                    makeKeyValueItem(key: String(localized: "iCloud Sign In", table: "Core"), value: cloud.isSignedInDescription)
+                    makeKeyValueItem(key: String(localized: "iCloud Sign In"), value: cloud.isSignedInDescription)
                 }
             }, header: { makeTitle("iCloud") })
 
             Section(content: {
                 GroupBox {
-                    makeKeyValueItem(key: String(localized: "Storage Location", table: "Core"), value: Config.getStorageLocation()?.title ?? String(localized: "Not Set", table: "Core"))
+                    makeKeyValueItem(key: String(localized: "Storage Location"), value: Config.getStorageLocation()?.title ?? String(localized: "Not Set"))
                 }
             }, header: { makeTitle("Settings") })
 
             Section(content: {
                 GroupBox {
-                    makeKeyValueItem(key: String(localized: "App Container", table: "Core"), value: MagicApp.getContainerDirectory().path(percentEncoded: false))
-                    makeKeyValueItem(key: String(localized: "Database Folder", table: "Core"), value: MagicApp.getDatabaseDirectory().path(percentEncoded: false))
+                    makeKeyValueItem(key: String(localized: "App Container"), value: MagicApp.getContainerDirectory().path(percentEncoded: false))
+                    makeKeyValueItem(key: String(localized: "Database Folder"), value: MagicApp.getDatabaseDirectory().path(percentEncoded: false))
                 }
             }, header: { makeTitle("Folders") })
 
@@ -114,13 +114,13 @@ struct CrashedView: View {
                     Config.resetStorageLocation()
                     showAlert = true
                 } label: {
-                    Text("Restore Defaults", tableName: "Core")
+                    Text("Restore Defaults")
                 }
                 .alert(isPresented: $showAlert) {
                     Alert(
-                        title: Text("Notice", tableName: "Core"),
-                        message: Text("Please quit the app, then open it again.", tableName: "Core"),
-                        dismissButton: .default(Text("OK", tableName: "Core"))
+                        title: Text("Notice"),
+                        message: Text("Please quit the app, then open it again."),
+                        dismissButton: .default(Text("OK"))
                     )
                 }
             }
@@ -129,7 +129,7 @@ struct CrashedView: View {
 
     private func makeTitle(_ title: LocalizedStringKey) -> some View {
         HStack {
-            Text(title, tableName: "Core").font(.headline).padding(.leading, 10)
+            Text(title).font(.headline).padding(.leading, 10)
             Spacer()
         }
     }

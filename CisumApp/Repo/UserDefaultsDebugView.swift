@@ -30,16 +30,16 @@ struct UserDefaultsDebugView: View, SuperLog {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("UserDefaults Debug View", tableName: "Core").font(.headline)
+            Text("UserDefaults Debug View").font(.headline)
 
             HStack {
                 TextField(text: $searchText) {
-                    Text("Search keys or values", tableName: "Core")
+                    Text("Search keys or values")
                 }
                 .textFieldStyle(RoundedBorderTextFieldStyle())
 
                 Toggle(isOn: $showingICloudValues) {
-                    Text("Show iCloud values", tableName: "Core")
+                    Text("Show iCloud values")
                 }
                 .onChange(of: showingICloudValues) {
                     refreshData()
@@ -49,7 +49,7 @@ struct UserDefaultsDebugView: View, SuperLog {
             Divider()
             
             if filteredPairs.isEmpty {
-                Text("No matching key-value pairs found", tableName: "Core")
+                Text("No matching key-value pairs found")
                     .foregroundColor(.secondary)
                     .padding()
             } else {
@@ -77,13 +77,13 @@ struct UserDefaultsDebugView: View, SuperLog {
                 Button {
                     refreshData()
                 } label: {
-                    Text("Refresh Data", tableName: "Core")
+                    Text("Refresh Data")
                 }
                 .buttonStyle(.borderedProminent)
 
                 Spacer()
 
-                Text("Total: \(filteredPairs.count) items", tableName: "Core")
+                Text("Total: \(filteredPairs.count) items")
                     .foregroundColor(.secondary)
                     .font(.caption)
             }

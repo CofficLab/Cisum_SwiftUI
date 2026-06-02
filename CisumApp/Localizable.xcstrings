@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "  • %@" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -122,6 +125,9 @@
         }
       }
     },
+    "2个订阅选项" : {
+
+    },
     "3:45" : {
       "localizations" : {
         "zh-Hans" : {
@@ -220,6 +226,12 @@
           }
         }
       }
+    },
+    "Cisum" : {
+
+    },
+    "Cisum Pro" : {
+
     },
     "Close" : {
 
@@ -339,6 +351,9 @@
         }
       }
     },
+    "Goes to the previous track." : {
+
+    },
     "Highest Product:" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -407,6 +422,9 @@
         }
       }
     },
+    "iCloud" : {
+
+    },
     "iCloud Drive Enabled" : {
       "localizations" : {
         "zh-Hans" : {
@@ -455,6 +473,9 @@
         }
       }
     },
+    "iCloud 同步" : {
+
+    },
     "ID: %@" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -472,7 +493,16 @@
         }
       }
     },
+    "ID: CISUM001" : {
+
+    },
+    "macOS 上也精彩" : {
+
+    },
     "Next" : {
+
+    },
+    "Next Track" : {
 
     },
     "No" : {
@@ -572,6 +602,9 @@
         }
       }
     },
+    "Play/Pause" : {
+
+    },
     "Please quit the app, then open it again." : {
       "localizations" : {
         "zh-Hans" : {
@@ -605,6 +638,9 @@
       }
     },
     "Previous" : {
+
+    },
+    "Previous Track" : {
 
     },
     "Products" : {
@@ -753,6 +789,9 @@
         }
       }
     },
+    "Skips to the next track." : {
+
+    },
     "state=" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -870,6 +909,9 @@
         }
       }
     },
+    "Toggles playback state." : {
+
+    },
     "Total: %lld items" : {
       "localizations" : {
         "zh-Hans" : {
@@ -950,6 +992,9 @@
         }
       }
     },
+    "专辑封面" : {
+
+    },
     "仓库位置" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1000,6 +1045,12 @@
         }
       }
     },
+    "如果您之前在其他设备上购买过订阅,可以通过点击下方的\"恢复购买\"按钮来恢复您的订阅。请确保您使用的是购买时所用的Apple ID 账号。" : {
+
+    },
+    "完美支持 iCloud" : {
+
+    },
     "尚未加载产品" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1016,6 +1067,9 @@
           }
         }
       }
+    },
+    "恢复购买" : {
+
     },
     "恢复默认设置" : {
       "extractionState" : "stale",
@@ -1100,6 +1154,9 @@
           }
         }
       }
+    },
+    "极简设计" : {
+
     },
     "正在从 iCloud 下载" : {
       "extractionState" : "stale",
@@ -1203,6 +1260,15 @@
         }
       }
     },
+    "简单纯粹的音乐播放器" : {
+
+    },
+    "自动获取专辑封面" : {
+
+    },
+    "许可协议" : {
+
+    },
     "设置" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1254,6 +1320,9 @@
         }
       }
     },
+    "适配 iOS" : {
+
+    },
     "遇到问题无法继续运行" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1270,6 +1339,9 @@
           }
         }
       }
+    },
+    "隐私政策" : {
+
     }
   },
   "version" : "1.0"

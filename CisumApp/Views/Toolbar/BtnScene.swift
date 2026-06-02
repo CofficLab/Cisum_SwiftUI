@@ -4,7 +4,7 @@ import SwiftData
 import SwiftUI
 
 struct BtnScene: View {
-    static let accessibilityTitle = String(localized: "Switch Scene", table: "Core")
+    static let accessibilityTitle = String(localized: "Switch Scene")
 
     @EnvironmentObject var p: PluginProvider
 
