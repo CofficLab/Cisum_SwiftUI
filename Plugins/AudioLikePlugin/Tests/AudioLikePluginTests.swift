@@ -14,10 +14,14 @@ private final class NotificationObserverToken: @unchecked Sendable {
 
 @Test
 @MainActor
-func pluginExposesSettingsView() {
+func pluginExposesSettingsNavigationItem() {
     let view = AudioLikePlugin.shared.addSettingView()
+    let item = AudioLikePlugin.shared.addSettingNavigationItem()
 
-    #expect(view != nil)
+    #expect(view == nil)
+    #expect(item != nil)
+    #expect(item?.id == "liked-audio")
+    #expect(item?.title == String(localized: "Liked audio", bundle: .module))
 }
 
 @Test func audioLikeSettingsOnlyAppliesLatestLoadResult() {

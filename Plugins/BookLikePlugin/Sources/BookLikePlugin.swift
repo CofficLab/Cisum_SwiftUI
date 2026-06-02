@@ -18,7 +18,19 @@ public actor BookLikePlugin: SuperPlugin {
 
     @MainActor
     public func addSettingView() -> AnyView? {
-        AnyView(BookLikeSettingsView())
+        nil
+    }
+
+    @MainActor
+    public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
+        PluginSettingNavigationItem(
+            id: "liked-books",
+            title: String(localized: "Liked Books", bundle: .module),
+            description: BookLikePluginInfo.description,
+            iconName: BookLikePluginInfo.iconName,
+            order: BookLikePluginInfo.order,
+            destination: AnyView(BookLikeSettingsView())
+        )
     }
 }
 

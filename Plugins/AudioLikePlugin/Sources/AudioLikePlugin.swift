@@ -18,7 +18,19 @@ public actor AudioLikePlugin: SuperPlugin {
 
     @MainActor
     public func addSettingView() -> AnyView? {
-        AnyView(AudioLikeSettingsView())
+        nil
+    }
+
+    @MainActor
+    public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
+        PluginSettingNavigationItem(
+            id: "liked-audio",
+            title: String(localized: "Liked audio", bundle: .module),
+            description: AudioLikePluginInfo.description,
+            iconName: AudioLikePluginInfo.iconName,
+            order: AudioLikePluginInfo.order,
+            destination: AnyView(AudioLikeSettingsView())
+        )
     }
 }
 

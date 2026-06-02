@@ -13,10 +13,14 @@ private final class NotificationObserverToken: @unchecked Sendable {
 
 @Test
 @MainActor
-func pluginExposesSettingsView() {
+func pluginExposesSettingsNavigationItem() {
     let view = BookLikePlugin.shared.addSettingView()
+    let item = BookLikePlugin.shared.addSettingNavigationItem()
 
-    #expect(view != nil)
+    #expect(view == nil)
+    #expect(item != nil)
+    #expect(item?.id == "liked-books")
+    #expect(item?.title == String(localized: "Liked Books", bundle: .module))
 }
 
 @Test func bookLikeSettingsUsesLocalizedLoadingText() {

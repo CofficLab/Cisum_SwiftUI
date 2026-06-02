@@ -1,5 +1,30 @@
 import SwiftUI
 
+public struct PluginSettingNavigationItem: Identifiable {
+    public let id: String
+    public let title: String
+    public let description: String?
+    public let iconName: String
+    public let order: Int
+    public let destination: AnyView
+
+    public init(
+        id: String,
+        title: String,
+        description: String? = nil,
+        iconName: String,
+        order: Int,
+        destination: AnyView
+    ) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.iconName = iconName
+        self.order = order
+        self.destination = destination
+    }
+}
+
 public protocol SuperPlugin: Actor {
     static var shared: Self { get }
 
@@ -20,6 +45,7 @@ public protocol SuperPlugin: Actor {
     @MainActor func addPosterView() -> AnyView?
     @MainActor func addTabView(reason: String, currentSceneName: String?, demoMode: Bool) -> (view: AnyView, label: String)?
     @MainActor func addSettingView() -> AnyView?
+    @MainActor func addSettingNavigationItem() -> PluginSettingNavigationItem?
     @MainActor func addStatusView() -> AnyView?
     @MainActor func addToolBarButtons() -> [(id: String, view: AnyView)]
     @MainActor func addThemeContributions() -> [LumiUIThemeContribution]
@@ -44,6 +70,7 @@ public extension SuperPlugin {
     nonisolated func addPosterView() -> AnyView? { nil }
     @MainActor func addTabView(reason: String, currentSceneName: String?, demoMode: Bool = false) -> (view: AnyView, label: String)? { nil }
     nonisolated func addSettingView() -> AnyView? { nil }
+    nonisolated func addSettingNavigationItem() -> PluginSettingNavigationItem? { nil }
     nonisolated func addStatusView() -> AnyView? { nil }
     nonisolated func addToolBarButtons() -> [(id: String, view: AnyView)] { [] }
     @MainActor func addThemeContributions() -> [LumiUIThemeContribution] { [] }
