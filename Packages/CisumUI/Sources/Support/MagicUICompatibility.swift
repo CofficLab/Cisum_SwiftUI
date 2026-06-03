@@ -501,6 +501,7 @@ private struct CisumHoverScaleModifier: ViewModifier {
     let duration: Double
 
     @State private var isHovering = false
+    @LumiMotionPreferenceReader private var motionPreference
 
     init(scale: CGFloat, duration: Double = 0.2) {
         self.scale = scale
@@ -510,10 +511,15 @@ private struct CisumHoverScaleModifier: ViewModifier {
     func body(content: Content) -> some View {
         #if os(macOS)
             content
-                .scaleEffect(isHovering ? scale : 1.0)
-                .animation(.easeInOut(duration: duration), value: isHovering)
+                .scaleEffect(isHovering && motionPreference.allowsMotion ? scale : 1.0)
+                .animation(
+                    LumiMotion.enabled(.easeOut(duration: duration), preference: motionPreference),
+                    value: isHovering
+                )
                 .onHover { hovering in
-                    isHovering = hovering
+                    LumiMotion.animate(LumiMotion.enabled(.easeOut(duration: duration), preference: motionPreference)) {
+                        isHovering = hovering
+                    }
                 }
         #else
             content

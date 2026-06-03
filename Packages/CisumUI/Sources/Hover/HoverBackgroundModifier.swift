@@ -13,6 +13,7 @@ struct HoverBackgroundModifier<S: ShapeStyle>: ViewModifier {
     let duration: Double
 
     @State private var isHovering = false
+    @LumiMotionPreferenceReader private var motionPreference
 
     init(background: S, cornerRadius: CGFloat = 8, duration: Double = 0.2) {
         self.background = background
@@ -29,9 +30,14 @@ struct HoverBackgroundModifier<S: ShapeStyle>: ViewModifier {
                             .fill(background)
                     }
                 }
-                .animation(.easeInOut(duration: duration), value: isHovering)
+                .animation(
+                    LumiMotion.enabled(.easeOut(duration: duration), preference: motionPreference),
+                    value: isHovering
+                )
                 .onHover { hovering in
-                    isHovering = hovering
+                    LumiMotion.animate(LumiMotion.enabled(.easeOut(duration: duration), preference: motionPreference)) {
+                        isHovering = hovering
+                    }
                 }
         #else
             // iOS 不支持鼠标悬停，直接返回原视图

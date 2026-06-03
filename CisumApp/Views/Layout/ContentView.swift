@@ -97,22 +97,48 @@ extension ContentView {
     }
 
     func onChangeOfShowDB() {
-        LumiMotion.animate(LumiMotion.enabled(LumiMotion.panelReveal, preference: motionPreference)) {
-            self.isDetailVisible = app.showDB
+        if app.showDB {
+            openDetailView()
+        } else {
+            closeDetailView()
         }
+    }
+
+    private func openDetailView() {
+        guard let geo = geo else {
+            setDetailVisible(true)
+            return
+        }
+
+        // 高度不足时，先让窗口尺寸稳定，再展示详情面板，避免两种动画同一帧竞争。
+        if geo.size.height - controlViewHeightMin <= databaseViewHeightMin {
+            self.increaseHeightToShowDB(geo)
+            DispatchQueue.main.async {
+                guard app.showDB else { return }
+                setDetailVisible(true)
+            }
+            return
+        }
+
+        setDetailVisible(true)
+    }
+
+    private func closeDetailView() {
+        setDetailVisible(false)
 
         guard let geo = geo else { return }
 
         // 高度被自动修改过了，重置
         if !app.showDB && geo.size.height != self.height {
-            resetHeight()
-            return
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) {
+                resetHeight()
+            }
         }
+    }
 
-        // 高度不足，自动调整以展示数据库
-        if app.showDB && geo.size.height - controlViewHeightMin <= databaseViewHeightMin {
-            self.increaseHeightToShowDB(geo)
-            return
+    private func setDetailVisible(_ visible: Bool) {
+        LumiMotion.animate(LumiMotion.enabled(LumiMotion.panelReveal, preference: motionPreference)) {
+            self.isDetailVisible = visible
         }
     }
 

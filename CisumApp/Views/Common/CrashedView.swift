@@ -15,7 +15,7 @@ struct CrashedView: View {
             VStack {
                 Spacer(minLength: 20)
 
-                Image.cisumCoffeeReelIcon(useDefaultBackground: false)
+                Image.makeCoffeeReelIcon(useDefaultBackground: false)
                     .scaledToFit()
                     .background(
                         Circle()

@@ -1,4 +1,5 @@
 import CisumUI
+import MagicPlayMan
 import OSLog
 import SwiftUI
 
@@ -14,7 +15,6 @@ struct HeroView: View, SuperLog {
     @LumiMotionPreferenceReader private var motionPreference
 
     private let titleViewHeight: CGFloat = 60
-    @State private var downloadRingRotation: Double = 0
 
     var body: some View {
         GeometryReader { geo in
@@ -64,37 +64,34 @@ extension HeroView {
 
             // 进度环形指示（下载中旋转）
             Circle()
-                .trim(from: 0, to: 0.28)
+                .trim(from: 0, to: downloadProgress)
                 .stroke(
                     appTheme.primary,
                     style: StrokeStyle(lineWidth: 8, lineCap: .round)
                 )
                 .frame(width: 200, height: 200)
-                .rotationEffect(.degrees(downloadRingRotation - 90))
+                .rotationEffect(.degrees(-90))
+                .animation(
+                    LumiMotion.enabled(LumiMotion.statusPresentation, preference: motionPreference),
+                    value: downloadProgress
+                )
 
             // 中心文字
             VStack(spacing: 8) {
-                Text("50%")
+                Text(downloadPercentText)
                     .font(.system(size: 36, weight: .bold, design: .rounded))
                     .foregroundColor(appTheme.textPrimary)
 
-                Text("Downloading from iCloud")
+                Text(playMan.state.localizedStateText(localization: playMan.localization))
                     .font(.system(size: 14))
                     .foregroundColor(appTheme.textSecondary)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
             }
+            .padding(.horizontal, 24)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(appTheme.elevatedSurface.opacity(0.55))
-        .onAppear(perform: startDownloadRingAnimation)
-        .onDisappear { downloadRingRotation = 0 }
-    }
-
-    private func startDownloadRingAnimation() {
-        guard motionPreference.allowsMotion else { return }
-        downloadRingRotation = 0
-        withAnimation(.linear(duration: 1.2).repeatForever(autoreverses: false)) {
-            downloadRingRotation = 360
-        }
     }
 
     // Demo mode 的静态演示封面
@@ -114,6 +111,26 @@ extension HeroView {
 
     private func shouldShowAlbum(_ geo: GeometryProxy) -> Bool {
         !app.rightAlbumVisible && geo.size.height > Config.minHeightToShowAlbum
+    }
+
+    private var downloadProgress: CGFloat {
+        if case .loading(.downloading(let progress)) = playMan.state {
+            return CGFloat(normalizedDownloadProgress(progress))
+        }
+
+        return 0
+    }
+
+    private var downloadPercentText: String {
+        if case .loading(.downloading(let progress)) = playMan.state {
+            return "\(Int(normalizedDownloadProgress(progress) * 100))%"
+        }
+
+        return "--"
+    }
+
+    private func normalizedDownloadProgress(_ progress: Double) -> Double {
+        min(max(progress, 0), 1)
     }
 }
 

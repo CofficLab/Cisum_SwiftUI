@@ -15,7 +15,7 @@ struct LogoView: View {
     }
 
     var body: some View {
-        Image.cisumCoffeeReelIcon(
+        Image.makeCoffeeReelIcon(
             useDefaultBackground: false,
             handleRotation: 0
         )

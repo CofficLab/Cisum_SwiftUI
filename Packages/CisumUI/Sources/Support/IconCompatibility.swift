@@ -53,20 +53,113 @@ public extension Image {
         handleRotation: Double = 30,
         size: CGFloat? = nil
     ) -> some View {
-        Image(systemName: "music.note")
-            .resizable()
-            .scaledToFit()
-            .foregroundStyle(plateColor)
-            .padding(size == nil ? 0 : max(4, (size ?? 40) * 0.12))
-            .frame(width: size, height: size)
-            .background {
+        makeCoffeeReelIcon(
+            useDefaultBackground: useDefaultBackground,
+            plateColor: plateColor,
+            handleRotation: handleRotation,
+            size: size
+        )
+    }
+
+    static func makeCoffeeReelIcon(
+        useDefaultBackground: Bool = true,
+        plateColor: Color = .white,
+        handleRotation: Double = 30,
+        size: CGFloat? = nil
+    ) -> some View {
+        CoffeeReelIcon(
+            useDefaultBackground: useDefaultBackground,
+            plateColor: plateColor,
+            handleRotation: handleRotation
+        )
+        .frame(width: size, height: size)
+    }
+}
+
+private struct CoffeeReelIcon: View {
+    let useDefaultBackground: Bool
+    let plateColor: Color
+    let handleRotation: Double
+
+    private let cupColor = Color(red: 0.8, green: 0.6, blue: 0.2)
+    private let coffeeColor = Color(red: 0.35, green: 0.22, blue: 0.17)
+
+    var body: some View {
+        GeometryReader { geometry in
+            let size = min(geometry.size.width, geometry.size.height)
+            let plateSize = size * 0.6
+            let cupSize = plateSize * 0.8
+            let coffeeSize = cupSize
+            let dotSize = coffeeSize * 0.125
+            let dotOffset = coffeeSize * 0.25
+            let centerDotSize = dotSize * 0.6
+            let handleWidth = cupSize * 0.16
+            let handleLength = cupSize * 0.7
+
+            ZStack {
                 if useDefaultBackground {
                     LinearGradient(
-                        colors: [.green.opacity(0.72), .teal.opacity(0.72)],
+                        gradient: Gradient(colors: [
+                            Color(red: 0.2, green: 0.5, blue: 0.4),
+                            Color(red: 0.2, green: 0.5, blue: 0.7),
+                        ]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
+                } else {
+                    Color.clear
                 }
+
+                Circle()
+                    .stroke(plateColor, lineWidth: plateSize - cupSize)
+                    .shadow(color: .black.opacity(0.2), radius: 4, x: 2, y: 3)
+                    .frame(width: plateSize, height: plateSize)
+                    .mask {
+                        Circle()
+                            .stroke(.white, lineWidth: plateSize - cupSize)
+                            .frame(width: plateSize, height: plateSize)
+                            .overlay {
+                                Capsule()
+                                    .frame(width: handleLength, height: handleWidth)
+                                    .offset(x: cupSize * 0.3)
+                                    .rotationEffect(.degrees(handleRotation))
+                                    .shadow(color: .black.opacity(0.3), radius: 3, x: 2, y: 2)
+                                    .blendMode(.destinationOut)
+                            }
+                    }
+
+                Circle()
+                    .fill(Color.clear)
+                    .stroke(cupColor, lineWidth: cupSize * 0.15)
+                    .shadow(color: .black.opacity(0.3), radius: 4, x: 2, y: 2)
+                    .frame(width: cupSize, height: cupSize)
+
+                Circle()
+                    .fill(coffeeColor)
+                    .frame(width: coffeeSize, height: coffeeSize)
+                    .mask {
+                        Circle()
+                            .fill(Color.white)
+                            .frame(width: coffeeSize, height: coffeeSize)
+                            .overlay {
+                                ZStack {
+                                    ForEach(0 ..< 4) { index in
+                                        Circle()
+                                            .frame(width: dotSize, height: dotSize)
+                                            .offset(
+                                                x: dotOffset * cos(Double(index) * .pi / 2),
+                                                y: dotOffset * sin(Double(index) * .pi / 2)
+                                            )
+                                            .blendMode(.destinationOut)
+                                    }
+
+                                    Circle()
+                                        .frame(width: centerDotSize, height: centerDotSize)
+                                        .blendMode(.destinationOut)
+                                }
+                            }
+                    }
             }
+        }
     }
 }

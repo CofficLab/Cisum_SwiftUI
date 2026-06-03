@@ -16,6 +16,10 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         isLaunching && hasUsableStorageLocation
     }
 
+    static func shouldShowLaunchLogo(hasUsableStorageLocation: Bool) -> Bool {
+        hasUsableStorageLocation
+    }
+
     static func shouldReloadAfterCloudAvailabilityChange(
         previousAvailability: Bool,
         newAvailability: Bool
@@ -65,7 +69,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
             } else if let e = self.error ?? pluginVM.initializationError {
                 CrashedView(error: e)
             } else if self.launching {
-                Guide()
+                launchView
             } else {
                 NavigationStack {
                     GeometryReader { proxy in
@@ -170,6 +174,15 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 },
                 isDesktop: Config.isDesktop
             )
+        }
+    }
+
+    @ViewBuilder
+    private var launchView: some View {
+        if Self.shouldShowLaunchLogo(hasUsableStorageLocation: Config.hasUsableStorageLocation()) {
+            GuideDoneView(isActive: true)
+        } else {
+            Guide()
         }
     }
 

@@ -1,4 +1,5 @@
 import CisumUI
+import MagicPlayMan
 import SwiftUI
 
 struct PlayingProgressView: View {
@@ -6,6 +7,7 @@ struct PlayingProgressView: View {
     @Environment(\.downloadingMode) var isDownloadingMode
     @EnvironmentObject var playMan: PlayMan
     @LumiTheme private var appTheme
+    @LumiMotionPreferenceReader private var motionPreference
 
     var body: some View {
         if isDownloadingMode {
@@ -31,7 +33,11 @@ struct PlayingProgressView: View {
                     // 进度（起点，即进度为0）
                     RoundedRectangle(cornerRadius: 2)
                         .fill(appTheme.primary.opacity(0.28))
-                        .frame(width: 0)
+                        .frame(width: geometry.size.width * downloadProgress)
+                        .animation(
+                            LumiMotion.enabled(LumiMotion.statusPresentation, preference: motionPreference),
+                            value: downloadProgress
+                        )
                 }
             }
             .frame(height: 4)
@@ -44,7 +50,7 @@ struct PlayingProgressView: View {
 
                 Spacer()
 
-                Text("--:--")
+                Text(downloadPercentText)
                     .font(.system(size: 12))
                     .foregroundColor(appTheme.textTertiary)
             }
@@ -85,6 +91,26 @@ struct PlayingProgressView: View {
             }
         }
         .frame(maxWidth: .infinity)
+    }
+
+    private var downloadProgress: CGFloat {
+        if case .loading(.downloading(let progress)) = playMan.state {
+            return CGFloat(normalizedDownloadProgress(progress))
+        }
+
+        return 0
+    }
+
+    private var downloadPercentText: String {
+        if case .loading(.downloading(let progress)) = playMan.state {
+            return "\(Int(normalizedDownloadProgress(progress) * 100))%"
+        }
+
+        return "--"
+    }
+
+    private func normalizedDownloadProgress(_ progress: Double) -> Double {
+        min(max(progress, 0), 1)
     }
 }
 

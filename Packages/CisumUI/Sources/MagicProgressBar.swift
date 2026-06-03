@@ -6,6 +6,7 @@ public struct MagicProgressBar: View {
     @State private var dragTime: TimeInterval
     @State private var isHovering = false
     @Environment(\.colorScheme) private var colorScheme
+    @LumiMotionPreferenceReader private var motionPreference
 
     let duration: TimeInterval
     let onSeek: ((TimeInterval) -> Void)?
@@ -54,7 +55,10 @@ public struct MagicProgressBar: View {
                             y: 0
                         )
                         .offset(x: geometry.size.width * progress - (isHovering ? 8 : 6))
-                        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovering)
+                        .animation(
+                            LumiMotion.enabled(LumiMotion.hover, preference: motionPreference),
+                            value: isHovering
+                        )
                         .gesture(
                             DragGesture(minimumDistance: 0)
                                 .onChanged { value in
@@ -64,9 +68,7 @@ public struct MagicProgressBar: View {
                                         trackWidth: geometry.size.width,
                                         duration: duration
                                     )
-                                    withAnimation(.linear(duration: 0.1)) {
-                                        dragTime = newTime
-                                    }
+                                    dragTime = newTime
                                 }
                                 .onEnded { value in
                                     isDragging = false
@@ -93,7 +95,7 @@ public struct MagicProgressBar: View {
                     onSeek?(newTime)
                 }
                 .onHover { hovering in
-                    withAnimation(.easeInOut(duration: 0.2)) {
+                    LumiMotion.animate(LumiMotion.enabled(LumiMotion.hover, preference: motionPreference)) {
                         isHovering = hovering
                     }
                 }
@@ -127,19 +129,20 @@ private struct TimeLabel: View {
     let time: TimeInterval
     let isProgressBarHovering: Bool
     @State private var isHovering = false
+    @LumiMotionPreferenceReader private var motionPreference
 
     var body: some View {
         Text(MagicProgressBarPolicy.formattedTime(time))
             .font(.caption)
             .foregroundStyle(isProgressBarHovering || isHovering ? .primary : .secondary)
             .opacity(isProgressBarHovering || isHovering ? 1 : 0.8)
-            .scaleEffect(isHovering ? 1.1 : 1)
+            .scaleEffect(isHovering && motionPreference.allowsMotion ? 1.04 : 1)
             .animation(
-                .spring(response: 0.3, dampingFraction: 0.7),
+                LumiMotion.enabled(LumiMotion.hover, preference: motionPreference),
                 value: isProgressBarHovering || isHovering
             )
             .onHover { hovering in
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                LumiMotion.animate(LumiMotion.enabled(LumiMotion.hover, preference: motionPreference)) {
                     isHovering = hovering
                 }
             }
