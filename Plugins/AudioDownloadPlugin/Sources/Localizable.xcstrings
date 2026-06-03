@@ -1,70 +1,118 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "Audio Download" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音频下载管理"
+  "sourceLanguage": "en",
+  "strings": {
+    "Audio Download": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音频下载管理"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音頻下載管理"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音頻下載管理"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音頻下載管理"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio Download"
           }
         }
       }
     },
-    "Auto download audio files" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "负责音频文件的自动下载"
+    "Auto download audio files": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "负责音频文件的自动下载"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "負責音頻檔案的自動下載"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "負責音頻檔案的自動下載"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "負責音頻檔案的自動下載"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto download audio files"
           }
         }
       }
     },
-    "Download failed: %@" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "下载失败：%@"
+    "Download failed: %@": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下载失败：%@"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "下載失敗：%@"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下載失敗：%@"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下載失敗：%@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download failed: %@"
           }
         }
       }
     },
-    "Music Library" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音乐库"
+    "Music Library": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音乐库"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音樂庫"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音樂庫"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音樂庫"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Music Library"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

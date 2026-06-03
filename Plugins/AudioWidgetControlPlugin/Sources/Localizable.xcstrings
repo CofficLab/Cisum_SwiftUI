@@ -1,50 +1,62 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "Responds to playback control commands from widgets" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Responds to playback control commands from widgets"
+  "sourceLanguage": "en",
+  "strings": {
+    "Responds to playback control commands from widgets": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Responds to playback control commands from widgets"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "响应小组件的播放控制命令"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "响应小组件的播放控制命令"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "響應小組件的播放控制命令"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "響應小組件的播放控制命令"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "響應小組件的播放控制命令"
           }
         }
       }
     },
-    "Widget Control" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Widget Control"
+    "Widget Control": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widget Control"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Widget 控制"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widget 控制"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Widget 控制"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widget 控制"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widget 控制"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

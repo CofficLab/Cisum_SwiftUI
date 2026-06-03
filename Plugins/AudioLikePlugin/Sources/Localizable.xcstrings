@@ -1,218 +1,374 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "Audio Like" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音频喜欢管理"
+  "sourceLanguage": "en",
+  "strings": {
+    "Audio Like": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音频喜欢管理"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音頻喜歡管理"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音頻喜歡管理"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音頻喜歡管理"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio Like"
           }
         }
       }
     },
-    "AudioLike database path is not configured" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AudioLike 数据库路径未配置"
+    "AudioLike database path is not configured": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AudioLike 数据库路径未配置"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AudioLike 資料庫路徑未配置"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AudioLike 資料庫路徑未配置"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AudioLike 資料庫路徑未配置"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AudioLike database path is not configured"
           }
         }
       }
     },
-    "Data container is unavailable" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "数据容器不可用"
+    "Data container is unavailable": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "数据容器不可用"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "資料容器不可用"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "資料容器不可用"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "資料容器不可用"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data container is unavailable"
           }
         }
       }
     },
-    "Failed to save like status: %@" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "保存喜欢状态失败: %@"
+    "Failed to save like status: %@": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存喜欢状态失败: %@"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "儲存喜歡狀態失敗: %@"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "儲存喜歡狀態失敗: %@"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "儲存喜歡狀態失敗: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to save like status: %@"
           }
         }
       }
     },
-    "Liked audio" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "喜欢的音频"
+    "Liked audio": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喜欢的音频"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "喜歡的音頻"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喜歡的音頻"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喜歡的音頻"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liked audio"
           }
         }
       }
     },
-    "Loading..." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "加载中..."
+    "Loading...": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加载中..."
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "加載中..."
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加載中..."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加載中..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading..."
           }
         }
       }
     },
-    "Manage and store audio like status" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "负责音频喜欢状态的独立管理和存储"
+    "Manage and store audio like status": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "负责音频喜欢状态的独立管理和存储"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "負責音頻喜歡狀態的獨立管理和存儲"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "負責音頻喜歡狀態的獨立管理和存儲"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "負責音頻喜歡狀態的獨立管理和存儲"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manage and store audio like status"
           }
         }
       }
     },
-    "No liked audio yet" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "还没有喜欢的音频"
+    "No liked audio yet": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "还没有喜欢的音频"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "還沒有喜歡的音頻"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "還沒有喜歡的音頻"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "還沒有喜歡的音頻"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No liked audio yet"
           }
         }
       }
     },
-    "Unknown audio" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未知音频"
+    "Unknown audio": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未知音频"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未知音頻"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未知音頻"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未知音頻"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown audio"
           }
         }
       }
     },
-    "加载中..." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "加载中..."
+    "加载中...": {
+      "extractionState": "stale",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加载中..."
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "加載中..."
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加載中..."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加載中..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加载中..."
           }
         }
       }
     },
-    "喜欢的音频" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "喜欢的音频"
+    "喜欢的音频": {
+      "extractionState": "stale",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喜欢的音频"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "喜歡的音頻"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喜歡的音頻"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喜歡的音頻"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喜欢的音频"
           }
         }
       }
     },
-    "未知音频" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未知音频"
+    "未知音频": {
+      "extractionState": "stale",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未知音频"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未知音頻"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未知音頻"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未知音頻"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未知音频"
           }
         }
       }
     },
-    "还没有喜欢的音频" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "还没有喜欢的音频"
+    "还没有喜欢的音频": {
+      "extractionState": "stale",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "还没有喜欢的音频"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "還沒有喜歡的音頻"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "還沒有喜歡的音頻"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "還沒有喜歡的音頻"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "还没有喜欢的音频"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

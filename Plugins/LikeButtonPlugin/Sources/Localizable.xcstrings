@@ -14,6 +14,18 @@
             "state": "translated",
             "value": "喜歡/取消喜歡 按鈕"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喜歡/取消喜歡 按鈕"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Like/Unlike Button"
+          }
         }
       }
     }

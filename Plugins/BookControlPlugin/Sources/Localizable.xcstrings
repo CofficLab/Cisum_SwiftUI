@@ -1,38 +1,62 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "Book Playback Control" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "书籍播放控制"
+  "sourceLanguage": "en",
+  "strings": {
+    "Book Playback Control": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "书籍播放控制"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "書籍播放控制"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "書籍播放控制"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "書籍播放控制"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Book Playback Control"
           }
         }
       }
     },
-    "Book playback control, such as previous and next chapter" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "负责书籍播放控制功能，如上一章、下一章"
+    "Book playback control, such as previous and next chapter": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "负责书籍播放控制功能，如上一章、下一章"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "負責書籍播放控制功能，如上一章、下一章"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "負責書籍播放控制功能，如上一章、下一章"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "負責書籍播放控制功能，如上一章、下一章"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Book playback control, such as previous and next chapter"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

@@ -3,6 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "LikeButtonPlugin",
+    defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
         .iOS(.v17)

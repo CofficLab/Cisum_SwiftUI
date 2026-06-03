@@ -14,6 +14,18 @@
             "state": "translated",
             "value": "音頻設置"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音頻設置"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio Settings"
+          }
         }
       }
     },
@@ -29,6 +41,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "音頻插件的設置入口"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音頻插件的設置入口"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio plugin settings"
           }
         }
       }
@@ -47,6 +71,18 @@
             "state": "translated",
             "value": "%d 個文件"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d 個文件"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d files"
+          }
         }
       }
     },
@@ -63,6 +99,18 @@
             "state": "translated",
             "value": "%lld 個文件"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 個文件"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld files"
+          }
         }
       }
     },
@@ -78,6 +126,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld 個文件"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 個文件"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld file"
           }
         }
       }
@@ -96,6 +156,18 @@
             "state": "translated",
             "value": "無法獲取音樂庫信息"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無法獲取音樂庫信息"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cannot get music library information"
+          }
         }
       }
     },
@@ -112,6 +184,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "錯誤"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "錯誤"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error"
           }
         }
       }
@@ -130,6 +214,18 @@
             "state": "translated",
             "value": "文件數量"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件數量"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Count"
+          }
         }
       }
     },
@@ -146,6 +242,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "庫大小"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "庫大小"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Library Size"
           }
         }
       }
@@ -164,6 +272,18 @@
             "state": "translated",
             "value": "音樂庫"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音樂庫"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Music Library"
+          }
         }
       }
     },
@@ -180,6 +300,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "打開庫"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打開庫"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Library"
           }
         }
       }
@@ -198,6 +330,18 @@
             "state": "translated",
             "value": "庫中的文件總數"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "庫中的文件總數"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total files in library"
+          }
         }
       }
     },
@@ -215,6 +359,18 @@
             "state": "translated",
             "value": "在 Finder 中查看"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在 Finder 中查看"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View in Finder"
+          }
         }
       }
     },
@@ -231,6 +387,18 @@
             "state": "translated",
             "value": "iCloud 雲端硬碟，將同步"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud 雲端硬碟，將同步"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud Drive, will sync"
+          }
         }
       }
     },
@@ -246,6 +414,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "本地目錄，不會同步"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本地目錄，不會同步"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Local directory, will not sync"
           }
         }
       }

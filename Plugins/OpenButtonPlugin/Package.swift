@@ -3,6 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "OpenButtonPlugin",
+    defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
         .iOS(.v17)

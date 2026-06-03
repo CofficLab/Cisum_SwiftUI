@@ -14,6 +14,18 @@
             "state": "translated",
             "value": "應用本地儲存"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "應用本地儲存"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App Local Storage"
+          }
         }
       }
     },
@@ -29,6 +41,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "檔案儲存在 iCloud 中\n可在其他裝置上存取\n請確保有足夠的 iCloud 儲存空間"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "檔案儲存在 iCloud 中\n可在其他裝置上存取\n請確保有足夠的 iCloud 儲存空間"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Files stored in iCloud\nAccessible on other devices\nEnsure sufficient iCloud storage"
           }
         }
       }
@@ -46,6 +70,18 @@
             "state": "translated",
             "value": "精彩即將呈現"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "精彩即將呈現"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Good Things Are Coming"
+          }
         }
       }
     },
@@ -61,6 +97,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "iCloud 雲端硬碟"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud 雲端硬碟"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud Drive"
           }
         }
       }
@@ -78,6 +126,18 @@
             "state": "translated",
             "value": "媒體儲存位置"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "媒體儲存位置"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Media Storage Location"
+          }
         }
       }
     },
@@ -93,6 +153,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "準備好探索你的音樂世界"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "準備好探索你的音樂世界"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready to explore your music world"
           }
         }
       }
@@ -110,6 +182,18 @@
             "state": "translated",
             "value": "推薦"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "推薦"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recommended"
+          }
         }
       }
     },
@@ -125,6 +209,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "請在系統設定中登入 iCloud 以使用此選項"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請在系統設定中登入 iCloud 以使用此選項"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to iCloud in System Settings to use this option"
           }
         }
       }
@@ -142,6 +238,18 @@
             "state": "translated",
             "value": "儲存在應用內，刪除應用後資料將遺失"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "儲存在應用內，刪除應用後資料將遺失"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stored within the app, data will be lost if app is deleted"
+          }
         }
       }
     },
@@ -158,6 +266,18 @@
             "state": "translated",
             "value": "歡迎"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "歡迎"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Welcome"
+          }
         }
       }
     },
@@ -173,6 +293,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "歡迎介面"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "歡迎介面"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Welcome screen"
           }
         }
       }

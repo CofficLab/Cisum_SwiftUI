@@ -14,6 +14,18 @@
             "state": "translated",
             "value": "遷移"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "遷移"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Migrate"
+          }
         }
       }
     }

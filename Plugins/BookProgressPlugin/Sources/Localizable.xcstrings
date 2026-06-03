@@ -14,6 +14,18 @@
             "state": "translated",
             "value": "書籍進度管理"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "書籍進度管理"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Book Progress"
+          }
         }
       }
     },
@@ -30,6 +42,18 @@
             "state": "translated",
             "value": "負責書籍播放進度的保存和恢復"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "負責書籍播放進度的保存和恢復"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save and restore book playback progress"
+          }
         }
       }
     },
@@ -45,6 +69,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "下載失敗: %@"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下載失敗: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download failed: %@"
           }
         }
       }

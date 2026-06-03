@@ -1,55 +1,91 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "Deep gray with blue accents, ideal for night listening" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "深灰空间与蓝色点缀，适合夜间听歌"
+  "sourceLanguage": "en",
+  "strings": {
+    "Deep gray with blue accents, ideal for night listening": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "深灰空间与蓝色点缀，适合夜间听歌"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "深灰空間與藍色點綴，適合夜間聽歌"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "深灰空間與藍色點綴，適合夜間聽歌"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "深灰空間與藍色點綴，適合夜間聽歌"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deep gray with blue accents, ideal for night listening"
           }
         }
       }
     },
-    "Midnight Blue" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "午夜幽蓝"
+    "Midnight Blue": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "午夜幽蓝"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "午夜幽藍"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "午夜幽藍"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "午夜幽藍"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Midnight Blue"
           }
         }
       }
     },
-    "Night listening theme" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "夜间听歌主题"
+    "Night listening theme": {
+      "extractionState": "stale",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "夜间听歌主题"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "夜間聽歌主題"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "夜間聽歌主題"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "夜間聽歌主題"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Night listening theme"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }
