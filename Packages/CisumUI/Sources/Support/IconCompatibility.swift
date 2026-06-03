@@ -77,21 +77,22 @@ public extension Image {
 }
 
 private struct CoffeeReelIcon: View {
+    let showBrownCircle: Bool = true
+    let showRedCircle: Bool = false
     let useDefaultBackground: Bool
     let plateColor: Color
     let handleRotation: Double
-
-    private let cupColor = Color(red: 0.8, green: 0.6, blue: 0.2)
-    private let coffeeColor = Color(red: 0.35, green: 0.22, blue: 0.17)
+    let cupColor: Color = Color(red: 0.8, green: 0.6, blue: 0.2)
 
     var body: some View {
         GeometryReader { geometry in
             let size = min(geometry.size.width, geometry.size.height)
             let plateSize = size * 0.6
             let cupSize = plateSize * 0.8
-            let coffeeSize = cupSize
-            let dotSize = coffeeSize * 0.125
-            let dotOffset = coffeeSize * 0.25
+            let brownCircleSize = cupSize * 1
+            let redCircleSize = brownCircleSize * 0.5
+            let dotSize = redCircleSize * 0.5
+            let dotOffset = redCircleSize * 0.5
             let centerDotSize = dotSize * 0.6
             let handleWidth = cupSize * 0.16
             let handleLength = cupSize * 0.7
@@ -134,31 +135,33 @@ private struct CoffeeReelIcon: View {
                     .shadow(color: .black.opacity(0.3), radius: 4, x: 2, y: 2)
                     .frame(width: cupSize, height: cupSize)
 
-                Circle()
-                    .fill(coffeeColor)
-                    .frame(width: coffeeSize, height: coffeeSize)
-                    .mask {
-                        Circle()
-                            .fill(Color.white)
-                            .frame(width: coffeeSize, height: coffeeSize)
-                            .overlay {
-                                ZStack {
-                                    ForEach(0 ..< 4) { index in
+                if showBrownCircle {
+                    Circle()
+                        .fill(Color(red: 0.35, green: 0.22, blue: 0.17))
+                        .frame(width: brownCircleSize, height: brownCircleSize)
+                        .mask {
+                            Circle()
+                                .fill(Color.white)
+                                .frame(width: brownCircleSize, height: brownCircleSize)
+                                .overlay {
+                                    ZStack {
+                                        ForEach(0 ..< 4) { index in
+                                            Circle()
+                                                .frame(width: dotSize, height: dotSize)
+                                                .offset(
+                                                    x: dotOffset * cos(Double(index) * .pi / 2),
+                                                    y: dotOffset * sin(Double(index) * .pi / 2)
+                                                )
+                                                .blendMode(.destinationOut)
+                                        }
+
                                         Circle()
-                                            .frame(width: dotSize, height: dotSize)
-                                            .offset(
-                                                x: dotOffset * cos(Double(index) * .pi / 2),
-                                                y: dotOffset * sin(Double(index) * .pi / 2)
-                                            )
+                                            .frame(width: centerDotSize, height: centerDotSize)
                                             .blendMode(.destinationOut)
                                     }
-
-                                    Circle()
-                                        .frame(width: centerDotSize, height: centerDotSize)
-                                        .blendMode(.destinationOut)
                                 }
-                            }
-                    }
+                        }
+                }
             }
         }
     }
