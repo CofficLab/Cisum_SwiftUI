@@ -2,19 +2,19 @@ import SwiftUI
 
 extension AvatarView {
     enum ErrorViewTextPolicy {
-        static let errorDetailsTitle = String(localized: "Error details")
-        static let fileURLTitle = String(localized: "File URL")
-        static let copiedLabel = String(localized: "Copied")
-        static let copyErrorLabel = String(localized: "Copy error")
-        static let copyURLLabel = String(localized: "Copy URL")
-        static let showDetailsLabel = String(localized: "Show error details")
+        static let errorDetailsTitle = String(localized: "Error details", bundle: .module)
+        static let fileURLTitle = String(localized: "File URL", bundle: .module)
+        static let copiedLabel = String(localized: "Copied", bundle: .module)
+        static let copyErrorLabel = String(localized: "Copy error", bundle: .module)
+        static let copyURLLabel = String(localized: "Copy URL", bundle: .module)
+        static let showDetailsLabel = String(localized: "Show error details", bundle: .module)
 
         static func showDetailsLabel(for url: URL) -> String {
             let fileName = url.lastPathComponent.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !fileName.isEmpty else {
                 return showDetailsLabel
             }
-            return String(localized: "Show error details for \(fileName)")
+            return String(localized: "Show error details for \(fileName)", bundle: .module)
         }
     }
 

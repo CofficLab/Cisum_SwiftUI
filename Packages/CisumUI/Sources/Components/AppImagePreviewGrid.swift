@@ -8,7 +8,7 @@ import SwiftUI
 #endif
 
 public struct AppImagePreviewGrid: View {
-    static let previewHelpText = String(localized: "Preview image", table: "Localizable", bundle: .module)
+    static let previewHelpText = String(localized: "Preview image", bundle: .module)
 
     let imageDataList: [Data]
     @State private var previewingImage: PlatformImage?
@@ -63,7 +63,7 @@ public struct AppImagePreviewGrid: View {
 }
 
 private struct AppImagePreviewSheet: View {
-    static let closeButtonTitle = String(localized: "Close", table: "Localizable", bundle: .module)
+    static let closeButtonTitle = String(localized: "Close", bundle: .module)
 
     let image: PlatformImage
     @Environment(\.dismiss) private var dismiss

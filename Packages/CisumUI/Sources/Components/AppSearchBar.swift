@@ -1,7 +1,7 @@
 import SwiftUI
 
 public struct AppSearchBar: View {
-    static let clearSearchLabel = String(localized: "Clear search", table: "Localizable", bundle: .module)
+    static let clearSearchLabel = String(localized: "Clear search", bundle: .module)
 
     @LumiTheme private var theme
 
