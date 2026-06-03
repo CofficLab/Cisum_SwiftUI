@@ -7,10 +7,10 @@ struct ControlView: View, SuperLog {
     static let verbose = false
 
     @Environment(\.demoMode) var isDemoMode
-    @EnvironmentObject var appManager: AppProvider
-    @EnvironmentObject var message: StateProvider
+    @EnvironmentObject var appManager: AppVM
+    @EnvironmentObject var message: StateVM
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var p: PluginVM
     @LumiMotionPreferenceReader private var motionPreference
 
     @State var showHeroView = true

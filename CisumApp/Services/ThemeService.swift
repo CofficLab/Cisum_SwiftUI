@@ -9,10 +9,10 @@ final class ThemeService {
     private init() {}
 
     func syncFromPlugins(
-        pluginProvider: PluginProvider,
+        pluginVM: PluginVM,
         registry: LumiUIThemeRegistry = .shared
     ) throws {
-        let contributions = pluginProvider.getThemeContributions()
+        let contributions = pluginVM.getThemeContributions()
         try registry.replaceAll(contributions)
     }
 }

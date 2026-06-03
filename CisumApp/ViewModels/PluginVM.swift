@@ -22,7 +22,7 @@ import SwiftUI
 /// - 该类必须在主线程上使用（`@MainActor`）
 /// - 插件按注册顺序进行视图包裹
 @MainActor
-class PluginProvider: ObservableObject, SuperLog, SuperThread {
+class PluginVM: ObservableObject, SuperLog, SuperThread {
     nonisolated static let emoji = "🧩"
     static let verbose = false
 
@@ -253,7 +253,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     /// 将指定的场景名称设置为当前激活的场景，并持久化该选择。
     ///
     /// - Parameter sceneName: 要激活的场景名称
-    /// - Throws: `PluginProviderError.sceneNotFound` 如果场景不存在
+    /// - Throws: `PluginVMError.sceneNotFound` 如果场景不存在
     @MainActor
     func setCurrentScene(_ sceneName: String) throws {
         let oldSceneName = self.currentSceneName ?? "nil"
@@ -264,7 +264,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
 
         guard sceneNames.contains(sceneName) else {
             os_log(.error, "\(self.t)❌ 场景切换失败: 场景 \(sceneName) 不存在")
-            throw PluginProviderError.sceneNotFound(sceneName: sceneName)
+            throw PluginVMError.sceneNotFound(sceneName: sceneName)
         }
 
         self.currentSceneName = sceneName
@@ -291,7 +291,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     /// 2. 如果找不到，使用第一个可用场景
     /// 3. 如果都没有，记录错误日志
     ///
-    /// - Throws: `PluginProviderError.sceneNotFound` 如果场景不存在
+    /// - Throws: `PluginVMError.sceneNotFound` 如果场景不存在
     @MainActor
     func restoreCurrent() throws {
         let savedSceneName = repo.getCurrentSceneName()
@@ -404,7 +404,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
             if hasScene && !hasPoster {
                 let pluginType = String(describing: type(of: plugin))
                 let sceneName = plugin.addSceneItem() ?? "Unknown"
-                let error = PluginProviderError.pluginSceneMissingPoster(
+                let error = PluginVMError.pluginSceneMissingPoster(
                     pluginType: pluginType,
                     sceneName: sceneName
                 )
@@ -418,7 +418,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
 
 // MARK: - Event Handler
 
-extension PluginProvider {
+extension PluginVM {
     /// 对所有插件执行异步操作
     ///
     /// 遍历所有已注册的插件，对每个插件执行指定的异步操作。
@@ -436,7 +436,7 @@ extension PluginProvider {
     }
 }
 
-private extension PluginProvider {
+private extension PluginVM {
     func invalidatePluginViewCaches() {
         cachedStatusViews = nil
         cachedToolBarButtons = nil
@@ -448,7 +448,7 @@ private extension PluginProvider {
 /// 插件提供者错误类型
 ///
 /// 定义了插件管理过程中可能出现的错误情况。
-enum PluginProviderError: Error, LocalizedError {
+enum PluginVMError: Error, LocalizedError {
     /// 插件未找到
     ///
     /// 当根据 ID 查找插件失败时抛出此错误。

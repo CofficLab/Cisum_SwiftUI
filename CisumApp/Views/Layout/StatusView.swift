@@ -5,7 +5,7 @@ struct StatusView: View, SuperLog, SuperThread {
     nonisolated static let emoji = "📊"
     nonisolated static let verbose = false
 
-    @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var p: PluginVM
 
     var body: some View {
         HStack {

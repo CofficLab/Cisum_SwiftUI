@@ -14,11 +14,11 @@ final class ProviderManager: SuperLog {
     nonisolated static let emoji = "🔧"
 
     // Providers
-    let app: AppProvider
-    let stateMessageProvider: StateProvider
-    let plugin: PluginProvider
-    let theme: AppThemeProvider
-    let cloud: CloudProvider
+    let app: AppVM
+    let stateVM: StateVM
+    let plugin: PluginVM
+    let theme: ThemeVM
+    let cloud: CloudVM
 
     // PlayMan
     let man: PlayMan
@@ -31,11 +31,11 @@ final class ProviderManager: SuperLog {
         let uiRepo = UIRepo()
 
         // Providers
-        self.app = AppProvider(uiRepo: uiRepo)
-        self.stateMessageProvider = StateProvider()
-        self.plugin = PluginProvider(repo: pluginRepo)
-        self.theme = AppThemeProvider(pluginProvider: self.plugin)
-        self.cloud = CloudProvider()
+        self.app = AppVM(uiRepo: uiRepo)
+        self.stateVM = StateVM()
+        self.plugin = PluginVM(repo: pluginRepo)
+        self.theme = ThemeVM(pluginVM: self.plugin)
+        self.cloud = CloudVM()
 
         // PlayMan
         self.man = PlayMan(

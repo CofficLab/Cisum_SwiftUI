@@ -8,13 +8,13 @@ import SwiftUI
 ///
 /// 主题定义由插件提供，当前选择由该 provider 持久化并同步到 `CisumUI`。
 @MainActor
-final class AppThemeProvider: ObservableObject, SuperLog {
+final class ThemeVM: ObservableObject, SuperLog {
     nonisolated static let emoji = "🎨"
     nonisolated static let verbose = false
 
     private static let selectedThemeKey = "Cisum.SelectedThemeID"
 
-    private let pluginProvider: PluginProvider
+    private let pluginVM: PluginVM
     private let registry: LumiUIThemeRegistry
     private var cancellables = Set<AnyCancellable>()
 
@@ -43,12 +43,12 @@ final class AppThemeProvider: ObservableObject, SuperLog {
         return theme.isDarkTheme ? .dark : .light
     }
 
-    init(pluginProvider: PluginProvider, registry: LumiUIThemeRegistry = .shared) {
-        self.pluginProvider = pluginProvider
+    init(pluginVM: PluginVM, registry: LumiUIThemeRegistry = .shared) {
+        self.pluginVM = pluginVM
         self.registry = registry
 
         do {
-            try ThemeService.shared.syncFromPlugins(pluginProvider: pluginProvider, registry: registry)
+            try ThemeService.shared.syncFromPlugins(pluginVM: pluginVM, registry: registry)
         } catch {
             os_log(.error, "\(Self.t)主题注册失败: \(error.localizedDescription)")
         }
@@ -67,7 +67,7 @@ final class AppThemeProvider: ObservableObject, SuperLog {
 
     func reloadThemes() {
         do {
-            try ThemeService.shared.syncFromPlugins(pluginProvider: pluginProvider, registry: registry)
+            try ThemeService.shared.syncFromPlugins(pluginVM: pluginVM, registry: registry)
         } catch {
             os_log(.error, "\(self.t)主题同步失败: \(error.localizedDescription)")
             return

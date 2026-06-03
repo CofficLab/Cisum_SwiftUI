@@ -10,11 +10,11 @@ struct Guide: View, SuperLog {
     nonisolated static let nextPageLabel = String(localized: "Next")
     nonisolated static let finishSetupLabel = String(localized: "Finish Setup")
 
-    @EnvironmentObject var pluginProvider: PluginProvider
+    @EnvironmentObject var pluginVM: PluginVM
     @State var currentGuidePageIndex: Int = 0
 
     private var pages: [PluginGuidePage] {
-        pluginProvider.plugins.compactMap { plugin in
+        pluginVM.plugins.compactMap { plugin in
             guard let view = plugin.addGuideView() else { return nil }
             return PluginGuidePage(
                 id: plugin.id,

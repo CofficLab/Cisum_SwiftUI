@@ -32,13 +32,13 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @Environment(\.demoMode) var isDemoMode
     @State var iCloudAvailable: Bool
 
-    @StateObject var appProvider: AppProvider
-    @StateObject var pluginProvider: PluginProvider
-    @StateObject var stateProvider: StateProvider
-    @StateObject var themeProvider: AppThemeProvider
+    @StateObject var appVM: AppVM
+    @StateObject var pluginVM: PluginVM
+    @StateObject var stateVM: StateVM
+    @StateObject var themeVM: ThemeVM
 
     var man: PlayMan
-    var cloudProvider: CloudProvider
+    var cloudVM: CloudVM
 
     /// 初始化 RootView
     /// - Parameters:
@@ -49,12 +49,12 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         let manager = providers ?? ProviderManager()
 
         self.content = content()
-        self._appProvider = StateObject(wrappedValue: manager.app)
-        self._stateProvider = StateObject(wrappedValue: manager.stateMessageProvider)
-        self._pluginProvider = StateObject(wrappedValue: manager.plugin)
-        self._themeProvider = StateObject(wrappedValue: manager.theme)
+        self._appVM = StateObject(wrappedValue: manager.app)
+        self._stateVM = StateObject(wrappedValue: manager.stateVM)
+        self._pluginVM = StateObject(wrappedValue: manager.plugin)
+        self._themeVM = StateObject(wrappedValue: manager.theme)
         self.man = manager.man
-        self.cloudProvider = manager.cloud
+        self.cloudVM = manager.cloud
         self._iCloudAvailable = State(initialValue: Config.isICloudStorageAvailable())
     }
 
@@ -62,7 +62,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         Group {
             if isDemoMode {
                 content
-            } else if let e = self.error ?? pluginProvider.initializationError {
+            } else if let e = self.error ?? pluginVM.initializationError {
                 CrashedView(error: e)
             } else if self.launching {
                 Guide()
@@ -71,12 +71,12 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     GeometryReader { proxy in
                         ZStack {
                         // iOS 的 NavigationStack 需要放这里才能设置背景
-                            themeProvider.activeChromeTheme
+                            themeVM.activeChromeTheme
                                 .makeGlobalBackground(proxy: proxy)
                                 .ignoresSafeArea()
 
                             Group {
-                                if let wrapped = pluginProvider.wrapWithCurrentRoot(content: { content }) {
+                                if let wrapped = pluginVM.wrapWithCurrentRoot(content: { content }) {
                                     wrapped
                                 } else {
                                     content
@@ -96,40 +96,40 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 .withMagicToast()
             }
         }
-        .background(themeProvider.activeChromeTheme.workspaceBackgroundColor())
-        .preferredColorScheme(themeProvider.preferredColorScheme)
+        .background(themeVM.activeChromeTheme.workspaceBackgroundColor())
+        .preferredColorScheme(themeVM.preferredColorScheme)
         .onStorageLocationChanged(perform: onStorageLocationChange)
         .onGuideDone(perform: onLaunchEnd)
         .onCloudAccountStateChanged(perform: onCloudAccountStateChanged)
         .onStorageLocationDidReset(perform: onResetStorageLocation)
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
-        .environmentObject(cloudProvider)
+        .environmentObject(cloudVM)
         .environmentObject(man)
-        .environmentObject(appProvider)
-        .environmentObject(pluginProvider)
-        .environmentObject(stateProvider)
-        .environmentObject(themeProvider)
+        .environmentObject(appVM)
+        .environmentObject(pluginVM)
+        .environmentObject(stateVM)
+        .environmentObject(themeVM)
         .environment(\.resetSettingsAction, {
             await MainActor.run {
                 Config.resetStorageLocation()
             }
         })
-        .environment(\.pluginThemes, themeProvider.themes)
-        .environment(\.currentPluginThemeId, themeProvider.currentThemeId)
+        .environment(\.pluginThemes, themeVM.themes)
+        .environment(\.currentPluginThemeId, themeVM.currentThemeId)
         .environment(\.selectPluginThemeAction, { themeId in
-            themeProvider.selectTheme(themeId)
+            themeVM.selectTheme(themeId)
         })
-        .environment(\.currentSceneName, pluginProvider.currentSceneName)
+        .environment(\.currentSceneName, pluginVM.currentSceneName)
         .environment(
             \.appIsImporting,
             Binding(
-                get: { appProvider.isImporting },
-                set: { appProvider.isImporting = $0 }
+                get: { appVM.isImporting },
+                set: { appVM.isImporting = $0 }
             )
         )
         .environment(\.showAudioDBViewAction, {
-            appProvider.showDBView()
+            appVM.showDBView()
         })
         .onAppear {
             AudioPluginHost.configure(
@@ -214,7 +214,7 @@ extension RootView {
         }
         Task { @MainActor in
             do {
-                try self.pluginProvider.restoreCurrent()
+                try self.pluginVM.restoreCurrent()
 
                 #if os(iOS)
                     UIApplication.shared.beginReceivingRemoteControlEvents()

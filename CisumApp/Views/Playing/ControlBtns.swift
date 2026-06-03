@@ -4,8 +4,8 @@ import OSLog
 import SwiftUI
 
 struct ControlBtns: View, SuperLog {
-    @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var message: StateProvider
+    @EnvironmentObject var app: AppVM
+    @EnvironmentObject var message: StateVM
 
     nonisolated static let emoji = "🎵"
     static let verbose = false

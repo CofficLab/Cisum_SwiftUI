@@ -3,7 +3,7 @@ import MagicPlayMan
 import SwiftUI
 
 struct BtnMore: View {
-    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var app: AppVM
     @Environment(\.demoMode) var isDemoMode
     @Environment(\.localization) private var loc
     @LumiTheme private var appTheme

@@ -6,7 +6,7 @@ struct HeroView: View, SuperLog {
     nonisolated static let emoji = "🎭"
     nonisolated static let verbose = false
 
-    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var app: AppVM
     @EnvironmentObject var playMan: PlayMan
     @Environment(\.demoMode) var isDemoMode
     @Environment(\.downloadingMode) var isDownloadingMode

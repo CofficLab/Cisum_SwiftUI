@@ -2,7 +2,7 @@ import MagicKit
 import SwiftUI
 
 struct RootToolbar: ToolbarContent {
-    @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var p: PluginVM
 
     var body: some ToolbarContent {
         // 提前计算，避免重复调用

@@ -8,8 +8,8 @@ struct ContentView: View, SuperLog, SuperThread {
     nonisolated static let emoji = "🖥️"
     nonisolated static let verbose = false
 
-    @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var app: AppVM
+    @EnvironmentObject var p: PluginVM
     @Environment(\.demoMode) var isDemoMode
     @LumiMotionPreferenceReader private var motionPreference
     @State private var databaseViewHeight: CGFloat = 300

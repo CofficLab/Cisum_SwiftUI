@@ -5,10 +5,10 @@ import SwiftData
 import SwiftUI
 
 struct StateView: View, SuperLog, SuperThread {
-    @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var messageManager: StateProvider
+    @EnvironmentObject var app: AppVM
+    @EnvironmentObject var messageManager: StateVM
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var p: PluginVM
     @Environment(\.demoMode) var isDemoMode
     @LumiTheme private var appTheme
     @LumiMotionPreferenceReader private var motionPreference

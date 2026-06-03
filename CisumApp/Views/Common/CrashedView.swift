@@ -3,7 +3,7 @@ import MagicKit
 import SwiftUI
 
 struct CrashedView: View {
-    @EnvironmentObject var cloud: CloudProvider
+    @EnvironmentObject var cloud: CloudVM
 
     var error: Error
 

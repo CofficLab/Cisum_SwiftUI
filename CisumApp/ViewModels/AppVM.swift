@@ -8,7 +8,7 @@ import OSLog
 import SwiftUI
 
 @MainActor
-class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, SuperThread {
+class AppVM: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, SuperThread {
     nonisolated static let emoji = "🐮"
 
     // 使用 UIRepo 来管理 UI 相关的数据

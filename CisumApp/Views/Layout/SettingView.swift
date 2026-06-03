@@ -2,7 +2,7 @@ import CisumUI
 import SwiftUI
 
 struct SettingView: View {
-    @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var p: PluginVM
     @LumiTheme private var appTheme
 
     private var settingItems: [PluginSettingItem] {

@@ -6,7 +6,7 @@ struct AppTabView: View, SuperLog, SuperThread {
     nonisolated static let emoji = "📑"
     nonisolated static let verbose = false
 
-    @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var p: PluginVM
     @Environment(\.demoMode) var isDemoMode
 
     @State private var selectedTabID: String = "0"

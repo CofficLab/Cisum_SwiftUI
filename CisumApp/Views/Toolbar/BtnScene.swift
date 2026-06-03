@@ -6,7 +6,7 @@ import SwiftUI
 struct BtnScene: View {
     static let accessibilityTitle = String(localized: "Switch Scene")
 
-    @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var p: PluginVM
 
     @State private var isPresented: Bool = false
 

@@ -8,8 +8,8 @@ struct ContentLayout: View, SuperLog {
     nonisolated static let emoji = "📐"
     nonisolated static let verbose = false
 
-    @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var app: AppVM
+    @EnvironmentObject var p: PluginVM
 
     private(set) var isDetailVisible: Bool
 
