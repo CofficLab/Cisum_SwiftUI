@@ -12,103 +12,6 @@ import UniformTypeIdentifiers
     public typealias MagicPlatformImage = UIImage
 #endif
 
-public enum AvatarViewShape: Shape {
-    case circle
-    case rectangle
-    case roundedRectangle(cornerRadius: CGFloat)
-    case capsule
-
-    public func path(in rect: CGRect) -> Path {
-        switch self {
-        case .circle:
-            return Circle().path(in: rect)
-        case .rectangle:
-            return Rectangle().path(in: rect)
-        case let .roundedRectangle(cornerRadius):
-            return RoundedRectangle(cornerRadius: cornerRadius).path(in: rect)
-        case .capsule:
-            return Capsule().path(in: rect)
-        }
-    }
-}
-
-public extension URL {
-    var isFileExist: Bool {
-        isFileURL ? FileManager.default.fileExists(atPath: path) : true
-    }
-
-    var isNetworkURL: Bool {
-        scheme == "http" || scheme == "https"
-    }
-
-    var isAudio: Bool {
-        if let type = try? resourceValues(forKeys: [.contentTypeKey]).contentType {
-            return type.conforms(to: .audio)
-        }
-        return ["mp3", "m4a", "m4b", "aac", "wav", "aiff", "ogg", "opus", "flac", "alac"]
-            .contains(pathExtension.lowercased())
-    }
-
-    var isVideo: Bool {
-        if let type = try? resourceValues(forKeys: [.contentTypeKey]).contentType {
-            return type.conforms(to: .movie) || type.conforms(to: .video)
-        }
-        return ["mp4", "m4v", "mov", "avi", "mkv", "webm", "mpeg", "mpg", "m3u8"]
-            .contains(pathExtension.lowercased())
-    }
-
-    func makeAvatarView(verbose: Bool = false) -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(.quaternary)
-            Image(systemName: isVideo ? "film" : isAudio ? "music.note" : "doc")
-                .font(.system(size: 44, weight: .medium))
-                .foregroundStyle(.secondary)
-        }
-        .accessibilityLabel(title)
-    }
-
-    var systemIcon: String {
-        if isVideo { return "film" }
-        if isAudio { return "music.note" }
-        return "doc"
-    }
-
-    func onDownloading(
-        verbose: Bool = false,
-        caller: String = "",
-        onProgress: @escaping (Double) -> Void
-    ) -> AnyCancellable {
-        AnyCancellable {}
-    }
-
-    func onDownloadFinished(
-        verbose: Bool = false,
-        caller: String = "",
-        onFinished: @escaping () -> Void
-    ) -> AnyCancellable {
-        AnyCancellable {}
-    }
-
-    func download(verbose: Bool = false, reason: String = "") async throws {}
-
-    func thumbnail(
-        size: CGSize,
-        verbose: Bool = false,
-        reason: String = ""
-    ) async throws -> MagicThumbnailResult? {
-        nil
-    }
-
-    func platformThumbnail(
-        size: CGSize,
-        verbose: Bool = false,
-        reason: String = ""
-    ) async throws -> MagicThumbnailResult? {
-        try await thumbnail(size: size, verbose: verbose, reason: reason)
-    }
-}
-
 public extension View {
     func magicSize(_ size: CGFloat) -> some View {
         frame(width: size, height: size)
@@ -120,10 +23,6 @@ public extension View {
 
     func magicBackground(_ color: Color) -> some View {
         background(color)
-    }
-
-    func magicAvatarShape(_ shape: AvatarViewShape) -> some View {
-        clipShape(shape)
     }
 
     func magicCentered() -> some View {
@@ -145,9 +44,6 @@ public extension View {
         .buttonStyle(.borderless)
     }
 
-    func magicDownloadMonitor(_ isEnabled: Bool = true) -> some View {
-        self
-    }
 }
 
 public extension String {

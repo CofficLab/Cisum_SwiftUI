@@ -29,6 +29,10 @@ let package = Package(
                "ZIPFoundation",
            ],
            path: "Sources",
+           exclude: [
+               "MagicDemo",
+               "MagicKit",
+           ],
            resources: [.process("Icons.xcassets"), .process("Resources")],
            swiftSettings: [
                .enableExperimentalFeature("StrictConcurrency=minimal"),
