@@ -1,34 +1,37 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
-    "Like/Unlike Button": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "喜欢/取消喜欢 按钮"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Like Button" : {
+
+    },
+    "Like/Unlike Button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Like/Unlike Button"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "喜歡/取消喜歡 按鈕"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "喜欢/取消喜欢 按钮"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "喜歡/取消喜歡 按鈕"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "喜歡/取消喜歡 按鈕"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Like/Unlike Button"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "喜歡/取消喜歡 按鈕"
           }
         }
       }
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }
