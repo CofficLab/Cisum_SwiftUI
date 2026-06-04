@@ -1,29 +1,38 @@
 # CisumPluginRegistry
 
-Plugin registry for the Cisum plugin system. Auto-generated registry that manages plugin registration and lifecycle.
+Plugin registry for the Cisum plugin system. Manually maintained list of all plugins available to Cisum.
 
 ## Overview
 
-This package contains the generated plugin registry code that automatically discovers and registers all Cisum plugins at startup.
+This package serves as the central registry that declares dependencies on all Cisum plugin packages and collects their shared instances at startup.
 
 ## Architecture
 
 ```
 CisumPluginRegistry/
-├── Package.swift
+├── Package.swift          ← All plugin dependencies declared here
 ├── Sources/
-│   └── GeneratedPluginRegistry.swift
-└── Tests/
+│   └── PluginRegistry.swift  ← Manually maintained registry
+└── README.md
 ```
-
-## Dependencies
-
-- `CisumApp` (host application)
 
 ## How It Works
 
-The registry is auto-generated during the build process. Each plugin module conforming to the plugin protocol is collected and registered automatically, eliminating the need for manual plugin registration.
+The registry is **manually maintained**, not auto-generated. When adding a new plugin:
 
-## Maintainers
+1. Add the plugin module to `Package.swift` dependencies and target dependencies
+2. Add `import` statement in `PluginRegistry.swift`
+3. Append the plugin's shared instance to the `plugins` array
+4. Keep the `Package.swift` dependency list in sync with the `import` statements and `plugins.append(...)` calls
 
-Work for Joy & Live for Love ➡️ <https://github.com/nookery>
+## Plugin Type Mapping
+
+Most modules use a matching plugin type name (e.g., `AudioPlugin` module → `AudioPlugin` type). Notable exceptions:
+
+| Module Name           | Plugin Type    |
+|-----------------------|----------------|
+| `AudioCopyPlugin`     | `CopyPlugin`   |
+| `AudioDBViewPlugin`   | `AudioDBPlugin`|
+| `BookDBViewPlugin`    | `BookDBPlugin` |
+| `ResetPlugin`         | `SystemPlugin` |
+

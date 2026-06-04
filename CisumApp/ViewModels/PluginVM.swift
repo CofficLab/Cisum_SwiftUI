@@ -91,8 +91,8 @@ class PluginVM: ObservableObject, SuperLog, SuperThread {
 
         self.repo = repo
 
-        // 自动发现并注册所有插件
-        autoDiscoverAndRegisterPlugins()
+        // 加载并注册所有插件
+        loadAndRegisterPlugins()
 
         // 从内部注册表获取所有已注册的插件实例
         self.plugins = getAllPlugins()
@@ -378,14 +378,15 @@ class PluginVM: ObservableObject, SuperLog, SuperThread {
         }
     }
     
-    /// 自动发现并注册所有插件。
+    /// 从 `PluginRegistry` 注册表中加载并注册所有插件。
     ///
-    /// 插件注册表由构建脚本扫描 `Plugins/*Plugin` 生成，
-    /// 避免依赖 Objective-C runtime 枚举 Swift actor 类型。
-    private func autoDiscoverAndRegisterPlugins() {
+    /// `PluginRegistry` 是手动维护的插件清单，
+    /// 新增插件时需要在 `CisumPluginRegistry/Package.swift` 和
+    /// `PluginRegistry.swift` 中同步更新。
+    private func loadAndRegisterPlugins() {
         clearRegisteredPlugins()
 
-        for instance in GeneratedPluginRegistry.plugins {
+        for instance in PluginRegistry.plugins {
             let pluginType = type(of: instance)
             let pluginOrder = pluginType.order
 

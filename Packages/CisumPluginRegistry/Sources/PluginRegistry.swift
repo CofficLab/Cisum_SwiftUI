@@ -43,8 +43,25 @@ import WelcomePlugin
 
 /// Central plugin registry.
 ///
-/// Add packaged plugins here explicitly when they should be available to Cisum.
-public enum GeneratedPluginRegistry {
+/// Manually maintained list of all plugins available to Cisum.
+/// When adding a new plugin, update both the `Package.swift` dependencies
+/// and the `plugins` array below.
+///
+/// ## Module Name → Plugin Type Mapping
+///
+/// Most modules use a matching plugin type name (e.g. `AudioPlugin` module → `AudioPlugin` type).
+/// Notable exceptions:
+///
+/// | Module                | Plugin Type  |
+/// |-----------------------|--------------|
+/// | `AudioCopyPlugin`     | `CopyPlugin` |
+/// | `AudioDBViewPlugin`   | `AudioDBPlugin` |
+/// | `BookDBViewPlugin`    | `BookDBPlugin` |
+/// | `ResetPlugin`         | `SystemPlugin` |
+///
+/// The `CisumPluginRegistry/Package.swift` dependency list must stay in sync
+/// with the `import` statements and `plugins.append(...)` calls below.
+public enum PluginRegistry {
     @MainActor
     public static var plugins: [any SuperPlugin] {
         var plugins: [any SuperPlugin] = []

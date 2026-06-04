@@ -1,6 +1,13 @@
 // swift-tools-version: 6.0
 import PackageDescription
 
+/// Manually maintained package definition for the Cisum plugin registry.
+///
+/// When adding or removing a plugin, update:
+/// 1. The `dependencies` array below
+/// 2. The `target.dependencies` array below
+/// 3. The corresponding `import` and `plugins.append(...)` in `Sources/PluginRegistry.swift`
+
 let package = Package(
     name: "CisumPluginRegistry",
     defaultLocalization: "en",
@@ -16,6 +23,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../CisumUI"),
+        // MARK: - Plugin Dependencies (keep in sync with PluginRegistry.swift)
         .package(path: "../../Plugins/AudioPlugin"),
         .package(path: "../../Plugins/AudioControlPlugin"),
         .package(path: "../../Plugins/AudioCopyPlugin"),
