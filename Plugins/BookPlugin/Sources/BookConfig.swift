@@ -34,8 +34,9 @@ public struct BookConfig {
     }
 }
 
-private extension URL {
-    func ensureDirectory() throws {
+extension URL {
+    @discardableResult
+    func ensureDirectory() throws -> URL {
         var isDirectory: ObjCBool = false
         if FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory), !isDirectory.boolValue {
             try FileManager.default.removeItem(at: self)
@@ -48,5 +49,7 @@ private extension URL {
             withIntermediateDirectories: true,
             attributes: nil
         )
+
+        return self
     }
 }

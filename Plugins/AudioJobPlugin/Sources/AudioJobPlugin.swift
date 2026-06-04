@@ -1,15 +1,7 @@
 import CisumUI
-import Combine
 import Foundation
 import OSLog
 import AudioPlugin
-
-@MainActor
-private final class AudioJobNotificationObserverHolder {
-    static let shared = AudioJobNotificationObserverHolder()
-    var cancellables = Set<AnyCancellable>()
-    private init() {}
-}
 
 public actor AudioJobPlugin: SuperPlugin {
     public static let shared = AudioJobPlugin()
