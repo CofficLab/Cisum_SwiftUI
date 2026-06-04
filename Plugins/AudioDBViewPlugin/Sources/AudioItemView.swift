@@ -262,15 +262,18 @@ extension AudioItemView {
 extension AudioItemView {
     /// 在后台加载文件大小
     private func loadFileSize() async {
-        fileSize = nil
-        fileSizeUnavailable = false
-
         let requestedURL = url
+
+        // Check cache first without resetting state - avoids a flicker
         if let cachedSize = AudioItemFileSizeCache.cachedSize(for: requestedURL) {
             fileSize = cachedSize
             fileSizeUnavailable = cachedSize == nil
             return
         }
+
+        // Only reset state when we actually need to load
+        fileSize = nil
+        fileSizeUnavailable = false
 
         let size = await Task.detached(priority: .background) { () -> Int64? in
             guard let attributes = try? FileManager.default.attributesOfItem(atPath: requestedURL.path) else {

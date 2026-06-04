@@ -40,6 +40,7 @@ class PluginVM: ObservableObject, SuperLog, SuperThread {
 
     private var cachedStatusViews: [AnyView]?
     private var cachedToolBarButtons: [(id: String, view: AnyView)]?
+    private var cachedThemeContributions: [LumiUIThemeContribution]?
 
     /// 获取所有可用的场景名称
     @MainActor
@@ -215,6 +216,10 @@ class PluginVM: ObservableObject, SuperLog, SuperThread {
     /// 主题贡献按插件 `order` 排序，并将排序信息写入 `ThemeSortKey`，让 `CisumUI`
     /// 的主题注册表只负责校验、选择和同步当前主题。
     func getThemeContributions() -> [LumiUIThemeContribution] {
+        if let cached = cachedThemeContributions {
+            return cached
+        }
+
         var merged: [(pluginOrder: Int, item: LumiUIThemeContribution)] = []
 
         for plugin in plugins {
@@ -245,6 +250,8 @@ class PluginVM: ObservableObject, SuperLog, SuperThread {
             seen.insert(item.id)
             result.append(item)
         }
+
+        cachedThemeContributions = result
         return result
     }
 
@@ -440,6 +447,7 @@ private extension PluginVM {
     func invalidatePluginViewCaches() {
         cachedStatusViews = nil
         cachedToolBarButtons = nil
+        cachedThemeContributions = nil
     }
 }
 

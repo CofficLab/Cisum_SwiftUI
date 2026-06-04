@@ -77,6 +77,14 @@ enum AudioListLoadPolicy {
         return currentIndex >= threshold
     }
 
+    /// Quick pre-check to see if an index is near the load-more threshold.
+    /// Used to avoid calling the full `shouldLoadMore` check for every cell.
+    static func isNearThreshold(currentIndex: Int, loadedCount: Int) -> Bool {
+        guard loadedCount > 0 else { return false }
+        let threshold = max(loadedCount - 15, Int(Double(loadedCount) * 0.75))
+        return currentIndex >= threshold
+    }
+
     static func generationAfterDeletingDisplayedItems(_ generation: Int) -> Int {
         generation + 1
     }
@@ -269,8 +277,14 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                         .equatable() // Use Equatable to reduce unnecessary redraws.
                         .listRowBackground(Color.clear)
                         .onAppear {
-                            // Check for more data only near the end of the list.
-                            checkLoadMore(at: index)
+                            // Only check for more data when approaching the threshold.
+                            // This avoids calling checkLoadMore for every cell.
+                            if AudioListLoadPolicy.isNearThreshold(
+                                currentIndex: index,
+                                loadedCount: urls.count
+                            ) {
+                                checkLoadMore(at: index)
+                            }
                         }
                 }
                 .onDelete(perform: handleDeleteItems)

@@ -41,12 +41,13 @@ struct AppTabView: View, SuperLog, SuperThread {
 extension AppTabView {
     /// 构建 TabView（正常模式）
     func buildTabView() -> AnyView {
+        let views = cachedTabViews
         let tabView = TabView(selection: $selectedTabID) {
-            ForEach(Array(cachedTabViews.enumerated()), id: \.offset) { index, item in
-                item.view
+            ForEach(0..<views.count, id: \.self) { index in
+                views[index].view
                     .tag(String(index))
                     .tabItem {
-                        Label(item.label, systemImage: .cisumIconMusicNote)
+                        Label(views[index].label, systemImage: .cisumIconMusicNote)
                     }
             }
 

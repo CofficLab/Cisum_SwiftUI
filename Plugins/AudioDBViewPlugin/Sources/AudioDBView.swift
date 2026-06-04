@@ -8,6 +8,9 @@ import SwiftUI
 import UniformTypeIdentifiers
 import AudioPlugin
 
+// NSItemProvider is thread-safe by design but not yet marked Sendable by Apple.
+extension NSItemProvider: @retroactive @unchecked Sendable {}
+
 @MainActor
 public struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     public nonisolated static let emoji = "🐘"
@@ -429,28 +432,33 @@ extension AudioDBView {
     }
 
     /// 处理用户将音频文件拖入仓库视图。
-    func handleDrop(_ providers: [NSItemProvider]) -> Bool {
+    nonisolated func handleDrop(_ providers: [NSItemProvider]) -> Bool {
         if Self.verbose {
             os_log("\(self.t)🎯 Handling file drop, provider count: \(providers.count)")
         }
 
+        // Extract URLs from non-Sendable NSItemProvider before crossing isolation boundary.
         Task {
             let droppedFiles = await Self.droppedFileURLs(from: providers)
 
-            if Self.shouldReportDroppedURLLoadFailure(droppedFiles.urls, errors: droppedFiles.errors),
-               let error = droppedFiles.errors.first {
-                os_log(.error, "\(self.t)⚠️ Failed to load dropped file: \(error.localizedDescription)")
-                alert_error(String(localized: "Import failed: \(error.localizedDescription)", bundle: .module))
-            } else if Self.shouldReportPartialDroppedURLLoadFailure(droppedFiles.urls, errors: droppedFiles.errors) {
-                os_log(.error, "\(self.t)⚠️ Some dropped files failed to load")
-                alert_warning(String(localized: "Some dropped files could not be loaded", bundle: .module))
-            }
+            await MainActor.run {
+                if Self.shouldReportDroppedURLLoadFailure(droppedFiles.urls, errors: droppedFiles.errors),
+                   let error = droppedFiles.errors.first {
+                    os_log(.error, "\(self.t)⚠️ Failed to load dropped file: \(error.localizedDescription)")
+                    alert_error(String(localized: "Import failed: \(error.localizedDescription)", bundle: .module))
+                } else if Self.shouldReportPartialDroppedURLLoadFailure(droppedFiles.urls, errors: droppedFiles.errors) {
+                    os_log(.error, "\(self.t)⚠️ Some dropped files failed to load")
+                    alert_warning(String(localized: "Some dropped files could not be loaded", bundle: .module))
+                }
 
-            guard Self.shouldImportDroppedURLs(droppedFiles.urls, after: droppedFiles.errors) else {
-                return
-            }
+                guard Self.shouldImportDroppedURLs(droppedFiles.urls, after: droppedFiles.errors) else {
+                    return
+                }
 
-            await importFiles(droppedFiles.urls)
+                Task {
+                    await importFiles(droppedFiles.urls)
+                }
+            }
         }
 
         return true

@@ -69,10 +69,41 @@ enum BookGridSelectionPolicy {
 }
 
 enum BookGridPlayableChildrenLoader {
+    /// In-memory cache for scanned playable children to avoid repeated directory I/O.
+    /// Key: standardized book URL path, Value: sorted playable child URLs.
+    nonisolated(unsafe) private static var cache: [String: [URL]] = [:]
+
     static func load(for bookURL: URL) async -> [URL] {
-        await Task.detached(priority: .userInitiated) {
+        let key = cacheKey(for: bookURL)
+
+        if let cached = cache[key] {
+            if BookGrid.verbose {
+                os_log("📖✅ Cache hit for playable children: \(bookURL.lastPathComponent)")
+            }
+            return cached
+        }
+
+        let result = await Task.detached(priority: .userInitiated) {
             BookPlaybackOrdering.playableChildren(for: bookURL)
         }.value
+
+        cache[key] = result
+        return result
+    }
+
+    /// Invalidates the entire playable children cache.
+    /// Called when books are refreshed, deleted, or synced.
+    static func invalidateCache() {
+        cache.removeAll()
+    }
+
+    /// Invalidates cache for a specific book URL.
+    static func invalidateCache(for bookURL: URL) {
+        cache.removeValue(forKey: cacheKey(for: bookURL))
+    }
+
+    private static func cacheKey(for url: URL) -> String {
+        url.resolvingSymlinksInPath().standardizedFileURL.path
     }
 }
 
@@ -106,6 +137,9 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
     
     /// Book collection list containing folder-style books.
     @State private var books: [BookDTO] = []
+    
+    /// URL to BookDTO index for O(1) lookup when updating selected book.
+    @State private var bookURLIndex: [URL: BookDTO] = [:]
     
     /// Whether books are loading.
     @State private var isLoading: Bool = true
@@ -175,22 +209,21 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
                             GridItem(.adaptive(minimum: 150), spacing: 12),
                         ], alignment: .center, spacing: 16, pinnedViews: [.sectionHeaders]) {
                             ForEach(books) { item in
+                                let isSelected = BookGridSelectionPolicy.representsSelectedBook(
+                                    item.url,
+                                    selectedURL: selectedBookURL
+                                )
+                                
                                 BookTile(url: item.url, title: item.bookTitle, childCount: item.childCount)
                                     .overlay(
-                                        // Highlight border.
+                                        // Highlight border - animation applied only to the overlay
                                         Rectangle()
                                             .stroke(
-                                                BookGridSelectionPolicy.representsSelectedBook(
-                                                    item.url,
-                                                    selectedURL: selectedBookURL
-                                                ) ? Color.accentColor : Color.clear,
-                                                lineWidth: BookGridSelectionPolicy.representsSelectedBook(
-                                                    item.url,
-                                                    selectedURL: selectedBookURL
-                                                ) ? 3 : 0
+                                                isSelected ? Color.accentColor : Color.clear,
+                                                lineWidth: isSelected ? 3 : 0
                                             )
+                                            .animation(.easeInOut(duration: 0.2), value: isSelected)
                                     )
-                                    .animation(.easeInOut(duration: 0.2), value: selectedBookURL)
                                     .onTapGesture {
                                         handleBookTap(book: item)
                                     }
@@ -271,6 +304,7 @@ extension BookGrid {
     ///
     /// Finds and highlights the book that contains the given audio URL.
     /// If the URL is the book itself or one of its child files, it is recognized and selected.
+    /// Uses O(1) index lookup instead of O(n) iteration.
     ///
     /// - Parameter url: Audio file URL to look up.
     private func updateSelectedBook(for url: URL) {
@@ -278,12 +312,23 @@ extension BookGrid {
             os_log("\(self.t)🔍 Finding book containing audio: \(url.lastPathComponent)")
         }
         
-        // Find the book that contains this URL.
+        // Try exact match first using index
+        if let book = bookURLIndex[url],
+           BookPlaybackOrdering.representsSameFile(book.url, url) {
+            if Self.verbose {
+                os_log("\(self.t)✅ Found book by exact match: \(book.bookTitle)")
+            }
+            selectedBookURL = book.url
+            return
+        }
+        
+        // Fall back to iteration only if index lookup fails (should be rare)
+        // This handles cases where the URL might be a child file
         for book in books {
             if BookPlaybackOrdering.representsSameFile(book.url, url)
                 || BookPlaybackOrdering.containsPlayableChild(url, in: book.url) {
                 if Self.verbose {
-                    os_log("\(self.t)✅ Found book: \(book.bookTitle)")
+                    os_log("\(self.t)✅ Found book by iteration: \(book.bookTitle)")
                 }
                 selectedBookURL = book.url
                 return
@@ -428,6 +473,14 @@ extension BookGrid {
         }
         
         books = newValue
+        
+        // Build URL to BookDTO index for O(1) lookup
+        var index: [URL: BookDTO] = [:]
+        for book in newValue {
+            index[book.url] = book
+        }
+        bookURLIndex = index
+        
         self.setIsLoading(false)
 
         // Restore selection from the current playback item after data loads to avoid losing highlight during the empty-list phase.
@@ -537,6 +590,8 @@ extension BookGrid {
         if Self.verbose {
             os_log("\(self.t)🗑️ Book deleted")
         }
+        BookGridPlayableChildrenLoader.invalidateCache()
+        BookCoverRepo.clearCache()
         playBookGeneration = BookGridPlaybackRequestPolicy.generationAfterInvalidatingPendingPlayback(playBookGeneration)
         scheduleUpdateBooksDebounced()
     }
@@ -550,6 +605,8 @@ extension BookGrid {
         if Self.verbose {
             os_log("\(self.t)✅ Data sync finished")
         }
+        BookGridPlayableChildrenLoader.invalidateCache()
+        BookCoverRepo.clearCache()
         playBookGeneration = BookGridPlaybackRequestPolicy.generationAfterInvalidatingPendingPlayback(playBookGeneration)
         scheduleUpdateBooksDebounced()
         setIsSyncing(false)

@@ -10,8 +10,9 @@ struct StatusView: View, SuperLog, SuperThread {
     var body: some View {
         HStack {
             Spacer()
-            ForEach(Array(p.getStatusViews().enumerated()), id: \.offset) { _, view in
-                view
+            let views = p.getStatusViews()
+            ForEach(0..<views.count, id: \.self) { index in
+                views[index]
             }
         }
     }
