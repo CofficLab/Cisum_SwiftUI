@@ -5,109 +5,152 @@ import CisumUI
 /// 本地化字符串管理
 public struct Localization {
     private let bundle: Bundle
+    private let locale: Locale
 
     public init(locale: Locale = .current) {
         self.bundle = .module
+        self.locale = locale
+    }
+
+    /// 在 Localizable.xcstrings 中查找指定 locale 的翻译
+    private func localized(_ key: String) -> String {
+        guard let url = bundle.url(forResource: "Localizable", withExtension: "xcstrings"),
+              let data = try? Data(contentsOf: url),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let strings = json["strings"] as? [String: Any] else {
+            return key
+        }
+
+        guard let entry = strings[key] as? [String: Any],
+              let localizations = entry["localizations"] as? [String: Any] else {
+            return key
+        }
+
+        let preferredLocales = [
+            locale.identifier,
+            "\(locale.languageCode ?? "en")-\(locale.regionCode ?? "")",
+            locale.languageCode ?? "en",
+            "zh-Hans",
+            "en",
+        ]
+
+        for localeId in preferredLocales {
+            if let loc = localizations[localeId] as? [String: Any],
+               let stringUnit = loc["stringUnit"] as? [String: Any],
+               let value = stringUnit["value"] as? String,
+               !value.isEmpty {
+                return value
+            }
+            // 也尝试带变体的 locale（如 zh-Hans-CN）
+            if let loc = localizations[localeId.replacing("-", with: "_")] as? [String: Any],
+               let stringUnit = loc["stringUnit"] as? [String: Any],
+               let value = stringUnit["value"] as? String,
+               !value.isEmpty {
+                return value
+            }
+        }
+
+        return key
     }
 
     // MARK: - Common
-    public var retry: String { String(localized: "Retry", bundle: .module) }
-    public var loadingWithDots: String { String(localized: "Loading...", bundle: .module) }
-    public var error: String { String(localized: "Error", bundle: .module) }
+    public var retry: String { localized("Retry") }
+    public var loadingWithDots: String { localized("Loading...") }
+    public var error: String { localized("Error") }
 
     // MARK: - Audio Content
-    public var noArtworkAvailable: String { String(localized: "No artwork available", bundle: .module) }
-    public var failedToLoadArtwork: String { String(localized: "Failed to load artwork", bundle: .module) }
+    public var noArtworkAvailable: String { localized("No artwork available") }
+    public var failedToLoadArtwork: String { localized("Failed to load artwork") }
 
     // MARK: - Format Info
-    public var supportedFormats: String { String(localized: "Supported Formats", bundle: .module) }
+    public var supportedFormats: String { localized("Supported Formats") }
 
     // MARK: - Error / Loading
-    public var failedToLoadMedia: String { String(localized: "Failed to Load Media", bundle: .module) }
+    public var failedToLoadMedia: String { localized("Failed to Load Media") }
 
     // MARK: - Thumbnail
-    public var noArtwork: String { String(localized: "No Artwork", bundle: .module) }
+    public var noArtwork: String { localized("No Artwork") }
 
     // MARK: - Subscribers
-    public var eventSubscribers: String { String(localized: "Event Subscribers", bundle: .module) }
-    public var noSubscribersRegistered: String { String(localized: "No subscribers are currently registered.", bundle: .module) }
-    public var noSubscribers: String { String(localized: "No Subscribers", bundle: .module) }
-    public var since: String { String(localized: "Since", bundle: .module) }
+    public var eventSubscribers: String { localized("Event Subscribers") }
+    public var noSubscribersRegistered: String { localized("No subscribers are currently registered.") }
+    public var noSubscribers: String { localized("No Subscribers") }
+    public var since: String { localized("Since") }
 
     // MARK: - Play Mode
-    public var lightMode: String { String(localized: "Light Mode", bundle: .module) }
-    public var darkMode: String { String(localized: "Dark Mode", bundle: .module) }
+    public var lightMode: String { localized("Light Mode") }
+    public var darkMode: String { localized("Dark Mode") }
 
     // MARK: - Buttons
-    public var differentSizes: String { String(localized: "Different Sizes", bundle: .module) }
+    public var differentSizes: String { localized("Different Sizes") }
 
     // MARK: - Playback State
-    public var nowPlaying: String { String(localized: "Now Playing", bundle: .module) }
+    public var nowPlaying: String { localized("Now Playing") }
 
     // MARK: - Loading States
-    public var buffering: String { String(localized: "Buffering...", bundle: .module) }
-    public var preparing: String { String(localized: "Preparing...", bundle: .module) }
-    public var connecting: String { String(localized: "Connecting...", bundle: .module) }
-    public var downloading: String { String(localized: "Downloading", bundle: .module) }
+    public var buffering: String { localized("Buffering...") }
+    public var preparing: String { localized("Preparing...") }
+    public var connecting: String { localized("Connecting...") }
+    public var downloading: String { localized("Downloading") }
 
     // MARK: - Error Messages
-    public var tryAgain: String { String(localized: "Try Again", bundle: .module) }
-    public var noMediaSelected: String { String(localized: "No media selected", bundle: .module) }
-    public var noMediaLoaded: String { String(localized: "No media loaded", bundle: .module) }
-    public var selectMediaToPlay: String { String(localized: "Select a media file to play", bundle: .module) }
-    public var invalidOrCorrupted: String { String(localized: "The media file is invalid or corrupted", bundle: .module) }
-    public var networkError: String { String(localized: "Network error", bundle: .module) }
-    public var playbackError: String { String(localized: "Playback error", bundle: .module) }
-    public var unsupportedFormat: String { String(localized: "Unsupported format", bundle: .module) }
+    public var tryAgain: String { localized("Try Again") }
+    public var noMediaSelected: String { localized("No media selected") }
+    public var noMediaLoaded: String { localized("No media loaded") }
+    public var selectMediaToPlay: String { localized("Select a media file to play") }
+    public var invalidOrCorrupted: String { localized("The media file is invalid or corrupted") }
+    public var networkError: String { localized("Network error") }
+    public var playbackError: String { localized("Playback error") }
+    public var unsupportedFormat: String { localized("Unsupported format") }
 
     // MARK: - Playback State Text
-    public var ready: String { String(localized: "Ready", bundle: .module) }
-    public var willPlay: String { String(localized: "Will Play", bundle: .module) }
-    public var playing: String { String(localized: "Playing", bundle: .module) }
-    public var paused: String { String(localized: "Paused", bundle: .module) }
-    public var stopped: String { String(localized: "Stopped", bundle: .module) }
-    public var failed: String { String(localized: "Failed", bundle: .module) }
+    public var ready: String { localized("Ready") }
+    public var willPlay: String { localized("Will Play") }
+    public var playing: String { localized("Playing") }
+    public var paused: String { localized("Paused") }
+    public var stopped: String { localized("Stopped") }
+    public var failed: String { localized("Failed") }
 
     // MARK: - Error Failure Reasons
-    public var pleaseSelectMedia: String { String(localized: "Please select a media file to play", bundle: .module) }
-    public var fileFormatNotSupportedOrCorrupted: String { String(localized: "The file format is not supported or the file is corrupted", bundle: .module) }
-    public var networkConnectionProblem: String { String(localized: "There was a problem with the network connection", bundle: .module) }
-    public var playbackProblem: String { String(localized: "There was a problem during playback", bundle: .module) }
-    public var mediaTypeNotSupported: String { String(localized: "The selected media type is not supported", bundle: .module) }
+    public var pleaseSelectMedia: String { localized("Please select a media file to play") }
+    public var fileFormatNotSupportedOrCorrupted: String { localized("The file format is not supported or the file is corrupted") }
+    public var networkConnectionProblem: String { localized("There was a problem with the network connection") }
+    public var playbackProblem: String { localized("There was a problem during playback") }
+    public var mediaTypeNotSupported: String { localized("The selected media type is not supported") }
 
     // MARK: - Error Recovery Suggestions
-    public var selectMediaFromLibrary: String { String(localized: "Select a media file from your library", bundle: .module) }
-    public var tryDifferentMedia: String { String(localized: "Try with a different media file", bundle: .module) }
-    public var checkInternetConnection: String { String(localized: "Check your internet connection and try again", bundle: .module) }
-    public var tryReloadMedia: String { String(localized: "Try reloading the media file", bundle: .module) }
-    public var chooseSupportedFormat: String { String(localized: "Choose a supported audio or video format", bundle: .module) }
-    public var checkURLFormat: String { String(localized: "Check if the URL format is correct", bundle: .module) }
-    public var invalidURL: String { String(localized: "Invalid URL", bundle: .module) }
-    public var invalidURLReason: String { String(localized: "The provided URL is invalid", bundle: .module) }
+    public var selectMediaFromLibrary: String { localized("Select a media file from your library") }
+    public var tryDifferentMedia: String { localized("Try with a different media file") }
+    public var checkInternetConnection: String { localized("Check your internet connection and try again") }
+    public var tryReloadMedia: String { localized("Try reloading the media file") }
+    public var chooseSupportedFormat: String { localized("Choose a supported audio or video format") }
+    public var checkURLFormat: String { localized("Check if the URL format is correct") }
+    public var invalidURL: String { localized("Invalid URL") }
+    public var invalidURLReason: String { localized("The provided URL is invalid") }
 
     // MARK: - Button Disabled Reasons
-    public var firstTrack: String { String(localized: "This is the first track", bundle: .module) }
-    public var lastTrack: String { String(localized: "This is the last track", bundle: .module) }
-    public var previousTrack: String { String(localized: "Previous Track", bundle: .module) }
-    public var nextTrack: String { String(localized: "Next Track", bundle: .module) }
-    public var play: String { String(localized: "Play", bundle: .module) }
-    public var pause: String { String(localized: "Pause", bundle: .module) }
-    public var likeCurrentMedia: String { String(localized: "Like Current Media", bundle: .module) }
-    public var unlikeCurrentMedia: String { String(localized: "Unlike Current Media", bundle: .module) }
-    public var rewindTenSeconds: String { String(localized: "Rewind 10 Seconds", bundle: .module) }
-    public var forwardTenSeconds: String { String(localized: "Forward 10 Seconds", bundle: .module) }
-    public var showEventSubscribers: String { String(localized: "Show Event Subscribers", bundle: .module) }
-    public var openMediaLibrary: String { String(localized: "Open Media Library", bundle: .module) }
-    public var closeMediaLibrary: String { String(localized: "Close Media Library", bundle: .module) }
+    public var firstTrack: String { localized("This is the first track") }
+    public var lastTrack: String { localized("This is the last track") }
+    public var previousTrack: String { localized("Previous Track") }
+    public var nextTrack: String { localized("Next Track") }
+    public var play: String { localized("Play") }
+    public var pause: String { localized("Pause") }
+    public var likeCurrentMedia: String { localized("Like Current Media") }
+    public var unlikeCurrentMedia: String { localized("Unlike Current Media") }
+    public var rewindTenSeconds: String { localized("Rewind 10 Seconds") }
+    public var forwardTenSeconds: String { localized("Forward 10 Seconds") }
+    public var showEventSubscribers: String { localized("Show Event Subscribers") }
+    public var openMediaLibrary: String { localized("Open Media Library") }
+    public var closeMediaLibrary: String { localized("Close Media Library") }
 
     // MARK: - Play Mode
-    public var sequentialPlay: String { String(localized: "Sequential Play", bundle: .module) }
-    public var singleTrackLoop: String { String(localized: "Single Track Loop", bundle: .module) }
-    public var shufflePlay: String { String(localized: "Shuffle Play", bundle: .module) }
-    public var repeatAll: String { String(localized: "Repeat All", bundle: .module) }
+    public var sequentialPlay: String { localized("Sequential Play") }
+    public var singleTrackLoop: String { localized("Single Track Loop") }
+    public var shufflePlay: String { localized("Shuffle Play") }
+    public var repeatAll: String { localized("Repeat All") }
 
     // MARK: - Media Picker
-    public var selectMedia: String { String(localized: "Select Media", bundle: .module) }
+    public var selectMedia: String { localized("Select Media") }
 }
 
 // MARK: - SwiftUI Environment Key
