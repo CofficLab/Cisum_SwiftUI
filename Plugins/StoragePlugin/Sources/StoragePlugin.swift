@@ -8,7 +8,6 @@ public actor StoragePlugin: SuperPlugin, SuperLog {
     public nonisolated static let emoji = "💾"
     public static let verbose = true
     public static let metadata = PluginMetadata(
-        id: "StoragePlugin",
         displayName: String(localized: String.LocalizationValue(StoragePluginInfo.titleKey), bundle: .module),
         description: String(localized: String.LocalizationValue(StoragePluginInfo.descriptionKey), bundle: .module),
         iconName: StoragePluginInfo.iconName,

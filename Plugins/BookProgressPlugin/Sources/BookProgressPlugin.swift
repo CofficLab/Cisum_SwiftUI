@@ -7,7 +7,6 @@ import SwiftUI
 public actor BookProgressPlugin: SuperPlugin {
     public static let shared = BookProgressPlugin()
     public static let metadata = PluginMetadata(
-        id: "BookProgressPlugin",
         displayName: BookProgressPluginInfo.title,
         description: BookProgressPluginInfo.description,
         iconName: BookProgressPluginInfo.iconName,

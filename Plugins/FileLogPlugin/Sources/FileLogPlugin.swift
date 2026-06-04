@@ -4,7 +4,6 @@ import Foundation
 public actor FileLogPlugin: SuperPlugin {
     public static let shared = FileLogPlugin()
     public static let metadata = PluginMetadata(
-        id: "FileLogPlugin",
         displayName: FileLogPluginInfo.title,
         description: FileLogPluginInfo.description,
         iconName: FileLogPluginInfo.iconName,

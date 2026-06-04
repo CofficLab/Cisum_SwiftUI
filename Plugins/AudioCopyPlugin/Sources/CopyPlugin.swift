@@ -6,7 +6,6 @@ import SwiftUI
     public actor CopyPlugin: SuperPlugin {
         public static let shared = CopyPlugin()
         public static let metadata = PluginMetadata(
-            id: "CopyPlugin",
             displayName: String(localized: "Copy", bundle: .module),
             description: String(localized: String.LocalizationValue(AudioCopyPluginInfo.descriptionKey), bundle: .module),
             iconName: AudioCopyPluginInfo.iconName,

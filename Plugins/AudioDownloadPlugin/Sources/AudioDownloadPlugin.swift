@@ -4,7 +4,6 @@ import SwiftUI
 public actor AudioDownloadPlugin: SuperPlugin {
     public static let shared = AudioDownloadPlugin()
     public static let metadata = PluginMetadata(
-        id: "AudioDownloadPlugin",
         displayName: AudioDownloadPluginInfo.title,
         description: AudioDownloadPluginInfo.description,
         iconName: AudioDownloadPluginInfo.iconName,

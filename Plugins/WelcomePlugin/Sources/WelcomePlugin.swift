@@ -7,7 +7,6 @@ public actor WelcomePlugin: SuperPlugin, SuperLog {
     public nonisolated static let emoji = WelcomePluginInfo.emoji
     public static let verbose = true
     public static let metadata = PluginMetadata(
-        id: "WelcomePlugin",
         displayName: WelcomePluginInfo.title,
         description: WelcomePluginInfo.description,
         iconName: WelcomePluginInfo.iconName,

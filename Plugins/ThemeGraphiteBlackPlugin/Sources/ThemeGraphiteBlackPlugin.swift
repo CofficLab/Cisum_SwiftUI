@@ -4,7 +4,6 @@ import SwiftUI
 public actor ThemeGraphiteBlackPlugin: SuperPlugin {
     public static let shared = ThemeGraphiteBlackPlugin()
     public static let metadata = PluginMetadata(
-        id: "ThemeGraphiteBlackPlugin",
         displayName: GraphiteBlackTheme().displayName,
         description: GraphiteBlackTheme().description,
         iconName: GraphiteBlackTheme().iconName,

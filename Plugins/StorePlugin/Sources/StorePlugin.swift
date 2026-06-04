@@ -4,7 +4,6 @@ import SwiftUI
 public actor StorePlugin: SuperPlugin {
     public static let shared = StorePlugin()
     public static let metadata = PluginMetadata(
-        id: "StorePlugin",
         displayName: String(localized: String.LocalizationValue(StorePluginInfo.titleKey), bundle: .module),
         description: String(localized: String.LocalizationValue(StorePluginInfo.descriptionKey), bundle: .module),
         iconName: StorePluginInfo.iconName,

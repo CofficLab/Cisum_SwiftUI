@@ -5,7 +5,6 @@ import SwiftUI
 public actor AudioDemoPlugin: SuperPlugin {
     public static let shared = AudioDemoPlugin()
     public static let metadata = PluginMetadata(
-        id: "AudioDemoPlugin",
         displayName: AudioDemoPluginInfo.title,
         description: AudioDemoPluginInfo.description,
         iconName: AudioDemoPluginInfo.iconName,

@@ -4,7 +4,6 @@ import SwiftUI
 public actor ThemeAuroraPlugin: SuperPlugin {
     public static let shared = ThemeAuroraPlugin()
     public static let metadata = PluginMetadata(
-        id: "ThemeAuroraPlugin",
         displayName: AuroraTheme().displayName,
         description: AuroraTheme().description,
         iconName: AuroraTheme().iconName,

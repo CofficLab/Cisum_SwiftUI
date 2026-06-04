@@ -4,7 +4,6 @@ import SwiftUI
 public actor ThemeNebulaPlugin: SuperPlugin {
     public static let shared = ThemeNebulaPlugin()
     public static let metadata = PluginMetadata(
-        id: "ThemeNebulaPlugin",
         displayName: NebulaTheme().displayName,
         description: NebulaTheme().description,
         iconName: NebulaTheme().iconName,

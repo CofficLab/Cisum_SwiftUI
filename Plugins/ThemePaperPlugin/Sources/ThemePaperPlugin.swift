@@ -4,7 +4,6 @@ import SwiftUI
 public actor ThemePaperPlugin: SuperPlugin {
     public static let shared = ThemePaperPlugin()
     public static let metadata = PluginMetadata(
-        id: "ThemePaperPlugin",
         displayName: PaperTheme().displayName,
         description: PaperTheme().description,
         iconName: PaperTheme().iconName,

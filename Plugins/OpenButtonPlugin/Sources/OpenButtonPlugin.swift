@@ -4,7 +4,6 @@ import SwiftUI
 public actor OpenButtonPlugin: SuperPlugin {
     public static let shared = OpenButtonPlugin()
     public static let metadata = PluginMetadata(
-        id: "OpenButtonPlugin",
         displayName: String(localized: "Open Current", bundle: .module),
         description: OpenButtonPluginInfo.description,
         iconName: OpenButtonPluginInfo.iconName

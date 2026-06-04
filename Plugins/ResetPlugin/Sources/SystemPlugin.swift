@@ -5,7 +5,6 @@ import SwiftUI
 public actor SystemPlugin: SuperPlugin {
     public static let shared = SystemPlugin()
     public static let metadata = PluginMetadata(
-        id: "SystemPlugin",
         displayName: ResetPluginInfo.title,
         description: ResetPluginInfo.description,
         iconName: ResetPluginInfo.iconName,

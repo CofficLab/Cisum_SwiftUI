@@ -42,7 +42,7 @@ public struct PluginMetadata: Equatable, Sendable {
     }
 
     public init(
-        id: String,
+        id: String = "",
         displayName: String,
         description: String,
         iconName: String = "puzzlepiece.extension",
@@ -125,8 +125,11 @@ public extension SuperPlugin {
         )
     }
 
-    nonisolated var id: String { Self.metadata.id }
-    nonisolated var label: String { Self.metadata.id }
+    nonisolated var id: String {
+        let metadataId = Self.metadata.id
+        return metadataId.isEmpty ? String(describing: Self.self) : metadataId
+    }
+    nonisolated var label: String { id }
     nonisolated var title: String { Self.metadata.displayName }
     nonisolated var description: String { Self.metadata.description }
     nonisolated var iconName: String { Self.metadata.iconName }

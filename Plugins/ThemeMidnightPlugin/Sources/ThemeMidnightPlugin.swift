@@ -4,7 +4,6 @@ import SwiftUI
 public actor ThemeMidnightPlugin: SuperPlugin {
     public static let shared = ThemeMidnightPlugin()
     public static let metadata = PluginMetadata(
-        id: "ThemeMidnightPlugin",
         displayName: MidnightTheme().displayName,
         description: MidnightTheme().description,
         iconName: MidnightTheme().iconName,

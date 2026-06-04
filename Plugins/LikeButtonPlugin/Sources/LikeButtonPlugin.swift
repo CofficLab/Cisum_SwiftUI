@@ -4,7 +4,6 @@ import SwiftUI
 public actor LikeButtonPlugin: SuperPlugin {
     public static let shared = LikeButtonPlugin()
     public static let metadata = PluginMetadata(
-        id: "LikeButtonPlugin",
         displayName: String(localized: "Like Button", bundle: .module),
         description: LikeButtonPluginInfo.description,
         iconName: LikeButtonPluginInfo.iconName,

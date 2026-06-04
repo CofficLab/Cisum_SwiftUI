@@ -6,7 +6,6 @@ import SwiftUI
 public actor AudioDBPlugin: SuperPlugin {
     public static let shared = AudioDBPlugin()
     public static let metadata = PluginMetadata(
-        id: "AudioDBPlugin",
         displayName: String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), bundle: .module),
         description: String(localized: String.LocalizationValue(AudioDBPluginInfo.descriptionKey), bundle: .module),
         iconName: "externaldrive",

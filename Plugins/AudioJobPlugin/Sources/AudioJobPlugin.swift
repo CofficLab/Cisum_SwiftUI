@@ -6,7 +6,6 @@ import AudioPlugin
 public actor AudioJobPlugin: SuperPlugin {
     public static let shared = AudioJobPlugin()
     public static let metadata = PluginMetadata(
-        id: "AudioJobPlugin",
         displayName: String(localized: "Audio Jobs", bundle: .module),
         description: String(localized: "Background tasks for audio files", bundle: .module),
         iconName: "gearshape.2",

@@ -4,7 +4,6 @@ import SwiftUI
 public actor ThemeOceanPlugin: SuperPlugin {
     public static let shared = ThemeOceanPlugin()
     public static let metadata = PluginMetadata(
-        id: "ThemeOceanPlugin",
         displayName: OceanTheme().displayName,
         description: OceanTheme().description,
         iconName: OceanTheme().iconName,

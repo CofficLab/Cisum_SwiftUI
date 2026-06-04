@@ -9,7 +9,6 @@ public actor AudioProgressPlugin: SuperPlugin, SuperLog {
     public nonisolated static let emoji = "💾"
     public static let verbose = true
     public static let metadata = PluginMetadata(
-        id: "AudioProgressPlugin",
         displayName: String(localized: String.LocalizationValue(AudioProgressPluginInfo.titleKey), bundle: .module),
         description: String(localized: String.LocalizationValue(AudioProgressPluginInfo.descriptionKey), bundle: .module),
         iconName: "waveform",

@@ -6,7 +6,6 @@ import SwiftUI
 public actor BookPlugin: SuperPlugin {
     public static let shared = BookPlugin()
     public static let metadata = PluginMetadata(
-        id: "BookPlugin",
         displayName: BookPluginInfo.title,
         description: BookPluginInfo.description,
         iconName: BookPluginInfo.iconName,

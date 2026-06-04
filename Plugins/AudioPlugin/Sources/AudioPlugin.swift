@@ -7,7 +7,6 @@ import SwiftUI
 public actor AudioPlugin: SuperPlugin {
     public static let shared = AudioPlugin()
     public static let metadata = PluginMetadata(
-        id: "AudioPlugin",
         displayName: String(localized: String.LocalizationValue(AudioPluginInfo.titleKey), bundle: .module),
         description: String(localized: String.LocalizationValue(AudioPluginInfo.descriptionKey), bundle: .module),
         iconName: .cisumIconMusicNote,

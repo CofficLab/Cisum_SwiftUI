@@ -4,7 +4,6 @@ import SwiftUI
 public actor ThemeForestPlugin: SuperPlugin {
     public static let shared = ThemeForestPlugin()
     public static let metadata = PluginMetadata(
-        id: "ThemeForestPlugin",
         displayName: ForestTheme().displayName,
         description: ForestTheme().description,
         iconName: ForestTheme().iconName,

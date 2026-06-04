@@ -7,7 +7,6 @@ import SwiftUI
 public actor BookDBPlugin: SuperPlugin {
     public static let shared = BookDBPlugin()
     public static let metadata = PluginMetadata(
-        id: "BookDBPlugin",
         displayName: String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), bundle: .module),
         description: String(localized: String.LocalizationValue(BookDBPluginInfo.descriptionKey), bundle: .module),
         iconName: BookDBPluginInfo.iconName,
