@@ -1,4 +1,4 @@
-# CisumPluginRegistry
+# PluginRegistry
 
 Plugin registry for the Cisum plugin system. Manually maintained list of all plugins available to Cisum.
 
@@ -9,7 +9,7 @@ This package serves as the central registry that declares dependencies on all Ci
 ## Architecture
 
 ```
-CisumPluginRegistry/
+PluginRegistry/
 ├── Package.swift          ← All plugin dependencies declared here
 ├── Sources/
 │   └── PluginRegistry.swift  ← Manually maintained registry

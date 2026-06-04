@@ -59,7 +59,7 @@ import WelcomePlugin
 /// | `BookDBViewPlugin`    | `BookDBPlugin` |
 /// | `ResetPlugin`         | `SystemPlugin` |
 ///
-/// The `CisumPluginRegistry/Package.swift` dependency list must stay in sync
+/// The `PluginRegistry/Package.swift` dependency list must stay in sync
 /// with the `import` statements and `plugins.append(...)` calls below.
 public enum PluginRegistry {
     @MainActor

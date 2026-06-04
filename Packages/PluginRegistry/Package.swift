@@ -9,7 +9,7 @@ import PackageDescription
 /// 3. The corresponding `import` and `plugins.append(...)` in `Sources/PluginRegistry.swift`
 
 let package = Package(
-    name: "CisumPluginRegistry",
+    name: "PluginRegistry",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v15),
@@ -17,8 +17,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "CisumPluginRegistry",
-            targets: ["CisumPluginRegistry"]
+            name: "PluginRegistry",
+            targets: ["PluginRegistry"]
         ),
     ],
     dependencies: [
@@ -68,7 +68,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "CisumPluginRegistry",
+            name: "PluginRegistry",
             dependencies: [
                 "CisumUI",
                 "AudioPlugin",

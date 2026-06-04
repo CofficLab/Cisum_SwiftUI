@@ -1,5 +1,5 @@
 import CisumUI
-import CisumPluginRegistry
+import PluginRegistry
 import Foundation
 import MagicKit
 import OSLog
@@ -381,7 +381,7 @@ class PluginVM: ObservableObject, SuperLog, SuperThread {
     /// 从 `PluginRegistry` 注册表中加载并注册所有插件。
     ///
     /// `PluginRegistry` 是手动维护的插件清单，
-    /// 新增插件时需要在 `CisumPluginRegistry/Package.swift` 和
+    /// 新增插件时需要在 `PluginRegistry/Package.swift` 和
     /// `PluginRegistry.swift` 中同步更新。
     private func loadAndRegisterPlugins() {
         clearRegisteredPlugins()

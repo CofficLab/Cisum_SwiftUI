@@ -70,7 +70,7 @@
 		A1C15200B2FD900000000000 /* ThemePaperPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100B2FD900000000000 /* ThemePaperPlugin */; };
 		A1C15200C2FD900000000000 /* ThemeStudioBluePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100C2FD900000000000 /* ThemeStudioBluePlugin */; };
 		A1C15200D2FD900000000000 /* ThemeSunsetPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100D2FD900000000000 /* ThemeSunsetPlugin */; };
-		A1C163002FD900000000000 /* CisumPluginRegistry in Frameworks */ = {isa = PBXBuildFile; productRef = A1C163022FD900000000000 /* CisumPluginRegistry */; };
+		A1C163002FD900000000000 /* PluginRegistry in Frameworks */ = {isa = PBXBuildFile; productRef = A1C163022FD900000000000 /* PluginRegistry */; };
 		F51482C92F2C6A6700CEB80D /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F51482C82F2C6A6700CEB80D /* MagicKit */; };
 		F51BCCDC2F21EC7B00A5E3E5 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F51BCCDB2F21EC7B00A5E3E5 /* MagicPlayMan */; };
 		F51BD2AC2F220B4900A5E3E5 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F51BD2AB2F220B4900A5E3E5 /* MagicKit */; };
@@ -562,7 +562,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1C163002FD900000000000 /* CisumPluginRegistry in Frameworks */,
+				A1C163002FD900000000000 /* PluginRegistry in Frameworks */,
 				0000000000000000A1C16201 /* OpenButtonPlugin in Frameworks */,
 				0000000000000000A1C16202 /* LikeButtonPlugin in Frameworks */,
 				0000000000000000A1C16203 /* AudioWidgetControlPlugin in Frameworks */,
@@ -855,7 +855,7 @@
 			);
 			name = Cisum;
 			packageProductDependencies = (
-				A1C163022FD900000000000 /* CisumPluginRegistry */,
+				A1C163022FD900000000000 /* PluginRegistry */,
 				0000000000000000A1C16101 /* OpenButtonPlugin */,
 				0000000000000000A1C16102 /* LikeButtonPlugin */,
 				0000000000000000A1C16103 /* AudioWidgetControlPlugin */,
@@ -1045,7 +1045,7 @@
 				A1C15000B2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemePaperPlugin" */,
 				A1C15000C2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeStudioBluePlugin" */,
 				A1C15000D2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeSunsetPlugin" */,
-				A1C163012FD900000000000 /* XCLocalSwiftPackageReference "Packages/CisumPluginRegistry" */,
+				A1C163012FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginRegistry" */,
 				0C6A1A022FD1000100A10001 /* XCLocalSwiftPackageReference "Packages/DeviceData" */,
 				A4EDBFBBFC934FE4853CA0E4 /* XCLocalSwiftPackageReference "Packages/CisumUI" */,
 				B0A1C160322FD90000000001 /* XCLocalSwiftPackageReference "Packages/MagicPlayMan" */,
@@ -2103,9 +2103,9 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Plugins/ThemeSunsetPlugin;
 		};
-		A1C163012FD900000000000 /* XCLocalSwiftPackageReference "Packages/CisumPluginRegistry" */ = {
+		A1C163012FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginRegistry" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Packages/CisumPluginRegistry;
+			relativePath = Packages/PluginRegistry;
 		};
 		A4EDBFBBFC934FE4853CA0E4 /* XCLocalSwiftPackageReference "Packages/CisumUI" */ = {
 			isa = XCLocalSwiftPackageReference;
@@ -2413,10 +2413,10 @@
 			package = A1C15000D2FD900000000000 /* XCLocalSwiftPackageReference "Plugins/ThemeSunsetPlugin" */;
 			productName = ThemeSunsetPlugin;
 		};
-		A1C163022FD900000000000 /* CisumPluginRegistry */ = {
+		A1C163022FD900000000000 /* PluginRegistry */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C163012FD900000000000 /* XCLocalSwiftPackageReference "Packages/CisumPluginRegistry" */;
-			productName = CisumPluginRegistry;
+			package = A1C163012FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginRegistry" */;
+			productName = PluginRegistry;
 		};
 		F50859132D2CD6510089DC96 /* MagicPlayMan */ = {
 			isa = XCSwiftPackageProductDependency;
