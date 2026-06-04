@@ -12,45 +12,58 @@ public struct Localization {
         self.locale = locale
     }
 
-    /// 在 Localizable.xcstrings 中查找指定 locale 的翻译
+    /// Xcode 构建会生成 `.lproj/Localizable.strings`；`swift test` 等场景可能只打包源 `.xcstrings`。
     private func localized(_ key: String) -> String {
+        let catalogLocale = Self.catalogLocale(for: locale)
+        let catalogValue = String(
+            localized: String.LocalizationValue(key),
+            bundle: bundle,
+            locale: catalogLocale
+        )
+        if catalogValue != key {
+            return catalogValue
+        }
+        return Self.lookupInStringCatalog(key: key, locale: catalogLocale, bundle: bundle) ?? key
+    }
+
+    /// 将 `zh_CN` 等系统 locale 映射到 String Catalog 中的 `zh-Hans` / `zh-HK`。
+    static func catalogLocale(for locale: Locale) -> Locale {
+        let id = locale.identifier.replacingOccurrences(of: "_", with: "-")
+        guard id.hasPrefix("zh") else { return locale }
+
+        if id.contains("Hant") || id == "zh-TW" || id == "zh-HK" || id.hasSuffix("-HK") {
+            return Locale(identifier: id.contains("HK") ? "zh-HK" : "zh-Hant")
+        }
+        return Locale(identifier: "zh-Hans")
+    }
+
+    /// 仅在 bundle 内仍包含源 `Localizable.xcstrings` 时使用（如 SPM 测试）。
+    static func lookupInStringCatalog(key: String, locale: Locale, bundle: Bundle) -> String? {
         guard let url = bundle.url(forResource: "Localizable", withExtension: "xcstrings"),
               let data = try? Data(contentsOf: url),
               let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-              let strings = json["strings"] as? [String: Any] else {
-            return key
-        }
-
-        guard let entry = strings[key] as? [String: Any],
+              let strings = json["strings"] as? [String: Any],
+              let entry = strings[key] as? [String: Any],
               let localizations = entry["localizations"] as? [String: Any] else {
-            return key
+            return nil
         }
 
         let preferredLocales = [
             locale.identifier,
-            "\(locale.languageCode ?? "en")-\(locale.regionCode ?? "")",
-            locale.languageCode ?? "en",
+            locale.identifier.replacingOccurrences(of: "_", with: "-"),
+            catalogLocale(for: locale).identifier,
             "zh-Hans",
             "en",
         ]
 
         for localeId in preferredLocales {
-            if let loc = localizations[localeId] as? [String: Any],
-               let stringUnit = loc["stringUnit"] as? [String: Any],
-               let value = stringUnit["value"] as? String,
-               !value.isEmpty {
-                return value
-            }
-            // 也尝试带变体的 locale（如 zh-Hans-CN）
-            if let loc = localizations[localeId.replacing("-", with: "_")] as? [String: Any],
-               let stringUnit = loc["stringUnit"] as? [String: Any],
-               let value = stringUnit["value"] as? String,
-               !value.isEmpty {
-                return value
-            }
+            guard let loc = localizations[localeId] as? [String: Any],
+                  let stringUnit = loc["stringUnit"] as? [String: Any],
+                  let value = stringUnit["value"] as? String,
+                  !value.isEmpty else { continue }
+            return value
         }
-
-        return key
+        return nil
     }
 
     // MARK: - Common

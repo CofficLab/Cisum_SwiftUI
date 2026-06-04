@@ -6,9 +6,9 @@ import CisumUI
 struct AudioPlayerViewShowcase: View {
     var body: some View {
         TabView {
-            // 基本用法
+            // Basic Usage
             VStack(spacing: 12) {
-                Text("基本用法")
+                Text("Basic Usage")
                     .font(.headline)
                     .padding(.top)
 
@@ -20,12 +20,12 @@ struct AudioPlayerViewShowcase: View {
                 .frame(width: 400)
             }
             .tabItem {
-                Label("基本", systemImage: "music.note")
+                Label("Basic", systemImage: "music.note")
             }
 
-            // 带默认封面
+            // With Default Cover
             VStack(spacing: 12) {
-                Text("带默认封面")
+                Text("With Default Cover")
                     .font(.headline)
                     .padding(.top)
 
@@ -37,17 +37,17 @@ struct AudioPlayerViewShowcase: View {
                 )
                 .frame(width: 400)
 
-                Text("使用 defaultArtwork 参数")
+                Text("Use the defaultArtwork parameter")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
             .tabItem {
-                Label("默认封面", systemImage: "photo.artframe")
+                Label("Default Cover", systemImage: "photo.artframe")
             }
 
-            // 无艺术家信息
+            // No Artist Info
             VStack(spacing: 12) {
-                Text("无艺术家信息")
+                Text("No Artist Info")
                     .font(.headline)
                     .padding(.top)
 
@@ -58,17 +58,17 @@ struct AudioPlayerViewShowcase: View {
                 )
                 .frame(width: 400)
 
-                Text("artist 参数为 nil")
+                Text("Artist parameter is nil")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
             .tabItem {
-                Label("无艺术家", systemImage: "person.slash")
+                Label("No Artist", systemImage: "person.slash")
             }
 
-            // 无 URL
+            // No URL
             VStack(spacing: 12) {
-                Text("无 URL（空状态）")
+                Text("No URL (Empty State)")
                     .font(.headline)
                     .padding(.top)
 
@@ -80,12 +80,12 @@ struct AudioPlayerViewShowcase: View {
                 )
                 .frame(width: 400)
 
-                Text("url 参数为 nil")
+                Text("URL parameter is nil")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
             .tabItem {
-                Label("空状态", systemImage: "doc.questionmark")
+                Label("Empty State", systemImage: "doc.questionmark")
             }
         }
         .frame(width: 500, height: 600)

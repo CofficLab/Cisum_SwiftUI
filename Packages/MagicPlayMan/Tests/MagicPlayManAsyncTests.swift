@@ -67,7 +67,7 @@ final class MagicPlayManAsyncTests: XCTestCase {
     // MARK: - Localization
 
     func testDefaultPlayerHasLocalization() {
-        let man = MagicPlayMan()
+        let man = MagicPlayMan(locale: Locale(identifier: "zh_CN"))
         XCTAssertEqual(man.localization.noMediaSelected, "未选择媒体")
     }
 

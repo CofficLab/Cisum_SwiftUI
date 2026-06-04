@@ -37,17 +37,17 @@ public enum PlaybackState: Equatable {
         public var errorDescription: String? {
             switch self {
             case .noAsset:
-                return "No media selected"
+                return String(localized: "No media selected", bundle: .module)
             case .invalidAsset:
-                return "The media file is invalid or corrupted"
+                return String(localized: "The media file is invalid or corrupted", bundle: .module)
             case .networkError(let message):
-                return "Network error: \(message)"
+                return String(localized: "Network error: \(message)", bundle: .module)
             case .playbackError(let message):
-                return "Playback error: \(message)"
+                return String(localized: "Playback error: \(message)", bundle: .module)
             case .unsupportedFormat(let ext):
-                return "Unsupported format: \(ext)"
+                return String(localized: "Unsupported format: \(ext)", bundle: .module)
             case .invalidURL(let url):
-                return "Invalid URL: \(url)"
+                return String(localized: "Invalid URL: \(url)", bundle: .module)
             }
         }
 
@@ -108,34 +108,34 @@ public enum PlaybackState: Equatable {
         public var failureReason: String? {
             switch self {
             case .noAsset:
-                return "Please select a media file to play"
+                return String(localized: "Please select a media file to play", bundle: .module)
             case .invalidAsset:
-                return "The file format is not supported or the file is corrupted"
+                return String(localized: "The file format is not supported or the file is corrupted", bundle: .module)
             case .networkError:
-                return "There was a problem with the network connection"
+                return String(localized: "There was a problem with the network connection", bundle: .module)
             case .playbackError:
-                return "There was a problem during playback"
+                return String(localized: "There was a problem during playback", bundle: .module)
             case .unsupportedFormat:
-                return "The selected media type is not supported"
+                return String(localized: "The selected media type is not supported", bundle: .module)
             case .invalidURL:
-                return "The provided URL is invalid"
+                return String(localized: "The provided URL is invalid", bundle: .module)
             }
         }
 
         public var recoverySuggestion: String? {
             switch self {
             case .noAsset:
-                return "Select a media file from your library"
+                return String(localized: "Select a media file from your library", bundle: .module)
             case .invalidAsset:
-                return "Try with a different media file"
+                return String(localized: "Try with a different media file", bundle: .module)
             case .networkError:
-                return "Check your internet connection and try again"
+                return String(localized: "Check your internet connection and try again", bundle: .module)
             case .playbackError:
-                return "Try reloading the media file"
+                return String(localized: "Try reloading the media file", bundle: .module)
             case .unsupportedFormat:
-                return "Choose a supported audio or video format"
+                return String(localized: "Choose a supported audio or video format", bundle: .module)
             case .invalidURL:
-                return "Check if the URL format is correct"
+                return String(localized: "Check if the URL format is correct", bundle: .module)
             }
         }
     }

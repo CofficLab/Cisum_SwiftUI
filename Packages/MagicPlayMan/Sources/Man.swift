@@ -53,7 +53,7 @@ public class MagicPlayMan: ObservableObject, SuperLog {
     private var playRequestGeneration: UInt64 = 0
 
     /// 本地化配置
-    public var localization = Localization(locale: Locale(identifier: "zh_CN"))
+    public var localization = Localization(locale: .current)
 
     /// 默认封面图，用于在音频缩略图无法获得时显示
     public var defaultArtwork: Image?

@@ -13,13 +13,13 @@ public extension MagicPlayMan {
     ///   - cacheDirectory: 自定义缓存目录。如果为 nil，则使用系统默认缓存目录
     ///   - playlistEnabled: 是否启用播放列表，默认为 true
     ///   - verbose: 是否启用详细日志模式，默认为 false
-    ///   - locale: 本地化设置，默认为中文
+    ///   - locale: 本地化设置，默认为系统当前语言
     ///   - defaultArtwork: 默认封面图，用于在音频缩略图无法获得时显示
     ///   - defaultArtworkBuilder: 默认封面图构建器，支持自定义视图作为默认封面
     convenience init(
         cacheDirectory: URL? = nil,
         verbose: Bool = false,
-        locale: Locale = Locale(identifier: "zh_CN"),
+        locale: Locale = .current,
         defaultArtwork: Image? = nil,
         defaultArtworkBuilder: (() -> any View)? = nil
     ) {

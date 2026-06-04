@@ -8,9 +8,9 @@ struct AudioContentViewShowcase: View {
 
     var body: some View {
         TabView {
-            // 基本用法 - Verbose
+            // Basic Usage - Verbose
             VStack(spacing: 12) {
-                Text("基本用法 (Verbose)")
+                Text("Basic Usage (Verbose)")
                     .font(.headline)
                     .padding(.top)
 
@@ -31,9 +31,9 @@ struct AudioContentViewShowcase: View {
                 Label("Verbose", systemImage: "speaker.wave.2")
             }
 
-            // 基本用法 - Non-Verbose
+            // Basic Usage - Non-Verbose
             VStack(spacing: 12) {
-                Text("基本用法 (Non-Verbose)")
+                Text("Basic Usage (Non-Verbose)")
                     .font(.headline)
                     .padding(.top)
 
@@ -54,9 +54,9 @@ struct AudioContentViewShowcase: View {
                 Label("Quiet", systemImage: "speaker.slash")
             }
 
-            // 外部传入 Artwork
+            // External Artwork
             VStack(spacing: 12) {
-                Text("外部传入 Artwork")
+                Text("External Artwork")
                     .font(.headline)
                     .padding(.top)
 
@@ -74,18 +74,18 @@ struct AudioContentViewShowcase: View {
                 )
                 .frame(width: 400)
 
-                Text("使用 artwork 参数传入自定义封面图")
+                Text("Pass custom artwork using the artwork parameter")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)
             }
             .tabItem {
-                Label("外部封面", systemImage: "photo")
+                Label("External Cover", systemImage: "photo")
             }
 
-            // 默认封面图
+            // Default Cover Image
             VStack(spacing: 12) {
-                Text("默认封面图")
+                Text("Default Cover Image")
                     .font(.headline)
                     .padding(.top)
 
@@ -103,18 +103,18 @@ struct AudioContentViewShowcase: View {
                 )
                 .frame(width: 400)
 
-                Text("使用 defaultArtwork 参数设置默认封面")
+                Text("Set default artwork using the defaultArtwork parameter")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)
             }
             .tabItem {
-                Label("默认封面", systemImage: "photo.artframe")
+                Label("Default Cover", systemImage: "photo.artframe")
             }
 
-            // 同时使用两种封面
+            // Priority: External > Local > Default
             VStack(spacing: 12) {
-                Text("优先级：外部 > 本地 > 默认")
+                Text("Priority: External > Local > Default")
                     .font(.headline)
                     .padding(.top)
 
@@ -133,18 +133,18 @@ struct AudioContentViewShowcase: View {
                 )
                 .frame(width: 400)
 
-                Text("外部封面优先级最高，默认封面作为后备")
+                Text("External cover has highest priority, default cover as fallback")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)
             }
             .tabItem {
-                Label("优先级", systemImage: "arrow.up.arrow.down")
+                Label("Priority", systemImage: "arrow.up.arrow.down")
             }
 
-            // 加载状态
+            // Loading State
             VStack(spacing: 12) {
-                Text("加载状态")
+                Text("Loading State")
                     .font(.headline)
                     .padding(.top)
 
@@ -161,18 +161,18 @@ struct AudioContentViewShowcase: View {
                 )
                 .frame(width: 400)
 
-                Text("显示加载指示器")
+                Text("Show Loading Indicator")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)
             }
             .tabItem {
-                Label("加载中", systemImage: "clock")
+                Label("Loading", systemImage: "clock")
             }
 
-            // 错误状态
+            // Error State
             VStack(spacing: 12) {
-                Text("错误状态（无默认封面）")
+                Text("Error State (No Default Cover)")
                     .font(.headline)
                     .padding(.top)
 
@@ -188,18 +188,18 @@ struct AudioContentViewShowcase: View {
                 AudioContentView(asset: errorAsset)
                     .frame(width: 400, height: 500)
 
-                Text("显示错误信息和重试按钮")
+                Text("Show Error Message and Retry Button")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)
             }
             .tabItem {
-                Label("错误", systemImage: "exclamationmark.triangle")
+                Label("Error", systemImage: "exclamationmark.triangle")
             }
 
-            // 错误状态带默认封面
+            // Error State with Default Cover
             VStack(spacing: 12) {
-                Text("错误状态（有默认封面）")
+                Text("Error State (With Default Cover)")
                     .font(.headline)
                     .padding(.top)
 
@@ -218,13 +218,13 @@ struct AudioContentViewShowcase: View {
                 )
                 .frame(width: 400, height: 500)
 
-                Text("使用默认封面作为后备方案")
+                Text("Use the default cover as a fallback")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)
             }
             .tabItem {
-                Label("后备方案", systemImage: "exclamationmark.shield")
+                Label("Fallback", systemImage: "exclamationmark.shield")
             }
         }
         .frame(width: 500, height: 600)
