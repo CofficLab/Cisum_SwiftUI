@@ -8,8 +8,7 @@ public struct PaperTheme: LumiAppChromeTheme {
     public let description = String(localized: "Warm white paper background, ideal for audiobooks", bundle: .module)
     public let iconName = "book.closed.fill"
     public let iconColor = Color.adaptive(light: "A15C38", dark: "D8A06B")
-    public let isDarkTheme = false
-    public let followsSystemAppearance = true
+    public let appearanceKind: ThemeAppearanceKind = .light
 
     public func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
         (

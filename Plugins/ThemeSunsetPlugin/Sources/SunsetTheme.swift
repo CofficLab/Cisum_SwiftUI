@@ -8,8 +8,7 @@ public struct SunsetTheme: LumiAppChromeTheme {
     public let description = String(localized: "Warm orange accents, background stays clean white", bundle: .module)
     public let iconName = "sunset.fill"
     public let iconColor = Color.adaptive(light: "EA580C", dark: "FB923C")
-    public let isDarkTheme = false
-    public let followsSystemAppearance = true
+    public let appearanceKind: ThemeAppearanceKind = .system
 
     public func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
         (

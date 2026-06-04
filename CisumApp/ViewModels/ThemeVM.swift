@@ -36,11 +36,14 @@ final class ThemeVM: ObservableObject, SuperLog {
     }
 
     var preferredColorScheme: ColorScheme? {
-        let theme = activeChromeTheme
-        if theme.followsSystemAppearance {
+        switch activeChromeTheme.appearanceKind {
+        case .dark:
+            return .dark
+        case .light:
+            return .light
+        case .system:
             return nil
         }
-        return theme.isDarkTheme ? .dark : .light
     }
 
     init(pluginVM: PluginVM, registry: LumiUIThemeRegistry = .shared) {

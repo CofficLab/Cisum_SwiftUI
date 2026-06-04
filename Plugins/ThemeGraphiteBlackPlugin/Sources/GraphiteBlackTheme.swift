@@ -8,8 +8,7 @@ public struct GraphiteBlackTheme: LumiAppChromeTheme {
     public let description = String(localized: "Neutral black-gray layers, ideal for extended night listening", bundle: .module)
     public let iconName = "circle.lefthalf.filled"
     public let iconColor = Color.adaptive(light: "3A3A3C", dark: "D1D1D6")
-    public let isDarkTheme = false
-    public let followsSystemAppearance = true
+    public let appearanceKind: ThemeAppearanceKind = .dark
 
     public func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
         (

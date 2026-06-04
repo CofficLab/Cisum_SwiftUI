@@ -8,8 +8,7 @@ public struct StudioBlueTheme: LumiAppChromeTheme {
     public let description = String(localized: "Blue-gray studio texture, ideal for focused listening", bundle: .module)
     public let iconName = "waveform"
     public let iconColor = Color.adaptive(light: "007AFF", dark: "5AC8FA")
-    public let isDarkTheme = false
-    public let followsSystemAppearance = true
+    public let appearanceKind: ThemeAppearanceKind = .system
 
     public func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
         (

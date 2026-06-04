@@ -8,8 +8,7 @@ public struct ForestTheme: LumiAppChromeTheme {
     public let description = String(localized: "Natural green accents, ideal for long audiobook sessions", bundle: .module)
     public let iconName = "leaf.fill"
     public let iconColor = Color.adaptive(light: "059669", dark: "34D399")
-    public let isDarkTheme = false
-    public let followsSystemAppearance = true
+    public let appearanceKind: ThemeAppearanceKind = .system
 
     public func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
         (

@@ -8,8 +8,7 @@ public struct MidnightTheme: LumiAppChromeTheme {
     public let description = String(localized: "Deep gray with blue accents, ideal for night listening", bundle: .module)
     public let iconName = "moon.stars.fill"
     public let iconColor = Color.adaptive(light: "2563EB", dark: "60A5FA")
-    public let isDarkTheme = false
-    public let followsSystemAppearance = true
+    public let appearanceKind: ThemeAppearanceKind = .dark
 
     public func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
         (

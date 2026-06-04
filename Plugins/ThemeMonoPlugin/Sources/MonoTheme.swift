@@ -8,8 +8,7 @@ public struct MonoTheme: LumiAppChromeTheme {
     public let description = String(localized: "Minimal grayscale, emphasizing content itself", bundle: .module)
     public let iconName = "circle.lefthalf.filled"
     public let iconColor = Color.adaptive(light: "111827", dark: "FFFFFF")
-    public let isDarkTheme = false
-    public let followsSystemAppearance = true
+    public let appearanceKind: ThemeAppearanceKind = .dark
 
     public func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
         (

@@ -8,20 +8,20 @@ private struct MockChromeTheme: LumiAppChromeTheme {
     let description: String
     let iconName: String
     let iconColor: Color
-    let isDarkTheme: Bool
+    let appearanceKind: ThemeAppearanceKind
 
     init(
         id: String,
         name: String = "Mock",
         pluginTint: Color = .purple,
-        isDark: Bool = true
+        appearanceKind: ThemeAppearanceKind = .dark
     ) {
         identifier = id
         displayName = name
         description = "Mock theme \(id)"
         iconName = "circle.fill"
         iconColor = pluginTint
-        isDarkTheme = isDark
+        self.appearanceKind = appearanceKind
     }
 
     func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
@@ -39,11 +39,16 @@ private struct MockChromeTheme: LumiAppChromeTheme {
 
 private func contribution(
     pluginOrder: Int,
-    themeId: String
+    themeId: String,
+    appearanceKind: ThemeAppearanceKind = .dark
 ) -> LumiUIThemeContribution {
     return LumiUIThemeContribution(
         sortKey: ThemeSortKey(pluginOrder: pluginOrder, themeId: themeId),
-        chromeTheme: MockChromeTheme(id: themeId, name: themeId.capitalized)
+        chromeTheme: MockChromeTheme(
+            id: themeId,
+            name: themeId.capitalized,
+            appearanceKind: appearanceKind
+        )
     )
 }
 
@@ -115,5 +120,24 @@ struct LumiUIThemeRegistryTests {
         try registry.select(themeId: "b")
         try registry.replaceAll([contribution(pluginOrder: 1, themeId: "a")])
         #expect(registry.selectedThemeId == "a")
+    }
+
+    @Test
+    @MainActor
+    func contributionExposesAppearanceKind() {
+        let systemTheme = contribution(pluginOrder: 1, themeId: "system", appearanceKind: .system)
+        #expect(systemTheme.appearanceKind == .system)
+        #expect(systemTheme.chromeTheme.followsSystemAppearance)
+        #expect(!systemTheme.chromeTheme.isDarkTheme)
+
+        let darkTheme = contribution(pluginOrder: 2, themeId: "dark", appearanceKind: .dark)
+        #expect(darkTheme.appearanceKind == .dark)
+        #expect(darkTheme.chromeTheme.isDarkTheme)
+        #expect(!darkTheme.chromeTheme.followsSystemAppearance)
+
+        let lightTheme = contribution(pluginOrder: 3, themeId: "light", appearanceKind: .light)
+        #expect(lightTheme.appearanceKind == .light)
+        #expect(!lightTheme.chromeTheme.isDarkTheme)
+        #expect(!lightTheme.chromeTheme.followsSystemAppearance)
     }
 }

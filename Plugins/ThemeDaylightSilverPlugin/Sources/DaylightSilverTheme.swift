@@ -8,8 +8,7 @@ public struct DaylightSilverTheme: LumiAppChromeTheme {
     public let description = String(localized: "Silver-white light gray interface, ideal for daytime office", bundle: .module)
     public let iconName = "sun.max.fill"
     public let iconColor = Color.adaptive(light: "0A84FF", dark: "64D2FF")
-    public let isDarkTheme = false
-    public let followsSystemAppearance = true
+    public let appearanceKind: ThemeAppearanceKind = .light
 
     public func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
         (

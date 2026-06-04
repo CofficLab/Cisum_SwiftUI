@@ -8,8 +8,7 @@ public struct AuroraTheme: LumiAppChromeTheme {
     public let description = String(localized: "Low-saturation purple accents, maintaining a light spatial feel", bundle: .module)
     public let iconName = "sparkles"
     public let iconColor = Color.adaptive(light: "8B5CF6", dark: "C084FC")
-    public let isDarkTheme = false
-    public let followsSystemAppearance = true
+    public let appearanceKind: ThemeAppearanceKind = .dark
 
     public func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
         (

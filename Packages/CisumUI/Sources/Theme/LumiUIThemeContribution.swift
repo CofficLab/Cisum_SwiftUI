@@ -11,6 +11,10 @@ public struct LumiUIThemeContribution: Identifiable {
     public let chromeTheme: any LumiAppChromeTheme
     public let uiTheme: (any LumiUITheme)?
 
+    public var appearanceKind: ThemeAppearanceKind {
+        chromeTheme.appearanceKind
+    }
+
     public init(
         sortKey: ThemeSortKey,
         chromeTheme: any LumiAppChromeTheme,

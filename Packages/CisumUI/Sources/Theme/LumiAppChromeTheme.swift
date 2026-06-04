@@ -10,6 +10,7 @@ public protocol LumiAppChromeTheme {
     var description: String { get }
     var iconName: String { get }
     var iconColor: Color { get }
+    var appearanceKind: ThemeAppearanceKind { get }
     var isDarkTheme: Bool { get }
     var followsSystemAppearance: Bool { get }
 
@@ -31,8 +32,9 @@ public protocol LumiAppChromeTheme {
 // MARK: - Default Implementations
 
 public extension LumiAppChromeTheme {
-    var isDarkTheme: Bool { true }
-    var followsSystemAppearance: Bool { false }
+    var appearanceKind: ThemeAppearanceKind { .dark }
+    var isDarkTheme: Bool { appearanceKind == .dark }
+    var followsSystemAppearance: Bool { appearanceKind == .system }
 
     func workspaceBackgroundColor() -> Color {
         atmosphereColors().deep

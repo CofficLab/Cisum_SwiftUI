@@ -8,8 +8,7 @@ public struct NebulaTheme: LumiAppChromeTheme {
     public let description = String(localized: "Soft pink accents, maintaining clean reading layers", bundle: .module)
     public let iconName = "cloud.moon.fill"
     public let iconColor = Color.adaptive(light: "C026D3", dark: "F0ABFC")
-    public let isDarkTheme = false
-    public let followsSystemAppearance = true
+    public let appearanceKind: ThemeAppearanceKind = .dark
 
     public func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
         (
