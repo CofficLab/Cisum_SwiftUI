@@ -85,7 +85,8 @@ public extension URL {
 
     private static let videoExtSet: Set<String> = [
         "mp4", "m4v", "mov", "avi", "wmv", "flv", "mkv", "webm",
-        "3gp", "mpeg", "mpg", "ts", "mts", "m2ts", "vob", "ogv"
+        "3gp", "mpeg", "mpg", "ts", "mts", "m2ts", "vob", "ogv",
+        "m3u8", "m3u"
     ]
 
     private static let imageExtSet: Set<String> = [
