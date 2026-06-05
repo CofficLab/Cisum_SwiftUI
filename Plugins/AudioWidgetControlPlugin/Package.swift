@@ -17,7 +17,6 @@ let package = Package(
     dependencies: [
         .package(path: "../../Packages/CisumUI"),
         .package(path: "../AudioPlugin"),
-        .package(path: "../../Packages/MagicKit"),
         .package(path: "../../Packages/MagicPlayMan"),
     ],
     targets: [
@@ -26,7 +25,6 @@ let package = Package(
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
                 .product(name: "AudioPlugin", package: "AudioPlugin"),
-                .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
             ],
             path: "Sources",

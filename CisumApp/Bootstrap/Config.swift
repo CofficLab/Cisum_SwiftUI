@@ -1,9 +1,8 @@
-import CisumUI
+import PluginRegistry
 import AVKit
 import Combine
 import Foundation
 import LocalAuthentication
-import MagicKit
 import MediaPlayer
 import OSLog
 import SwiftData

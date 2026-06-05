@@ -1,6 +1,4 @@
 import CisumUI
-import MagicAlert
-import MagicKit
 import SwiftUI
 
 public typealias AudioSceneEnterAction = @MainActor () throws -> Void

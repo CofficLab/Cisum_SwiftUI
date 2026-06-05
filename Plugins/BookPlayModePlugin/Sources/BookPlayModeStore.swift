@@ -1,5 +1,5 @@
 import Foundation
-import MagicKit
+import CisumUI
 import MagicPlayMan
 import OSLog
 

@@ -1,9 +1,8 @@
 import AVFoundation
 import Foundation
-import MagicKit
+import CisumUI
 import OSLog
 import SwiftUI
-import CisumUI
 
 enum MagicPlayManPlaybackRequestPolicy {
     static func basicValidationError(for url: URL) -> PlaybackState.PlaybackError? {

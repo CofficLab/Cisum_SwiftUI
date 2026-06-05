@@ -1,10 +1,9 @@
 import AVFoundation
 import Foundation
-import MagicKit
+import CisumUI
 import MediaPlayer
 import OSLog
 import SwiftUI
-import CisumUI
 
 #if os(macOS)
     import AppKit

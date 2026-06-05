@@ -1,7 +1,6 @@
 import Foundation
-import MagicKit
-import SwiftUI
 import CisumUI
+import SwiftUI
 
 /// 支持的媒体格式
 public struct SupportedFormat {

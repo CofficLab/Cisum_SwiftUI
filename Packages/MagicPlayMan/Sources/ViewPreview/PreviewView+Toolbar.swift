@@ -1,6 +1,5 @@
-import MagicKit
-import SwiftUI
 import CisumUI
+import SwiftUI
 
 extension MagicPlayManPreviewView {
     /// 顶部工具栏

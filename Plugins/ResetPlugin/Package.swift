@@ -16,14 +16,12 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../../Packages/CisumUI"),
-        .package(path: "../../Packages/MagicKit")
     ],
     targets: [
         .target(
             name: "ResetPlugin",
             dependencies: [
                 "CisumUI",
-                .product(name: "MagicKit", package: "MagicKit")
             ],
             path: "Sources",
             resources: [

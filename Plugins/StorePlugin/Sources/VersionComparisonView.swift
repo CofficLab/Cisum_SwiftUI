@@ -1,4 +1,4 @@
-import MagicKit
+import CisumUI
 import AudioPlugin
 import SwiftUI
 

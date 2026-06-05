@@ -1,6 +1,5 @@
-import CisumUI
+import PluginRegistry
 import AVKit
-import MagicKit
 import OSLog
 import SwiftUI
 

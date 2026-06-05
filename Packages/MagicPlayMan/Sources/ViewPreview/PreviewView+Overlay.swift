@@ -1,6 +1,5 @@
-import MagicKit
-import SwiftUI
 import CisumUI
+import SwiftUI
 
 extension MagicPlayManPreviewView {
     /// 加载状态覆盖层

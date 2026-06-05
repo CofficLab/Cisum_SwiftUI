@@ -1,7 +1,7 @@
 import CoreFoundation
 import Darwin
 import Foundation
-import MagicKit
+import CisumUI
 import MagicPlayMan
 import OSLog
 import SwiftUI

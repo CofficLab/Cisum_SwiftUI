@@ -1,4 +1,4 @@
-import CisumUI
+import PluginRegistry
 import SwiftData
 import SwiftUI
 

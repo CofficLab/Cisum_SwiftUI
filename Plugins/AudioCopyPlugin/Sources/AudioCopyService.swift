@@ -1,6 +1,6 @@
 #if os(macOS)
 import Foundation
-import MagicKit
+import CisumUI
 import AudioPlugin
 import StorePlugin
 import SwiftData

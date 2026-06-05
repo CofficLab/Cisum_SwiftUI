@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import AudioPlugin
 import StorePlugin
 import SwiftUI

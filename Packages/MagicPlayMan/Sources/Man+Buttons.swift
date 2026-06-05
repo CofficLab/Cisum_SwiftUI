@@ -1,7 +1,6 @@
-import MagicKit
+import CisumUI
 import OSLog
 import SwiftUI
-import CisumUI
 
 public extension MagicPlayMan {
     /// 自观察版本：播放/暂停按钮视图（推荐外部调用，零负担自动刷新）

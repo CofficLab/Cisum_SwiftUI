@@ -1,5 +1,4 @@
-import CisumUI
-import MagicPlayMan
+import PluginRegistry
 import SwiftUI
 
 /// 下一曲按钮

@@ -1,7 +1,7 @@
 import OSLog
 import SwiftData
 import SwiftUI
-import AudioPlugin
+import PluginRegistry
 
 struct Duplicates: View {
     @State var showDumplicates = false

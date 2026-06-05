@@ -1,4 +1,4 @@
-import MagicKit
+import CisumUI
 
 import OSLog
 import SwiftUI

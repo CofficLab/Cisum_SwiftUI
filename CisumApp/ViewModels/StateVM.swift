@@ -1,5 +1,5 @@
 import Foundation
-import MagicKit
+import PluginRegistry
 import SwiftData
 import SwiftUI
 

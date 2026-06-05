@@ -1,4 +1,4 @@
-import MagicKit
+import CisumUI
 
 public struct Migrate: SuperLog {
     public static let emoji = "🐯"

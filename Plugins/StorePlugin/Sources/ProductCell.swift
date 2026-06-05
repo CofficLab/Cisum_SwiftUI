@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import OSLog
 import StoreKit
 import SwiftUI

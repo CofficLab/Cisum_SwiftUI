@@ -6,8 +6,8 @@ let package = Package(
     name: "StoragePlugin",
     defaultLocalization: "en",
     platforms: [
-        .macOS(.v15),
-        .iOS(.v18),
+        .macOS(.v14),
+        .iOS(.v17),
     ],
     products: [
         .library(
@@ -17,14 +17,12 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../../Packages/CisumUI"),
-        .package(path: "../../Packages/MagicKit"),
     ],
     targets: [
         .target(
             name: "StoragePlugin",
             dependencies: [
                 "CisumUI",
-                "MagicKit",
             ],
             path: "Sources",
             resources: [

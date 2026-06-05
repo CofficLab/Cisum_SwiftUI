@@ -1,6 +1,6 @@
 @preconcurrency import Combine
 import Foundation
-import MagicKit
+import CisumUI
 import OSLog
 
 public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {

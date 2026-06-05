@@ -1,7 +1,5 @@
 #if os(macOS)
 import CisumUI
-import MagicKit
-import MagicAlert
 import OSLog
 import SwiftData
 import SwiftUI

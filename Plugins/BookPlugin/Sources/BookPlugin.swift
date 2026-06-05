@@ -1,6 +1,5 @@
 import CisumUI
 import Foundation
-import MagicKit
 import SwiftUI
 
 public actor BookPlugin: SuperPlugin {

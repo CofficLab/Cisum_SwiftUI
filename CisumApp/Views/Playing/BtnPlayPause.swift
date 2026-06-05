@@ -1,5 +1,4 @@
-import CisumUI
-import MagicPlayMan
+import PluginRegistry
 import SwiftUI
 
 /// 播放/暂停按钮
