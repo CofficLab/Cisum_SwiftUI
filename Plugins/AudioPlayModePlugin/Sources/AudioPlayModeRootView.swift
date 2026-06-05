@@ -1,6 +1,5 @@
 import Foundation
-import MagicAlert
-import MagicKit
+import CisumUI
 import MagicPlayMan
 import OSLog
 import SwiftUI

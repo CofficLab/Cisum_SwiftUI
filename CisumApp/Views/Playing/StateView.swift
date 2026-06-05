@@ -1,5 +1,4 @@
-import CisumUI
-import MagicPlayMan
+import PluginRegistry
 import OSLog
 import SwiftData
 import SwiftUI

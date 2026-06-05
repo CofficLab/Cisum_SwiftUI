@@ -1,5 +1,4 @@
-import CisumUI
-import MagicKit
+import PluginRegistry
 import SwiftUI
 
 struct AppStoreICloud: View {

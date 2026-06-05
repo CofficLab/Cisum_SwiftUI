@@ -1,6 +1,5 @@
-import MagicKit
-import SwiftUI
 import CisumUI
+import SwiftUI
 
 struct MediaPickerButton: View {
     let man: MagicPlayMan

@@ -1,7 +1,6 @@
 import AVFoundation
 import Foundation
-import MagicAlert
-import MagicKit
+import CisumUI
 import MagicPlayMan
 import OSLog
 import AudioPlugin

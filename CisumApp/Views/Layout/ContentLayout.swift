@@ -1,4 +1,4 @@
-import MagicKit
+import PluginRegistry
 import OSLog
 import SwiftUI
 

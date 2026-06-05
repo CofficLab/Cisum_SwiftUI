@@ -1,9 +1,5 @@
-import CisumUI
-import MagicAlert
-import MagicKit
-import MagicPlayMan
+import PluginRegistry
 import OSLog
-import StorePlugin
 import SwiftUI
 
 typealias PlayMan = MagicPlayMan

@@ -6,8 +6,8 @@ let package = Package(
     name: "AudioCopyPlugin",
     defaultLocalization: "en",
     platforms: [
-        .macOS(.v15),
-        .iOS(.v18),
+        .macOS(.v14),
+        .iOS(.v17),
     ],
     products: [
         .library(
@@ -17,20 +17,16 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../../Packages/CisumUI"),
-        .package(path: "../../Packages/MagicKit"),
         .package(path: "../AudioPlugin"),
         .package(path: "../StorePlugin"),
-        .package(url: "https://github.com/nookery/MagicAlert.git", from: "1.0.1"),
     ],
     targets: [
         .target(
             name: "AudioCopyPlugin",
             dependencies: [
                 "CisumUI",
-                "MagicKit",
                 "AudioPlugin",
                 "StorePlugin",
-                "MagicAlert",
             ],
             path: "Sources",
             resources: [

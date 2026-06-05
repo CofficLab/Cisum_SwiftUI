@@ -1,5 +1,4 @@
-import CisumUI
-import MagicKit
+import PluginRegistry
 import SwiftUI
 
 /// App Store 功能特性项视图

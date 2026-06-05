@@ -1,6 +1,5 @@
-import MagicKit
-import SwiftUI
 import CisumUI
+import SwiftUI
 
 enum AudioContentArtworkLoadPolicy {
     static func shouldApplyResult(requestedAsset: URL, currentAsset: URL) -> Bool {

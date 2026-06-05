@@ -1,10 +1,9 @@
 import AVFoundation
 import Combine
 import Foundation
-import MagicKit
+import CisumUI
 import OSLog
 import SwiftUI
-import CisumUI
 
 enum MagicPlayManDownloadRequestPolicy {
     static func shouldApplyResult(requestedAsset: URL, currentAsset: URL?) -> Bool {

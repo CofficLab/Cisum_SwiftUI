@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import SwiftUI
 
 public struct StorageView: View {

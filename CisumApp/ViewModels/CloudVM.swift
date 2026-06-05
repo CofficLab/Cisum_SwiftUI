@@ -2,7 +2,7 @@ import AVKit
 import CloudKit
 import Combine
 import Foundation
-import MagicKit
+import PluginRegistry
 import MediaPlayer
 import OSLog
 import SwiftUI

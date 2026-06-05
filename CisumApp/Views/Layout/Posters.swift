@@ -1,5 +1,4 @@
-import MagicAlert
-import MagicKit
+import PluginRegistry
 import OSLog
 import SwiftData
 import SwiftUI

@@ -1,5 +1,5 @@
 import SwiftUI
-import MagicKit
+import PluginRegistry
 import OSLog
 
 /// 用于展示当前应用所有 UserDefaults 键值对的视图

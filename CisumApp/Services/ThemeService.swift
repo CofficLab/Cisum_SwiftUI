@@ -1,4 +1,4 @@
-import CisumUI
+import PluginRegistry
 import Foundation
 
 /// Core 与 CisumUI 主题注册表之间的桥梁。

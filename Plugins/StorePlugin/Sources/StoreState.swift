@@ -1,5 +1,5 @@
 import Foundation
-import MagicKit
+import CisumUI
 import OSLog
 import StoreKit
 import SwiftUI

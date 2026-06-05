@@ -1,8 +1,7 @@
 import Foundation
-import MagicKit
+import CisumUI
 import OSLog
 import SwiftUI
-import CisumUI
 
 public extension MagicPlayMan {
     /// 切换到下一个播放模式

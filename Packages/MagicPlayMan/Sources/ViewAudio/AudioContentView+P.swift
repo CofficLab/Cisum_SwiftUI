@@ -1,6 +1,5 @@
-import MagicKit
-import SwiftUI
 import CisumUI
+import SwiftUI
 
 struct AudioContentViewShowcase: View {
     private static let errorURL = URL(string: "invalid://url")

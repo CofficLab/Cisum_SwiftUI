@@ -16,18 +16,14 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../../Packages/CisumUI"),
-        .package(path: "../../Packages/MagicKit"),
         .package(path: "../AudioPlugin"),
-        .package(url: "https://github.com/nookery/MagicAlert", from: "1.0.1")
     ],
     targets: [
         .target(
             name: "StorePlugin",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
-                .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "AudioPlugin", package: "AudioPlugin"),
-                .product(name: "MagicAlert", package: "MagicAlert")
             ],
             path: "Sources",
             resources: [

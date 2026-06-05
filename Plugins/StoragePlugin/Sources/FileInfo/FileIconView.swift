@@ -1,5 +1,5 @@
 import SwiftUI
-import MagicKit
+import CisumUI
 
 
 struct FileIconView: View {

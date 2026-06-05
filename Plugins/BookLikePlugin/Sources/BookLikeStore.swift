@@ -1,5 +1,5 @@
 import Foundation
-import MagicKit
+import CisumUI
 
 public struct BookLikeItem: Hashable, Identifiable {
     public let url: URL

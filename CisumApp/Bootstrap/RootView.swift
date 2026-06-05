@@ -1,11 +1,5 @@
-import CisumUI
-import MagicKit
+import PluginRegistry
 import OSLog
-import AudioPlugin
-import AudioProgressPlugin
-import BookPlugin
-import StoragePlugin
-import WelcomePlugin
 import SwiftUI
 
 struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {

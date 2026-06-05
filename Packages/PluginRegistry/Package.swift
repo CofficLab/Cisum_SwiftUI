@@ -12,8 +12,8 @@ let package = Package(
     name: "PluginRegistry",
     defaultLocalization: "en",
     platforms: [
-        .macOS(.v15),
-        .iOS(.v18),
+        .macOS(.v14),
+        .iOS(.v17),
     ],
     products: [
         .library(

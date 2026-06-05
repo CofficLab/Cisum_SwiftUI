@@ -1,7 +1,6 @@
 import AVFoundation
 import SwiftUI
 import Foundation
-import MagicKit
 import CisumUI
 
 public extension MagicPlayMan {

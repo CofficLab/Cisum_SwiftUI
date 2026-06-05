@@ -16,7 +16,6 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../../Packages/CisumUI"),
-        .package(path: "../../Packages/MagicKit"),
         .package(path: "../BookPlugin")
     ],
     targets: [
@@ -24,7 +23,6 @@ let package = Package(
             name: "BookSettingsPlugin",
             dependencies: [
                 "CisumUI",
-                .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "BookPlugin", package: "BookPlugin")
             ],
             path: "Sources",

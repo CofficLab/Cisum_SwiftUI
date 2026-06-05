@@ -1,5 +1,4 @@
-import MagicKit
-import MagicAlert
+import CisumUI
 import MagicPlayMan
 import OSLog
 import AudioPlugin

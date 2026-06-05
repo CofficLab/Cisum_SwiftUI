@@ -1,7 +1,7 @@
 import AVKit
 import Combine
 import Foundation
-import MagicKit
+import PluginRegistry
 
 import MediaPlayer
 import OSLog

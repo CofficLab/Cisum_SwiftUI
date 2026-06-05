@@ -1,4 +1,4 @@
-import MagicKit
+import CisumUI
 import SwiftUI
 
 public struct PurchaseInfo: Codable, Equatable, Sendable {

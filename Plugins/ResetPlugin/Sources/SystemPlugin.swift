@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import SwiftUI
 
 public actor SystemPlugin: SuperPlugin {

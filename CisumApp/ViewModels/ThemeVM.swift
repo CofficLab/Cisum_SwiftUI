@@ -1,4 +1,4 @@
-import CisumUI
+import PluginRegistry
 import Combine
 import Foundation
 import OSLog

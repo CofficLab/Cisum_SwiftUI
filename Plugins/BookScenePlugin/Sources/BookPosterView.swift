@@ -1,7 +1,5 @@
 import CisumUI
 import SwiftUI
-import MagicAlert
-import MagicKit
 
 public typealias BookSceneEnterAction = @MainActor () throws -> Void
 public typealias BookSceneDismissAction = @MainActor () -> Void

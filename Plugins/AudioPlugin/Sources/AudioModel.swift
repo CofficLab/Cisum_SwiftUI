@@ -1,7 +1,7 @@
 import AVFoundation
 import CryptoKit
 import Foundation
-import MagicKit
+import CisumUI
 
 import OSLog
 import SwiftData

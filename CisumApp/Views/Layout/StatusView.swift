@@ -1,4 +1,4 @@
-import MagicKit
+import PluginRegistry
 import SwiftUI
 
 struct StatusView: View, SuperLog, SuperThread {

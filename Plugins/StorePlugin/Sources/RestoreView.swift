@@ -1,6 +1,4 @@
 import CisumUI
-import MagicAlert
-import MagicKit
 import OSLog
 import StoreKit
 import SwiftUI

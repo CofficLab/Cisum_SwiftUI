@@ -1,7 +1,5 @@
-import CisumUI
-import MagicKit
+import PluginRegistry
 import OSLog
-import WelcomePlugin
 import SwiftData
 import SwiftUI
 

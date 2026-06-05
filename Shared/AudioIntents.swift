@@ -1,5 +1,5 @@
 import AppIntents
-import MagicKit
+import PluginRegistry
 import Foundation
 import WidgetKit
 import OSLog
