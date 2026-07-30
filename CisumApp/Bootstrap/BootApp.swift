@@ -12,7 +12,8 @@ typealias SuperThread = MagicKit.SuperThread
 typealias MagicSettingSection = CisumUI.MagicSettingSection
 typealias MagicSettingRow = CisumUI.MagicSettingRow
 
-@main
+// 原入口已迁移至 NewApp.swift，@main 移至该文件。
+// @main
 struct BootApp: App, SuperLog {
     #if os(macOS)
         @NSApplicationDelegateAdaptor var appDelegate: AppDelegate
