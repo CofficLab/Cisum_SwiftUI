@@ -16,6 +16,104 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		F50BFAC5301B4EF400516EA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50BF764301B4E3600516EA0 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452832EF2044D28E00458375;
+			remoteInfo = "Demo macOS";
+		};
+		F50BFAC7301B4EF400516EA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50BF764301B4E3600516EA0 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4528334A2044D41300458375;
+			remoteInfo = "Demo iOS";
+		};
+		F50BFAC9301B4EF400516EA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50BF764301B4E3600516EA0 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F834342059078A0046C804;
+			remoteInfo = "Demo watchOS";
+		};
+		F50BFACB301B4EF400516EA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50BF764301B4E3600516EA0 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F834402059078B0046C804;
+			remoteInfo = "Demo watchOS Extension";
+		};
+		F50BFACD301B4EF400516EA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50BF764301B4E3600516EA0 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541BC5205990990025A8BF;
+			remoteInfo = "Demo tvOS";
+		};
+		F50BFAD6301B4EF400516EA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50BF8A3301B4E3600516EA0 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831C52044C40700458375;
+			remoteInfo = "ID3TagEditor macOS";
+		};
+		F50BFAD8301B4EF400516EA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50BF8A3301B4E3600516EA0 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831CE2044C40700458375;
+			remoteInfo = "ID3TagEditor macOS Tests";
+		};
+		F50BFADA301B4EF400516EA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50BF8A3301B4E3600516EA0 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831E52044C4F500458375;
+			remoteInfo = "ID3TagEditor iOS";
+		};
+		F50BFADC301B4EF400516EA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50BF8A3301B4E3600516EA0 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831ED2044C4F500458375;
+			remoteInfo = "ID3TagEditor iOS Tests";
+		};
+		F50BFADE301B4EF400516EA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50BF8A3301B4E3600516EA0 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541B7720598F6C0025A8BF;
+			remoteInfo = "ID3TagEditor tvOS";
+		};
+		F50BFAE0301B4EF400516EA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50BF8A3301B4E3600516EA0 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541BE52059954C0025A8BF;
+			remoteInfo = "ID3TagEditor tvOS Tests";
+		};
+		F50BFAE2301B4EF400516EA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50BF8A3301B4E3600516EA0 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F833E3205904680046C804;
+			remoteInfo = "ID3TagEditor watchOS";
+		};
+		F50BFAE6301B4EF400516EA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50BF988301B4E3600516EA0 /* ZIPFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "ZIPFoundation::ZIPFoundation::Product";
+			remoteInfo = ZIPFoundation;
+		};
+		F50BFAE8301B4EF400516EA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50BF988301B4E3600516EA0 /* ZIPFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "ZIPFoundation::ZIPFoundationTests::Product";
+			remoteInfo = ZIPFoundationTests;
+		};
 		F54DA2212FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F54DA1C52FC82E0300D5EDB5 /* ZIPFoundation.xcodeproj */;
@@ -436,6 +534,9 @@
 		0B1D5A8B2AB305D70010DDF2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0B53A6CC2F1C734B00169AF2 /* Cisum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cisum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BB5871C2AD820FA0071AEBD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F50BF764301B4E3600516EA0 /* Demo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Demo.xcodeproj; sourceTree = "<group>"; };
+		F50BF8A3301B4E3600516EA0 /* ID3TagEditor.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ID3TagEditor.xcodeproj; sourceTree = "<group>"; };
+		F50BF988301B4E3600516EA0 /* ZIPFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ZIPFoundation.xcodeproj; sourceTree = "<group>"; };
 		F52F17E82F3585980008EF9F /* CisumWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CisumWidgetExtension.entitlements; sourceTree = "<group>"; };
 		F54DA1C52FC82E0300D5EDB5 /* ZIPFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ZIPFoundation.xcodeproj; sourceTree = "<group>"; };
 		F54DA2612FC82E0400D5EDB5 /* Demo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Demo.xcodeproj; sourceTree = "<group>"; };
@@ -510,6 +611,41 @@
 				F5826E682F3578070079B285 /* CisumWidgetExtension.appex */,
 				F5826E692F3578070079B285 /* Frameworks */,
 			);
+			sourceTree = "<group>";
+		};
+		F50BFA0E301B4E3600516EA0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F50BFAE7301B4EF400516EA0 /* ZIPFoundation.framework */,
+				F50BFAE9301B4EF400516EA0 /* ZIPFoundationTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F50BFA10301B4E3600516EA0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F50BFAC6301B4EF400516EA0 /* Demo macOS.app */,
+				F50BFAC8301B4EF400516EA0 /* Demo iOS.app */,
+				F50BFACA301B4EF400516EA0 /* Demo watchOS.app */,
+				F50BFACC301B4EF400516EA0 /* Demo watchOS Extension.appex */,
+				F50BFACE301B4EF400516EA0 /* Demo tvOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F50BFA12301B4E3600516EA0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F50BFAD7301B4EF400516EA0 /* ID3TagEditor.framework */,
+				F50BFAD9301B4EF400516EA0 /* ID3TagEditor macOS Tests.xctest */,
+				F50BFADB301B4EF400516EA0 /* ID3TagEditor.framework */,
+				F50BFADD301B4EF400516EA0 /* ID3TagEditor iOS Tests.xctest */,
+				F50BFADF301B4EF400516EA0 /* ID3TagEditor.framework */,
+				F50BFAE1301B4EF400516EA0 /* ID3TagEditor tvOS Tests.xctest */,
+				F50BFAE3301B4EF400516EA0 /* ID3TagEditor.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		F54DA1C62FC82E0300D5EDB5 /* Products */ = {
@@ -752,6 +888,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = F50BFA10301B4E3600516EA0 /* Products */;
+					ProjectRef = F50BF764301B4E3600516EA0 /* Demo.xcodeproj */;
+				},
+				{
 					ProductGroup = F54DA2622FC82E0400D5EDB5 /* Products */;
 					ProjectRef = F54DA2612FC82E0400D5EDB5 /* Demo.xcodeproj */;
 				},
@@ -766,6 +906,10 @@
 				{
 					ProductGroup = F5E2ACD12FC8229000CDCA7B /* Products */;
 					ProjectRef = F5E2ACCE2FC8229000CDCA7B /* Demo.xcodeproj */;
+				},
+				{
+					ProductGroup = F50BFA12301B4E3600516EA0 /* Products */;
+					ProjectRef = F50BF8A3301B4E3600516EA0 /* ID3TagEditor.xcodeproj */;
 				},
 				{
 					ProductGroup = F5E23F6E2FC8244500CDCA7B /* Products */;
@@ -786,6 +930,10 @@
 				{
 					ProductGroup = F5E23B562FC8244400CDCA7B /* Products */;
 					ProjectRef = F5E23B552FC8244400CDCA7B /* ZIPFoundation.xcodeproj */;
+				},
+				{
+					ProductGroup = F50BFA0E301B4E3600516EA0 /* Products */;
+					ProjectRef = F50BF988301B4E3600516EA0 /* ZIPFoundation.xcodeproj */;
 				},
 				{
 					ProductGroup = F54DA1C62FC82E0300D5EDB5 /* Products */;
@@ -809,6 +957,104 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		F50BFAC6301B4EF400516EA0 /* Demo macOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo macOS.app";
+			remoteRef = F50BFAC5301B4EF400516EA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F50BFAC8301B4EF400516EA0 /* Demo iOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo iOS.app";
+			remoteRef = F50BFAC7301B4EF400516EA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F50BFACA301B4EF400516EA0 /* Demo watchOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo watchOS.app";
+			remoteRef = F50BFAC9301B4EF400516EA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F50BFACC301B4EF400516EA0 /* Demo watchOS Extension.appex */ = {
+			isa = PBXReferenceProxy;
+			fileType = "wrapper.app-extension";
+			path = "Demo watchOS Extension.appex";
+			remoteRef = F50BFACB301B4EF400516EA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F50BFACE301B4EF400516EA0 /* Demo tvOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo tvOS.app";
+			remoteRef = F50BFACD301B4EF400516EA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F50BFAD7301B4EF400516EA0 /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F50BFAD6301B4EF400516EA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F50BFAD9301B4EF400516EA0 /* ID3TagEditor macOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor macOS Tests.xctest";
+			remoteRef = F50BFAD8301B4EF400516EA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F50BFADB301B4EF400516EA0 /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F50BFADA301B4EF400516EA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F50BFADD301B4EF400516EA0 /* ID3TagEditor iOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor iOS Tests.xctest";
+			remoteRef = F50BFADC301B4EF400516EA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F50BFADF301B4EF400516EA0 /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F50BFADE301B4EF400516EA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F50BFAE1301B4EF400516EA0 /* ID3TagEditor tvOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor tvOS Tests.xctest";
+			remoteRef = F50BFAE0301B4EF400516EA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F50BFAE3301B4EF400516EA0 /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F50BFAE2301B4EF400516EA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F50BFAE7301B4EF400516EA0 /* ZIPFoundation.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ZIPFoundation.framework;
+			remoteRef = F50BFAE6301B4EF400516EA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F50BFAE9301B4EF400516EA0 /* ZIPFoundationTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ZIPFoundationTests.xctest;
+			remoteRef = F50BFAE8301B4EF400516EA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F54DA2222FC82E0400D5EDB5 /* ZIPFoundation.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;

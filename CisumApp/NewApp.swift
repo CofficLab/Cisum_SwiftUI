@@ -19,16 +19,5 @@ struct NewApp: App {
             CisumFactory.makeCommands()
         }
 
-        #if os(macOS)
-        Window(String(localized: "设置"), id: AppBootstrap.settingsWindowID) {
-            CisumFactory.makeSettingsWindow()
-        }
-        .windowStyle(.hiddenTitleBar)
-        .windowToolbarStyle(.unified(showsTitle: false))
-        .defaultSize(
-            width: AppBootstrap.defaultSettingsWindowSize.width,
-            height: AppBootstrap.defaultSettingsWindowSize.height
-        )
-        #endif
     }
 }

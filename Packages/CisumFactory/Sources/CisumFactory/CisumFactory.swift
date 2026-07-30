@@ -28,7 +28,6 @@ import SwiftUI
 ///
 /// // 3. 窗口工厂
 /// CisumFactory.makeMainWindow()            // 主窗口
-/// CisumFactory.makeSettingsWindow()        // 设置窗口
 /// CisumFactory.makeCommands()              // 命令菜单
 /// ```
 @MainActor
@@ -67,6 +66,16 @@ public enum CisumBuilder: SuperLog {
 
         // 初始化插件（转换为 existential 类型）
         kernel.pluginManager.initializePlugins(plugins.map { $0 })
+
+        // 当前阶段 Factory 只负责把 Kernel 准备好，插件尚未注入。
+        // CisumKernel 的服务自检依赖插件注册 Storage/Playback/Plugin/Theme，
+        // 因此空清单时不能执行 startup，否则应用会在布局显示前失败。
+        // 插件清单接入后恢复完整的两阶段启动流程。
+        if plugins.isEmpty {
+            kernels.append(kernel)
+            print("\(Self.t)Kernel prepared with no plugins; waiting for plugin injection")
+            return kernel
+        }
 
         // 订阅插件变更
         subscribeToPluginChanges(kernel: kernel)
@@ -116,14 +125,7 @@ public enum CisumBuilder: SuperLog {
     /// 内部调用 `CisumFactory.createMainKernel()` 初始化内核，
     /// 显示加载中 / 崩溃 / 正常三种状态。
     public static func makeMainWindow() -> some View {
-        // TODO: 返回主窗口视图
-        EmptyView()
-    }
-
-    /// 创建设置窗口视图。
-    public static func makeSettingsWindow() -> some View {
-        // TODO: 返回设置窗口视图
-        EmptyView()
+        WindowMain()
     }
 
     // MARK: - Commands Factory
@@ -149,6 +151,74 @@ public enum CisumBuilder: SuperLog {
             // TODO: 后续在 BuiltinPluginManager 中添加 rebuildAllContributions 后接入
             print("\(Self.t)Plugin enabled state changed, rebuild pending")
         }
+    }
+}
+
+/// Factory 的主窗口启动视图。
+///
+/// 负责创建 Kernel，并在 Kernel 准备完成后显示 Factory 内部的 AppLayoutView。
+public struct WindowMain: View {
+    @State private var kernel: CisumKernel?
+    @State private var initializationError: Error?
+    @State private var isInitializing = true
+
+    public init() {}
+
+    public var body: some View {
+        Group {
+            if isInitializing {
+                KernelLoadingView()
+            } else if let initializationError {
+                KernelErrorView(error: initializationError)
+            } else if let kernel {
+                AppLayoutView(kernel: kernel)
+            }
+        }
+        .task {
+            await initializeKernel()
+        }
+    }
+
+    private func initializeKernel() async {
+        guard kernel == nil, initializationError == nil else { return }
+
+        do {
+            kernel = try await CisumFactory.createMainKernel()
+        } catch {
+            initializationError = error
+        }
+        isInitializing = false
+    }
+}
+
+private struct KernelLoadingView: View {
+    var body: some View {
+        VStack(spacing: 12) {
+            ProgressView()
+            Text("Loading…")
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+private struct KernelErrorView: View {
+    let error: Error
+
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle")
+                .font(.largeTitle)
+                .foregroundStyle(.orange)
+            Text("Unable to start Cisum")
+                .font(.title2)
+            Text(error.localizedDescription)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: 520)
+        }
+        .padding(32)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
