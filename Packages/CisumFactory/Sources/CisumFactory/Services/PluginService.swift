@@ -1,4 +1,5 @@
 import CisumKernel
+import CisumUI
 import Foundation
 
 /// 内置插件清单。
@@ -12,5 +13,5 @@ public enum PluginService {
     /// 所有内置插件列表。
     ///
     /// 顺序即注册顺序，`BuiltinPluginManager` 会在初始化时按各插件的 `order` 重新排序。
-    public static let plugins: [CisumKernelPlugin] = []
+    public static let plugins: [any SuperPlugin] = []
 }

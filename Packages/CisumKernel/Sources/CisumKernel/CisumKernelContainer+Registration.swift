@@ -4,6 +4,11 @@ import Foundation
 // MARK: - Service Registration
 
 extension CisumKernelContainer {
+    /// 注册音频库服务。
+    public func registerAudioLibrary(_ library: any AudioLibraryProviding) {
+        registerService((any AudioLibraryProviding).self, library)
+    }
+
     /// 注册存储服务。
     public func registerStorage(_ storage: any StorageProviding) {
         registerService(StorageProviding.self, storage)

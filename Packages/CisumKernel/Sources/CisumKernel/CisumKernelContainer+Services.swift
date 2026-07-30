@@ -4,6 +4,11 @@ import Foundation
 // MARK: - Service Accessors
 
 extension CisumKernelContainer {
+    /// 音频库服务 —— 提供 AudioDB 所需的抽象音频库能力。
+    public var audioLibrary: (any AudioLibraryProviding)? {
+        resolveService((any AudioLibraryProviding).self)
+    }
+
     /// 存储服务 —— 管理数据存储位置（iCloud / 本地 / 自定义）。
     public var storage: (any StorageProviding)? {
         resolveService(StorageProviding.self)

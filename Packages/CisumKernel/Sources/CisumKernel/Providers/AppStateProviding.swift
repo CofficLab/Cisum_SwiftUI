@@ -36,4 +36,7 @@ public protocol AppStateProviding: AnyObject, ObservableObject {
 
     /// 隐藏数据库视图。
     func hideDBView()
+
+    /// 更新导入状态。
+    func setImporting(_ importing: Bool)
 }

@@ -67,6 +67,13 @@ public enum CisumBuilder: SuperLog {
         // 初始化插件（转换为 existential 类型）
         kernel.pluginManager.initializePlugins(plugins.map { $0 })
 
+        // 先注册与具体插件无关的基础服务。真正的 Provider 插件会在
+        // onBoot 阶段继续注册 Storage / Playback / Theme 等能力。
+        kernel.registerAppStateService(BasicAppStateService())
+        kernel.registerPluginService(
+            PluginContributionService(manager: kernel.pluginManager)
+        )
+
         // 当前阶段 Factory 只负责把 Kernel 准备好，插件尚未注入。
         // CisumKernel 的服务自检依赖插件注册 Storage/Playback/Plugin/Theme，
         // 因此空清单时不能执行 startup，否则应用会在布局显示前失败。
@@ -171,7 +178,7 @@ public struct WindowMain: View {
             } else if let initializationError {
                 KernelErrorView(error: initializationError)
             } else if let kernel {
-                AppLayoutView(kernel: kernel)
+                KernelRootView(kernel: kernel)
             }
         }
         .task {
@@ -188,6 +195,44 @@ public struct WindowMain: View {
             initializationError = error
         }
         isInitializing = false
+    }
+}
+
+/// Factory 根视图桥接层。
+///
+/// 统一向新架构插件提供 Kernel 状态、旧版兼容 Environment，以及插件
+/// RootView 包装能力。AudioDBViewPlugin 迁移完成后可逐步移除兼容环境。
+private struct KernelRootView: View {
+    @ObservedObject private var kernel: CisumKernel
+
+    init(kernel: CisumKernel) {
+        self.kernel = kernel
+    }
+
+    var body: some View {
+        let content = AppLayoutView(kernel: kernel)
+        let appState = kernel.appState
+
+        Group {
+            if let wrapped = kernel.plugin?.wrapWithCurrentRoot(content: { content }) {
+                wrapped
+            } else {
+                content
+            }
+        }
+        .environment(\.demoMode, appState?.isDemoMode ?? false)
+        .environment(
+            \.appIsImporting,
+            Binding(
+                get: { appState?.isImporting ?? false },
+                set: { appState?.setImporting($0) }
+            )
+        )
+        .environment(
+            \.showAudioDBViewAction,
+            { appState?.showDBView() }
+        )
+        .environment(\.currentSceneName, kernel.plugin?.currentSceneName)
     }
 }
 
