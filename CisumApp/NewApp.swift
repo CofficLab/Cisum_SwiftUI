@@ -8,7 +8,6 @@ struct NewApp: App {
     var body: some Scene {
         WindowGroup(AppBootstrap.appName, id: AppBootstrap.mainWindowID) {
             CisumFactory.makeMainWindow()
-                .environmentObject(appDelegate)
         }
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified(showsTitle: false))
