@@ -3,6 +3,101 @@ import CisumUI
 import OSLog
 import SwiftUI
 
+/// Thread-safe storage for cached covers and in-flight cover requests.
+///
+/// `BookCoverRepo` is called from multiple unstructured tasks, so all compound
+/// cache operations (lookup/create/remove) must happen under the same lock.
+final class BookCoverCache: @unchecked Sendable {
+    private enum CachedCover {
+        case image(Image)
+        case missing
+
+        var value: Image? {
+            switch self {
+            case let .image(image): image
+            case .missing: nil
+            }
+        }
+    }
+
+    private struct InFlightRequest {
+        let id: UUID
+        let task: Task<Image?, Never>
+    }
+
+    private enum Lookup {
+        case cached(Image?)
+        case inFlight(Task<Image?, Never>)
+    }
+
+    private let lock = NSLock()
+    private var results: [String: CachedCover] = [:]
+    private var inFlightRequests: [String: InFlightRequest] = [:]
+
+    func value(
+        for key: String,
+        loader: @escaping @Sendable () async -> Image?
+    ) async -> Image? {
+        let lookup = lock.withLock { () -> Lookup in
+            if let cached = results[key] {
+                return .cached(cached.value)
+            }
+
+            if let request = inFlightRequests[key] {
+                return .inFlight(request.task)
+            }
+
+            let requestID = UUID()
+            let task = Task { [self] in
+                let result = await loader()
+                finish(result, for: key, requestID: requestID)
+                return result
+            }
+            inFlightRequests[key] = InFlightRequest(id: requestID, task: task)
+            return .inFlight(task)
+        }
+
+        switch lookup {
+        case let .cached(image):
+            return image
+        case let .inFlight(task):
+            return await task.value
+        }
+    }
+
+    func clear() {
+        let tasks = lock.withLock {
+            results.removeAll()
+            let tasks = inFlightRequests.values.map(\.task)
+            inFlightRequests.removeAll()
+            return tasks
+        }
+        tasks.forEach { $0.cancel() }
+    }
+
+    func clear(forKeyPrefix prefix: String) {
+        let tasks = lock.withLock {
+            results = results.filter { !$0.key.hasPrefix(prefix) }
+            let matchingRequests = inFlightRequests.filter { $0.key.hasPrefix(prefix) }
+            for key in matchingRequests.keys {
+                inFlightRequests.removeValue(forKey: key)
+            }
+            return matchingRequests.values.map(\.task)
+        }
+        tasks.forEach { $0.cancel() }
+    }
+
+    private func finish(_ result: Image?, for key: String, requestID: UUID) {
+        lock.withLock {
+            // A cache clear may have removed this request while its loader was
+            // finishing. In that case, do not restore the stale result.
+            guard inFlightRequests[key]?.id == requestID else { return }
+            results[key] = result.map(CachedCover.image) ?? .missing
+            inFlightRequests.removeValue(forKey: key)
+        }
+    }
+}
+
 /// 专门负责书籍封面图获取的仓库类
 public final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendable {
     public nonisolated static let emoji = "🖼️"
@@ -30,17 +125,12 @@ public final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendabl
 
     // MARK: - In-flight Deduplication & Cache
 
+    private nonisolated static let coverCache = BookCoverCache()
+
     /// Cache key: standardized URL path + thumbnail size
     private static func cacheKey(for url: URL, size: CGSize) -> String {
         "\(url.resolvingSymlinksInPath().standardizedFileURL.path)_\(Int(size.width))x\(Int(size.height))"
     }
-
-    /// In-flight tasks to prevent concurrent loads of the same cover.
-    /// Key: cache key, Value: ongoing Task that produces the cover image.
-    nonisolated(unsafe) private static var inFlightTasks: [String: Task<Image?, Never>] = [:]
-
-    /// Result cache to avoid re-scanning the file system for already-loaded covers.
-    nonisolated(unsafe) private static var resultCache: [String: Image?] = [:]
 
     // MARK: - Public Methods
 
@@ -51,50 +141,26 @@ public final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendabl
     /// - Returns: 封面图，如果未找到则返回nil
     func getCover(for url: URL, thumbnailSize: CGSize) async -> Image? {
         let key = Self.cacheKey(for: url, size: thumbnailSize)
-
-        // 1. Check result cache first
-        if let cached = Self.resultCache[key] {
-            return cached
-        }
-
-        // 2. Check in-flight tasks for deduplication
-        if let existingTask = Self.inFlightTasks[key] {
-            return await existingTask.value
-        }
-
-        // 3. Start a new task
-        let task = Task<Image?, Never> {
+        return await Self.coverCache.value(for: key) { [verbose] in
             do {
                 let result = try await Self.findCoverRecursively(in: url, thumbnailSize: thumbnailSize, verbose: verbose)
-                Self.resultCache[key] = result
                 return result
             } catch {
                 os_log(.error, "\(Self.t)Failed to find cover for \(url.lastPathComponent): \(error.localizedDescription)")
-                Self.resultCache[key] = nil
                 return nil
             }
         }
-
-        Self.inFlightTasks[key] = task
-        let result = await task.value
-        Self.inFlightTasks.removeValue(forKey: key)
-        return result
     }
 
     /// Clears the cover cache. Call when books are refreshed or deleted.
     public static func clearCache() {
-        resultCache.removeAll()
-        // Cancel any in-flight tasks
-        for (_, task) in inFlightTasks {
-            task.cancel()
-        }
-        inFlightTasks.removeAll()
+        coverCache.clear()
     }
 
     /// Clears cache for a specific book URL.
     static func clearCache(for url: URL) {
-        let prefix = url.resolvingSymlinksInPath().standardizedFileURL.path
-        resultCache = resultCache.filter { !$0.key.hasPrefix(prefix) }
+        let prefix = url.resolvingSymlinksInPath().standardizedFileURL.path + "_"
+        coverCache.clear(forKeyPrefix: prefix)
     }
 
     // MARK: - Private Methods

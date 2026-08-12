@@ -2,6 +2,7 @@
 import Foundation
 import Testing
 import SwiftData
+import SwiftUI
 
 @Test func bookPluginInfoExportsMetadata() {
     #expect(BookPluginInfo.dirName == "audios_book")
@@ -289,8 +290,62 @@ import SwiftData
     ])
 }
 
+@Test func bookCoverCacheDeduplicatesConcurrentLoadsAndCachesMissingCovers() async {
+    let cache = BookCoverCache()
+    let probe = CoverLoaderProbe()
+
+    await withTaskGroup(of: Void.self) { group in
+        for _ in 0..<100 {
+            group.addTask {
+                _ = await cache.value(for: "same-book_100x100") {
+                    await probe.load()
+                }
+            }
+        }
+    }
+
+    #expect(await probe.callCount == 1)
+
+    _ = await cache.value(for: "same-book_100x100") {
+        await probe.load()
+    }
+    #expect(await probe.callCount == 1)
+}
+
+@Test func clearingBookCoverCachePreventsInFlightResultFromBeingRestored() async {
+    let cache = BookCoverCache()
+    let probe = CoverLoaderProbe()
+    let firstRequest = Task {
+        await cache.value(for: "book_100x100") {
+            await probe.load()
+        }
+    }
+
+    while await probe.callCount == 0 {
+        await Task.yield()
+    }
+
+    cache.clear()
+    _ = await firstRequest.value
+    _ = await cache.value(for: "book_100x100") {
+        await probe.load()
+    }
+
+    #expect(await probe.callCount == 2)
+}
+
 private func canonicalPath(_ url: URL) -> String {
     url.resolvingSymlinksInPath().standardizedFileURL.path
+}
+
+private actor CoverLoaderProbe {
+    private(set) var callCount = 0
+
+    func load() async -> Image? {
+        callCount += 1
+        try? await Task.sleep(for: .milliseconds(20))
+        return nil
+    }
 }
 
 @Test func emptyCloudBookURLIsIgnored() {
