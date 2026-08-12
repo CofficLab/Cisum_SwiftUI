@@ -16,14 +16,18 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "CisumKernel", path: "../CisumKernel"),
+        .package(name: "CisumUI", path: "../CisumUI"),
         .package(name: "MagicKit", path: "../MagicKit"),
+        .package(name: "MagicPlayMan", path: "../MagicPlayMan"),
     ],
     targets: [
         .target(
             name: "CisumFactory",
             dependencies: [
                 .product(name: "CisumKernel", package: "CisumKernel"),
+                .product(name: "CisumUI", package: "CisumUI"),
                 .product(name: "MagicKit", package: "MagicKit"),
+                .product(name: "MagicPlayMan", package: "MagicPlayMan"),
             ],
             path: "Sources/CisumFactory"
         ),

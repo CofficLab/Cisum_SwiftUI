@@ -3,18 +3,15 @@ import SwiftUI
 
 /// 内容 Tab 容器。
 ///
-/// 插件存在时展示插件 Tab；插件尚未注入时展示可交互的 Mock 媒体库。
+/// 展示插件贡献的 Tab 视图；插件尚未提供 Tab 时展示占位说明。
 struct AppTabView: View {
     let kernel: CisumKernel
-    @ObservedObject var model: MockPlayerModel
     @State private var selectedTab = 0
-
-    private let mockTabs = ["音频库", "最近播放", "收藏"]
 
     private var pluginTabs: [(view: AnyView, label: String)] {
         kernel.plugin?.getTabViews(
             reason: "AppTabView",
-            demoMode: kernel.appState?.isDemoMode ?? true
+            demoMode: kernel.appState?.isDemoMode ?? false
         ) ?? []
     }
 
@@ -26,25 +23,16 @@ struct AppTabView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.background.secondary)
+        .onChange(of: pluginTabs.count) { _, newCount in
+            if selectedTab >= newCount { selectedTab = max(0, newCount - 1) }
+        }
     }
 
     private var tabBar: some View {
         HStack(spacing: 4) {
-            if pluginTabs.isEmpty {
-                ForEach(Array(mockTabs.enumerated()), id: \.offset) { index, title in
-                    TabButton(
-                        title: title,
-                        icon: index == 0 ? "music.note.list" : index == 1 ? "clock" : "heart",
-                        isSelected: selectedTab == index
-                    ) {
-                        withAnimation(.easeInOut(duration: 0.16)) {
-                            selectedTab = index
-                        }
-                    }
-                }
-            } else {
-                ForEach(Array(pluginTabs.enumerated()), id: \.offset) { index, tab in
-                    TabButton(title: tab.label, icon: "music.note", isSelected: selectedTab == index) {
+            ForEach(Array(pluginTabs.enumerated()), id: \.offset) { index, tab in
+                TabButton(title: tab.label, icon: "music.note", isSelected: selectedTab == index) {
+                    withAnimation(.easeInOut(duration: 0.16)) {
                         selectedTab = index
                     }
                 }
@@ -59,7 +47,7 @@ struct AppTabView: View {
     @ViewBuilder
     private var tabContent: some View {
         if pluginTabs.isEmpty {
-            MockLibraryView(model: model, selection: selectedTab)
+            EmptyTabView()
         } else if let tab = pluginTabs[safe: selectedTab] {
             tab.view
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -86,67 +74,17 @@ private struct TabButton: View {
     }
 }
 
-private struct MockLibraryView: View {
-    @ObservedObject var model: MockPlayerModel
-    let selection: Int
-
-    private var tracks: [MockPlayerModel.Track] { model.tracks }
-
+private struct EmptyTabView: View {
     var body: some View {
-        ScrollView {
-            LazyVStack(spacing: 0) {
-                HStack {
-                    Text(selection == 0 ? "我的媒体库" : selection == 1 ? "最近播放" : "我的收藏")
-                        .font(.title3.weight(.semibold))
-                    Spacer()
-                    Text("\(tracks.count) 项")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 16)
-
-                ForEach(tracks, id: \.id) { track in
-                    Button {
-                        model.play(track)
-                    } label: {
-                        HStack(spacing: 12) {
-                            RoundedRectangle(cornerRadius: 9, style: .continuous)
-                                .fill(track.color.gradient)
-                                .frame(width: 44, height: 44)
-                                .overlay {
-                                    Image(systemName: track.icon)
-                                        .foregroundStyle(.white.opacity(0.9))
-                                }
-
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(track.title)
-                                    .foregroundStyle(.primary)
-                                    .lineLimit(1)
-                                Text(track.artist)
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-
-                            Spacer()
-
-                            if model.title == track.title {
-                                Image(systemName: model.isPlaying ? "waveform" : "pause")
-                                    .foregroundStyle(Color.accentColor)
-                            } else {
-                                Text(track.length)
-                                    .font(.caption)
-                                    .foregroundStyle(.tertiary)
-                            }
-                        }
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 9)
-                        .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
+        VStack(spacing: 8) {
+            Image(systemName: "music.note.list")
+                .font(.system(size: 40, weight: .light))
+                .foregroundStyle(.tertiary)
+            Text("当前场景暂无可用内容")
+                .font(.callout)
+                .foregroundStyle(.secondary)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

@@ -1,30 +1,31 @@
+import MagicPlayMan
 import SwiftUI
 
-/// 播放操作按钮，对应旧版 ControlBtns。
+/// 播放操作按钮。
 struct ControlBtns: View {
-    @ObservedObject var model: MockPlayerModel
+    @EnvironmentObject private var man: MagicPlayMan
 
     var body: some View {
         HStack(spacing: 22) {
-            Button { model.toggleMode() } label: {
-                Image(systemName: model.isShuffle ? "shuffle" : "repeat")
+            Button { man.togglePlayMode() } label: {
+                Image(systemName: man.playMode.icon)
             }
-            Button { model.previous() } label: {
+            Button { man.previous() } label: {
                 Image(systemName: "backward.fill")
             }
-            Button { model.togglePlay() } label: {
-                Image(systemName: model.isPlaying ? "pause.fill" : "play.fill")
+            Button { man.toggle(reason: "ControlBtns") } label: {
+                Image(systemName: man.isPlaying ? "pause.fill" : "play.fill")
                     .font(.title2.weight(.semibold))
                     .frame(width: 48, height: 48)
             }
             .buttonStyle(.borderedProminent)
             .clipShape(Circle())
-            Button { model.next() } label: {
+            Button { man.next() } label: {
                 Image(systemName: "forward.fill")
             }
-            Button { model.isLiked.toggle() } label: {
-                Image(systemName: model.isLiked ? "heart.fill" : "heart")
-                    .foregroundStyle(model.isLiked ? Color.pink : Color.primary)
+            Button { man.toggleLike() } label: {
+                Image(systemName: man.isCurrentAssetLiked ? "heart.fill" : "heart")
+                    .foregroundStyle(man.isCurrentAssetLiked ? Color.pink : Color.primary)
             }
         }
         .buttonStyle(.plain)

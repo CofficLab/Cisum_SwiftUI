@@ -1,6 +1,8 @@
 import CisumKernel
+import CisumUI
 import Foundation
 import MagicKit
+import MagicPlayMan
 import OSLog
 import SwiftUI
 
@@ -8,27 +10,26 @@ import SwiftUI
 ///
 /// 唯一知道"如何组装应用"的地方：
 /// - 内核生命周期管理（创建、启动、销毁）
-/// - 插件清单维护（通过 `PluginService`）
+/// - 基础设施 Provider 注册（AppState / Playback / Theme / Cloud / Device）
 /// - 窗口 / 命令工厂方法
+///
+/// 插件清单由宿主（app target）通过 `CisumFactoryConfiguration` 传入，Factory
+/// 本身不依赖任何具体插件。
 ///
 /// ## 核心流程
 ///
 /// ```swift
-/// // 1. App 入口调用
-/// let kernel = try await CisumFactory.createMainKernel()
+/// let kernel = try await CisumFactory.createMainKernel(configuration: config)
 ///
-/// // 2. 内部流程
-/// CisumKernel()                            // 创建内核容器
-///   -> PluginService.plugins               // 获取插件清单
-///   -> kernel.pluginManager.initializePlugins(...) // 初始化插件
-///   -> kernel.startup()                    // 两阶段启动
-///       -> pluginManager.onBoot(kernel:)   // 阶段 1: 注册服务
-///       -> 服务校验                         // 必需服务检查
-///       -> pluginManager.onReady(kernel:)  // 阶段 2: 异步初始化
-///
-/// // 3. 窗口工厂
-/// CisumFactory.makeMainWindow()            // 主窗口
-/// CisumFactory.makeCommands()              // 命令菜单
+/// // 内部:
+/// CisumKernel()
+///   -> initializePlugins(config.plugins)
+///   -> 注册基础设施 Provider
+///   -> kernel.startup()
+///       -> pluginManager.onBoot(kernel:)   // 插件注册 Storage 等服务
+///       -> 必需服务校验
+///       -> pluginManager.onReady(kernel:)  // 插件桥接 Host / 异步初始化
+///       -> registerPluginUIContributions   // 失效缓存 + 主题同步
 /// ```
 @MainActor
 public enum CisumBuilder: SuperLog {
@@ -49,127 +50,110 @@ public enum CisumBuilder: SuperLog {
     /// 创建并启动一个新内核。
     ///
     /// 流程：
-    /// 1. 创建 `CisumKernel` 实例
-    /// 2. 从 `PluginService` 获取插件清单
-    /// 3. 初始化插件到 `BuiltinPluginManager`
-    /// 4. 订阅插件启用/禁用变更
-    /// 5. 启动内核（两阶段生命周期 + 服务校验）
-    /// 6. 注册到内核列表
-    ///
-    /// - Returns: 已启动的 `CisumKernel` 实例。
-    /// - Throws: 内核启动失败（如必需服务缺失）。
-    public static func createKernel() async throws -> CisumKernel {
+    /// 1. 创建 `CisumKernel` 实例并初始化插件
+    /// 2. 注册基础设施 Provider（非插件拥有的跨切面服务）
+    /// 3. 启动内核（两阶段生命周期 + 服务校验 + 贡献聚合）
+    /// 4. 恢复持久化的当前场景
+    /// 5. 订阅插件启用/禁用变更
+    public static func createKernel(configuration: CisumFactoryConfiguration) async throws -> CisumKernel {
         let kernel = CisumKernel()
 
-        // 获取插件清单
-        let plugins = PluginService.plugins
+        // 1. 初始化插件
+        kernel.pluginManager.initializePlugins(configuration.plugins)
 
-        // 初始化插件（转换为 existential 类型）
-        kernel.pluginManager.initializePlugins(plugins.map { $0 })
+        // 2. 注册基础设施 Provider
+        let appState = BasicAppStateService()
+        kernel.registerAppStateService(appState)
 
-        // 先注册与具体插件无关的基础服务。真正的 Provider 插件会在
-        // onBoot 阶段继续注册 Storage / Playback / Theme 等能力。
-        kernel.registerAppStateService(BasicAppStateService())
-        kernel.registerPluginService(
-            PluginContributionService(manager: kernel.pluginManager)
-        )
+        let pluginService = PluginContributionService(manager: kernel.pluginManager)
+        kernel.registerPluginService(pluginService)
 
-        // 当前阶段 Factory 只负责把 Kernel 准备好，插件尚未注入。
-        // CisumKernel 的服务自检依赖插件注册 Storage/Playback/Plugin/Theme，
-        // 因此空清单时不能执行 startup，否则应用会在布局显示前失败。
-        // 插件清单接入后恢复完整的两阶段启动流程。
-        if plugins.isEmpty {
-            kernels.append(kernel)
-            print("\(Self.t)Kernel prepared with no plugins; waiting for plugin injection")
-            return kernel
-        }
+        let playMan = MagicPlayMan()
+        kernel.registerPlayback(playMan)
 
-        // 订阅插件变更
-        subscribeToPluginChanges(kernel: kernel)
+        let themeService = ThemeService(contributionsProvider: { [weak kernel] in
+            kernel?.plugin?.getThemeContributions() ?? []
+        })
+        kernel.registerThemeService(themeService)
 
-        // 启动内核
+        kernel.registerCloudService(CloudService())
+        kernel.registerDeviceService(DeviceService())
+
+        // 3. 启动内核（插件 onBoot 注册 Storage 等服务 → 校验 → onReady → 贡献聚合）
         try await kernel.startup()
 
-        // 注册到内核列表
-        kernels.append(kernel)
+        // 4. 恢复当前场景
+        pluginService.restoreCurrentScene()
 
-        print("\(Self.t)Kernel created and started successfully")
+        // 5. 订阅插件变更
+        subscribeToPluginChanges(kernel: kernel)
+
+        kernels.append(kernel)
+        logger.info("\(Self.t)Kernel created and started successfully")
         return kernel
     }
 
-    /// 创建主内核（幂等）。
-    ///
-    /// 如果主内核已存在则直接返回，否则创建新的。
-    ///
-    /// - Returns: 已启动的主 `CisumKernel` 实例。
-    /// - Throws: 内核启动失败。
-    public static func createMainKernel() async throws -> CisumKernel {
+    /// 创建主内核（幂等：首次调用以传入的 configuration 创建，后续调用返回已有实例）。
+    public static func createMainKernel(configuration: CisumFactoryConfiguration) async throws -> CisumKernel {
         if let existing = mainKernel {
-            print("\(Self.t)Main kernel already exists, returning existing instance")
+            logger.info("\(Self.t)Main kernel already exists, returning existing instance")
             return existing
         }
-        return try await createKernel()
+        return try await createKernel(configuration: configuration)
     }
 
     /// 销毁指定内核。
-    ///
-    /// - Parameter kernel: 要销毁的内核实例。
     public static func destroyKernel(_ kernel: CisumKernel) {
         kernels.removeAll { $0 === kernel }
-        print("\(Self.t)Kernel destroyed, remaining: \(kernels.count)")
     }
 
     /// 销毁所有内核。
     public static func destroyAllKernels() {
         kernels.removeAll()
-        print("\(Self.t)All kernels destroyed")
     }
 
     // MARK: - Window Factory
 
     /// 创建主窗口视图。
-    ///
-    /// 内部调用 `CisumFactory.createMainKernel()` 初始化内核，
-    /// 显示加载中 / 崩溃 / 正常三种状态。
-    public static func makeMainWindow() -> some View {
-        WindowMain()
+    public static func makeMainWindow(configuration: CisumFactoryConfiguration) -> some View {
+        WindowMain(configuration: configuration)
     }
 
     // MARK: - Commands Factory
 
     /// 创建应用命令菜单。
     public static func makeCommands() -> some Commands {
-        // TODO: 返回应用命令
         EmptyCommands()
     }
 
     // MARK: - Private
 
-    /// 订阅插件启用/禁用变更通知。
-    ///
-    /// 插件在运行时切换启用状态后，通知工厂重建插件贡献并刷新 UI。
-    /// 当前阶段插件清单为空，此处预留事件监听供后续扩展。
+    /// 订阅插件启用/禁用变更通知，触发贡献重建。
     private static func subscribeToPluginChanges(kernel: CisumKernel) {
         NotificationCenter.default.addObserver(
             forName: .cisumEnabledPluginsDidChange,
             object: nil,
             queue: .main
         ) { _ in
-            // TODO: 后续在 BuiltinPluginManager 中添加 rebuildAllContributions 后接入
-            print("\(Self.t)Plugin enabled state changed, rebuild pending")
+            Task { @MainActor in
+                kernel.pluginManager.rebuildAllContributions(in: kernel)
+            }
         }
     }
 }
 
 /// Factory 的主窗口启动视图。
 ///
-/// 负责创建 Kernel，并在 Kernel 准备完成后显示 Factory 内部的 AppLayoutView。
+/// 负责创建 Kernel，并在 Kernel 准备完成后显示 `KernelRootView`。
 public struct WindowMain: View {
     @State private var kernel: CisumKernel?
     @State private var initializationError: Error?
     @State private var isInitializing = true
+    private let configuration: CisumFactoryConfiguration
 
-    public init() {}
+    public init(configuration: CisumFactoryConfiguration) {
+        self.configuration = configuration
+    }
 
     public var body: some View {
         Group {
@@ -190,7 +174,7 @@ public struct WindowMain: View {
         guard kernel == nil, initializationError == nil else { return }
 
         do {
-            kernel = try await CisumFactory.createMainKernel()
+            kernel = try await CisumFactory.createMainKernel(configuration: configuration)
         } catch {
             initializationError = error
         }
@@ -200,39 +184,51 @@ public struct WindowMain: View {
 
 /// Factory 根视图桥接层。
 ///
-/// 统一向新架构插件提供 Kernel 状态、旧版兼容 Environment，以及插件
-/// RootView 包装能力。AudioDBViewPlugin 迁移完成后可逐步移除兼容环境。
-private struct KernelRootView: View {
-    @ObservedObject private var kernel: CisumKernel
-
-    init(kernel: CisumKernel) {
-        self.kernel = kernel
-    }
+/// 将内核 Provider 投影为 SwiftUI 环境值/环境对象，供仍以旧式环境读取的插件视图
+/// 继续工作；并用插件的 RootView 包裹内部布局。Host 桥接彻底移除后，这里的兼容
+/// 环境可进一步精简。
+struct KernelRootView: View {
+    @ObservedObject var kernel: CisumKernel
 
     var body: some View {
-        let content = AppLayoutView(kernel: kernel)
-        let appState = kernel.appState
-
-        Group {
-            if let wrapped = kernel.plugin?.wrapWithCurrentRoot(content: { content }) {
-                wrapped
-            } else {
-                content
-            }
-        }
-        .environment(\.demoMode, appState?.isDemoMode ?? false)
-        .environment(
-            \.appIsImporting,
-            Binding(
-                get: { appState?.isImporting ?? false },
-                set: { appState?.setImporting($0) }
+        rootContent
+            .environment(\.currentSceneName, kernel.plugin?.currentSceneName)
+            .environment(\.demoMode, kernel.appState?.isDemoMode ?? false)
+            .environment(
+                \.appIsImporting,
+                Binding(
+                    get: { kernel.appState?.isImporting ?? false },
+                    set: { kernel.appState?.setImporting($0) }
+                )
             )
-        )
-        .environment(
-            \.showAudioDBViewAction,
-            { appState?.showDBView() }
-        )
-        .environment(\.currentSceneName, kernel.plugin?.currentSceneName)
+            .environment(\.showAudioDBViewAction, { kernel.appState?.showDBView() })
+            .environment(\.pluginThemes, kernel.theme?.allThemeContributions ?? [])
+            .environment(\.currentPluginThemeId, kernel.theme?.selectedThemeID ?? "")
+            .environment(\.selectPluginThemeAction, { themeID in kernel.theme?.selectTheme(themeID) })
+            .environment(\.resetSettingsAction, {
+                Task { @MainActor in
+                    CisumFactory.mainKernel?.storage?.resetStorageLocation()
+                }
+            })
+    }
+
+    @ViewBuilder
+    private var rootContent: some View {
+        let content = AppLayoutView(kernel: kernel)
+        if let playMan = kernel.playback as? MagicPlayMan {
+            wrap(content).environmentObject(playMan)
+        } else {
+            wrap(content)
+        }
+    }
+
+    @ViewBuilder
+    private func wrap(_ content: AppLayoutView) -> some View {
+        if let wrapped = kernel.plugin?.wrapWithCurrentRoot(content: { content }) {
+            wrapped
+        } else {
+            content
+        }
     }
 }
 

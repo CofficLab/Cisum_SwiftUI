@@ -1,8 +1,9 @@
+import MagicPlayMan
 import SwiftUI
 
-/// 播放封面区域，对应旧版 HeroView。
+/// 播放封面区域。
 struct HeroView: View {
-    @ObservedObject var model: MockPlayerModel
+    @EnvironmentObject private var man: MagicPlayMan
     var compact = false
 
     var body: some View {
@@ -17,9 +18,9 @@ struct HeroView: View {
                 )
 
             VStack(spacing: compact ? 10 : 14) {
-                Image(systemName: model.isPlaying ? "waveform" : "music.note")
+                Image(systemName: man.isPlaying ? "waveform" : "music.note")
                     .font(.system(size: compact ? 44 : 72, weight: .medium))
-                    .symbolEffect(.variableColor.iterative, isActive: model.isPlaying)
+                    .symbolEffect(.variableColor.iterative, isActive: man.isPlaying)
                     .foregroundStyle(.white.opacity(0.94))
 
                 if !compact {

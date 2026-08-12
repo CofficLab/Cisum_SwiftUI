@@ -1,22 +1,24 @@
 import CisumKernel
 import SwiftUI
 
-/// 底部状态区域，对应旧版 StatusView。
+/// 底部状态区域。
 struct StatusView: View {
     let kernel: CisumKernel
-    @ObservedObject var model: MockPlayerModel
+
+    private var isPlaying: Bool { kernel.playback?.isPlaying ?? false }
+    private var pluginsReady: Bool { kernel.plugin != nil }
 
     var body: some View {
         HStack(spacing: 10) {
             Circle()
-                .fill(.green)
+                .fill(pluginsReady ? .green : .orange)
                 .frame(width: 7, height: 7)
-            Text(kernel.plugin == nil ? "Mock 模式" : "插件系统就绪")
+            Text(pluginsReady ? "插件系统就绪" : "初始化中")
                 .foregroundStyle(.secondary)
 
             Spacer()
 
-            Text(model.isPlaying ? "播放中" : "待机")
+            Text(isPlaying ? "播放中" : "待机")
                 .foregroundStyle(.secondary)
             Text("•")
                 .foregroundStyle(.tertiary)

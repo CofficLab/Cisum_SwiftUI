@@ -1,34 +1,35 @@
+import MagicPlayMan
 import SwiftUI
 
-/// 播放控制区域。
+/// 播放控制区域：封面、标题、状态、进度条和底部操作按钮。
 ///
-/// 对应旧版 ControlView：封面、标题、状态、进度条和底部操作按钮。
+/// 通过 `@EnvironmentObject` 读取内核注册的真实 `MagicPlayMan`。
 struct ControlView: View {
-    @ObservedObject var model: MockPlayerModel
+    @EnvironmentObject private var man: MagicPlayMan
 
     var body: some View {
         GeometryReader { geometry in
             HStack(spacing: 0) {
-                HeroView(model: model)
+                HeroView()
                     .frame(maxWidth: geometry.size.width > 900 ? 330 : .infinity)
 
                 if geometry.size.width > 900 {
-                    HeroView(model: model, compact: true)
+                    HeroView(compact: true)
                         .frame(maxWidth: 330)
                         .transition(.move(edge: .trailing).combined(with: .opacity))
                 }
 
                 VStack(spacing: 0) {
-                    TitleView(model: model)
-                    StateView(model: model)
+                    TitleView()
+                    StateView()
                         .frame(height: 38)
 
                     Spacer(minLength: 8)
 
-                    PlayingProgressView(model: model)
+                    PlayingProgressView()
                         .padding(.horizontal, 24)
 
-                    ControlBtns(model: model)
+                    ControlBtns()
                         .padding(.bottom, 18)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
