@@ -2,37 +2,17 @@ import Foundation
 
 /// 云同步服务能力协议。
 ///
-/// 提供 iCloud 账户状态监控与同步进度查询。
-///
-/// ## 使用示例
-///
-/// ```swift
-/// let isAvailable = kernel.cloud?.isICloudAvailable ?? false
-/// let status = kernel.cloud?.accountStatus
-/// ```
+/// 包装 `MagicApp.isICloudAvailable()` 与系统 `CKAccountChanged` 通知，
+/// 对应旧版 `CloudVM` 暴露的面。iCloud 可用性是一个布尔判定
+/// （`FileManager.ubiquityIdentityToken != nil`），账户变化通过系统通知感知。
 @MainActor
 public protocol CloudProviding: AnyObject, ObservableObject {
     /// iCloud 是否可用。
     var isICloudAvailable: Bool { get }
 
-    /// 当前 iCloud 账户状态。
-    var accountStatus: CloudAccountStatus { get }
+    /// 是否已登录 iCloud 账户；`nil` 表示尚未确定。
+    var isSignedIn: Bool? { get }
 
-    /// 是否正在进行同步。
-    var isSyncing: Bool { get }
-
-    /// 上一次同步时间。
-    var lastSyncDate: Date? { get }
-}
-
-/// 云同步账户状态。
-public enum CloudAccountStatus: Sendable {
-    /// 可用。
-    case available
-    /// 未登录。
-    case notSignedIn
-    /// 受限访问。
-    case restricted
-    /// 未知（尚未确定）。
-    case unknown
+    /// 账户状态的可读描述。
+    var accountStatusDescription: String { get }
 }

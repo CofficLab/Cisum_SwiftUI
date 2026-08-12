@@ -6,7 +6,7 @@ import Foundation
 extension CisumKernelContainer {
     /// 注册音频库服务。
     public func registerAudioLibrary(_ library: any AudioLibraryProviding) {
-        registerService((any AudioLibraryProviding).self, library)
+        registerService(AudioLibraryProviding.self, library)
     }
 
     /// 注册存储服务。

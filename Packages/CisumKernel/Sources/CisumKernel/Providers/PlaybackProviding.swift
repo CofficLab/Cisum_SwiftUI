@@ -1,83 +1,73 @@
 import Foundation
-import SwiftUI
+import MagicPlayMan
 
 /// 播放服务能力协议。
 ///
-/// 提供音频/有声书播放的状态查询与控制接口。
+/// 直接复用 `MagicPlayMan` 的真实类型（`PlaybackState` / `MagicPlayMode`），
+/// 避免维护一套并行的播放状态枚举。具体实现由 `MagicPlayMan` 在 Factory
+/// 注册时提供；插件视图中仍可通过 `@EnvironmentObject MagicPlayMan` 直接
+/// 访问完整引擎 API，而新布局视图通过此协议消费。
 ///
 /// ## 使用示例
 ///
 /// ```swift
-/// kernel.playback?.play()
-/// kernel.playback?.pause()
+/// kernel.playback?.toggle()
 /// let isPlaying = kernel.playback?.isPlaying ?? false
+/// kernel.playback?.setPlayMode(.shuffle)
 /// ```
 @MainActor
 public protocol PlaybackProviding: AnyObject, ObservableObject {
-    /// 当前是否正在播放。
-    var isPlaying: Bool { get }
+    /// 底层播放状态（idle/loading/playing/paused/...）。
+    var state: PlaybackState { get }
 
-    /// 当前播放进度 (0.0 ~ 1.0)。
-    var progress: Double { get }
+    /// 当前播放资源的 URL。
+    var currentURL: URL? { get }
 
-    /// 当前播放进度时间。
+    /// 当前播放时间（秒）。
     var currentTime: TimeInterval { get }
 
-    /// 总时长。
+    /// 总时长（秒）。
     var duration: TimeInterval { get }
 
-    /// 当前播放资源标题。
-    var currentTitle: String { get }
-
-    /// 当前播放资源艺术家。
-    var currentArtist: String { get }
-
-    /// 是否有封面图。
-    var hasArtwork: Bool { get }
+    /// 播放进度 (0.0 ~ 1.0)。
+    var progress: Double { get }
 
     /// 当前播放模式。
-    var playMode: PlayMode { get }
+    var playMode: MagicPlayMode { get }
 
-    /// 开始播放。
-    func play()
+    /// 已点赞的资源集合。
+    var likedAssets: Set<URL> { get }
 
-    /// 暂停播放。
+    /// 是否正在播放（便捷判断）。
+    var isPlaying: Bool { get }
+
+    /// 是否已加载资源。
+    var hasAsset: Bool { get }
+
+    /// 播放指定 URL。
+    func play(_ url: URL) async
+
+    /// 暂停。
     func pause()
 
-    /// 切换播放 / 暂停。
-    func togglePlayPause()
+    /// 依据当前状态在播放/暂停间切换。
+    func toggle()
 
-    /// 播放下一首。
+    /// 跳转到指定进度 (0.0 ~ 1.0)。
+    func seek(toProgress progress: Double)
+
+    /// 跳转到指定时间点（秒）。
+    func seek(toTime time: TimeInterval)
+
+    /// 下一首。
     func next()
 
-    /// 播放上一首。
+    /// 上一首。
     func previous()
 
-    /// 跳转到指定进度。
-    ///
-    /// - Parameter progress: 0.0 ~ 1.0 的进度值。
-    func seek(to progress: Double)
-
     /// 设置播放模式。
-    ///
-    /// - Parameter mode: 目标播放模式。
-    func setPlayMode(_ mode: PlayMode)
-}
+    func setPlayMode(_ mode: MagicPlayMode)
 
-/// 播放模式。
-public enum PlayMode: String, Sendable, CaseIterable {
-    /// 顺序播放。
-    case sequence
-    /// 随机播放。
-    case shuffle
-    /// 单曲循环。
-    case repeatOne
-
-    public var iconName: String {
-        switch self {
-        case .sequence: "repeat"
-        case .shuffle: "shuffle"
-        case .repeatOne: "repeat.1"
-        }
-    }
+    /// 循环切换播放模式。
+    func togglePlayMode()
 }

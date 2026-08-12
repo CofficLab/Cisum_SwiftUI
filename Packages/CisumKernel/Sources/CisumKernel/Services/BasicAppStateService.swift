@@ -3,16 +3,24 @@ import Foundation
 
 /// Kernel 默认提供的轻量级应用状态实现。
 ///
-/// Factory 在真正的 AppState 插件接入前使用它，为插件视图提供稳定的
-/// Demo、数据库视图和导入状态上下文。
+/// 吸收了旧版 `AppVM`（Demo 模式、数据库视图显隐、导入/拖放）与 `StateVM`
+/// （状态消息频道）的职责，并通过 `UserDefaults` 持久化数据库视图显隐
+/// （key `"UI.ShowDB"`，与旧版 `UIRepo` 一致）。
 @MainActor
 public final class BasicAppStateService: ObservableObject, AppStateProviding {
-    @Published public private(set) var isDemoMode = false
-    @Published public private(set) var isDBViewVisible = true
-    @Published public private(set) var isImporting = false
-    @Published public private(set) var hasDragOperation = false
+    private static let showDBKey = "UI.ShowDB"
 
-    public init() {}
+    @Published public private(set) var isDemoMode = false
+    @Published public private(set) var isDBViewVisible: Bool
+    @Published public private(set) var isImporting = false
+    @Published public private(set) var isDropping = false
+    @Published public private(set) var stateMessage = ""
+
+    public var hasDragOperation: Bool { isDropping }
+
+    public init() {
+        isDBViewVisible = UserDefaults.standard.bool(forKey: Self.showDBKey)
+    }
 
     public func enterDemoMode() {
         isDemoMode = true
@@ -23,11 +31,19 @@ public final class BasicAppStateService: ObservableObject, AppStateProviding {
     }
 
     public func showDBView() {
-        isDBViewVisible = true
+        setDBView(true)
     }
 
     public func hideDBView() {
-        isDBViewVisible = false
+        setDBView(false)
+    }
+
+    public func closeDBView() {
+        setDBView(false)
+    }
+
+    public func toggleDBView() {
+        setDBView(!isDBViewVisible)
     }
 
     public func setImporting(_ importing: Bool) {
@@ -35,6 +51,24 @@ public final class BasicAppStateService: ObservableObject, AppStateProviding {
     }
 
     public func setDragOperation(_ active: Bool) {
-        hasDragOperation = active
+        isDropping = active
+    }
+
+    public func appendStateMessage(_ message: String) {
+        if stateMessage.isEmpty {
+            stateMessage = message
+        } else {
+            stateMessage += "\n" + message
+        }
+    }
+
+    public func clearStateMessages() {
+        stateMessage = ""
+    }
+
+    private func setDBView(_ visible: Bool) {
+        guard isDBViewVisible != visible else { return }
+        isDBViewVisible = visible
+        UserDefaults.standard.set(visible, forKey: Self.showDBKey)
     }
 }

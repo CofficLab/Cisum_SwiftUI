@@ -49,16 +49,18 @@ public final class BuiltinPluginManager: ObservableObject {
 
     /// 初始化插件列表。
     ///
-    /// 调用此方法后，所有插件实例被注册到内部注册表中。
+    /// 按 `metadata.order` 升序排序后注册，保证 `onBoot` / `onReady` 与贡献
+    /// 聚合都以稳定、确定的顺序执行（与旧版 `PluginVM.getAllPlugins()` 一致）。
     /// 此方法应在 `startup()` 之前调用。
     ///
-    /// - Parameter plugins: 插件实例数组，按注册顺序排列。
+    /// - Parameter plugins: 插件实例数组。
     public func initializePlugins(_ plugins: [any SuperPlugin]) {
         pluginRegistry.removeAll()
         orderedPluginKeys.removeAll()
         usedIDs.removeAll()
 
-        for plugin in plugins {
+        let sortedPlugins = plugins.sorted { type(of: $0).metadata.order < type(of: $1).metadata.order }
+        for plugin in sortedPlugins {
             register(plugin)
         }
 
@@ -71,8 +73,9 @@ public final class BuiltinPluginManager: ObservableObject {
 
     /// 阶段 1: OnBoot —— 注册内核服务。
     ///
-    /// 遍历所有已启用的插件，调用其 `onBoot(kernel:)`（如果实现了 `CisumKernelPlugin`）。
-    /// 然后再对仅实现 `SuperPlugin` 的插件调用 `onRegister()` / `onEnable()`。
+    /// 先启动所有 `alwaysOn` 插件（核心服务先行，例如 Storage 提供数据目录），
+    /// 再启动可配置插件（受启用策略 + 用户覆盖约束）。对内核感知插件调用
+    /// `onBoot(kernel:)`；对仅实现 `SuperPlugin` 的插件回退到 `onRegister()` + `onEnable()`。
     ///
     /// - Parameter kernel: 内核容器实例。
     func onBoot(kernel: CisumKernelContainer) async throws {
@@ -81,23 +84,34 @@ public final class BuiltinPluginManager: ObservableObject {
             return
         }
 
+        // 核心插件先启动
         for key in orderedPluginKeys {
             guard let plugin = pluginRegistry[key] else { continue }
+            guard type(of: plugin).metadata.policy == .alwaysOn else { continue }
+            try await bootPlugin(plugin, kernel: kernel)
+        }
+
+        // 可配置插件随后启动
+        for key in orderedPluginKeys {
+            guard let plugin = pluginRegistry[key] else { continue }
+            guard type(of: plugin).metadata.policy != .alwaysOn else { continue }
             guard isPluginEnabled(plugin) else {
                 if Self.verbose { os_log("\(Self.t)⏭️ Skipping disabled plugin: \(plugin.id)") }
                 continue
             }
+            try await bootPlugin(plugin, kernel: kernel)
+        }
+    }
 
-            // 如果是内核感知插件，调用两阶段生命周期
-            if let kernelPlugin = plugin as? any CisumKernelPlugin {
-                if Self.verbose { os_log("\(Self.t)🔌 onBoot for kernel plugin: \(plugin.id)") }
-                try await kernelPlugin.onBoot(kernel: kernel)
-            } else {
-                // 标准 SuperPlugin: 调用 onRegister + onEnable
-                if Self.verbose { os_log("\(Self.t)📋 onRegister for: \(plugin.id)") }
-                plugin.onRegister()
-                plugin.onEnable()
-            }
+    /// 启动单个插件（内核感知插件走 onBoot，其余走 onRegister + onEnable）。
+    private func bootPlugin(_ plugin: any SuperPlugin, kernel: CisumKernelContainer) async throws {
+        if let kernelPlugin = plugin as? any CisumKernelPlugin {
+            if Self.verbose { os_log("\(Self.t)🔌 onBoot for kernel plugin: \(plugin.id)") }
+            try await kernelPlugin.onBoot(kernel: kernel)
+        } else {
+            if Self.verbose { os_log("\(Self.t)📋 onRegister for: \(plugin.id)") }
+            plugin.onRegister()
+            plugin.onEnable()
         }
     }
 
@@ -115,6 +129,28 @@ public final class BuiltinPluginManager: ObservableObject {
             if Self.verbose { os_log("\(Self.t)🚀 onReady for: \(plugin.id)") }
             try await kernelPlugin.onReady(kernel: kernel)
         }
+    }
+
+    // MARK: - Contribution Aggregation
+
+    /// 启动期：失效插件视图缓存，并将主题贡献同步到 CisumUI。
+    ///
+    /// 在 `startup()` 的 `onReady` 之后调用一次。
+    func registerPluginUIContributions(in kernel: CisumKernelContainer) {
+        refreshContributions(in: kernel)
+    }
+
+    /// 运行期：插件启用/禁用变更后重建全部贡献。
+    public func rebuildAllContributions(in kernel: CisumKernelContainer) {
+        refreshContributions(in: kernel)
+        kernel.eventManager.postEnabledPluginsDidChange()
+    }
+
+    /// 失效插件视图缓存 + 重新同步主题到 CisumUI。
+    private func refreshContributions(in kernel: CisumKernelContainer) {
+        kernel.plugin?.invalidateCaches()
+        kernel.theme?.reloadThemes()
+        kernel.theme?.syncToCisumUI()
     }
 
     // MARK: - Plugin Enable State

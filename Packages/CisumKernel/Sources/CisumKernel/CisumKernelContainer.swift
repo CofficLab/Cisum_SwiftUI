@@ -109,9 +109,10 @@ public final class CisumKernelContainer: ObservableObject {
     /// 启动内核，执行自检和初始化流程。
     ///
     /// 启动顺序:
-    /// 1. 插件系统 OnBoot — 注册内核服务与 UI 贡献
-    /// 2. 服务校验 — 必需服务检查
+    /// 1. 插件系统 OnBoot — 注册内核服务（alwaysOn 优先，其后可配置）
+    /// 2. 服务校验 — 必需服务（Storage / Playback / Plugin / Theme）检查
     /// 3. 插件系统 OnReady — 依赖服务的异步初始化
+    /// 4. 贡献聚合 — 失效插件视图缓存，并将主题贡献同步到 CisumUI
     ///
     /// - Throws: `CisumKernelError.missingRequiredServices` 如果必需服务缺失。
     public func startup() async throws {
@@ -132,6 +133,9 @@ public final class CisumKernelContainer: ObservableObject {
 
         // 阶段 3: 插件 OnReady — 异步初始化
         try await pluginManager.onReady(kernel: self)
+
+        // 阶段 4: 贡献聚合 — 失效缓存并将主题同步到 CisumUI
+        pluginManager.registerPluginUIContributions(in: self)
     }
 }
 
