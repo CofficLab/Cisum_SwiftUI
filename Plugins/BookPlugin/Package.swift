@@ -16,12 +16,14 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../../Packages/CisumUI"),
+        .package(path: "../../Packages/CisumKernel"),
     ],
     targets: [
         .target(
             name: "BookPlugin",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
+                .product(name: "CisumKernel", package: "CisumKernel"),
             ],
             path: "Sources",
             resources: [

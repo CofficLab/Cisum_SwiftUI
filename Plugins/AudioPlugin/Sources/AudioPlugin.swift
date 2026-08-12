@@ -1,9 +1,10 @@
+import CisumKernel
 import CisumUI
 import Foundation
 import AudioLikePlugin
 import SwiftUI
 
-public actor AudioPlugin: SuperPlugin {
+public actor AudioPlugin: SuperPlugin, CisumKernelPlugin {
     public static let shared = AudioPlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: String.LocalizationValue(AudioPluginInfo.titleKey), bundle: .module),
@@ -20,6 +21,19 @@ public actor AudioPlugin: SuperPlugin {
     #else
         public static let dbDirName = AudioPluginInfo.dbDirName
     #endif
+
+    /// OnReady 阶段（Storage 服务已注册）将 `AudioPluginHost` 桥接到内核
+    /// `StorageProviding`，使历史插件代码无需改动即可继续工作。
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
+        guard let storage = kernel.storage else { return }
+        AudioPluginHost.configure(
+            databaseURL: { try storage.databaseFile(name: $0) },
+            storageRoot: { storage.storageRoot },
+            hasStorageLocation: { storage.hasUsableStorageLocation },
+            storageLocationDidChangeNotifications: [.cisumStorageLocationDidChange, .cisumStorageLocationDidReset]
+        )
+    }
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {

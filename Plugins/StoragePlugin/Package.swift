@@ -17,12 +17,16 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../../Packages/CisumUI"),
+        .package(path: "../../Packages/CisumKernel"),
+        .package(path: "../../Packages/MagicKit"),
     ],
     targets: [
         .target(
             name: "StoragePlugin",
             dependencies: [
                 "CisumUI",
+                .product(name: "CisumKernel", package: "CisumKernel"),
+                .product(name: "MagicKit", package: "MagicKit"),
             ],
             path: "Sources",
             resources: [
