@@ -1,13 +1,30 @@
 import CisumFactory
+import PluginRegistry
 import SwiftUI
+
+/// 宿主（app target）在编译期确定的插件清单与内核组装配置。
+///
+/// 插件清单来自 `PluginRegistry`；Factory 本身不依赖任何具体插件，
+/// 由这里显式注入，保持依赖方向单向（App → Factory + Registry）。
+@MainActor
+private enum CisumAppAssembly {
+    static let configuration = try! CisumFactoryConfiguration(plugins: PluginRegistry.plugins)
+}
 
 @main
 struct NewApp: App {
     @NSApplicationDelegateAdaptor private var appDelegate: AppDelegate
 
+    init() {
+        #if os(macOS)
+        UserDefaults.standard.set(true, forKey: "ApplePersistenceIgnoreState")
+        #endif
+        StoreService.bootstrap()
+    }
+
     var body: some Scene {
         WindowGroup(AppBootstrap.appName, id: AppBootstrap.mainWindowID) {
-            CisumFactory.makeMainWindow()
+            CisumFactory.makeMainWindow(configuration: CisumAppAssembly.configuration)
         }
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified(showsTitle: false))
