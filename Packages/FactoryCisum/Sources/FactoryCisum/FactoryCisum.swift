@@ -81,17 +81,6 @@ public enum CisumBuilder: SuperLog {
         let pluginService = PluginContributionService(manager: kernel.pluginManager)
         kernel.registerPluginService(pluginService)
 
-        // 场景服务：独立 Provider，负责场景发现/切换/持久化；场景变化时通知
-        // 插件贡献服务重建视图缓存。
-        let sceneService = SceneService(
-            manager: kernel.pluginManager,
-            onSceneChanged: { [weak pluginService] in
-                pluginService?.invalidateCaches()
-            }
-        )
-        kernel.registerSceneService(sceneService)
-        pluginService.scene = sceneService
-
         let playMan = MagicPlayMan()
         kernel.registerPlayback(playMan)
 
@@ -105,15 +94,13 @@ public enum CisumBuilder: SuperLog {
 
         // 3. 启动内核（插件 onBoot 注册 Storage 等服务 → 校验 → onReady → 贡献聚合）
         try await kernel.startup()
+        pluginService.scene = kernel.scene
 
         // 2.5 注册视图 Provider（对齐 Lumi：视图区域各自为独立的 Provider 契约，
         // 默认实现在此注册进内核；Factory 组装时只做 resolveProvider + 注入 + makeRootView）
         registerViewProviders(into: kernel)
 
-        // 4. 恢复当前场景
-        sceneService.restoreCurrentScene()
-
-        // 5. 订阅插件变更
+        // 4. 订阅插件变更
         subscribeToPluginChanges(kernel: kernel)
 
         kernels.append(kernel)

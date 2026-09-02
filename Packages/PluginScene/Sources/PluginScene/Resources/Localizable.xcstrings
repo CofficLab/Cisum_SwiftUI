@@ -1,0 +1,16 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Manages the current scene" : {
+      "localizations" : {
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "管理当前场景" } }
+      }
+    },
+    "Scene" : {
+      "localizations" : {
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "场景" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

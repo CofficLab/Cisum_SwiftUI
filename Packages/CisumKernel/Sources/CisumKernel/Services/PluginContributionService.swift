@@ -11,9 +11,9 @@ import SwiftUI
 /// 但把插件发现与视图消费边界放到 Kernel，使 Factory 与具体 App 布局
 /// 无需直接依赖插件注册表。
 ///
-/// 场景管理（场景列表/当前场景/切换与持久化）已独立到 `SceneService`
-/// （`SceneProviding`）；本服务通过弱引用 `scene` 读取当前场景名以聚合
-/// 场景相关的视图贡献。
+/// 场景管理（场景列表/当前场景/切换与持久化）已独立到 `PluginScene` 的
+/// `SceneService`（`SceneProviding`）；本服务通过弱引用 `scene` 读取当前
+/// 场景名以聚合场景相关的视图贡献。
 @MainActor
 public final class PluginContributionService: ObservableObject, PluginProviding {
     private let manager: BuiltinPluginManager
