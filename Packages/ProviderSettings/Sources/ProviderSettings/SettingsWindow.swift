@@ -1,3 +1,4 @@
+import CisumKernel
 import CisumUI
 import ProviderAppState
 import ProviderPlugin
@@ -19,6 +20,10 @@ public struct SettingsWindow: View {
     private static let allSettingsID = "cisum.settings.all"
 
     @State private var selection: String
+
+    /// 插件启停变化版本号：收到 `.cisumEnabledPluginsDidChange` 时 +1，强制重建
+    /// 设置项列表（禁用某插件后其贡献的设置项会消失）。
+    @State private var revision = 0
 
     private let settings: (any PluginProviding)?
     private let appState: (any AppStateProviding)?
@@ -57,6 +62,11 @@ public struct SettingsWindow: View {
                     description: Text("插件暂未贡献任何设置项")
                 )
             }
+        }
+        // 插件启停变化时重建设置项列表。
+        .id(revision)
+        .onReceive(NotificationCenter.default.publisher(for: .cisumEnabledPluginsDidChange)) { _ in
+            revision += 1
         }
         .modifier(KernelEnvironmentModifier(
             settings: settings,

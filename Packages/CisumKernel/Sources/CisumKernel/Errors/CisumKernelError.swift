@@ -7,6 +7,7 @@ public enum CisumKernelError: Error, LocalizedError {
 
     /// 未找到插件。
     case pluginNotFound(id: String)
+    case pluginNotConfigurable(id: String)
 
     /// 缺少必需服务。
     ///
@@ -50,6 +51,8 @@ public enum CisumKernelError: Error, LocalizedError {
             "Plugin '\(id)' is already registered"
         case .pluginNotFound(let id):
             "Plugin '\(id)' not found"
+        case .pluginNotConfigurable(let id):
+            "Plugin '\(id)' cannot be toggled by user"
         case .missingRequiredServices(let services):
             "Missing required services: \(services.joined(separator: ", "))"
         case .serviceNotAvailable(let service):

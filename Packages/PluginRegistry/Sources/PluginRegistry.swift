@@ -23,6 +23,7 @@
 @_exported import PluginFileLog
 @_exported import PluginLikeButton
 @_exported import PluginOpenButton
+@_exported import PluginPluginManager
 @_exported import PluginReset
 @_exported import PluginSettingGeneral
 @_exported import PluginStorage
@@ -93,6 +94,7 @@ public enum PluginRegistry {
         #endif
         plugins.append(LikeButtonPlugin.shared)
         plugins.append(OpenButtonPlugin.shared)
+        plugins.append(PluginPluginManager.shared)
         plugins.append(StoragePlugin.shared)
         plugins.append(StorePlugin.shared)
         plugins.append(SystemPlugin.shared)

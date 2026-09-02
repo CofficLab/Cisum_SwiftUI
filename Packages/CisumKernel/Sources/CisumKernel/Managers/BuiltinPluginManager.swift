@@ -251,6 +251,36 @@ public final class BuiltinPluginManager: ObservableObject {
         stateStore.clearOverride(for: pluginID)
     }
 
+    /// 运行期启用插件：写入用户覆盖 + 重建全部贡献（对齐 Lumi
+    /// `KernelCore.enablePlugin(id:)`）。
+    ///
+    /// 不可由用户切换的插件（alwaysOn / disabled）会拒绝并抛错。
+    public func enablePlugin(id: String, kernel: CisumKernelContainer) async throws {
+        guard let plugin = plugin(by: id) else {
+            throw CisumKernelError.pluginNotFound(id: id)
+        }
+        guard type(of: plugin).metadata.policy.allowUserToggle else {
+            throw CisumKernelError.pluginNotConfigurable(id: id)
+        }
+        setOverride(true, for: id)
+        rebuildAllContributions(in: kernel)
+    }
+
+    /// 运行期禁用插件：写入用户覆盖 + 重建全部贡献（对齐 Lumi
+    /// `KernelCore.disablePlugin(id:)`）。
+    ///
+    /// 不可由用户切换的插件（alwaysOn / disabled）会拒绝并抛错。
+    public func disablePlugin(id: String, kernel: CisumKernelContainer) async throws {
+        guard let plugin = plugin(by: id) else {
+            throw CisumKernelError.pluginNotFound(id: id)
+        }
+        guard type(of: plugin).metadata.policy.allowUserToggle else {
+            throw CisumKernelError.pluginNotConfigurable(id: id)
+        }
+        setOverride(false, for: id)
+        rebuildAllContributions(in: kernel)
+    }
+
     /// 解析插件的最终启用状态。
     ///
     /// - Parameters:
