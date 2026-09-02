@@ -12,7 +12,14 @@ public actor BookSettingsPlugin: SuperPlugin {
     )
 
     @MainActor
-    public func addSettingView() -> AnyView? {
-        AnyView(BookSettingsPluginView())
+    public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
+        PluginSettingNavigationItem(
+            id: "book-settings",
+            title: BookSettingsPluginInfo.title,
+            description: Self.metadata.description,
+            iconName: "book",
+            order: BookSettingsPluginInfo.order,
+            destination: AnyView(BookSettingsPluginView())
+        )
     }
 }

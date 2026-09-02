@@ -18,16 +18,6 @@ public actor ThemeSettingsPlugin: SuperPlugin {
     )
 
     @MainActor
-    public func addSettingView() -> AnyView? {
-        #if os(iOS)
-        // iOS 设置窗口不渲染导航项交互，主题设置走聚合页。
-        AnyView(ThemeSettingView())
-        #else
-        nil
-        #endif
-    }
-
-    @MainActor
     public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
         PluginSettingNavigationItem(
             id: "appearance",

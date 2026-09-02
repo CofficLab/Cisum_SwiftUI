@@ -28,13 +28,17 @@ public actor StoragePlugin: SuperPlugin, SuperLog, CisumKernelPlugin {
     }
 
     @MainActor
-    public func addSettingView() -> AnyView? {
-        if Self.verbose {
-            os_log("\(self.t)💾 加载存储设置视图")
-        }
-
-        let view = StorageSettingView()
-            .pluginStorageDependencies(StorageService.makePluginDependencies())
-        return AnyView(view)
+    public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
+        PluginSettingNavigationItem(
+            id: "storage",
+            title: String(localized: String.LocalizationValue(StoragePluginInfo.titleKey), bundle: .module),
+            description: Self.metadata.description,
+            iconName: StoragePluginInfo.iconName,
+            order: 10,
+            destination: AnyView(
+                StorageSettingView()
+                    .pluginStorageDependencies(StorageService.makePluginDependencies())
+            )
+        )
     }
 }

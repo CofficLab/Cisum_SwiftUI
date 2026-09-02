@@ -11,7 +11,14 @@ public actor StorePlugin: SuperPlugin {
     )
 
     @MainActor
-    public func addSettingView() -> AnyView? {
-        AnyView(StoreSetting())
+    public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
+        PluginSettingNavigationItem(
+            id: "store",
+            title: String(localized: String.LocalizationValue(StorePluginInfo.titleKey), bundle: .module),
+            description: Self.metadata.description,
+            iconName: StorePluginInfo.iconName,
+            order: 80,
+            destination: AnyView(StoreSetting())
+        )
     }
 }

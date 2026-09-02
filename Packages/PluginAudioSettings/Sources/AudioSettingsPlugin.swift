@@ -12,7 +12,14 @@ public actor AudioSettingsPlugin: SuperPlugin {
     )
 
     @MainActor
-    public func addSettingView() -> AnyView? {
-        AnyView(AudioSettingsPluginView())
+    public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
+        PluginSettingNavigationItem(
+            id: "audio-settings",
+            title: AudioSettingsPluginInfo.title,
+            description: Self.metadata.description,
+            iconName: "slider.horizontal.3",
+            order: AudioSettingsPluginInfo.order,
+            destination: AnyView(AudioSettingsPluginView())
+        )
     }
 }

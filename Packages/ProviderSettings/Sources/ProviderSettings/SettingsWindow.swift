@@ -6,23 +6,23 @@ import ProviderStorage
 import ProviderTheme
 import SwiftUI
 
-/// 设置窗口：聚合插件贡献的设置项，双栏布局（对齐 Lumi `ProviderSettingView`）。
+/// 设置窗口：各插件贡献的一级导航入口，双栏布局（对齐 Lumi `ProviderSettingView`）。
+///
+/// 每个插件通过 `addSettingNavigationItem()` 贡献自己的设置入口（对齐 Lumi
+/// 各插件 `SettingViewProviding.addEntries` 一个入口的范式），窗口不再聚合
+/// 「插件设置」列表。
+///
+/// - 左侧：插件 `addSettingNavigationItem` 贡献的导航入口；
+/// - 右侧：选中导航入口的内容。
 ///
 /// 本视图只依赖各 Provider 能力契约（`PluginProviding` / `AppStateProviding` /
 /// `ThemeProviding` / `StorageProviding`），不依赖内核或工厂具体类型；由宿主
 /// （CisumFactory）从内核解析各 Provider 后注入。
-///
-/// - 左侧：插件 `addSettingNavigationItem` 贡献的导航入口；另有「插件设置」
-///   聚合项承载全部 `addSettingView` 视图。
-/// - 右侧：选中导航入口的内容，或全部 `addSettingView` 视图的滚动列表。
 public struct SettingsWindow: View {
-    /// 「插件设置」聚合项的稳定 ID（优先于插件导航项）。
-    private static let allSettingsID = "cisum.settings.all"
-
     @State private var selection: String
 
     /// 插件启停变化版本号：收到 `.cisumEnabledPluginsDidChange` 时 +1，强制重建
-    /// 设置项列表（禁用某插件后其贡献的设置项会消失）。
+    /// 设置项列表（禁用某插件后其贡献的入口会消失）。
     @State private var revision = 0
 
     private let settings: (any PluginProviding)?
@@ -40,20 +40,20 @@ public struct SettingsWindow: View {
         self.appState = appState
         self.theme = theme
         self.storage = storage
-        self._selection = State(initialValue: Self.allSettingsID)
+        self._selection = State(initialValue: "")
     }
 
     public var body: some View {
         let navItems = settings?.getSettingNavigationItems() ?? []
-        let settingViews = settings?.getSettingViews() ?? []
-        let hasContent = !navItems.isEmpty || !settingViews.isEmpty
+        // 未选中时默认展示首个入口。
+        let currentSelection = selection.isEmpty ? (navItems.first?.id ?? "") : selection
 
         Group {
-            if hasContent {
+            if !navItems.isEmpty {
                 #if os(macOS)
-                macOSSplitView(settingViews: settingViews, navItems: navItems)
+                macOSSplitView(navItems: navItems, currentSelection: currentSelection)
                 #else
-                iOSList(settingViews: settingViews, navItems: navItems)
+                iOSList(navItems: navItems, currentSelection: currentSelection)
                 #endif
             } else {
                 ContentUnavailableView(
@@ -63,7 +63,7 @@ public struct SettingsWindow: View {
                 )
             }
         }
-        // 插件启停变化时重建设置项列表。
+        // 插件启停变化时重建设置入口列表。
         .id(revision)
         .onReceive(NotificationCenter.default.publisher(for: .cisumEnabledPluginsDidChange)) { _ in
             revision += 1
@@ -74,25 +74,16 @@ public struct SettingsWindow: View {
             theme: theme,
             storage: storage
         ))
-        .onAppear {
-            // 无「插件设置」聚合项且存在导航项时，默认选中首个导航入口。
-            if settingViews.isEmpty, let first = navItems.first, selection == Self.allSettingsID {
-                selection = first.id
-            }
-        }
     }
 
     #if os(macOS)
     /// macOS：双栏，侧边栏对齐 Lumi `AppSettingsSidebarContainer` 结构
     /// （顶部 app 信息 Header + 分隔线 + 入口列表，手动管理选中态）。
-    ///
-    /// 不使用 `NavigationSplitView`，避免 macOS 工具栏出现「折叠/展开侧边栏」
-    /// 按钮；侧边栏始终展示，宽度固定为 220。
     private func macOSSplitView(
-        settingViews: [AnyView],
-        navItems: [PluginSettingNavigationItem]
+        navItems: [PluginSettingNavigationItem],
+        currentSelection: String
     ) -> some View {
-        HStack(spacing: 0) {
+        NavigationSplitView {
             AppSettingsSidebarContainer(width: 220) {
                 VStack(alignment: .leading, spacing: 10) {
                     SettingsHeaderView()
@@ -101,20 +92,11 @@ public struct SettingsWindow: View {
 
                     ScrollView {
                         VStack(spacing: 6) {
-                            if !settingViews.isEmpty {
-                                AppSettingsSidebarItem(
-                                    title: "插件设置",
-                                    systemImage: "puzzlepiece.extension",
-                                    isSelected: selection == Self.allSettingsID
-                                ) {
-                                    selection = Self.allSettingsID
-                                }
-                            }
                             ForEach(navItems) { item in
                                 AppSettingsSidebarItem(
                                     title: item.title,
                                     systemImage: item.iconName,
-                                    isSelected: selection == item.id
+                                    isSelected: currentSelection == item.id
                                 ) {
                                     selection = item.id
                                 }
@@ -127,64 +109,45 @@ public struct SettingsWindow: View {
                     Spacer()
                 }
             }
-
-            Divider()
-
-            detailContent(settingViews: settingViews, navItems: navItems)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .navigationSplitViewColumnWidth(min: 200, ideal: 230)
+        } detail: {
+            detailContent(navItems: navItems, currentSelection: currentSelection)
         }
     }
     #else
-    /// iOS：设置窗口仅在 macOS 有菜单栏入口，此处只保证可编译并展示全部设置项。
+    /// iOS：各插件一级入口同样可交互选择，右侧展示选中入口内容。
     private func iOSList(
-        settingViews: [AnyView],
-        navItems: [PluginSettingNavigationItem]
+        navItems: [PluginSettingNavigationItem],
+        currentSelection: String
     ) -> some View {
         NavigationSplitView {
             List {
                 Section("设置") {
                     ForEach(navItems) { item in
-                        Label(item.title, systemImage: item.iconName)
+                        Button {
+                            selection = item.id
+                        } label: {
+                            Label(item.title, systemImage: item.iconName)
+                                .foregroundStyle(currentSelection == item.id ? Color.accentColor : Color.primary)
+                        }
                     }
                 }
             }
             .navigationSplitViewColumnWidth(min: 200, ideal: 230)
         } detail: {
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 28) {
-                    if settingViews.isEmpty {
-                        Text("暂无可用设置")
-                            .foregroundStyle(.secondary)
-                    }
-                    ForEach(Array(settingViews.enumerated()), id: \.offset) { _, view in
-                        view
-                    }
-                }
-                .padding(24)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
+            detailContent(navItems: navItems, currentSelection: currentSelection)
         }
     }
     #endif
 
     @ViewBuilder
     private func detailContent(
-        settingViews: [AnyView],
-        navItems: [PluginSettingNavigationItem]
+        navItems: [PluginSettingNavigationItem],
+        currentSelection: String
     ) -> some View {
-        if let selected = navItems.first(where: { $0.id == selection }) {
+        if let selected = navItems.first(where: { $0.id == currentSelection }) {
             selected.destination
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else if !settingViews.isEmpty {
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 28) {
-                    ForEach(Array(settingViews.enumerated()), id: \.offset) { _, view in
-                        view
-                    }
-                }
-                .padding(24)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
         } else {
             ContentUnavailableView(
                 "选择一个设置项",

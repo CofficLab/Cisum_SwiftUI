@@ -11,8 +11,15 @@ public actor SystemPlugin: SuperPlugin {
     )
 
     @MainActor
-    public func addSettingView() -> AnyView? {
-        AnyView(SystemPluginSettingView())
+    public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
+        PluginSettingNavigationItem(
+            id: "system",
+            title: ResetPluginInfo.title,
+            description: Self.metadata.description,
+            iconName: "gearshape.2",
+            order: ResetPluginInfo.order,
+            destination: AnyView(SystemPluginSettingView())
+        )
     }
 }
 
