@@ -37,7 +37,7 @@ public final class DeviceService: DeviceProviding {
         #if os(macOS)
             return NSScreen.main?.frame.size ?? .zero
         #elseif os(iOS)
-            return UIScreen.main?.bounds.size ?? .zero
+            return UIScreen.main.bounds.size ?? .zero
         #else
             return .zero
         #endif

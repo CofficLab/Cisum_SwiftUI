@@ -13,7 +13,9 @@ private enum CisumAppAssembly {
 
 @main
 struct NewApp: App {
+    #if os(macOS)
     @NSApplicationDelegateAdaptor private var appDelegate: AppDelegate
+    #endif
 
     init() {
         #if os(macOS)
@@ -26,6 +28,7 @@ struct NewApp: App {
         WindowGroup(AppBootstrap.appName, id: AppBootstrap.mainWindowID) {
             CisumFactory.makeMainWindow(configuration: CisumAppAssembly.configuration)
         }
+        #if os(macOS)
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified(showsTitle: false))
         .defaultSize(
@@ -35,6 +38,6 @@ struct NewApp: App {
         .commands {
             CisumFactory.makeCommands()
         }
-
+        #endif
     }
 }
