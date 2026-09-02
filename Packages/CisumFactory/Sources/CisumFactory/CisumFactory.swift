@@ -4,6 +4,7 @@ import Foundation
 import MagicKit
 import MagicPlayMan
 import OSLog
+import ProviderSettings
 import SwiftUI
 
 /// Cisum 应用组装工厂（Composition Root）。
@@ -123,11 +124,11 @@ public enum CisumBuilder: SuperLog {
 
     /// 创建设置窗口视图。
     ///
-    /// 设置窗口复用 `createMainKernel` 返回的主内核（幂等，与主窗口共享同一实例），
-    /// 聚合插件贡献的设置项：左侧为 `addSettingNavigationItem` 导航入口，
-    /// 右侧为选中入口内容或全部 `addSettingView` 视图。
+    /// 设置窗口复用 `createMainKernel` 返回的主内核（幂等，与主窗口共享同一实例）。
+    /// 设置窗口 UI 本体在独立的 `ProviderSettings` 包中（只依赖 Provider 契约），
+    /// 此处仅做接线：创建内核 → 解析各 Provider → 注入设置窗口。
     public static func makeSettingsWindow(configuration: CisumFactoryConfiguration) -> some View {
-        SettingsWindow(configuration: configuration)
+        SettingsWindowHost(configuration: configuration)
     }
 
     // MARK: - Commands Factory
@@ -150,6 +151,52 @@ public enum CisumBuilder: SuperLog {
                 kernel.pluginManager.rebuildAllContributions(in: kernel)
             }
         }
+    }
+}
+
+/// Factory 的设置窗口接线视图。
+///
+/// 负责创建主内核，并在内核就绪后把各 Provider 解析出来注入 `ProviderSettings.SettingsWindow`。
+/// 设置窗口 UI 本身不感知内核/工厂，与主窗口共享同一内核实例。
+public struct SettingsWindowHost: View {
+    @State private var kernel: CisumKernel?
+    @State private var initializationError: Error?
+    @State private var isInitializing = true
+    private let configuration: CisumFactoryConfiguration
+
+    public init(configuration: CisumFactoryConfiguration) {
+        self.configuration = configuration
+    }
+
+    public var body: some View {
+        Group {
+            if isInitializing {
+                KernelLoadingView()
+            } else if let initializationError {
+                KernelErrorView(error: initializationError)
+            } else if let kernel {
+                ProviderSettings.SettingsWindow(
+                    settings: kernel.plugin,
+                    appState: kernel.appState,
+                    theme: kernel.theme,
+                    storage: kernel.storage
+                )
+            }
+        }
+        .task {
+            await initializeKernel()
+        }
+    }
+
+    private func initializeKernel() async {
+        guard kernel == nil, initializationError == nil else { return }
+
+        do {
+            kernel = try await CisumFactory.createMainKernel(configuration: configuration)
+        } catch {
+            initializationError = error
+        }
+        isInitializing = false
     }
 }
 

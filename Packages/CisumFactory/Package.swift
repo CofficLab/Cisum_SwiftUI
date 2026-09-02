@@ -23,6 +23,7 @@ let package = Package(
         .package(name: "ProviderDevice", path: "../ProviderDevice"),
         .package(name: "ProviderPlayback", path: "../ProviderPlayback"),
         .package(name: "ProviderPlugin", path: "../ProviderPlugin"),
+        .package(name: "ProviderSettings", path: "../ProviderSettings"),
     ],
     targets: [
         .target(
@@ -36,6 +37,7 @@ let package = Package(
                 .product(name: "ProviderDevice", package: "ProviderDevice"),
                 .product(name: "ProviderPlayback", package: "ProviderPlayback"),
                 .product(name: "ProviderPlugin", package: "ProviderPlugin"),
+                .product(name: "ProviderSettings", package: "ProviderSettings"),
             ],
             path: "Sources/CisumFactory"
         ),
