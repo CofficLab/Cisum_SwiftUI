@@ -1,5 +1,5 @@
 import Foundation
-import CisumUI
+import CisumUIComponents
 import OSLog
 
 typealias ProgressCallback = (Double, String) -> Void

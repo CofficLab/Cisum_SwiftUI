@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public typealias ResetSettingsAction = @Sendable () async -> Void
@@ -25,8 +25,8 @@ public struct SystemSetting: View, SuperLog {
     }
 
     public var body: some View {
-        CisumUI.MagicSettingSection(title: String(localized: "App Information", bundle: .module)) {
-            CisumUI.MagicSettingRow(
+        CisumUIComponents.MagicSettingSection(title: String(localized: "App Information", bundle: .module)) {
+            CisumUIComponents.MagicSettingRow(
                 title: String(localized: "Current Version", bundle: .module),
                 description: String(localized: "App version", bundle: .module),
                 icon: "info.circle",
@@ -36,7 +36,7 @@ public struct SystemSetting: View, SuperLog {
                 }
             )
 
-            CisumUI.MagicSettingRow(
+            CisumUIComponents.MagicSettingRow(
                 title: String(localized: "Reset Storage Location", bundle: .module),
                 description: String(localized: "Clear the media storage selection", bundle: .module),
                 icon: .cisumIconReset

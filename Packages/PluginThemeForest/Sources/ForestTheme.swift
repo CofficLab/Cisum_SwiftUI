@@ -1,10 +1,11 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public struct ForestTheme: LumiAppChromeTheme {
     public init() {}
     public let identifier = "forest"
     public let displayName = String(localized: "Forest Green", bundle: .module)
+    public let compactName = "Forest Green"
     public let description = String(localized: "Natural green accents, ideal for long audiobook sessions", bundle: .module)
     public let iconName = "leaf.fill"
     public let iconColor = Color.adaptive(light: "059669", dark: "34D399")

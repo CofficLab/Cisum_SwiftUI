@@ -15,7 +15,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "CisumUI", path: "../CisumUI"),
+        .package(name: "CisumUIComponents", path: "../CisumUIComponents"),
         .package(name: "MagicKit", path: "../MagicKit"),
         .package(name: "MagicPlayMan", path: "../MagicPlayMan"),
         // MARK: - Provider Contracts（能力契约独立成包，与 Lumi 的 Provider* 体系对齐）
@@ -32,7 +32,7 @@ let package = Package(
         .target(
             name: "CisumKernel",
             dependencies: [
-                .product(name: "CisumUI", package: "CisumUI"),
+                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
                 .product(name: "ProviderAppState", package: "ProviderAppState"),
@@ -50,7 +50,7 @@ let package = Package(
             name: "CisumKernelTests",
             dependencies: [
                 "CisumKernel",
-                .product(name: "CisumUI", package: "CisumUI"),
+                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
             ],
             path: "Tests/CisumKernelTests"
         ),

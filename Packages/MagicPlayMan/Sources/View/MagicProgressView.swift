@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 /// 播放进度条视图

@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import OSLog
 import SwiftUI
 
@@ -49,8 +49,8 @@ public struct BookSettingsView: View, SuperLog {
     public var body: some View {
         Group {
             if let disk = disk {
-                CisumUI.MagicSettingSection(title: String(localized: "Audiobook Library", bundle: .module)) {
-                    CisumUI.MagicSettingRow(
+                CisumUIComponents.MagicSettingSection(title: String(localized: "Audiobook Library", bundle: .module)) {
+                    CisumUIComponents.MagicSettingRow(
                         title: String(localized: "Library Size", bundle: .module),
                         description: description,
                         icon: .cisumIconMusicLibrary
@@ -63,7 +63,7 @@ public struct BookSettingsView: View, SuperLog {
 
                     #if os(macOS)
                         if Self.shouldShowOpenLibraryAction(for: disk) {
-                            CisumUI.MagicSettingRow(
+                            CisumUIComponents.MagicSettingRow(
                                 title: String(localized: "Open Library", bundle: .module),
                                 description: String(localized: "View in Finder", bundle: .module),
                                 icon: .cisumIconShowInFinder
@@ -82,7 +82,7 @@ public struct BookSettingsView: View, SuperLog {
                         }
                     #endif
 
-                    CisumUI.MagicSettingRow(
+                    CisumUIComponents.MagicSettingRow(
                         title: String(localized: "File Count", bundle: .module),
                         description: String(localized: "Total files in library", bundle: .module),
                         icon: .cisumIconDocument
@@ -97,8 +97,8 @@ public struct BookSettingsView: View, SuperLog {
                     }
                 }
             } else {
-                CisumUI.MagicSettingSection(title: String(localized: "Audiobook Library", bundle: .module)) {
-                    CisumUI.MagicSettingRow(
+                CisumUIComponents.MagicSettingSection(title: String(localized: "Audiobook Library", bundle: .module)) {
+                    CisumUIComponents.MagicSettingRow(
                         title: String(localized: "Error", bundle: .module),
                         description: description,
                         icon: .cisumIconMusicLibrary

@@ -1,10 +1,11 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public struct AuroraTheme: LumiAppChromeTheme {
     public init() {}
     public let identifier = "aurora"
     public let displayName = String(localized: "Aurora Purple", bundle: .module)
+    public let compactName = "Aurora Purple"
     public let description = String(localized: "Low-saturation purple accents, maintaining a light spatial feel", bundle: .module)
     public let iconName = "sparkles"
     public let iconColor = Color.adaptive(light: "8B5CF6", dark: "C084FC")

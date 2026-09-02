@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 /// 设置 - 通用 插件（复刻 Lumi `PluginSettingGeneral`）。

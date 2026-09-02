@@ -1,6 +1,6 @@
 import Combine
 import Foundation
-import CisumUI
+import CisumUIComponents
 import OSLog
 import PluginAudioLike
 import SwiftData

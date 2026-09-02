@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "CisumKernel", path: "../CisumKernel"),
-        .package(name: "CisumUI", path: "../CisumUI"),
+        .package(name: "CisumUIComponents", path: "../CisumUIComponents"),
         // MARK: - Provider Contracts（设置窗口只依赖能力契约，不依赖内核/工厂）
         .package(name: "ProviderAppState", path: "../ProviderAppState"),
         .package(name: "ProviderPlugin", path: "../ProviderPlugin"),
@@ -25,7 +25,7 @@ let package = Package(
             name: "ProviderSettings",
             dependencies: [
                 .product(name: "CisumKernel", package: "CisumKernel"),
-                .product(name: "CisumUI", package: "CisumUI"),
+                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "ProviderAppState", package: "ProviderAppState"),
                 .product(name: "ProviderPlugin", package: "ProviderPlugin"),
                 .product(name: "ProviderStorage", package: "ProviderStorage"),

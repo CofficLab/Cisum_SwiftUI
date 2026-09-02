@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import Foundation
 import ProviderPlugin
 import SwiftUI
@@ -155,6 +155,7 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
                     return LumiUIThemeContribution(
                         sortKey: ThemeSortKey(pluginOrder: order, themeId: contribution.id),
                         chromeTheme: contribution.chromeTheme,
+                        editorThemeId: contribution.id,
                         uiTheme: contribution.uiTheme
                     )
                 }

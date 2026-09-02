@@ -1,7 +1,7 @@
 import Foundation
 import AVFoundation
 import SwiftUI
-import CisumUI
+import CisumUIComponents
 import CryptoKit
 
 public class AssetCache {

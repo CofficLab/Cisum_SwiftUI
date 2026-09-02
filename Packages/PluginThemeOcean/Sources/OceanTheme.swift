@@ -1,10 +1,11 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public struct OceanTheme: LumiAppChromeTheme {
     public init() {}
     public let identifier = "ocean"
     public let displayName = String(localized: "Ocean Blue", bundle: .module)
+    public let compactName = "Ocean Blue"
     public let description = String(localized: "Fresh blue-cyan accents, adapts to system light/dark mode", bundle: .module)
     public let iconName = "water.waves"
     public let iconColor = Color.adaptive(light: "0284C7", dark: "38BDF8")

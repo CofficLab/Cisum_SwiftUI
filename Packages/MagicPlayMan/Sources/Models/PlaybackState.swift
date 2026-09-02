@@ -1,6 +1,6 @@
 import Foundation
 import SwiftUI
-import CisumUI
+import CisumUIComponents
 
 public enum PlaybackState: Equatable {
     case idle

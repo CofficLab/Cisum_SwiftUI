@@ -1,5 +1,5 @@
 import CisumKernel
-import CisumUI
+import CisumUIComponents
 import Foundation
 
 /// 插件管理数据协议（对齐 Lumi `ProviderPluginManaging/PluginManaging`）。

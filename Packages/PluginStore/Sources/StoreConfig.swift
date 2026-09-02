@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public struct PurchaseInfo: Codable, Equatable, Sendable {

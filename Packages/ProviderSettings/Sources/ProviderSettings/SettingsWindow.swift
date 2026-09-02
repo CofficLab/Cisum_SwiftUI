@@ -1,5 +1,5 @@
 import CisumKernel
-import CisumUI
+import CisumUIComponents
 import ProviderAppState
 import ProviderPlugin
 import ProviderStorage

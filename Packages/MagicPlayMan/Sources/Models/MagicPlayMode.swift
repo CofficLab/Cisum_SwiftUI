@@ -1,5 +1,5 @@
 import SwiftUI
-import CisumUI
+import CisumUIComponents
 
 /// 音频播放模式枚举
 ///

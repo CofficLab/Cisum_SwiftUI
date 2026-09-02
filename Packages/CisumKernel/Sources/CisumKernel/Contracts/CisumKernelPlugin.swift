@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import Foundation
 
 /// 内核感知的插件协议。

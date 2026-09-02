@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import PluginBook
 import PluginBookScene
 import SwiftData

@@ -1,10 +1,11 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public struct NebulaTheme: LumiAppChromeTheme {
     public init() {}
     public let identifier = "nebula"
     public let displayName = String(localized: "Nebula Pink", bundle: .module)
+    public let compactName = "Nebula Pink"
     public let description = String(localized: "Soft pink accents, maintaining clean reading layers", bundle: .module)
     public let iconName = "cloud.moon.fill"
     public let iconColor = Color.adaptive(light: "C026D3", dark: "F0ABFC")

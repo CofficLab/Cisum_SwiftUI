@@ -1,7 +1,7 @@
 import Foundation
 import OSLog
 import SwiftData
-import CisumUI
+import CisumUIComponents
 import CisumDeviceData
 
 

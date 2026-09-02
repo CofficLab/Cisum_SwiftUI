@@ -15,13 +15,13 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI")
+        .package(path: "../../Packages/CisumUIComponents")
     ],
     targets: [
         .target(
             name: "PluginVideo",
             dependencies: [
-                .product(name: "CisumUI", package: "CisumUI")
+                .product(name: "CisumUIComponents", package: "CisumUIComponents")
             ],
             path: "Sources",
             resources: [

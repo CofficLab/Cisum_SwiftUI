@@ -1,4 +1,5 @@
 {
+  "originHash" : "c7a1bcf76e558f09a859515ecfd0a600d3e0002c52f7e9df4e6856288a224010",
   "pins" : [
     {
       "identity" : "id3tageditor",
@@ -7,6 +8,15 @@
       "state" : {
         "revision" : "3ccc31eafae0ded1fea8c9acd5e7ef7dfdbf1e8e",
         "version" : "4.6.0"
+      }
+    },
+    {
+      "identity" : "lumiui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CofficLab/LumiUI",
+      "state" : {
+        "revision" : "8f7ece852097b6617deb7837768ca08718a93d2a",
+        "version" : "1.0.3"
       }
     },
     {
@@ -28,5 +38,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

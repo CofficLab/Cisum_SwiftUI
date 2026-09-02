@@ -15,14 +15,14 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../CisumUI"),
+        .package(path: "../CisumUIComponents"),
         .package(path: "../PluginAudio")
     ],
     targets: [
         .target(
             name: "PluginAudioSettings",
             dependencies: [
-                "CisumUI",
+                "CisumUIComponents",
                 .product(name: "PluginAudio", package: "PluginAudio")
             ],
             path: "Sources",

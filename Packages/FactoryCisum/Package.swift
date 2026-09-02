@@ -16,7 +16,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "CisumKernel", path: "../CisumKernel"),
-        .package(name: "CisumUI", path: "../CisumUI"),
+        .package(name: "CisumUIComponents", path: "../CisumUIComponents"),
         .package(name: "MagicKit", path: "../MagicKit"),
         .package(name: "MagicPlayMan", path: "../MagicPlayMan"),
         .package(name: "ProviderCloud", path: "../ProviderCloud"),
@@ -77,7 +77,7 @@ let package = Package(
             name: "FactoryCisum",
             dependencies: [
                 .product(name: "CisumKernel", package: "CisumKernel"),
-                .product(name: "CisumUI", package: "CisumUI"),
+                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
                 .product(name: "ProviderCloud", package: "ProviderCloud"),

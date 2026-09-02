@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public actor ThemeSunsetPlugin: SuperPlugin {
@@ -12,6 +12,10 @@ public actor ThemeSunsetPlugin: SuperPlugin {
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: SunsetTheme())]
+        [LumiUIThemeContribution(
+        sortKey: ThemeSortKey(pluginOrder: 140, themeId: SunsetTheme().identifier),
+        chromeTheme: SunsetTheme(),
+        editorThemeId: SunsetTheme().identifier
+    )]
     }
 }

@@ -1,5 +1,5 @@
 import Foundation
-import CisumUI
+import CisumUIComponents
 
 public struct BookLikeItem: Hashable, Identifiable {
     public let url: URL

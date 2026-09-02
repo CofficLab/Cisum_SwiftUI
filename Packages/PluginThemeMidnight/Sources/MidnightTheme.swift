@@ -1,10 +1,11 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public struct MidnightTheme: LumiAppChromeTheme {
     public init() {}
     public let identifier = "midnight"
     public let displayName = String(localized: "Midnight Blue", bundle: .module)
+    public let compactName = "Midnight Blue"
     public let description = String(localized: "Deep gray with blue accents, ideal for night listening", bundle: .module)
     public let iconName = "moon.stars.fill"
     public let iconColor = Color.adaptive(light: "2563EB", dark: "60A5FA")

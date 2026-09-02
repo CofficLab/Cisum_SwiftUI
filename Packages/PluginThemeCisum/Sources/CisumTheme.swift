@@ -1,10 +1,11 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public struct CisumTheme: LumiAppChromeTheme {
     public init() {}
     public let identifier = "cisum"
     public let displayName = String(localized: "Cisum", bundle: .module)
+    public let compactName = "Cisum"
     public let description = String(localized: "Original sunset gradient color scheme", bundle: .module)
     public let iconName = "sunset.fill"
     public let iconColor = Color.adaptive(light: "FF512F", dark: "FF8A4C")

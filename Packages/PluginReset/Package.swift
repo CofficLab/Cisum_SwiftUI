@@ -15,14 +15,14 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../CisumUI"),
+        .package(path: "../CisumUIComponents"),
         .package(path: "../ProviderStorage"),
     ],
     targets: [
         .target(
             name: "PluginReset",
             dependencies: [
-                "CisumUI",
+                "CisumUIComponents",
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
             path: "Sources",

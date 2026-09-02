@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import PluginAudioScene
 import SwiftUI
 

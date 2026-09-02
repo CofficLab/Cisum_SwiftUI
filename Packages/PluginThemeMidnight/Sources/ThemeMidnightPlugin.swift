@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public actor ThemeMidnightPlugin: SuperPlugin {
@@ -12,6 +12,10 @@ public actor ThemeMidnightPlugin: SuperPlugin {
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: MidnightTheme())]
+        [LumiUIThemeContribution(
+        sortKey: ThemeSortKey(pluginOrder: 160, themeId: MidnightTheme().identifier),
+        chromeTheme: MidnightTheme(),
+        editorThemeId: MidnightTheme().identifier
+    )]
     }
 }

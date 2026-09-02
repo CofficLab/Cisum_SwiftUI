@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public actor ThemeOceanPlugin: SuperPlugin {
@@ -12,6 +12,10 @@ public actor ThemeOceanPlugin: SuperPlugin {
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: OceanTheme())]
+        [LumiUIThemeContribution(
+        sortKey: ThemeSortKey(pluginOrder: 190, themeId: OceanTheme().identifier),
+        chromeTheme: OceanTheme(),
+        editorThemeId: OceanTheme().identifier
+    )]
     }
 }

@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import OSLog
 import StoreKit
 import SwiftUI

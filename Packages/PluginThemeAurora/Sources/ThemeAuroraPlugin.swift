@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public actor ThemeAuroraPlugin: SuperPlugin {
@@ -12,6 +12,10 @@ public actor ThemeAuroraPlugin: SuperPlugin {
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: AuroraTheme())]
+        [LumiUIThemeContribution(
+        sortKey: ThemeSortKey(pluginOrder: 120, themeId: AuroraTheme().identifier),
+        chromeTheme: AuroraTheme(),
+        editorThemeId: AuroraTheme().identifier
+    )]
     }
 }

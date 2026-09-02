@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public actor ThemeNebulaPlugin: SuperPlugin {
@@ -12,6 +12,10 @@ public actor ThemeNebulaPlugin: SuperPlugin {
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: NebulaTheme())]
+        [LumiUIThemeContribution(
+        sortKey: ThemeSortKey(pluginOrder: 180, themeId: NebulaTheme().identifier),
+        chromeTheme: NebulaTheme(),
+        editorThemeId: NebulaTheme().identifier
+    )]
     }
 }

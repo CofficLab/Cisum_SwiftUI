@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public typealias ThemeSettingsSelectThemeAction = @MainActor (String) -> Void

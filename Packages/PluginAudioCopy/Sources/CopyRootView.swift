@@ -1,5 +1,5 @@
 #if os(macOS)
-    import CisumUI
+    import CisumUIComponents
     import MagicAlert
     import MagicKit
     import OSLog

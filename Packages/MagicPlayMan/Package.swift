@@ -16,13 +16,13 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../CisumUI"),
+        .package(path: "../CisumUIComponents"),
     ],
     targets: [
         .target(
             name: "MagicPlayMan",
             dependencies: [
-                .product(name: "CisumUI", package: "CisumUI"),
+                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
             ],
             path: "Sources",
             resources: [

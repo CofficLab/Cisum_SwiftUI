@@ -1,10 +1,11 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public struct StudioBlueTheme: LumiAppChromeTheme {
     public init() {}
     public let identifier = "studio-blue"
     public let displayName = String(localized: "Studio Blue", bundle: .module)
+    public let compactName = "Studio Blue"
     public let description = String(localized: "Blue-gray studio texture, ideal for focused listening", bundle: .module)
     public let iconName = "waveform"
     public let iconColor = Color.adaptive(light: "007AFF", dark: "5AC8FA")

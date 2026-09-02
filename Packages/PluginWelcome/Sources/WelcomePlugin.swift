@@ -1,5 +1,5 @@
 import CisumKernel
-import CisumUI
+import CisumUIComponents
 import ProviderStorage
 import SwiftUI
 

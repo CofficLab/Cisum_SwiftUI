@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import Foundation
 
 public actor FileLogPlugin: SuperPlugin {

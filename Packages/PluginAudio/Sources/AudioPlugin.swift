@@ -1,5 +1,5 @@
 import CisumKernel
-import CisumUI
+import CisumUIComponents
 import Foundation
 import PluginAudioLike
 import ProviderStorage

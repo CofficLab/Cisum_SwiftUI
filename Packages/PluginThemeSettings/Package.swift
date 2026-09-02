@@ -15,12 +15,12 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../CisumUI")
+        .package(path: "../CisumUIComponents")
     ],
     targets: [
         .target(
             name: "PluginThemeSettings",
-            dependencies: ["CisumUI"],
+            dependencies: ["CisumUIComponents"],
             path: "Sources",
             resources: [
                 .process("Localizable.xcstrings")

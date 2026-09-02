@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public actor ThemeStudioBluePlugin: SuperPlugin {
@@ -12,6 +12,10 @@ public actor ThemeStudioBluePlugin: SuperPlugin {
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: StudioBlueTheme())]
+        [LumiUIThemeContribution(
+        sortKey: ThemeSortKey(pluginOrder: 130, themeId: StudioBlueTheme().identifier),
+        chromeTheme: StudioBlueTheme(),
+        editorThemeId: StudioBlueTheme().identifier
+    )]
     }
 }

@@ -1,10 +1,11 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public struct MonoTheme: LumiAppChromeTheme {
     public init() {}
     public let identifier = "mono"
     public let displayName = String(localized: "Mono High Contrast", bundle: .module)
+    public let compactName = "Mono High Contrast"
     public let description = String(localized: "Minimal grayscale, emphasizing content itself", bundle: .module)
     public let iconName = "circle.lefthalf.filled"
     public let iconColor = Color.adaptive(light: "111827", dark: "FFFFFF")

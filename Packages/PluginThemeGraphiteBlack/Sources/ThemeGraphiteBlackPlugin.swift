@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public actor ThemeGraphiteBlackPlugin: SuperPlugin {
@@ -12,6 +12,10 @@ public actor ThemeGraphiteBlackPlugin: SuperPlugin {
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: GraphiteBlackTheme())]
+        [LumiUIThemeContribution(
+        sortKey: ThemeSortKey(pluginOrder: 155, themeId: GraphiteBlackTheme().identifier),
+        chromeTheme: GraphiteBlackTheme(),
+        editorThemeId: GraphiteBlackTheme().identifier
+    )]
     }
 }

@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 struct AudioDownloadPluginRootView<Content>: View where Content: View {

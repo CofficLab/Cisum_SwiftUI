@@ -1,5 +1,5 @@
 import Combine
-import CisumUI
+import CisumUIComponents
 import Foundation
 import SwiftUI
 

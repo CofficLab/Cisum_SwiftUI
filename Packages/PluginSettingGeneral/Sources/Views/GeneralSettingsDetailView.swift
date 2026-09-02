@@ -1,7 +1,7 @@
 #if canImport(AppKit)
 import AppKit
 #endif
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 /// 通用设置详情视图 —— 设置窗口「通用」标签页。

@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 
 public struct Migrate: SuperLog {
     public static let emoji = "🐯"

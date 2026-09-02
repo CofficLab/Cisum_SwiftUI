@@ -1,6 +1,6 @@
 import AVKit
 import SwiftUI
-import CisumUI
+import CisumUIComponents
 
 struct VideoPlayerView: View {
     let player: AVPlayer

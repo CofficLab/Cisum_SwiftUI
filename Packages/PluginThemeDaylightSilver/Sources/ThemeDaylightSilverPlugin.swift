@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public actor ThemeDaylightSilverPlugin: SuperPlugin {
@@ -12,6 +12,10 @@ public actor ThemeDaylightSilverPlugin: SuperPlugin {
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: DaylightSilverTheme())]
+        [LumiUIThemeContribution(
+        sortKey: ThemeSortKey(pluginOrder: 110, themeId: DaylightSilverTheme().identifier),
+        chromeTheme: DaylightSilverTheme(),
+        editorThemeId: DaylightSilverTheme().identifier
+    )]
     }
 }

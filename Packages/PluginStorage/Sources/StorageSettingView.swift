@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import OSLog
 import SwiftUI
 
@@ -16,9 +16,9 @@ public struct StorageSettingView: View, SuperLog {
     }
 
     public var body: some View {
-        CisumUI.MagicSettingSection(title: String(localized: "Media Storage Location", bundle: .module)) {
+        CisumUIComponents.MagicSettingSection(title: String(localized: "Media Storage Location", bundle: .module)) {
             VStack(spacing: 0) {
-                CisumUI.MagicSettingRow(
+                CisumUIComponents.MagicSettingRow(
                     title: String(localized: "iCloud Drive", bundle: .module),
                     description: isICloudAvailable
                         ? String(localized: "Store media files in iCloud Drive", bundle: .module)
@@ -38,7 +38,7 @@ public struct StorageSettingView: View, SuperLog {
                 }
                 .opacity(isICloudAvailable ? 1 : 0.5)
 
-                CisumUI.MagicSettingRow(
+                CisumUIComponents.MagicSettingRow(
                     title: String(localized: "Local", bundle: .module),
                     description: isLocalStorageAvailable
                         ? String(localized: "Store within app, data will be lost if app is deleted", bundle: .module)

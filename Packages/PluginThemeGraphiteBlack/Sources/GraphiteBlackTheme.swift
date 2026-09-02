@@ -1,10 +1,11 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public struct GraphiteBlackTheme: LumiAppChromeTheme {
     public init() {}
     public let identifier = "graphite-black"
     public let displayName = String(localized: "Graphite Black", bundle: .module)
+    public let compactName = "Graphite Black"
     public let description = String(localized: "Neutral black-gray layers, ideal for extended night listening", bundle: .module)
     public let iconName = "circle.lefthalf.filled"
     public let iconColor = Color.adaptive(light: "3A3A3C", dark: "D1D1D6")

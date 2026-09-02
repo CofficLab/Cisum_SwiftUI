@@ -1,5 +1,5 @@
 import Foundation
-import CisumUI
+import CisumUIComponents
 
 enum AudioDeletePlaybackPolicy {
     static func deletedURLsContainCurrentAudio(currentURL: URL?, deletedURLs: [URL]) -> Bool {

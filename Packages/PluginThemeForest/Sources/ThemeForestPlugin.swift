@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public actor ThemeForestPlugin: SuperPlugin {
@@ -12,6 +12,10 @@ public actor ThemeForestPlugin: SuperPlugin {
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: ForestTheme())]
+        [LumiUIThemeContribution(
+        sortKey: ThemeSortKey(pluginOrder: 150, themeId: ForestTheme().identifier),
+        chromeTheme: ForestTheme(),
+        editorThemeId: ForestTheme().identifier
+    )]
     }
 }

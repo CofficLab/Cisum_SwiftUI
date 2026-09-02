@@ -15,7 +15,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../CisumUI"),
+        .package(path: "../CisumUIComponents"),
         .package(path: "../CisumKernel"),
         .package(path: "../ProviderStorage"),
     ],
@@ -23,7 +23,7 @@ let package = Package(
         .target(
             name: "PluginBook",
             dependencies: [
-                .product(name: "CisumUI", package: "CisumUI"),
+                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "CisumKernel", package: "CisumKernel"),
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],

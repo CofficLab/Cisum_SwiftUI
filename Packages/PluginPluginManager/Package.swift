@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "CisumKernel", path: "../CisumKernel"),
-        .package(name: "CisumUI", path: "../CisumUI"),
+        .package(name: "CisumUIComponents", path: "../CisumUIComponents"),
         .package(name: "ProviderPluginManaging", path: "../ProviderPluginManaging"),
     ],
     targets: [
@@ -21,7 +21,7 @@ let package = Package(
             name: "PluginPluginManager",
             dependencies: [
                 .product(name: "CisumKernel", package: "CisumKernel"),
-                .product(name: "CisumUI", package: "CisumUI"),
+                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "ProviderPluginManaging", package: "ProviderPluginManaging"),
             ],
             path: "Sources/PluginPluginManager"

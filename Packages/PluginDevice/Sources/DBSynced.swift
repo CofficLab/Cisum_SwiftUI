@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 import SwiftData
 import SwiftUI
-import CisumUI
+import CisumUIComponents
 
 
 public actor DBSynced: ModelActor, ObservableObject, SuperLog {

@@ -1,4 +1,4 @@
-import CisumUI
+import CisumUIComponents
 import SwiftUI
 
 public actor ThemePaperPlugin: SuperPlugin {
@@ -12,6 +12,10 @@ public actor ThemePaperPlugin: SuperPlugin {
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: PaperTheme())]
+        [LumiUIThemeContribution(
+        sortKey: ThemeSortKey(pluginOrder: 200, themeId: PaperTheme().identifier),
+        chromeTheme: PaperTheme(),
+        editorThemeId: PaperTheme().identifier
+    )]
     }
 }
