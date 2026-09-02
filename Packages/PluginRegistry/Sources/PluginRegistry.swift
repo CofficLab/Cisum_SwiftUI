@@ -24,6 +24,7 @@
 @_exported import PluginLikeButton
 @_exported import PluginOpenButton
 @_exported import PluginReset
+@_exported import PluginSettingGeneral
 @_exported import PluginStorage
 @_exported import PluginStore
 @_exported import PluginThemeAurora
@@ -95,6 +96,7 @@ public enum PluginRegistry {
         plugins.append(StoragePlugin.shared)
         plugins.append(StorePlugin.shared)
         plugins.append(SystemPlugin.shared)
+        plugins.append(SettingGeneralPlugin.shared)
         plugins.append(ThemeAuroraPlugin.shared)
         plugins.append(ThemeCisumPlugin.shared)
         plugins.append(ThemeDaylightSilverPlugin.shared)
