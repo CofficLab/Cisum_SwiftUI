@@ -22,8 +22,8 @@ public protocol PluginProviding: AnyObject, ObservableObject {
     /// 获取所有插件提供的 status 视图。
     func getStatusViews() -> [AnyView]
 
-    /// 获取所有插件提供的 state 视图（与当前场景相关）。
-    func getStateViews(currentSceneName: String?) -> [AnyView]
+    /// 获取所有插件提供的 state 视图。
+    func getStateViews() -> [AnyView]
 
     /// 获取所有场景插件提供的海报视图。
     func getPosterViews() -> [AnyView]

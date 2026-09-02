@@ -100,9 +100,9 @@ public protocol SuperPlugin: Actor {
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View
     @MainActor func addGuideView() -> AnyView?
     @MainActor func completeGuidePage() -> Bool
-    @MainActor func addStateView(currentSceneName: String?) -> AnyView?
+    @MainActor func addStateView() -> AnyView?
     @MainActor func addPosterView() -> AnyView?
-    @MainActor func addTabView(reason: String, currentSceneName: String?, demoMode: Bool) -> (view: AnyView, label: String)?
+    @MainActor func addTabView(reason: String, demoMode: Bool) -> (view: AnyView, label: String)?
     @MainActor func addSettingView() -> AnyView?
     @MainActor func addSettingNavigationItem() -> PluginSettingNavigationItem?
     @MainActor func addStatusView() -> AnyView?
@@ -140,9 +140,9 @@ public extension SuperPlugin {
     nonisolated func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View { nil }
     nonisolated func addGuideView() -> AnyView? { nil }
     nonisolated func completeGuidePage() -> Bool { true }
-    nonisolated func addStateView(currentSceneName: String?) -> AnyView? { nil }
+    nonisolated func addStateView() -> AnyView? { nil }
     nonisolated func addPosterView() -> AnyView? { nil }
-    @MainActor func addTabView(reason: String, currentSceneName: String?, demoMode: Bool = false) -> (view: AnyView, label: String)? { nil }
+    @MainActor func addTabView(reason: String, demoMode: Bool = false) -> (view: AnyView, label: String)? { nil }
     nonisolated func addSettingView() -> AnyView? { nil }
     nonisolated func addSettingNavigationItem() -> PluginSettingNavigationItem? { nil }
     nonisolated func addStatusView() -> AnyView? { nil }

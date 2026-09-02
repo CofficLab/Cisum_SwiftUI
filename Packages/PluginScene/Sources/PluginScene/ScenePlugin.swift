@@ -54,6 +54,7 @@ public final class SceneService: ObservableObject, SceneProviding {
 
     private let manager: BuiltinPluginManager
     private let persistenceURL: URL?
+    private var observers: [WeakObserver] = []
 
     @Published public private(set) var currentSceneName: String?
 
@@ -82,29 +83,56 @@ public final class SceneService: ObservableObject, SceneProviding {
 
         try persistScene(sceneName)
         currentSceneName = sceneName
+        notify(.selectionChanged(sceneName: sceneName))
     }
 
     /// 从磁盘恢复当前场景；无记录或记录失效时回落到首个场景。
     public func restoreCurrentScene() {
         let names = sceneNames
         guard !names.isEmpty else {
-            currentSceneName = nil
+            updateCurrentScene(nil)
             return
         }
 
         let saved = loadPersistedSceneName() ?? loadLegacySceneName()
         if let saved, names.contains(saved) {
-            currentSceneName = saved
+            updateCurrentScene(saved)
             return
         }
 
         let first = names[0]
-        currentSceneName = first
+        updateCurrentScene(first)
         try? persistScene(first)
     }
 
     public func plugin(for sceneName: String) -> (any SuperPlugin)? {
         manager.enabledPlugins.first { $0.addSceneItem() == sceneName }
+    }
+
+    @discardableResult
+    public func addObserver(
+        _ callback: @escaping (SceneProvidingEvent) -> Void
+    ) -> any SceneProvidingObserverHandle {
+        let observer = Observer(owner: self, callback: callback)
+        observers.append(WeakObserver(observer))
+        return observer
+    }
+
+    private func updateCurrentScene(_ sceneName: String?) {
+        guard currentSceneName != sceneName else { return }
+        currentSceneName = sceneName
+        notify(.selectionChanged(sceneName: sceneName))
+    }
+
+    private func remove(_ observer: Observer) {
+        observers.removeAll { $0.observer === observer }
+    }
+
+    private func notify(_ event: SceneProvidingEvent) {
+        observers.removeAll { $0.observer == nil }
+        for observer in observers {
+            observer.observer?.invoke(event)
+        }
     }
 
     private static func defaultPersistenceURL() -> URL? {
@@ -146,6 +174,36 @@ public final class SceneService: ObservableObject, SceneProviding {
         UserDefaults.standard.set(sceneName, forKey: Self.legacySceneKey)
         if let pluginID {
             UserDefaults.standard.set(pluginID, forKey: Self.legacyPluginIDKey)
+        }
+    }
+
+    private final class Observer: SceneProvidingObserverHandle {
+        private weak var owner: SceneService?
+        private let callback: (SceneProvidingEvent) -> Void
+        private var cancelled = false
+
+        init(owner: SceneService, callback: @escaping (SceneProvidingEvent) -> Void) {
+            self.owner = owner
+            self.callback = callback
+        }
+
+        func cancel() {
+            guard !cancelled else { return }
+            cancelled = true
+            owner?.remove(self)
+        }
+
+        func invoke(_ event: SceneProvidingEvent) {
+            guard !cancelled else { return }
+            callback(event)
+        }
+    }
+
+    private final class WeakObserver {
+        weak var observer: Observer?
+
+        init(_ observer: Observer) {
+            self.observer = observer
         }
     }
 }

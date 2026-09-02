@@ -13,7 +13,7 @@ import SwiftUI
         )
 
         @MainActor
-        public func addStateView(currentSceneName: String?) -> AnyView? {
+        public func addStateView() -> AnyView? {
             configureService()
             return AudioCopyService.getStateView()
         }

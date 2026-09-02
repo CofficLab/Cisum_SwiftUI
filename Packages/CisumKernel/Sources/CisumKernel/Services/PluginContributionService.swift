@@ -45,8 +45,8 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
         return value
     }
 
-    public func getStateViews(currentSceneName: String?) -> [AnyView] {
-        manager.enabledPlugins.compactMap { $0.addStateView(currentSceneName: currentSceneName) }
+    public func getStateViews() -> [AnyView] {
+        manager.enabledPlugins.compactMap { $0.addStateView() }
     }
 
     public func getPosterViews() -> [AnyView] {
@@ -85,7 +85,6 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
         manager.enabledPlugins.compactMap { plugin in
             plugin.addTabView(
                 reason: reason,
-                currentSceneName: scene?.currentSceneName,
                 demoMode: demoMode
             )
         }

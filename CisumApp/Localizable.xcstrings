@@ -1065,6 +1065,9 @@
         }
       }
     },
+    "设置" : {
+
+    },
     "适配 iOS" : {
       "extractionState" : "stale",
       "localizations" : {
