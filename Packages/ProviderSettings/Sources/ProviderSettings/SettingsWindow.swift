@@ -85,11 +85,14 @@ public struct SettingsWindow: View {
     #if os(macOS)
     /// macOS：双栏，侧边栏对齐 Lumi `AppSettingsSidebarContainer` 结构
     /// （顶部 app 信息 Header + 分隔线 + 入口列表，手动管理选中态）。
+    ///
+    /// 不使用 `NavigationSplitView`，避免 macOS 工具栏出现「折叠/展开侧边栏」
+    /// 按钮；侧边栏始终展示，宽度固定为 220。
     private func macOSSplitView(
         settingViews: [AnyView],
         navItems: [PluginSettingNavigationItem]
     ) -> some View {
-        NavigationSplitView {
+        HStack(spacing: 0) {
             AppSettingsSidebarContainer(width: 220) {
                 VStack(alignment: .leading, spacing: 10) {
                     SettingsHeaderView()
@@ -124,9 +127,11 @@ public struct SettingsWindow: View {
                     Spacer()
                 }
             }
-            .navigationSplitViewColumnWidth(min: 200, ideal: 230)
-        } detail: {
+
+            Divider()
+
             detailContent(settingViews: settingViews, navItems: navItems)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
     #else
