@@ -21,7 +21,7 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
         SheetContainer {
             VStack(spacing: 16) {
                 // Description text.
-                AppSheetPanel {
+                AppCard(style: .subtle, cornerRadius: 8, showShadow: false) {
                     VStack(spacing: 16) {
                         AppSheetIconHeader(systemImage: "icloud.and.arrow.down.fill", title: localized("Restore Purchase"), tint: .blue)
                         VStack(alignment: .leading, spacing: 12) {
@@ -83,9 +83,11 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
 
     @ViewBuilder
     private var restoreButton: some View {
-        AppSheetActionButton(
-            title: restoreState == .failed ? localized("Retry Restore") : localized("Restore Purchase"),
-            systemImage: "arrow.clockwise"
+        AppButton(
+            restoreState == .failed ? localized("Retry Restore") : localized("Restore Purchase"),
+            systemImage: "arrow.clockwise",
+            style: .primary,
+            fillsWidth: true
         ) {
             restorePurchase()
         }
@@ -95,11 +97,11 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
     @ViewBuilder
     private var successButtons: some View {
         HStack(spacing: 12) {
-            AppSheetActionButton(title: localized("Done"), systemImage: "checkmark.circle.fill") {
+            AppButton(localized("Done"), systemImage: "checkmark.circle.fill", style: .primary, fillsWidth: true) {
                 dismiss()
             }
 
-            AppSheetActionButton(title: localized("Try Again"), systemImage: "arrow.clockwise") {
+            AppButton(localized("Try Again"), systemImage: "arrow.clockwise", style: .primary, fillsWidth: true) {
                 restoreState = .idle
                 restorePurchase()
             }

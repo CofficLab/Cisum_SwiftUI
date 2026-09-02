@@ -49,8 +49,8 @@ public struct BookSettingsView: View, SuperLog {
     public var body: some View {
         Group {
             if let disk = disk {
-                CisumUIComponents.MagicSettingSection(title: String(localized: "Audiobook Library", bundle: .module)) {
-                    CisumUIComponents.MagicSettingRow(
+                AppSettingSection(title: String(localized: "Audiobook Library", bundle: .module)) {
+                    AppSettingRow(
                         title: String(localized: "Library Size", bundle: .module),
                         description: description,
                         icon: .cisumIconMusicLibrary
@@ -63,7 +63,7 @@ public struct BookSettingsView: View, SuperLog {
 
                     #if os(macOS)
                         if Self.shouldShowOpenLibraryAction(for: disk) {
-                            CisumUIComponents.MagicSettingRow(
+                            AppSettingRow(
                                 title: String(localized: "Open Library", bundle: .module),
                                 description: String(localized: "View in Finder", bundle: .module),
                                 icon: .cisumIconShowInFinder
@@ -82,7 +82,7 @@ public struct BookSettingsView: View, SuperLog {
                         }
                     #endif
 
-                    CisumUIComponents.MagicSettingRow(
+                    AppSettingRow(
                         title: String(localized: "File Count", bundle: .module),
                         description: String(localized: "Total files in library", bundle: .module),
                         icon: .cisumIconDocument
@@ -97,8 +97,8 @@ public struct BookSettingsView: View, SuperLog {
                     }
                 }
             } else {
-                CisumUIComponents.MagicSettingSection(title: String(localized: "Audiobook Library", bundle: .module)) {
-                    CisumUIComponents.MagicSettingRow(
+                AppSettingSection(title: String(localized: "Audiobook Library", bundle: .module)) {
+                    AppSettingRow(
                         title: String(localized: "Error", bundle: .module),
                         description: description,
                         icon: .cisumIconMusicLibrary

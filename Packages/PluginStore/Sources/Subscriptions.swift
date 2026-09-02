@@ -158,9 +158,11 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                 message: error?.localizedDescription ?? String(localized: "Please check your network and try again.", bundle: .module)
             )
 
-            AppSheetActionButton(
-                title: String(localized: "Try Again", bundle: .module),
-                systemImage: "arrow.clockwise"
+            AppButton(
+                String(localized: "Try Again", bundle: .module),
+                systemImage: "arrow.clockwise",
+                style: .primary,
+                fillsWidth: true
             ) {
                 getProducts("Retry after load failure")
             }

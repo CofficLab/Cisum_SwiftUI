@@ -25,8 +25,8 @@ public struct SystemSetting: View, SuperLog {
     }
 
     public var body: some View {
-        CisumUIComponents.MagicSettingSection(title: String(localized: "App Information", bundle: .module)) {
-            CisumUIComponents.MagicSettingRow(
+        AppSettingSection(title: String(localized: "App Information", bundle: .module)) {
+            AppSettingRow(
                 title: String(localized: "Current Version", bundle: .module),
                 description: String(localized: "App version", bundle: .module),
                 icon: "info.circle",
@@ -36,7 +36,7 @@ public struct SystemSetting: View, SuperLog {
                 }
             )
 
-            CisumUIComponents.MagicSettingRow(
+            AppSettingRow(
                 title: String(localized: "Reset Storage Location", bundle: .module),
                 description: String(localized: "Clear the media storage selection", bundle: .module),
                 icon: .cisumIconReset

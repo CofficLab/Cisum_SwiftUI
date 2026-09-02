@@ -10,7 +10,7 @@ struct PurchaseView: View, SuperLog {
     var body: some View {
         SheetContainer {
             VStack {
-                AppSheetPanel {
+                AppCard(style: .subtle, cornerRadius: 8, showShadow: false) {
                     VStack(spacing: 16) {
                         AppSheetIconHeader(systemImage: "giftcard.fill", title: nil as String?, tint: .blue)
                     // 版本对比

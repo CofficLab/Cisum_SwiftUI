@@ -24,7 +24,7 @@ public struct ThemeSettingsRootView: View {
     }
 
     public var body: some View {
-        MagicSettingSection(title: String(localized: "Theme Style", bundle: .module)) {
+        AppSettingSection(title: String(localized: "Theme Style", bundle: .module)) {
             Picker("", selection: $appearanceFilter) {
                 ForEach(ThemeAppearanceFilter.allCases) { filter in
                     Text(filter.title).tag(filter)
@@ -34,7 +34,7 @@ public struct ThemeSettingsRootView: View {
             .labelsHidden()
 
             if filteredThemes.isEmpty {
-                MagicSettingRow(
+                AppSettingRow(
                     title: String(localized: "No themes in this category", bundle: .module),
                     description: nil,
                     icon: "line.3.horizontal.decrease.circle",
@@ -46,7 +46,7 @@ public struct ThemeSettingsRootView: View {
 
             ForEach(filteredThemes) { theme in
                 let isSelected = currentThemeId == theme.id
-                MagicSettingRow(
+                AppSettingRow(
                     title: theme.displayName,
                     description: theme.description,
                     icon: theme.iconName,

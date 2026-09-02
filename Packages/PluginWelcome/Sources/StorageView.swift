@@ -23,12 +23,12 @@ public struct StorageView: View {
     }
 
     public var body: some View {
-        CisumUIComponents.MagicSettingSection(
+        AppSettingSection(
             title: String(localized: "Media Storage Location", bundle: .module),
             titleAlignment: .center
         ) {
             VStack(spacing: 12) {
-                CisumUIComponents.MagicSettingRow(
+                AppSettingRow(
                     title: String(localized: "iCloud Drive", bundle: .module),
                     description: String(localized: "Files stored in iCloud\nAccessible on other devices\nEnsure sufficient iCloud storage", bundle: .module),
                     icon: .cisumIconCloud,
@@ -67,7 +67,7 @@ public struct StorageView: View {
 
                 Divider()
 
-                CisumUIComponents.MagicSettingRow(
+                AppSettingRow(
                     title: String(localized: "App Local Storage", bundle: .module),
                     description: String(localized: "Stored within the app, data will be lost if app is deleted", bundle: .module),
                     icon: .cisumIconFolder,

@@ -31,9 +31,9 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
     public init() {}
 
     public var body: some View {
-        CisumUIComponents.MagicSettingSection(title: String(localized: "Subscription Information", bundle: .module), content: {
+        AppSettingSection(title: String(localized: "Subscription Information", bundle: .module), content: {
             // Current version
-            CisumUIComponents.MagicSettingRow(title: String(localized: "Current Version", bundle: .module), description: String(localized: "Version you are using", bundle: .module), icon: "star.fill", content: {
+            AppSettingRow(title: String(localized: "Current Version", bundle: .module), description: String(localized: "Version you are using", bundle: .module), icon: "star.fill", content: {
                 HStack {
                     Text(tierDisplayName)
                         .font(.footnote)
@@ -41,7 +41,7 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
             })
 
             // Subscription status
-            CisumUIComponents.MagicSettingRow(title: String(localized: "Subscription Status", bundle: .module), description: statusDescription, icon: "info.circle", content: {
+            AppSettingRow(title: String(localized: "Subscription Status", bundle: .module), description: statusDescription, icon: "info.circle", content: {
                 HStack {
                     if purchaseInfo.isProOrHigher {
                         if purchaseInfo.isExpired {
@@ -63,7 +63,7 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
 
             // Expiration date (if has subscription)
             if let expiresAt = purchaseInfo.expiresAt {
-                CisumUIComponents.MagicSettingRow(title: String(localized: "Expiration Date", bundle: .module), description: String(localized: "Subscription expiration date", bundle: .module), icon: "calendar", content: {
+                AppSettingRow(title: String(localized: "Expiration Date", bundle: .module), description: String(localized: "Subscription expiration date", bundle: .module), icon: "calendar", content: {
                     HStack {
                         Text(expiresAt.fullDateTime)
                             .font(.footnote)
@@ -72,7 +72,7 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
             }
 
             // Purchase entry
-            CisumUIComponents.MagicSettingRow(title: String(localized: "In-App Purchase", bundle: .module), description: String(localized: "Subscribe to Pro to unlock all features", bundle: .module), icon: "cart", content: {
+            AppSettingRow(title: String(localized: "In-App Purchase", bundle: .module), description: String(localized: "Subscribe to Pro to unlock all features", bundle: .module), icon: "cart", content: {
                 Image.cisumAppStore
                     .frame(width: 28)
                     .frame(height: 28)
@@ -87,7 +87,7 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
             })
 
             // Restore purchase
-            CisumUIComponents.MagicSettingRow(title: String(localized: "Restore Purchase", bundle: .module), description: String(localized: "Restore purchases made on other devices", bundle: .module), icon: "arrow.clockwise", content: {
+            AppSettingRow(title: String(localized: "Restore Purchase", bundle: .module), description: String(localized: "Restore purchases made on other devices", bundle: .module), icon: "arrow.clockwise", content: {
                 Image.cisumReset
                     .frame(width: 28)
                     .frame(height: 28)

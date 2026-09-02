@@ -34,7 +34,7 @@ public struct ResetConfirm: View {
             .padding(.trailing, 8)
 
             VStack(spacing: 16) {
-                AppSheetPanel {
+                AppCard(style: .subtle, cornerRadius: 8, showShadow: false) {
                     VStack(spacing: 16) {
                         AppSheetIconHeader(
                             systemImage: .cisumIconReset,
@@ -76,9 +76,11 @@ public struct ResetConfirm: View {
                     }
                 }
 
-                AppSheetActionButton(
-                    title: String(localized: "Continue Reset", bundle: .module),
-                    systemImage: "checkmark"
+                AppButton(
+                    String(localized: "Continue Reset", bundle: .module),
+                    systemImage: "checkmark",
+                    style: .primary,
+                    fillsWidth: true
                 ) {
                     performReset()
                 }
