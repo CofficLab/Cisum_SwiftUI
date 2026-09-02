@@ -5,8 +5,8 @@ import SwiftUI
 /// 插件管理服务能力协议。
 ///
 /// 提供插件的发现、生命周期管理以及 UI 贡献聚合。聚合规则继承自旧版
-/// `PluginVM`：场景/海报/状态/标签页/工具栏/主题贡献的收集，以及当前场景的
-/// 持久化（UserDefaults + `NSUbiquitousKeyValueStore`）。
+/// `PluginVM`：场景/海报/状态/标签页/工具栏/主题贡献的收集。当前场景的
+/// 管理与持久化已独立到 `SceneProviding`（`kernel.scene`）。
 ///
 /// ## 使用示例
 ///
@@ -18,18 +18,6 @@ import SwiftUI
 public protocol PluginProviding: AnyObject, ObservableObject {
     /// 所有已注册的插件。
     var allPlugins: [any SuperPlugin] { get }
-
-    /// 所有可用场景名称（由提供场景的插件贡献）。
-    var sceneNames: [String] { get }
-
-    /// 当前激活的场景名称。
-    var currentSceneName: String? { get }
-
-    /// 切换当前激活的场景（持久化）。
-    func setCurrentScene(_ sceneName: String) throws
-
-    /// 从持久化恢复当前场景；无记录时回落到首个场景。
-    func restoreCurrentScene()
 
     /// 获取所有插件提供的 status 视图。
     func getStatusViews() -> [AnyView]
@@ -65,9 +53,6 @@ public protocol PluginProviding: AnyObject, ObservableObject {
 
     /// 获取所有插件贡献的主题（已重写 sortKey 并去重）。
     func getThemeContributions() -> [LumiUIThemeContribution]
-
-    /// 根据场景名称查找对应插件。
-    func plugin(for sceneName: String) -> (any SuperPlugin)?
 
     /// 失效所有缓存的聚合结果。
     func invalidateCaches()

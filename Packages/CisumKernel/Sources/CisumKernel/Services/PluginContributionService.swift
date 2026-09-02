@@ -1,6 +1,7 @@
 import CisumUIComponents
 import Foundation
 import ProviderPlugin
+import ProviderScene
 import SwiftUI
 
 /// 将 `BuiltinPluginManager` 中的插件 UI 贡献聚合为 Kernel Provider。
@@ -9,16 +10,16 @@ import SwiftUI
 /// 贡献的收集、主题 sortKey 重写与去重、当前场景持久化与缓存失效），
 /// 但把插件发现与视图消费边界放到 Kernel，使 Factory 与具体 App 布局
 /// 无需直接依赖插件注册表。
+///
+/// 场景管理（场景列表/当前场景/切换与持久化）已独立到 `SceneService`
+/// （`SceneProviding`）；本服务通过弱引用 `scene` 读取当前场景名以聚合
+/// 场景相关的视图贡献。
 @MainActor
 public final class PluginContributionService: ObservableObject, PluginProviding {
     private let manager: BuiltinPluginManager
 
-    @Published public private(set) var currentSceneName: String?
-
-    // MARK: - Persistence Keys（与旧版 PluginRepo 一致，保证向后兼容）
-
-    private static let sceneKey = "currentSceneName"
-    private static let pluginIDKey = "currentPluginID"
+    /// 场景服务（弱引用，避免与 `SceneService` 形成强引用环）。
+    public weak var scene: (any SceneProviding)?
 
     // MARK: - Caches
 
@@ -31,44 +32,10 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
 
     public init(manager: BuiltinPluginManager) {
         self.manager = manager
-        self.currentSceneName = nil
     }
 
     public var allPlugins: [any SuperPlugin] {
         manager.allPlugins
-    }
-
-    public var sceneNames: [String] {
-        manager.enabledPlugins.compactMap { $0.addSceneItem() }
-    }
-
-    public func setCurrentScene(_ sceneName: String) throws {
-        guard sceneNames.contains(sceneName) else {
-            throw PluginContributionError.unknownScene(sceneName)
-        }
-        guard currentSceneName != sceneName else { return }
-        currentSceneName = sceneName
-        persistScene(sceneName)
-        invalidateCaches()
-    }
-
-    /// 从持久化恢复当前场景；无记录或记录失效时回落到首个场景。
-    public func restoreCurrentScene() {
-        let names = sceneNames
-        guard !names.isEmpty else {
-            currentSceneName = nil
-            return
-        }
-
-        let saved = UserDefaults.standard.string(forKey: Self.sceneKey)
-            ?? NSUbiquitousKeyValueStore.default.string(forKey: Self.sceneKey)
-        if let saved, names.contains(saved) {
-            currentSceneName = saved
-        } else {
-            let first = names[0]
-            currentSceneName = first
-            persistScene(first)
-        }
     }
 
     public func getStatusViews() -> [AnyView] {
@@ -118,7 +85,7 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
         manager.enabledPlugins.compactMap { plugin in
             plugin.addTabView(
                 reason: reason,
-                currentSceneName: currentSceneName,
+                currentSceneName: scene?.currentSceneName,
                 demoMode: demoMode
             )
         }
@@ -167,10 +134,6 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
         return value
     }
 
-    public func plugin(for sceneName: String) -> (any SuperPlugin)? {
-        manager.enabledPlugins.first { $0.addSceneItem() == sceneName }
-    }
-
     public func invalidateCaches() {
         cachedStatusViews = nil
         cachedPosterViews = nil
@@ -179,31 +142,5 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
         cachedToolBarButtons = nil
         cachedThemeContributions = nil
         objectWillChange.send()
-    }
-
-    // MARK: - Persistence
-
-    private func persistScene(_ sceneName: String) {
-        UserDefaults.standard.set(sceneName, forKey: Self.sceneKey)
-        NSUbiquitousKeyValueStore.default.set(sceneName, forKey: Self.sceneKey)
-        NSUbiquitousKeyValueStore.default.synchronize()
-
-        if let plugin = plugin(for: sceneName) {
-            let pluginID = plugin.id
-            UserDefaults.standard.set(pluginID, forKey: Self.pluginIDKey)
-            NSUbiquitousKeyValueStore.default.set(pluginID, forKey: Self.pluginIDKey)
-            NSUbiquitousKeyValueStore.default.synchronize()
-        }
-    }
-}
-
-public enum PluginContributionError: LocalizedError {
-    case unknownScene(String)
-
-    public var errorDescription: String? {
-        switch self {
-        case let .unknownScene(sceneName):
-            "Unknown scene: \(sceneName)"
-        }
     }
 }

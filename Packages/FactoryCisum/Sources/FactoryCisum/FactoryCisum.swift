@@ -7,6 +7,7 @@ import OSLog
 import ProviderContentView
 import ProviderControlView
 import ProviderRootView
+import ProviderScene
 import ProviderSettings
 import ProviderStatusView
 import ProviderToolbar
@@ -80,6 +81,17 @@ public enum CisumBuilder: SuperLog {
         let pluginService = PluginContributionService(manager: kernel.pluginManager)
         kernel.registerPluginService(pluginService)
 
+        // 场景服务：独立 Provider，负责场景发现/切换/持久化；场景变化时通知
+        // 插件贡献服务重建视图缓存。
+        let sceneService = SceneService(
+            manager: kernel.pluginManager,
+            onSceneChanged: { [weak pluginService] in
+                pluginService?.invalidateCaches()
+            }
+        )
+        kernel.registerSceneService(sceneService)
+        pluginService.scene = sceneService
+
         let playMan = MagicPlayMan()
         kernel.registerPlayback(playMan)
 
@@ -99,7 +111,7 @@ public enum CisumBuilder: SuperLog {
         registerViewProviders(into: kernel)
 
         // 4. 恢复当前场景
-        pluginService.restoreCurrentScene()
+        sceneService.restoreCurrentScene()
 
         // 5. 订阅插件变更
         subscribeToPluginChanges(kernel: kernel)
@@ -263,7 +275,8 @@ public struct SettingsWindowHost: View {
                     settings: kernel.plugin,
                     appState: kernel.appState,
                     theme: kernel.theme,
-                    storage: kernel.storage
+                    storage: kernel.storage,
+                    scene: kernel.scene
                 )
             }
         }
@@ -338,7 +351,10 @@ struct KernelRootView: View {
         rootContent
             // 插件贡献变化（.id 变化）时整棵子树重建，重新注入内容 Tab 等。
             .id(contributionRevision)
-            .environment(\.currentSceneName, kernel.plugin?.currentSceneName)
+            .environment(\.currentSceneName, kernel.scene?.currentSceneName)
+            .environment(\.setCurrentSceneAction, { sceneName in
+                try kernel.scene?.setCurrentScene(sceneName)
+            })
             .environment(\.demoMode, kernel.appState?.isDemoMode ?? false)
             .environment(
                 \.appIsImporting,

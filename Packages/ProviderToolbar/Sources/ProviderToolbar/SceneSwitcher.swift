@@ -1,18 +1,18 @@
 import CisumKernel
-import ProviderPlugin
+import ProviderScene
 import SwiftUI
 
-/// 场景切换器：工具栏入口，列出插件贡献的全部场景（如「音乐库」「有声书」），
+/// 场景切换器：工具栏入口，列出全部可用场景（如「音乐库」「有声书」），
 /// 选择后切换 `currentSceneName`，从而改变内容区展示的 Tab。
 struct SceneSwitcher: View {
     @ObservedObject var kernel: CisumKernel
 
-    private var plugin: (any PluginProviding)? { kernel.plugin }
-    private var sceneNames: [String] { plugin?.sceneNames ?? [] }
-    private var current: String? { plugin?.currentSceneName }
+    private var scene: (any SceneProviding)? { kernel.scene }
+    private var sceneNames: [String] { scene?.sceneNames ?? [] }
+    private var current: String? { scene?.currentSceneName }
 
     private func icon(for sceneName: String) -> String {
-        plugin?.plugin(for: sceneName)?.iconName ?? "rectangle.3.group"
+        scene?.plugin(for: sceneName)?.iconName ?? "rectangle.3.group"
     }
 
     var body: some View {
@@ -20,7 +20,7 @@ struct SceneSwitcher: View {
             Menu {
                 ForEach(sceneNames, id: \.self) { name in
                     Button {
-                        try? plugin?.setCurrentScene(name)
+                        try? scene?.setCurrentScene(name)
                     } label: {
                         if name == current {
                             Label(name, systemImage: "checkmark")

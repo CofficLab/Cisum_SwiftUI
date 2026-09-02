@@ -17,6 +17,7 @@ let package = Package(
         // MARK: - Provider Contracts（设置窗口只依赖能力契约，不依赖内核/工厂）
         .package(name: "ProviderAppState", path: "../ProviderAppState"),
         .package(name: "ProviderPlugin", path: "../ProviderPlugin"),
+        .package(name: "ProviderScene", path: "../ProviderScene"),
         .package(name: "ProviderStorage", path: "../ProviderStorage"),
         .package(name: "ProviderTheme", path: "../ProviderTheme"),
     ],
@@ -28,6 +29,7 @@ let package = Package(
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "ProviderAppState", package: "ProviderAppState"),
                 .product(name: "ProviderPlugin", package: "ProviderPlugin"),
+                .product(name: "ProviderScene", package: "ProviderScene"),
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
                 .product(name: "ProviderTheme", package: "ProviderTheme"),
             ],

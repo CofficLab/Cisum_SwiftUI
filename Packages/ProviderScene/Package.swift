@@ -1,0 +1,27 @@
+// swift-tools-version: 6.0
+import PackageDescription
+
+let package = Package(
+    name: "ProviderScene",
+    defaultLocalization: "en",
+    platforms: [
+        .macOS(.v14),
+        .iOS(.v17),
+    ],
+    products: [
+        .library(name: "ProviderScene", targets: ["ProviderScene"]),
+    ],
+    dependencies: [
+        .package(name: "CisumUIComponents", path: "../CisumUIComponents"),
+    ],
+    targets: [
+        .target(
+            name: "ProviderScene",
+            dependencies: [
+                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
+            ],
+            path: "Sources/ProviderScene"
+        ),
+    ],
+    swiftLanguageModes: [.v5]
+)

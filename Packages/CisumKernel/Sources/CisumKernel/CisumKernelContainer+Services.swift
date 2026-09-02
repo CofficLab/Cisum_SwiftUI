@@ -6,6 +6,7 @@ import ProviderCloud
 import ProviderDevice
 import ProviderPlayback
 import ProviderPlugin
+import ProviderScene
 import ProviderStorage
 import ProviderTheme
 
@@ -30,6 +31,11 @@ extension CisumKernelContainer {
     /// 插件服务 —— 插件发现、注册、生命周期管理。
     public var plugin: (any PluginProviding)? {
         resolveProvider(PluginProviding.self)
+    }
+
+    /// 场景服务 —— 场景发现、切换与持久化恢复。
+    public var scene: (any SceneProviding)? {
+        resolveProvider(SceneProviding.self)
     }
 
     /// 主题服务 —— 主题贡献收集、选择与同步。
