@@ -4,7 +4,10 @@ import Foundation
 import MagicKit
 import MagicPlayMan
 import OSLog
+import ProviderContentView
+import ProviderRootView
 import ProviderSettings
+import ProviderToolbar
 import SwiftUI
 
 /// Cisum 应用组装工厂（Composition Root）。
@@ -83,6 +86,10 @@ public enum CisumBuilder: SuperLog {
         // 3. 启动内核（插件 onBoot 注册 Storage 等服务 → 校验 → onReady → 贡献聚合）
         try await kernel.startup()
 
+        // 2.5 注册视图 Provider（对齐 Lumi：视图区域各自为独立的 Provider 契约，
+        // 默认实现在此注册进内核；Factory 组装时只做 resolveProvider + 注入 + makeRootView）
+        registerViewProviders(into: kernel)
+
         // 4. 恢复当前场景
         pluginService.restoreCurrentScene()
 
@@ -139,6 +146,62 @@ public enum CisumBuilder: SuperLog {
     /// 宿主只需 `.commands { FactoryCisum.makeCommands() }`。
     public static func makeCommands() -> some Commands {
         CisumAppCommands()
+    }
+
+    // MARK: - View Assembly
+
+    /// 注册视图 Provider 默认实现（对齐 Lumi `DefaultProviderFactory` 的
+    /// `makeXxxProvider()` 方法族）。
+    ///
+    /// 各视图区域（根布局 / 内容区 / 工具栏）是独立的 Provider 契约，
+    /// 默认实现注册进内核；Factory 组装时只做解析 + 注入 + makeRootView。
+    private static func registerViewProviders(into kernel: CisumKernel) {
+        kernel.registerProvider((any RootViewProviding).self, DefaultRootViewProviding(kernel: kernel))
+        kernel.registerProvider((any ContentViewProviding).self, DefaultContentViewProviding())
+        kernel.registerProvider((any ToolbarProviding).self, DefaultToolbarProviding(kernel: kernel))
+    }
+
+    /// 组装主视图（对齐 Lumi `DefaultViewFactory.makeMainView(kernel:)`）。
+    ///
+    /// 视图组装逻辑集中在此：解析 `RootViewProviding` → 注入各区域视图
+    /// （内容区来自 `ContentViewProviding`、工具栏来自 `ToolbarProviding`）→
+    /// 返回 `makeRootView()`。宿主只需要一个视图，无需关心各 Provider 如何组合。
+    @MainActor
+    public static func assembleMainView(kernel: CisumKernel) -> AnyView {
+        guard let root = kernel.resolveProvider((any RootViewProviding).self) else {
+            return AnyView(Text("RootViewProviding not registered"))
+        }
+
+        if let content = kernel.resolveProvider((any ContentViewProviding).self) {
+            refreshContentTabs(content, kernel: kernel)
+            root.setContentView(content.makeContentView())
+        }
+        if let toolbar = kernel.resolveProvider((any ToolbarProviding).self) {
+            root.setToolbarContent(toolbar.makeToolbarView())
+        }
+        return root.makeRootView()
+    }
+
+    /// 把插件贡献的内容 Tab 注入 `ContentViewProviding`。
+    ///
+    /// 对齐 Lumi 插件通过 Provider 注入内容的范式；Cisum 侧由
+    /// `PluginContributionService` 聚合插件贡献，此处转成 `ContentTabItem` 注入。
+    @MainActor
+    private static func refreshContentTabs(_ content: any ContentViewProviding, kernel: CisumKernel) {
+        let contribution = kernel.plugin?.getTabViews(
+            reason: "AppTabView",
+            demoMode: kernel.appState?.isDemoMode ?? false
+        ) ?? []
+        content.setTabs(
+            contribution.enumerated().map { index, tab in
+                ContentTabItem(
+                    id: tab.label,
+                    title: tab.label,
+                    order: index,
+                    content: tab.view
+                )
+            }
+        )
     }
 
     // MARK: - Private
@@ -250,9 +313,13 @@ public struct WindowMain: View {
 /// 环境可进一步精简。
 struct KernelRootView: View {
     @ObservedObject var kernel: CisumKernel
+    /// 插件贡献版本号：插件启用/禁用变化时 +1，触发根视图重新组装。
+    @State private var contributionRevision = 0
 
     var body: some View {
         rootContent
+            // 插件贡献变化（.id 变化）时整棵子树重建，重新注入内容 Tab 等。
+            .id(contributionRevision)
             .environment(\.currentSceneName, kernel.plugin?.currentSceneName)
             .environment(\.demoMode, kernel.appState?.isDemoMode ?? false)
             .environment(
@@ -271,11 +338,14 @@ struct KernelRootView: View {
                     FactoryCisum.mainKernel?.storage?.resetStorageLocation()
                 }
             })
+            .onReceive(NotificationCenter.default.publisher(for: .cisumEnabledPluginsDidChange)) { _ in
+                contributionRevision += 1
+            }
     }
 
     @ViewBuilder
     private var rootContent: some View {
-        let content = AppLayoutView(kernel: kernel)
+        let content = FactoryCisum.assembleMainView(kernel: kernel)
         if let playMan = kernel.playback as? MagicPlayMan {
             wrap(content).environmentObject(playMan)
         } else {
@@ -284,7 +354,7 @@ struct KernelRootView: View {
     }
 
     @ViewBuilder
-    private func wrap(_ content: AppLayoutView) -> some View {
+    private func wrap(_ content: AnyView) -> some View {
         if let wrapped = kernel.plugin?.wrapWithCurrentRoot(content: { content }) {
             wrapped
         } else {
