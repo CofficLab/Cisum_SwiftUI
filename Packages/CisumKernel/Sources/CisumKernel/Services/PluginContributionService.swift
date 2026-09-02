@@ -1,5 +1,6 @@
 import CisumUI
 import Foundation
+import ProviderPlugin
 import SwiftUI
 
 /// 将 `BuiltinPluginManager` 中的插件 UI 贡献聚合为 Kernel Provider。

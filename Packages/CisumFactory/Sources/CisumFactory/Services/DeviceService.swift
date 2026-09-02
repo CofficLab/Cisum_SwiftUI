@@ -1,6 +1,7 @@
 import CisumKernel
 import Foundation
 import MagicKit
+import ProviderDevice
 #if canImport(AppKit)
     import AppKit
 #endif

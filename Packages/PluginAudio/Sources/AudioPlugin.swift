@@ -2,6 +2,7 @@ import CisumKernel
 import CisumUI
 import Foundation
 import PluginAudioLike
+import ProviderStorage
 import SwiftUI
 
 public actor AudioPlugin: SuperPlugin, CisumKernelPlugin {

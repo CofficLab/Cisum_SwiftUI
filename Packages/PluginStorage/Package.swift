@@ -19,6 +19,7 @@ let package = Package(
         .package(path: "../CisumUI"),
         .package(path: "../CisumKernel"),
         .package(path: "../MagicKit"),
+        .package(path: "../ProviderStorage"),
     ],
     targets: [
         .target(
@@ -27,6 +28,7 @@ let package = Package(
                 "CisumUI",
                 .product(name: "CisumKernel", package: "CisumKernel"),
                 .product(name: "MagicKit", package: "MagicKit"),
+                .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
             path: "Sources",
             resources: [

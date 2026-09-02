@@ -1,4 +1,5 @@
 import CisumKernel
+import ProviderPlugin
 import SwiftUI
 
 /// 场景切换器：工具栏入口，列出插件贡献的全部场景（如「音乐库」「有声书」），

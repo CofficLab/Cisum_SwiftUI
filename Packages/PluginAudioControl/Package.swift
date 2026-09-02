@@ -19,6 +19,7 @@ let package = Package(
         .package(path: "../PluginAudio"),
         .package(path: "../PluginAudioScene"),
         .package(path: "../MagicPlayMan"),
+        .package(path: "../ProviderStorage"),
     ],
     targets: [
         .target(
@@ -28,6 +29,7 @@ let package = Package(
                 .product(name: "PluginAudio", package: "PluginAudio"),
                 .product(name: "PluginAudioScene", package: "PluginAudioScene"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
+                .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
             path: "Sources",
             resources: [

@@ -1,5 +1,6 @@
 import CisumKernel
 import CisumUI
+import ProviderStorage
 import SwiftUI
 
 public actor WelcomePlugin: SuperPlugin, SuperLog, CisumKernelPlugin {

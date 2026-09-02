@@ -1,5 +1,6 @@
 import Combine
 import Foundation
+import ProviderAppState
 
 /// Kernel 默认提供的轻量级应用状态实现。
 ///

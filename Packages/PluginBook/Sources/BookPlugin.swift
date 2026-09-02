@@ -1,6 +1,7 @@
 import CisumKernel
 import CisumUI
 import Foundation
+import ProviderStorage
 import SwiftUI
 
 public actor BookPlugin: SuperPlugin, CisumKernelPlugin {

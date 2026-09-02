@@ -2,6 +2,7 @@ import CisumKernel
 import CloudKit
 import Foundation
 import MagicKit
+import ProviderCloud
 
 /// `CloudProviding` 的具体实现。
 ///

@@ -67,27 +67,44 @@ public final class CisumKernelContainer: ObservableObject {
     /// - Parameters:
     ///   - type: 协议类型。
     ///   - instance: 服务实例。
-    public func registerService<T>(_ type: T.Type, _ instance: T) {
+    public func registerProvider<T>(_ type: T.Type, _ provider: T) {
         let key = ObjectIdentifier(type)
-        services[key] = instance
-        subscribeToObjectWillChange(observable: instance, key: key)
+        services[key] = provider
+        subscribeToObjectWillChange(observable: provider, key: key)
     }
 
     /// 解析已注册的服务。
     ///
     /// - Parameter type: 协议类型，默认从返回值类型推导。
     /// - Returns: 已注册的服务实例，未注册时返回 `nil`。
-    public func resolveService<T>(_ type: T.Type = T.self) -> T? {
+    public func resolveProvider<T>(_ type: T.Type = T.self) -> T? {
         services[ObjectIdentifier(type)] as? T
     }
 
     /// 移除已注册的服务。
     ///
     /// - Parameter type: 协议类型。
-    public func unregisterService<T>(_ type: T.Type) {
+    public func unregisterProvider<T>(_ type: T.Type) {
         let key = ObjectIdentifier(type)
         services.removeValue(forKey: key)
         serviceSubscriptions.removeValue(forKey: key)
+    }
+
+    // MARK: - 兼容别名（对齐 Lumi KernelCore 命名；旧名保留为薄封装）
+
+    @available(*, deprecated, renamed: "registerProvider")
+    public func registerService<T>(_ type: T.Type, _ instance: T) {
+        registerProvider(type, instance)
+    }
+
+    @available(*, deprecated, renamed: "resolveProvider")
+    public func resolveService<T>(_ type: T.Type = T.self) -> T? {
+        resolveProvider(type)
+    }
+
+    @available(*, deprecated, renamed: "unregisterProvider")
+    public func unregisterService<T>(_ type: T.Type) {
+        unregisterProvider(type)
     }
 
     // MARK: - Private Helpers

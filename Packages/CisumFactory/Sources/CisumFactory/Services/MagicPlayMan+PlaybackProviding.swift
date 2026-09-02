@@ -1,6 +1,7 @@
 import CisumKernel
 import Foundation
 import MagicPlayMan
+import ProviderPlayback
 
 /// 将 `MagicPlayMan` 桥接为内核的 `PlaybackProviding`。
 ///

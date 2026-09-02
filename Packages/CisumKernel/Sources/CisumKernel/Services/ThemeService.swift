@@ -1,5 +1,6 @@
 import CisumUI
 import Foundation
+import ProviderTheme
 import SwiftUI
 
 /// `ThemeProviding` 的具体实现。

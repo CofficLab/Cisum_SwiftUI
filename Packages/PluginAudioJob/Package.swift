@@ -17,6 +17,7 @@ let package = Package(
     dependencies: [
         .package(path: "../CisumUI"),
         .package(path: "../PluginAudio"),
+        .package(path: "../ProviderStorage"),
     ],
     targets: [
         .target(
@@ -24,6 +25,7 @@ let package = Package(
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
                 .product(name: "PluginAudio", package: "PluginAudio"),
+                .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
             path: "Sources",
             resources: [
