@@ -119,6 +119,17 @@ public enum CisumBuilder: SuperLog {
         WindowMain(configuration: configuration)
     }
 
+    // MARK: - Settings Window Factory
+
+    /// 创建设置窗口视图。
+    ///
+    /// 设置窗口复用 `createMainKernel` 返回的主内核（幂等，与主窗口共享同一实例），
+    /// 聚合插件贡献的设置项：左侧为 `addSettingNavigationItem` 导航入口，
+    /// 右侧为选中入口内容或全部 `addSettingView` 视图。
+    public static func makeSettingsWindow(configuration: CisumFactoryConfiguration) -> some View {
+        SettingsWindow(configuration: configuration)
+    }
+
     // MARK: - Commands Factory
 
     /// 创建应用命令菜单。

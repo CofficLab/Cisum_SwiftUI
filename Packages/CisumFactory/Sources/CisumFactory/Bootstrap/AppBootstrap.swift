@@ -11,4 +11,10 @@ public enum AppBootstrap {
     /// 默认主窗口尺寸。
     public static let defaultWindowSize = CGSize(width: 1100, height: 760)
 
+    /// 设置窗口 ID。
+    public static let settingsWindowID = "cisum.settings"
+
+    /// 默认设置窗口尺寸。
+    public static let defaultSettingsWindowSize = CGSize(width: 900, height: 640)
+
 }

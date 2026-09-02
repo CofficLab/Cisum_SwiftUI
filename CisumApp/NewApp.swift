@@ -15,6 +15,7 @@ private enum CisumAppAssembly {
 struct NewApp: App {
     #if os(macOS)
     @NSApplicationDelegateAdaptor private var appDelegate: AppDelegate
+    @Environment(\.openWindow) private var openWindow
     #endif
 
     init() {
@@ -25,10 +26,10 @@ struct NewApp: App {
     }
 
     var body: some Scene {
+        #if os(macOS)
         WindowGroup(AppBootstrap.appName, id: AppBootstrap.mainWindowID) {
             CisumFactory.makeMainWindow(configuration: CisumAppAssembly.configuration)
         }
-        #if os(macOS)
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified(showsTitle: false))
         .defaultSize(
@@ -37,6 +38,27 @@ struct NewApp: App {
         )
         .commands {
             CisumFactory.makeCommands()
+            // 菜单栏「设置…」入口（⌘,）——对齐 Lumi 的设置窗口入口。
+            CommandGroup(replacing: .appSettings) {
+                Button("设置…") {
+                    openWindow(id: AppBootstrap.settingsWindowID)
+                }
+                .keyboardShortcut(",", modifiers: .command)
+            }
+        }
+
+        Window("设置", id: AppBootstrap.settingsWindowID) {
+            CisumFactory.makeSettingsWindow(configuration: CisumAppAssembly.configuration)
+        }
+        .windowStyle(.hiddenTitleBar)
+        .windowToolbarStyle(.unified(showsTitle: false))
+        .defaultSize(
+            width: AppBootstrap.defaultSettingsWindowSize.width,
+            height: AppBootstrap.defaultSettingsWindowSize.height
+        )
+        #else
+        WindowGroup(AppBootstrap.appName, id: AppBootstrap.mainWindowID) {
+            CisumFactory.makeMainWindow(configuration: CisumAppAssembly.configuration)
         }
         #endif
     }
