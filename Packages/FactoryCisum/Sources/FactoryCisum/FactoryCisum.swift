@@ -54,20 +54,21 @@ public enum CisumBuilder: SuperLog {
     /// 创建并启动一个新内核。
     ///
     /// 流程：
-    /// 1. 通过 `PluginFactory` 产出插件并初始化（默认 `DefaultPluginFactory` 取
-    ///    配置清单；宿主可传 `SelectedPluginFactory` 等自定义实现覆盖）
+    /// 1. 通过 `PluginFactory` 装配插件清单并初始化（默认 `DefaultPluginFactory`
+    ///    直接装配 Cisum 全部内置插件；宿主可传 `SelectedPluginFactory` 等
+    ///    自定义实现覆盖）
     /// 2. 注册基础设施 Provider（非插件拥有的跨切面服务）
     /// 3. 启动内核（两阶段生命周期 + 服务校验 + 贡献聚合）
     /// 4. 恢复持久化的当前场景
     /// 5. 订阅插件启用/禁用变更
     public static func createKernel(
-        configuration: FactoryCisumConfiguration,
+        configuration: FactoryCisumConfiguration = FactoryCisumConfiguration(),
         pluginFactory: (any PluginFactory)? = nil
     ) async throws -> CisumKernel {
         let kernel = CisumKernel()
 
         // 1. 通过插件工厂装配插件清单（对齐 Lumi `pluginFactory.makePlugins()`）
-        let factory = pluginFactory ?? DefaultPluginFactory(plugins: configuration.plugins)
+        let factory = pluginFactory ?? DefaultPluginFactory()
         kernel.pluginManager.initializePlugins(factory.makePlugins())
 
         // 2. 注册基础设施 Provider

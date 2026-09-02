@@ -1,44 +1,11 @@
-import CisumKernel
-import CisumUI
 import Foundation
 
 /// 宿主在编译期确定的内核组装配置。
 ///
-/// 对齐 Lumi 的 `FactoryConfiguration`：携带插件清单与显式启用的插件 id 集合，
-/// 在初始化时校验重复 id 与未知启用 id。插件清单由宿主（app target）提供，
-/// Factory 本身不依赖任何具体插件。
-public struct FactoryCisumConfiguration: @unchecked Sendable {
-    /// 有序插件清单。
-    public let plugins: [any SuperPlugin]
-
-    /// 宿主显式启用的插件 id（必须是 `plugins` 中 id 的子集）。
-    public let enabledPluginIDs: Set<String>
-
-    @MainActor
-    public init(plugins: [any SuperPlugin], enabledPluginIDs: Set<String> = []) throws {
-        var seen = Set<String>()
-        for plugin in plugins {
-            guard seen.insert(plugin.id).inserted else {
-                throw FactoryCisumError.duplicatePluginID(plugin.id)
-            }
-        }
-        let unknown = enabledPluginIDs.subtracting(seen)
-        if !unknown.isEmpty {
-            throw FactoryCisumError.unknownEnabledPluginID(unknown.sorted().joined(separator: ", "))
-        }
-        self.plugins = plugins
-        self.enabledPluginIDs = enabledPluginIDs
-    }
-}
-
-public enum FactoryCisumError: LocalizedError {
-    case duplicatePluginID(String)
-    case unknownEnabledPluginID(String)
-
-    public var errorDescription: String? {
-        switch self {
-        case let .duplicatePluginID(id): "Duplicate plugin ID: \(id)"
-        case let .unknownEnabledPluginID(ids): "Unknown enabled plugin IDs: \(ids)"
-        }
-    }
+/// 对齐 Lumi 的 `FactoryConfiguration`。Cisum 的插件清单由
+/// `FactoryCisum.DefaultPluginFactory` 直接装配（不再经宿主/Registry 注入），
+/// 因此配置无需携带插件列表；此处保留为空配置结构，便于未来扩展
+/// （如默认启停集合、窗口尺寸等）。
+public struct FactoryCisumConfiguration: Sendable {
+    public init() {}
 }

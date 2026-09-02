@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		83AA30B56C4727C36DC629BB /* PluginRegistry in Frameworks */ = {isa = PBXBuildFile; productRef = A1C163022FD900000000000 /* PluginRegistry */; };
-		A1C163002FD900000000000 /* PluginRegistry in Frameworks */ = {isa = PBXBuildFile; productRef = A1C163022FD900000000000 /* PluginRegistry */; };
+		83AA30B56C4727C36DC629BB /* FactoryCisum in Frameworks */ = {isa = PBXBuildFile; productRef = A1C163022FD900000000000 /* FactoryCisum */; };
+		A1C163002FD900000000000 /* FactoryCisum in Frameworks */ = {isa = PBXBuildFile; productRef = A1C163022FD900000000000 /* FactoryCisum */; };
 		F5826E6B2F3578070079B285 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5826E6A2F3578070079B285 /* WidgetKit.framework */; };
 		F5826E6D2F3578070079B285 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5826E6C2F3578070079B285 /* SwiftUI.framework */; };
 		F5826E782F3578080079B285 /* CisumWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F5826E682F3578070079B285 /* CisumWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -579,7 +579,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1C163002FD900000000000 /* PluginRegistry in Frameworks */,
+				A1C163002FD900000000000 /* FactoryCisum in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -589,7 +589,7 @@
 			files = (
 				F5826E6D2F3578070079B285 /* SwiftUI.framework in Frameworks */,
 				F5826E6B2F3578070079B285 /* WidgetKit.framework in Frameworks */,
-				83AA30B56C4727C36DC629BB /* PluginRegistry in Frameworks */,
+				83AA30B56C4727C36DC629BB /* FactoryCisum in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -815,7 +815,7 @@
 			);
 			name = Cisum;
 			packageProductDependencies = (
-				A1C163022FD900000000000 /* PluginRegistry */,
+				A1C163022FD900000000000 /* FactoryCisum */,
 			);
 			productName = Cisum;
 			productReference = 0B53A6CC2F1C734B00169AF2 /* Cisum.app */;
@@ -839,7 +839,7 @@
 			);
 			name = CisumWidgetExtension;
 			packageProductDependencies = (
-				A1C163022FD900000000000 /* PluginRegistry */,
+				A1C163022FD900000000000 /* FactoryCisum */,
 			);
 			productName = CisumWidgetExtension;
 			productReference = F5826E682F3578070079B285 /* CisumWidgetExtension.appex */;
@@ -876,7 +876,7 @@
 			);
 			mainGroup = 0B9C1C342AAF18FE001A26AF;
 			packageReferences = (
-				A1C163012FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginRegistry" */,
+				A1C163012FD900000000000 /* XCLocalSwiftPackageReference "Packages/FactoryCisum" */,
 			);
 			productRefGroup = 0B9C1C342AAF18FE001A26AF;
 			projectDirPath = "";
@@ -1859,17 +1859,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		A1C163012FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginRegistry" */ = {
+		A1C163012FD900000000000 /* XCLocalSwiftPackageReference "Packages/FactoryCisum" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = Packages/PluginRegistry;
+			relativePath = Packages/FactoryCisum;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A1C163022FD900000000000 /* PluginRegistry */ = {
+		A1C163022FD900000000000 /* FactoryCisum */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1C163012FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginRegistry" */;
-			productName = PluginRegistry;
+			package = A1C163012FD900000000000 /* XCLocalSwiftPackageReference "Packages/FactoryCisum" */;
+			productName = FactoryCisum;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -1,4 +1,47 @@
 import CisumUI
+import PluginAudio
+import PluginAudioControl
+import PluginAudioCopy
+import PluginAudioDBView
+import PluginAudioDemo
+import PluginAudioDownload
+import PluginAudioJob
+import PluginAudioLike
+import PluginAudioPlayMode
+import PluginAudioProgress
+import PluginAudioScene
+import PluginAudioSettings
+import PluginAudioWidgetControl
+import PluginBook
+import PluginBookControl
+import PluginBookDBView
+import PluginBookLike
+import PluginBookPlayMode
+import PluginBookProgress
+import PluginBookScene
+import PluginBookSettings
+import PluginFileLog
+import PluginLikeButton
+import PluginOpenButton
+import PluginPluginManager
+import PluginReset
+import PluginSettingGeneral
+import PluginStorage
+import PluginStore
+import PluginThemeAurora
+import PluginThemeCisum
+import PluginThemeDaylightSilver
+import PluginThemeForest
+import PluginThemeGraphiteBlack
+import PluginThemeMidnight
+import PluginThemeMono
+import PluginThemeNebula
+import PluginThemeOcean
+import PluginThemePaper
+import PluginThemeSettings
+import PluginThemeStudioBlue
+import PluginThemeSunset
+import PluginWelcome
 
 /// 产出各种插件的工厂协议（对齐 Lumi `FactoryLumi/PluginFactory.swift`）。
 ///
@@ -14,19 +57,68 @@ public protocol PluginFactory {
     func makePlugins() -> [any SuperPlugin]
 }
 
-/// 默认插件工厂：产出宿主传入的插件清单。
+/// 默认插件工厂：直接装配 Cisum 的全部内置插件（对齐 Lumi
+/// `DefaultPluginFactory.makePlugins()` 的硬编码清单方式）。
 ///
-/// Cisum 的插件清单由宿主（app target）通过 `PluginRegistry` 提供，
-/// Factory 本身不依赖任何具体插件。
+/// 插件清单由 Factory 自身维护（不再经由宿主/Registry 注入），
+/// Factory 是唯一知道"应用由哪些插件组成"的地方。
 public struct DefaultPluginFactory: PluginFactory {
-    private let plugins: [any SuperPlugin]
-
-    public init(plugins: [any SuperPlugin]) {
-        self.plugins = plugins
-    }
+    public init() {}
 
     public func makePlugins() -> [any SuperPlugin] {
-        plugins
+        var plugins: [any SuperPlugin] = [
+            AudioControlPlugin.shared,
+            AudioDBPlugin.shared,
+            AudioDemoPlugin.shared,
+            AudioDownloadPlugin.shared,
+            AudioJobPlugin.shared,
+            AudioLikePlugin.shared,
+            AudioPlayModePlugin.shared,
+            AudioPlugin.shared,
+            AudioProgressPlugin.shared,
+            AudioScenePlugin.shared,
+            AudioSettingsPlugin.shared,
+            AudioWidgetControlPlugin.shared,
+            BookControlPlugin.shared,
+            BookDBPlugin.shared,
+            BookLikePlugin.shared,
+            BookPlayModePlugin.shared,
+            BookPlugin.shared,
+            BookProgressPlugin.shared,
+            BookScenePlugin.shared,
+            BookSettingsPlugin.shared,
+        ]
+
+        #if os(macOS)
+        plugins.append(CopyPlugin.shared)
+        plugins.append(FileLogPlugin.shared)
+        #endif
+
+        plugins.append(contentsOf: [
+            LikeButtonPlugin.shared,
+            OpenButtonPlugin.shared,
+            PluginPluginManager.shared,
+            StoragePlugin.shared,
+            StorePlugin.shared,
+            SystemPlugin.shared,
+            SettingGeneralPlugin.shared,
+            ThemeAuroraPlugin.shared,
+            ThemeCisumPlugin.shared,
+            ThemeDaylightSilverPlugin.shared,
+            ThemeForestPlugin.shared,
+            ThemeGraphiteBlackPlugin.shared,
+            ThemeMidnightPlugin.shared,
+            ThemeMonoPlugin.shared,
+            ThemeNebulaPlugin.shared,
+            ThemeOceanPlugin.shared,
+            ThemePaperPlugin.shared,
+            ThemeSettingsPlugin.shared,
+            ThemeStudioBluePlugin.shared,
+            ThemeSunsetPlugin.shared,
+            WelcomePlugin.shared,
+        ] as [any SuperPlugin])
+
+        return plugins
     }
 }
 
@@ -40,7 +132,7 @@ public struct SelectedPluginFactory: PluginFactory {
 
     public init(allowedPluginIDs: Set<String>) {
         self.allowedPluginIDs = allowedPluginIDs
-        self.base = DefaultPluginFactory(plugins: [])
+        self.base = DefaultPluginFactory()
     }
 
     public init(allowedPluginIDs: Set<String>, base: any PluginFactory) {

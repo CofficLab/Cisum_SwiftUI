@@ -1,14 +1,14 @@
 import FactoryCisum
-import PluginRegistry
+import PluginStore
 import SwiftUI
 
-/// 宿主（app target）在编译期确定的插件清单与内核组装配置。
+/// 宿主在编译期确定的内核组装配置。
 ///
-/// 插件清单来自 `PluginRegistry`；Factory 本身不依赖任何具体插件，
-/// 由这里显式注入，保持依赖方向单向（App → Factory + Registry）。
+/// 插件清单由 `FactoryCisum` 的 `DefaultPluginFactory` 直接装配（对齐 Lumi，
+/// Factory 是唯一知道"应用由哪些插件组成"的地方），宿主不再注入插件列表。
 @MainActor
 private enum CisumAppAssembly {
-    static let configuration = try! FactoryCisumConfiguration(plugins: PluginRegistry.plugins)
+    static let configuration = FactoryCisumConfiguration()
 }
 
 @main
