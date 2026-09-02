@@ -1,5 +1,4 @@
 import AppIntents
-import PluginRegistry
 import Foundation
 import WidgetKit
 import OSLog
@@ -44,7 +43,7 @@ private func incrementWidgetCommand(_ key: String) {
     }
 }
 
-public struct PlayPauseIntent: AppIntent, SuperLog {
+public struct PlayPauseIntent: AppIntent {
     nonisolated public static let emoji = "🎵"
     nonisolated static let verbose = false
 
@@ -55,7 +54,7 @@ public struct PlayPauseIntent: AppIntent, SuperLog {
     public init() {}
 
     public func perform() async throws -> some IntentResult {
-        os_log("\(Self.t)Play/Pause intent performed")
+        os_log("[CisumWidget] Play/Pause intent performed")
 
         // 通过 App Groups UserDefaults 触发主 App 操作。
         incrementWidgetCommand("widgetPlayPauseTrigger")
@@ -67,7 +66,7 @@ public struct PlayPauseIntent: AppIntent, SuperLog {
     }
 }
 
-public struct NextTrackIntent: AppIntent, SuperLog {
+public struct NextTrackIntent: AppIntent {
     nonisolated public static let emoji = "🎵"
     nonisolated static let verbose = false
 
@@ -78,7 +77,7 @@ public struct NextTrackIntent: AppIntent, SuperLog {
     public init() {}
 
     public func perform() async throws -> some IntentResult {
-        os_log("\(Self.t)Next Track intent performed")
+        os_log("[CisumWidget] Next Track intent performed")
 
         // 通过 App Groups UserDefaults 触发主 App 操作。
         incrementWidgetCommand("widgetNextTrigger")
@@ -90,7 +89,7 @@ public struct NextTrackIntent: AppIntent, SuperLog {
     }
 }
 
-public struct PreviousTrackIntent: AppIntent, SuperLog {
+public struct PreviousTrackIntent: AppIntent {
     nonisolated public static let emoji = "🎵"
     nonisolated static let verbose = false
 
@@ -101,7 +100,7 @@ public struct PreviousTrackIntent: AppIntent, SuperLog {
     public init() {}
 
     public func perform() async throws -> some IntentResult {
-        os_log("\(Self.t)Previous Track intent performed")
+        os_log("[CisumWidget] Previous Track intent performed")
 
         // 通过 App Groups UserDefaults 触发主 App 操作。
         incrementWidgetCommand("widgetPreviousTrigger")
