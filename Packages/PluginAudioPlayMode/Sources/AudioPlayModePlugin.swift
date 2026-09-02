@@ -1,9 +1,11 @@
+import CisumKernel
 import CisumUIComponents
 import PluginAudio
 import PluginAudioScene
+import ProviderScene
 import SwiftUI
 
-public actor AudioPlayModePlugin: SuperPlugin {
+public actor AudioPlayModePlugin: SuperPlugin, CisumKernelPlugin {
     public static let shared = AudioPlayModePlugin()
     public static let metadata = PluginMetadata(
         displayName: AudioPlayModePluginInfo.title,
@@ -12,8 +14,29 @@ public actor AudioPlayModePlugin: SuperPlugin {
         order: AudioPlayModePluginInfo.order
     )
 
+    nonisolated(unsafe) private let sceneBox = SceneBox()
+
+    @MainActor
+    public func onBoot(kernel: CisumKernel) async throws {
+        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
+        }
+        sceneBox.scene = scene
+    }
+
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        sceneBox.scene = nil
+    }
+
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
-        AnyView(AudioPlayModePluginRootView(content: content))
+        let scene = sceneBox.scene
+        return AnyView(AudioPlayModePluginRootView(scene: scene, content: content))
+    }
+
+
+    private final class SceneBox {
+        weak var scene: (any SceneProviding)?
     }
 }

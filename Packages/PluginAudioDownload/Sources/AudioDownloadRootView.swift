@@ -1,9 +1,8 @@
 import CisumUIComponents
 import MagicPlayMan
 import OSLog
+import ProviderScene
 import SwiftUI
-
-public typealias AudioDownloadCurrentSceneProvider = @MainActor () -> String?
 
 enum AudioDownloadRequestPolicy {
     static func shouldStartDownload(
@@ -58,21 +57,21 @@ public struct AudioDownloadRootView<Content>: View, SuperLog where Content: View
     @EnvironmentObject private var man: MagicPlayMan
     @State private var downloadGeneration = 0
     @State private var activeDownloadAssets: [URL] = []
-    private let currentSceneName: AudioDownloadCurrentSceneProvider
+    private let scene: (any SceneProviding)?
     private var content: Content
 
     public init(
-        currentSceneName: @escaping AudioDownloadCurrentSceneProvider,
+        scene: (any SceneProviding)?,
         @ViewBuilder content: () -> Content
     ) {
-        self.currentSceneName = currentSceneName
+        self.scene = scene
         self.content = content()
     }
 
     public var body: some View {
         content
             .onAppear(perform: handleOnAppear)
-            .onChange(of: currentSceneName()) { _, newSceneName in
+            .onChange(of: scene?.currentSceneName) { _, newSceneName in
                 handleCurrentSceneChanged(newSceneName)
             }
             .onPlayManAssetChanged(handlePlayManAssetChanged)
@@ -80,7 +79,7 @@ public struct AudioDownloadRootView<Content>: View, SuperLog where Content: View
 
     /// 检查是否应该激活下载功能
     private var shouldActivateDownload: Bool {
-        currentSceneName() == AudioDownloadPluginInfo.audioSceneName
+        scene?.currentSceneName == AudioDownloadPluginInfo.audioSceneName
     }
 }
 

@@ -7,7 +7,6 @@ import OSLog
 import ProviderContentView
 import ProviderControlView
 import ProviderRootView
-import ProviderScene
 import ProviderSettings
 import ProviderStatusView
 import ProviderToolbar
@@ -94,7 +93,6 @@ public enum CisumBuilder: SuperLog {
 
         // 3. 启动内核（插件 onBoot 注册 Storage 等服务 → 校验 → onReady → 贡献聚合）
         try await kernel.startup()
-        pluginService.scene = kernel.scene
 
         // 2.5 注册视图 Provider（对齐 Lumi：视图区域各自为独立的 Provider 契约，
         // 默认实现在此注册进内核；Factory 组装时只做 resolveProvider + 注入 + makeRootView）
@@ -262,8 +260,7 @@ public struct SettingsWindowHost: View {
                     settings: kernel.plugin,
                     appState: kernel.appState,
                     theme: kernel.theme,
-                    storage: kernel.storage,
-                    scene: kernel.scene
+                    storage: kernel.storage
                 )
             }
         }
@@ -338,10 +335,6 @@ struct KernelRootView: View {
         rootContent
             // 插件贡献变化（.id 变化）时整棵子树重建，重新注入内容 Tab 等。
             .id(contributionRevision)
-            .environment(\.currentSceneName, kernel.scene?.currentSceneName)
-            .environment(\.setCurrentSceneAction, { sceneName in
-                try kernel.scene?.setCurrentScene(sceneName)
-            })
             .environment(\.demoMode, kernel.appState?.isDemoMode ?? false)
             .environment(
                 \.appIsImporting,

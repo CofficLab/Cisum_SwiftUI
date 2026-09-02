@@ -2,9 +2,8 @@ import Foundation
 import CisumUIComponents
 import MagicPlayMan
 import OSLog
+import ProviderScene
 import SwiftUI
-
-public typealias BookPlayModeCurrentSceneProvider = @MainActor () -> String?
 
 enum BookPlayModeRestorePolicy {
     static func shouldStorePlayModeChange(currentGeneration: Int, requestGeneration: Int) -> Bool {
@@ -36,15 +35,15 @@ public struct BookPlayModeRootView<Content>: View, SuperLog where Content: View 
 
     private let content: Content
     private let targetSceneName: String
-    private let currentSceneName: BookPlayModeCurrentSceneProvider
+    private let scene: (any SceneProviding)?
 
     public init(
         targetSceneName: String,
-        currentSceneName: @escaping BookPlayModeCurrentSceneProvider,
+        scene: (any SceneProviding)?,
         @ViewBuilder content: () -> Content
     ) {
         self.targetSceneName = targetSceneName
-        self.currentSceneName = currentSceneName
+        self.scene = scene
         self.content = content()
     }
 
@@ -52,14 +51,14 @@ public struct BookPlayModeRootView<Content>: View, SuperLog where Content: View 
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
-            .onChange(of: currentSceneName()) { _, newSceneName in
+            .onChange(of: scene?.currentSceneName) { _, newSceneName in
                 handleCurrentSceneChanged(newSceneName)
             }
     }
 
     /// 检查是否应该激活书籍播放模式管理功能
     private var shouldActivatePlayMode: Bool {
-        currentSceneName() == targetSceneName
+        scene?.currentSceneName == targetSceneName
     }
 }
 
@@ -70,7 +69,7 @@ private extension BookPlayModeRootView {
     ///
     /// 当视图首次出现时触发，执行初始化操作。
     func handleOnAppear() {
-        updatePlayModeActivation(for: currentSceneName())
+        updatePlayModeActivation(for: scene?.currentSceneName)
     }
 
     func handleCurrentSceneChanged(_ sceneName: String?) {

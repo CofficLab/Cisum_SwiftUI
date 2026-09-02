@@ -5,6 +5,7 @@ import MagicPlayMan
 import OSLog
 import PluginAudio
 import PluginAudioLike
+import ProviderScene
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
@@ -101,21 +102,21 @@ public struct AudioProgressRootView<Content>: View, SuperLog where Content: View
     @State private var restoreGeneration = 0
 
     private var content: Content
-    private let currentSceneName: @MainActor () -> String?
+    private let scene: (any SceneProviding)?
     private let audioSceneName: String
     private let audioRepo: @MainActor () -> AudioRepo?
     private let storageResetNotifications: [Notification.Name]
     private let saveWidgetData: @Sendable (String, String, Bool, Data?) -> Void
 
     public init(
-        currentSceneName: @escaping @MainActor () -> String?,
+        scene: (any SceneProviding)?,
         audioSceneName: String,
         audioRepo: @escaping @MainActor () -> AudioRepo?,
         storageResetNotifications: [Notification.Name] = [],
         saveWidgetData: @escaping @Sendable (String, String, Bool, Data?) -> Void,
         @ViewBuilder content: () -> Content
     ) {
-        self.currentSceneName = currentSceneName
+        self.scene = scene
         self.audioSceneName = audioSceneName
         self.audioRepo = audioRepo
         self.storageResetNotifications = storageResetNotifications
@@ -127,7 +128,7 @@ public struct AudioProgressRootView<Content>: View, SuperLog where Content: View
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
-            .onChange(of: currentSceneName()) { oldSceneName, newSceneName in
+            .onChange(of: scene?.currentSceneName) { oldSceneName, newSceneName in
                 handleCurrentSceneChanged(from: oldSceneName, to: newSceneName)
             }
             .onPlayManStateChanged(handlePlayManStateChanged)
@@ -141,7 +142,7 @@ public struct AudioProgressRootView<Content>: View, SuperLog where Content: View
 
     /// 检查是否应该激活进度管理功能
     private var shouldActivateProgress: Bool {
-        currentSceneName() == audioSceneName
+        scene?.currentSceneName == audioSceneName
     }
 }
 
@@ -298,7 +299,7 @@ extension AudioProgressRootView {
     /// 1. 恢复上次播放状态
     /// 2. 恢复播放模式
     func handleOnAppear() {
-        restorePlayingIfNeeded(for: currentSceneName())
+        restorePlayingIfNeeded(for: scene?.currentSceneName)
     }
 
     /// 处理视图消失事件，避免播放中离开页面时丢失最后进度。

@@ -3,9 +3,9 @@ import CisumUIComponents
 import MagicPlayMan
 import OSLog
 import PluginBook
+import ProviderScene
 import SwiftUI
 
-public typealias BookProgressCurrentSceneProvider = @MainActor () -> String?
 public typealias BookProgressURLProvider = @MainActor () -> URL?
 public typealias BookProgressTimeProvider = @MainActor () -> TimeInterval?
 public typealias BookProgressStoreCurrentURL = @MainActor (URL?) -> Void
@@ -266,7 +266,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
 
     private let content: Content
     private let targetSceneName: String
-    private let currentSceneName: BookProgressCurrentSceneProvider
+    private let scene: (any SceneProviding)?
     private let currentBookURL: BookProgressURLProvider
     private let currentBookTime: BookProgressTimeProvider
     private let storeCurrentBookURL: BookProgressStoreCurrentURL
@@ -275,7 +275,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
 
     public init(
         targetSceneName: String,
-        currentSceneName: @escaping BookProgressCurrentSceneProvider,
+        scene: (any SceneProviding)?,
         currentBookURL: @escaping BookProgressURLProvider,
         currentBookTime: @escaping BookProgressTimeProvider,
         storeCurrentBookURL: @escaping BookProgressStoreCurrentURL,
@@ -284,7 +284,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
         @ViewBuilder content: () -> Content
     ) {
         self.targetSceneName = targetSceneName
-        self.currentSceneName = currentSceneName
+        self.scene = scene
         self.currentBookURL = currentBookURL
         self.currentBookTime = currentBookTime
         self.storeCurrentBookURL = storeCurrentBookURL
@@ -297,7 +297,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
-            .onChange(of: currentSceneName()) { _, newSceneName in
+            .onChange(of: scene?.currentSceneName) { _, newSceneName in
                 handleCurrentSceneChanged(newSceneName)
             }
             .onPlayManStateChanged(handlePlayManStateChanged)
@@ -306,7 +306,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
 
     /// 检查是否应该激活书籍进度管理功能
     private var shouldActivateProgress: Bool {
-        currentSceneName() == targetSceneName
+        scene?.currentSceneName == targetSceneName
     }
 }
 
@@ -317,7 +317,7 @@ private extension BookProgressRootView {
     ///
     /// 当视图首次出现时触发，恢复上次播放的书籍和进度。
     func handleOnAppear() {
-        updateProgressActivation(for: currentSceneName())
+        updateProgressActivation(for: scene?.currentSceneName)
     }
 
     /// 处理视图消失事件，释放播放器事件订阅。

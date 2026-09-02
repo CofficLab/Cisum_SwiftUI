@@ -48,6 +48,13 @@ struct ScenePluginTests {
         return manager
     }
 
+    private func clearLegacyPersistence() {
+        UserDefaults.standard.removeObject(forKey: "currentSceneName")
+        UserDefaults.standard.removeObject(forKey: "currentPluginID")
+        NSUbiquitousKeyValueStore.default.removeObject(forKey: "currentSceneName")
+        NSUbiquitousKeyValueStore.default.removeObject(forKey: "currentPluginID")
+    }
+
     @Test
     func persistsAndRestoresCurrentSceneFromDisk() throws {
         let persistenceURL = try makePersistenceURL()
@@ -86,5 +93,32 @@ struct ScenePluginTests {
         #expect(throws: SceneContributionError.self) {
             try service.setCurrentScene("不存在")
         }
+    }
+
+    @Test
+    func notifiesObserversAfterSceneChangesAndSupportsCancellation() throws {
+        let persistenceURL = try makePersistenceURL()
+        clearLegacyPersistence()
+        defer {
+            clearLegacyPersistence()
+            try? FileManager.default.removeItem(at: persistenceURL.deletingLastPathComponent())
+        }
+        let service = SceneService(manager: makeManager(), persistenceURL: persistenceURL)
+        var observedScenes: [String?] = []
+        let handle = service.addObserver { event in
+            if case let .selectionChanged(sceneName) = event {
+                observedScenes.append(sceneName)
+                #expect(service.currentSceneName == sceneName)
+            }
+        }
+        defer { handle.cancel() }
+
+        service.restoreCurrentScene()
+        try service.setCurrentScene("有声书")
+        #expect(observedScenes == ["音乐库", "有声书"])
+
+        handle.cancel()
+        try service.setCurrentScene("音乐库")
+        #expect(observedScenes == ["音乐库", "有声书"])
     }
 }

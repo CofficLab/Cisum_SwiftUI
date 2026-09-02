@@ -2,7 +2,6 @@ import CisumKernel
 import CisumUIComponents
 import ProviderAppState
 import ProviderPlugin
-import ProviderScene
 import ProviderStorage
 import ProviderTheme
 import SwiftUI
@@ -30,20 +29,16 @@ public struct SettingsWindow: View {
     private let appState: (any AppStateProviding)?
     private let theme: (any ThemeProviding)?
     private let storage: (any StorageProviding)?
-    private let scene: (any SceneProviding)?
-
     public init(
         settings: (any PluginProviding)?,
         appState: (any AppStateProviding)?,
         theme: (any ThemeProviding)?,
-        storage: (any StorageProviding)?,
-        scene: (any SceneProviding)? = nil
+        storage: (any StorageProviding)?
     ) {
         self.settings = settings
         self.appState = appState
         self.theme = theme
         self.storage = storage
-        self.scene = scene
         self._selection = State(initialValue: "")
     }
 
@@ -76,8 +71,7 @@ public struct SettingsWindow: View {
             settings: settings,
             appState: appState,
             theme: theme,
-            storage: storage,
-            scene: scene
+            storage: storage
         ))
     }
 
@@ -170,14 +164,9 @@ private struct KernelEnvironmentModifier: ViewModifier {
     let appState: (any AppStateProviding)?
     let theme: (any ThemeProviding)?
     let storage: (any StorageProviding)?
-    let scene: (any SceneProviding)?
 
     func body(content: Content) -> some View {
         content
-            .environment(\.currentSceneName, scene?.currentSceneName)
-            .environment(\.setCurrentSceneAction, { sceneName in
-                try scene?.setCurrentScene(sceneName)
-            })
             .environment(\.demoMode, appState?.isDemoMode ?? false)
             .environment(
                 \.appIsImporting,

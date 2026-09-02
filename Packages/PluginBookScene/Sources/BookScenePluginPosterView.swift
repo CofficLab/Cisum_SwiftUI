@@ -3,7 +3,11 @@ import SwiftUI
 
 struct BookScenePluginPosterView: View {
     @Environment(\.posterDismissAction) private var dismissAction
-    @Environment(\.setCurrentSceneAction) private var setCurrentScene
+    private let setCurrentScene: @MainActor (String) throws -> Void
+
+    init(setCurrentScene: @escaping @MainActor (String) throws -> Void) {
+        self.setCurrentScene = setCurrentScene
+    }
 
     var body: some View {
         BookPosterView(

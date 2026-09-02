@@ -1,9 +1,11 @@
+import CisumKernel
 import CisumUIComponents
 import PluginAudio
 import PluginAudioScene
+import ProviderScene
 import SwiftUI
 
-public actor AudioDBPlugin: SuperPlugin {
+public actor AudioDBPlugin: SuperPlugin, CisumKernelPlugin {
     public static let shared = AudioDBPlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), bundle: .module),
@@ -12,17 +14,36 @@ public actor AudioDBPlugin: SuperPlugin {
         order: 1
     )
 
+    nonisolated(unsafe) private let sceneBox = SceneBox()
+
+    @MainActor
+    public func onBoot(kernel: CisumKernel) async throws {
+        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
+        }
+        sceneBox.scene = scene
+    }
+
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        sceneBox.scene = nil
+    }
+
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(AudioDBPluginRootView(content: content))
     }
 
     @MainActor
-    public func addTabView(reason: String, currentSceneName: String?, demoMode: Bool = false) -> (view: AnyView, label: String)? {
-        guard currentSceneName == AudioScenePlugin.sceneName else { return nil }
+    public func addTabView(reason: String, demoMode: Bool = false) -> (view: AnyView, label: String)? {
+        guard sceneBox.scene?.currentSceneName == AudioScenePlugin.sceneName else { return nil }
         guard demoMode == false else { return nil }
 
         return (AnyView(AudioDBPluginTabView(demoMode: demoMode)), String(localized: "Music Repository", bundle: .module))
+    }
+
+    private final class SceneBox {
+        weak var scene: (any SceneProviding)?
     }
 }
 
@@ -94,5 +115,10 @@ private struct AudioDBPluginTabView: View {
         #else
             false
         #endif
+    }
+
+
+    private final class SceneBox {
+        weak var scene: (any SceneProviding)?
     }
 }

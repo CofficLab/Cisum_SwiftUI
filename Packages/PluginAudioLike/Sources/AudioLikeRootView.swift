@@ -2,9 +2,8 @@ import Foundation
 import CisumUIComponents
 import MagicPlayMan
 import OSLog
+import ProviderScene
 import SwiftUI
-
-public typealias AudioLikeCurrentSceneProvider = @MainActor () -> String?
 
 enum AudioLikeStatusChangePolicy {
     static func shouldAcceptChange(isSceneActive: Bool) -> Bool {
@@ -25,15 +24,15 @@ public struct AudioLikeRootView<Content>: View, SuperLog where Content: View {
 
     private let content: Content
     private let targetSceneName: String
-    private let currentSceneName: AudioLikeCurrentSceneProvider
+    private let scene: (any SceneProviding)?
 
     public init(
         targetSceneName: String,
-        currentSceneName: @escaping AudioLikeCurrentSceneProvider,
+        scene: (any SceneProviding)?,
         @ViewBuilder content: () -> Content
     ) {
         self.targetSceneName = targetSceneName
-        self.currentSceneName = currentSceneName
+        self.scene = scene
         self.content = content()
     }
 
@@ -41,19 +40,19 @@ public struct AudioLikeRootView<Content>: View, SuperLog where Content: View {
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
-            .onChange(of: currentSceneName()) { _, newSceneName in
+            .onChange(of: scene?.currentSceneName) { _, newSceneName in
                 handleCurrentSceneChanged(newSceneName)
             }
     }
 
     private var shouldActivateLike: Bool {
-        currentSceneName() == targetSceneName
+        scene?.currentSceneName == targetSceneName
     }
 }
 
 private extension AudioLikeRootView {
     func handleOnAppear() {
-        updateLikeActivation(for: currentSceneName())
+        updateLikeActivation(for: scene?.currentSceneName)
     }
 
     func handleCurrentSceneChanged(_ sceneName: String?) {

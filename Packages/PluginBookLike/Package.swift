@@ -17,7 +17,9 @@ let package = Package(
     dependencies: [
         .package(path: "../CisumUIComponents"),
         .package(path: "../PluginBookScene"),
-        .package(path: "../MagicPlayMan")
+        .package(path: "../MagicPlayMan"),
+        .package(path: "../CisumKernel"),
+        .package(path: "../ProviderScene")
     ],
     targets: [
         .target(
@@ -25,7 +27,9 @@ let package = Package(
             dependencies: [
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "PluginBookScene", package: "PluginBookScene"),
-                .product(name: "MagicPlayMan", package: "MagicPlayMan")
+                .product(name: "MagicPlayMan", package: "MagicPlayMan"),
+                .product(name: "CisumKernel", package: "CisumKernel"),
+                .product(name: "ProviderScene", package: "ProviderScene")
             ],
             path: "Sources",
             resources: [

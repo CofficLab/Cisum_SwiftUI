@@ -1,8 +1,10 @@
+import CisumKernel
 import CisumUIComponents
 import PluginAudioScene
+import ProviderScene
 import SwiftUI
 
-public actor AudioDemoPlugin: SuperPlugin {
+public actor AudioDemoPlugin: SuperPlugin, CisumKernelPlugin {
     public static let shared = AudioDemoPlugin()
     public static let metadata = PluginMetadata(
         displayName: AudioDemoPluginInfo.title,
@@ -11,9 +13,24 @@ public actor AudioDemoPlugin: SuperPlugin {
         order: 1
     )
 
+    nonisolated(unsafe) private let sceneBox = SceneBox()
+
     @MainActor
-    public func addTabView(reason: String, currentSceneName: String?, demoMode: Bool = false) -> (view: AnyView, label: String)? {
-        guard currentSceneName == AudioScenePlugin.sceneName else { return nil }
+    public func onBoot(kernel: CisumKernel) async throws {
+        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
+        }
+        sceneBox.scene = scene
+    }
+
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        sceneBox.scene = nil
+    }
+
+    @MainActor
+    public func addTabView(reason: String, demoMode: Bool = false) -> (view: AnyView, label: String)? {
+        guard sceneBox.scene?.currentSceneName == AudioScenePlugin.sceneName else { return nil }
         guard demoMode else { return nil }
 
         let addButton = AnyView(
@@ -34,5 +51,10 @@ public actor AudioDemoPlugin: SuperPlugin {
         #else
             true
         #endif
+    }
+
+
+    private final class SceneBox {
+        weak var scene: (any SceneProviding)?
     }
 }

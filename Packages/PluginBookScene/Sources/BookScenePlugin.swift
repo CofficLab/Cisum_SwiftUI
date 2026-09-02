@@ -1,7 +1,9 @@
+import CisumKernel
 import CisumUIComponents
+import ProviderScene
 import SwiftUI
 
-public actor BookScenePlugin: SuperPlugin {
+public actor BookScenePlugin: SuperPlugin, CisumKernelPlugin {
     public static let shared = BookScenePlugin()
     public static let metadata = PluginMetadata(
         displayName: BookScenePluginInfo.title,
@@ -11,6 +13,23 @@ public actor BookScenePlugin: SuperPlugin {
     )
     public static let sceneName = BookScenePluginInfo.sceneName
 
+    nonisolated(unsafe) private var setSceneAction: (@MainActor (String) throws -> Void)?
+
+    @MainActor
+    public func onBoot(kernel: CisumKernel) async throws {
+        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
+        }
+        self.setSceneAction = { @MainActor sceneName in
+            try scene.setCurrentScene(sceneName)
+        }
+    }
+
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        setSceneAction = nil
+    }
+
     @MainActor
     public func addSceneItem() -> String? {
         Self.sceneName
@@ -18,6 +37,11 @@ public actor BookScenePlugin: SuperPlugin {
 
     @MainActor
     public func addPosterView() -> AnyView? {
-        AnyView(BookScenePluginPosterView())
+        AnyView(BookScenePluginPosterView(setCurrentScene: setSceneAction ?? { _ in }))
+    }
+
+
+    private final class SceneBox {
+        weak var scene: (any SceneProviding)?
     }
 }

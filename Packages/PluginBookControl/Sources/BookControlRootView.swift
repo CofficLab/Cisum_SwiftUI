@@ -3,9 +3,8 @@ import CisumUIComponents
 import MagicPlayMan
 import OSLog
 import PluginBook
+import ProviderScene
 import SwiftUI
-
-public typealias BookControlCurrentSceneProvider = @MainActor () -> String?
 
 enum BookControlBookRootResolver {
     static func bookRoot(containing url: URL, bookDisk: URL?) -> URL {
@@ -327,15 +326,15 @@ public struct BookControlRootView<Content>: View, SuperLog where Content: View {
 
     private let content: Content
     private let targetSceneName: String
-    private let currentSceneName: BookControlCurrentSceneProvider
+    private let scene: (any SceneProviding)?
 
     public init(
         targetSceneName: String,
-        currentSceneName: @escaping BookControlCurrentSceneProvider,
+        scene: (any SceneProviding)?,
         @ViewBuilder content: () -> Content
     ) {
         self.targetSceneName = targetSceneName
-        self.currentSceneName = currentSceneName
+        self.scene = scene
         self.content = content()
     }
 
@@ -343,7 +342,7 @@ public struct BookControlRootView<Content>: View, SuperLog where Content: View {
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
-            .onChange(of: currentSceneName()) { _, newSceneName in
+            .onChange(of: scene?.currentSceneName) { _, newSceneName in
                 handleCurrentSceneChanged(newSceneName)
             }
             .onReceive(NotificationCenter.default.publisher(for: .bookDBDeleted), perform: handleBookDBDeleted)
@@ -356,7 +355,7 @@ public struct BookControlRootView<Content>: View, SuperLog where Content: View {
 
     /// 检查是否应该激活书籍播放控制功能
     private var shouldActivateControl: Bool {
-        currentSceneName() == targetSceneName
+        scene?.currentSceneName == targetSceneName
     }
 }
 
@@ -367,7 +366,7 @@ extension BookControlRootView {
     ///
     /// 当视图首次出现时触发，执行初始化操作。
     func handleOnAppear() {
-        updateControlActivation(for: currentSceneName())
+        updateControlActivation(for: scene?.currentSceneName)
     }
 
     func handleCurrentSceneChanged(_ sceneName: String?) {

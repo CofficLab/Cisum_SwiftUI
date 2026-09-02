@@ -1,9 +1,11 @@
+import CisumKernel
 import CisumUIComponents
 import PluginAudio
 import PluginAudioScene
+import ProviderScene
 import SwiftUI
 
-public actor AudioControlPlugin: SuperPlugin {
+public actor AudioControlPlugin: SuperPlugin, CisumKernelPlugin {
     public static let shared = AudioControlPlugin()
     public static let metadata = PluginMetadata(
         displayName: AudioControlPluginInfo.title,
@@ -11,8 +13,29 @@ public actor AudioControlPlugin: SuperPlugin {
         iconName: AudioControlPluginInfo.iconName
     )
 
+    nonisolated(unsafe) private let sceneBox = SceneBox()
+
+    @MainActor
+    public func onBoot(kernel: CisumKernel) async throws {
+        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
+        }
+        sceneBox.scene = scene
+    }
+
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        sceneBox.scene = nil
+    }
+
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
-        AnyView(AudioControlPluginRootView(content: content))
+        let scene = sceneBox.scene
+        return AnyView(AudioControlPluginRootView(scene: scene, content: content))
+    }
+
+
+    private final class SceneBox {
+        weak var scene: (any SceneProviding)?
     }
 }

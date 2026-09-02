@@ -17,22 +17,26 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../CisumUIComponents"),
+        .package(path: "../CisumKernel"),
         .package(path: "../PluginAudio"),
         .package(path: "../PluginBook"),
         .package(path: "../PluginBookScene"),
         .package(path: "../PluginDevice"),
         .package(path: "../MagicPlayMan"),
+        .package(path: "../ProviderScene"),
     ],
     targets: [
         .target(
             name: "PluginBookDBView",
             dependencies: [
                 "CisumUIComponents",
+                .product(name: "CisumKernel", package: "CisumKernel"),
                 "PluginAudio",
                 "PluginBook",
                 "PluginBookScene",
                 "PluginDevice",
                 "MagicPlayMan",
+                "ProviderScene",
             ],
             path: "Sources",
             resources: [

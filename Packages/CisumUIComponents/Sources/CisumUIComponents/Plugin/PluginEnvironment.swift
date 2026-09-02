@@ -4,10 +4,6 @@ private struct PosterDismissActionKey: EnvironmentKey {
     static let defaultValue: @MainActor () -> Void = {}
 }
 
-private struct SetCurrentSceneActionKey: EnvironmentKey {
-    static let defaultValue: @MainActor (String) throws -> Void = { _ in }
-}
-
 private struct ResetSettingsActionKey: EnvironmentKey {
     static let defaultValue: @Sendable () async -> Void = {}
 }
@@ -22,10 +18,6 @@ private struct CurrentPluginThemeIdKey: EnvironmentKey {
 
 private struct SelectPluginThemeActionKey: EnvironmentKey {
     static let defaultValue: @MainActor (String) -> Void = { _ in }
-}
-
-private struct CurrentSceneNameKey: EnvironmentKey {
-    static let defaultValue: String? = nil
 }
 
 private struct DemoModeKey: EnvironmentKey {
@@ -46,11 +38,6 @@ public extension EnvironmentValues {
         set { self[PosterDismissActionKey.self] = newValue }
     }
 
-    var setCurrentSceneAction: @MainActor (String) throws -> Void {
-        get { self[SetCurrentSceneActionKey.self] }
-        set { self[SetCurrentSceneActionKey.self] = newValue }
-    }
-
     var resetSettingsAction: @Sendable () async -> Void {
         get { self[ResetSettingsActionKey.self] }
         set { self[ResetSettingsActionKey.self] = newValue }
@@ -69,11 +56,6 @@ public extension EnvironmentValues {
     var selectPluginThemeAction: @MainActor (String) -> Void {
         get { self[SelectPluginThemeActionKey.self] }
         set { self[SelectPluginThemeActionKey.self] = newValue }
-    }
-
-    var currentSceneName: String? {
-        get { self[CurrentSceneNameKey.self] }
-        set { self[CurrentSceneNameKey.self] = newValue }
     }
 
     var demoMode: Bool {

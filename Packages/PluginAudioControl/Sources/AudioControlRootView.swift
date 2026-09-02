@@ -2,12 +2,12 @@ import Foundation
 import CisumUIComponents
 import MagicPlayMan
 import OSLog
+import ProviderScene
 import SwiftUI
 
 public typealias AudioControlAdjacentAssetProvider = @MainActor (_ current: URL?, _ verbose: Bool) async throws -> URL?
 public typealias AudioControlFirstAssetProvider = @MainActor () async throws -> URL?
 public typealias AudioControlLastAssetProvider = @MainActor () async throws -> URL?
-public typealias AudioControlCurrentSceneProvider = @MainActor () -> String?
 
 private enum AudioControlRuntime {
     static let verbose = true
@@ -100,7 +100,7 @@ public struct AudioControlRootView<Content>: View where Content: View {
 
     private let content: Content
     private let targetSceneName: String
-    private let currentSceneName: AudioControlCurrentSceneProvider
+    private let scene: (any SceneProviding)?
     private let nextAsset: AudioControlAdjacentAssetProvider
     private let previousAsset: AudioControlAdjacentAssetProvider
     private let firstAsset: AudioControlFirstAssetProvider
@@ -108,7 +108,7 @@ public struct AudioControlRootView<Content>: View where Content: View {
 
     public init(
         targetSceneName: String,
-        currentSceneName: @escaping AudioControlCurrentSceneProvider,
+        scene: (any SceneProviding)?,
         nextAsset: @escaping AudioControlAdjacentAssetProvider,
         previousAsset: @escaping AudioControlAdjacentAssetProvider,
         firstAsset: @escaping AudioControlFirstAssetProvider,
@@ -116,7 +116,7 @@ public struct AudioControlRootView<Content>: View where Content: View {
         @ViewBuilder content: () -> Content
     ) {
         self.targetSceneName = targetSceneName
-        self.currentSceneName = currentSceneName
+        self.scene = scene
         self.nextAsset = nextAsset
         self.previousAsset = previousAsset
         self.firstAsset = firstAsset
@@ -128,7 +128,7 @@ public struct AudioControlRootView<Content>: View where Content: View {
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
-            .onChange(of: currentSceneName()) { _, newSceneName in
+            .onChange(of: scene?.currentSceneName) { _, newSceneName in
                 handleCurrentSceneChanged(newSceneName)
             }
             .onReceive(NotificationCenter.default.publisher(for: .audioControlDBDeleted), perform: handleDBDeleted)
@@ -138,13 +138,13 @@ public struct AudioControlRootView<Content>: View where Content: View {
     }
 
     private var shouldActivateControl: Bool {
-        currentSceneName() == targetSceneName
+        scene?.currentSceneName == targetSceneName
     }
 }
 
 private extension AudioControlRootView {
     func handleOnAppear() {
-        updateControlActivation(for: currentSceneName())
+        updateControlActivation(for: scene?.currentSceneName)
     }
 
     func handleCurrentSceneChanged(_ sceneName: String?) {

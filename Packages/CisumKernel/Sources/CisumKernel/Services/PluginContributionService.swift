@@ -1,7 +1,6 @@
 import CisumUIComponents
 import Foundation
 import ProviderPlugin
-import ProviderScene
 import SwiftUI
 
 /// 将 `BuiltinPluginManager` 中的插件 UI 贡献聚合为 Kernel Provider。
@@ -12,14 +11,11 @@ import SwiftUI
 /// 无需直接依赖插件注册表。
 ///
 /// 场景管理（场景列表/当前场景/切换与持久化）已独立到 `PluginScene` 的
-/// `SceneService`（`SceneProviding`）；本服务通过弱引用 `scene` 读取当前
-/// 场景名以聚合场景相关的视图贡献。
+/// `SceneService`（`SceneProviding`）；场景相关视图由插件自行从 Kernel
+/// 解析场景能力并注入所需状态。
 @MainActor
 public final class PluginContributionService: ObservableObject, PluginProviding {
     private let manager: BuiltinPluginManager
-
-    /// 场景服务（弱引用，避免与 `SceneService` 形成强引用环）。
-    public weak var scene: (any SceneProviding)?
 
     // MARK: - Caches
 

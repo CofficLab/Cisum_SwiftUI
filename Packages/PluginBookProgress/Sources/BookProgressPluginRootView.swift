@@ -2,21 +2,23 @@ import CisumUIComponents
 import OSLog
 import PluginBook
 import PluginBookScene
+import ProviderScene
 import SwiftData
 import SwiftUI
 
 struct BookProgressPluginRootView<Content>: View where Content: View {
-    @Environment(\.currentSceneName) private var currentSceneName
+    private let scene: (any SceneProviding)?
     private let content: Content
 
-    init(@ViewBuilder content: () -> Content) {
+    init(scene: (any SceneProviding)?, @ViewBuilder content: () -> Content) {
+        self.scene = scene
         self.content = content()
     }
 
     var body: some View {
         BookProgressRootView(
             targetSceneName: BookScenePlugin.sceneName,
-            currentSceneName: { currentSceneName },
+            scene: scene,
             currentBookURL: { BookSettingRepo.getCurrent() },
             currentBookTime: { BookSettingRepo.getCurrentTime() },
             storeCurrentBookURL: { BookSettingRepo.storeCurrent($0) },

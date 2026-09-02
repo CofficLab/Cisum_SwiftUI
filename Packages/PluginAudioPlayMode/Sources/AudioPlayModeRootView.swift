@@ -2,9 +2,9 @@ import Foundation
 import CisumUIComponents
 import MagicPlayMan
 import OSLog
+import ProviderScene
 import SwiftUI
 
-public typealias AudioPlayModeCurrentSceneProvider = @MainActor () -> String?
 public typealias AudioPlayModeSortAction = @MainActor (_ currentURL: URL?) async throws -> Void
 public typealias AudioPlayModeShuffleAction = @MainActor (_ currentURL: URL?) async throws -> Void
 
@@ -61,19 +61,19 @@ public struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View
 
     private let content: Content
     private let targetSceneName: String
-    private let currentSceneName: AudioPlayModeCurrentSceneProvider
+    private let scene: (any SceneProviding)?
     private let sort: AudioPlayModeSortAction
     private let shuffle: AudioPlayModeShuffleAction
 
     public init(
         targetSceneName: String,
-        currentSceneName: @escaping AudioPlayModeCurrentSceneProvider,
+        scene: (any SceneProviding)?,
         sort: @escaping AudioPlayModeSortAction,
         shuffle: @escaping AudioPlayModeShuffleAction,
         @ViewBuilder content: () -> Content
     ) {
         self.targetSceneName = targetSceneName
-        self.currentSceneName = currentSceneName
+        self.scene = scene
         self.sort = sort
         self.shuffle = shuffle
         self.content = content()
@@ -83,19 +83,19 @@ public struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
-            .onChange(of: currentSceneName()) { _, newSceneName in
+            .onChange(of: scene?.currentSceneName) { _, newSceneName in
                 handleCurrentSceneChanged(newSceneName)
             }
     }
 
     private var shouldActivatePlayMode: Bool {
-        currentSceneName() == targetSceneName
+        scene?.currentSceneName == targetSceneName
     }
 }
 
 private extension AudioPlayModeRootView {
     func handleOnAppear() {
-        updatePlayModeActivation(for: currentSceneName())
+        updatePlayModeActivation(for: scene?.currentSceneName)
     }
 
     func handleCurrentSceneChanged(_ sceneName: String?) {

@@ -1,19 +1,21 @@
 import CisumUIComponents
 import PluginAudioScene
+import ProviderScene
 import SwiftUI
 
 struct AudioLikePluginRootView<Content>: View where Content: View {
-    @Environment(\.currentSceneName) private var currentSceneName
+    private let scene: (any SceneProviding)?
     private let content: Content
 
-    init(@ViewBuilder content: () -> Content) {
+    init(scene: (any SceneProviding)?, @ViewBuilder content: () -> Content) {
+        self.scene = scene
         self.content = content()
     }
 
     var body: some View {
         AudioLikeRootView(
             targetSceneName: AudioScenePlugin.sceneName,
-            currentSceneName: { currentSceneName }
+            scene: scene
         ) {
             content
         }

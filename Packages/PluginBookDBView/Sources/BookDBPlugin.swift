@@ -1,10 +1,12 @@
+import CisumKernel
 import CisumUIComponents
 import OSLog
 import PluginBook
 import PluginBookScene
+import ProviderScene
 import SwiftUI
 
-public actor BookDBPlugin: SuperPlugin {
+public actor BookDBPlugin: SuperPlugin, CisumKernelPlugin {
     public static let shared = BookDBPlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), bundle: .module),
@@ -13,9 +15,24 @@ public actor BookDBPlugin: SuperPlugin {
         order: 12
     )
 
+    nonisolated(unsafe) private let sceneBox = SceneBox()
+
     @MainActor
-    public func addTabView(reason: String, currentSceneName: String?, demoMode: Bool = false) -> (view: AnyView, label: String)? {
-        guard currentSceneName == BookScenePlugin.sceneName else { return nil }
+    public func onBoot(kernel: CisumKernel) async throws {
+        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
+        }
+        sceneBox.scene = scene
+    }
+
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        sceneBox.scene = nil
+    }
+
+    @MainActor
+    public func addTabView(reason: String, demoMode: Bool = false) -> (view: AnyView, label: String)? {
+        guard sceneBox.scene?.currentSceneName == BookScenePlugin.sceneName else { return nil }
         let label = String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), bundle: .module)
         let dbRoot: URL
 
@@ -36,6 +53,10 @@ public actor BookDBPlugin: SuperPlugin {
         let view = BookDBView()
             .bookDBViewDependencies(dependencies)
         return (AnyView(view), label)
+    }
+
+    private final class SceneBox {
+        weak var scene: (any SceneProviding)?
     }
 }
 
@@ -61,4 +82,9 @@ private enum ConfigShim {
     }
 
     static var isNotDesktop: Bool { !isDesktop }
+
+
+    private final class SceneBox {
+        weak var scene: (any SceneProviding)?
+    }
 }
