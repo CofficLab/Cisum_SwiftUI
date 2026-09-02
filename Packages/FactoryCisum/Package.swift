@@ -26,6 +26,7 @@ let package = Package(
         .package(name: "ProviderPlayback", path: "../ProviderPlayback"),
         .package(name: "ProviderPlugin", path: "../ProviderPlugin"),
         .package(name: "ProviderRootView", path: "../ProviderRootView"),
+        .package(name: "ProviderScene", path: "../ProviderScene"),
         .package(name: "ProviderSettings", path: "../ProviderSettings"),
         .package(name: "ProviderStatusView", path: "../ProviderStatusView"),
         .package(name: "ProviderToolbar", path: "../ProviderToolbar"),
@@ -75,8 +76,8 @@ let package = Package(
         .package(name: "PluginWelcome", path: "../PluginWelcome"),
     ],
     targets: [
-        .target(
-            name: "FactoryCisum",
+            .target(
+                name: "FactoryCisum",
             dependencies: [
                 .product(name: "CisumKernel", package: "CisumKernel"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
@@ -89,6 +90,7 @@ let package = Package(
                 .product(name: "ProviderPlayback", package: "ProviderPlayback"),
                 .product(name: "ProviderPlugin", package: "ProviderPlugin"),
                 .product(name: "ProviderRootView", package: "ProviderRootView"),
+                .product(name: "ProviderScene", package: "ProviderScene"),
                 .product(name: "ProviderSettings", package: "ProviderSettings"),
                 .product(name: "ProviderStatusView", package: "ProviderStatusView"),
                 .product(name: "ProviderToolbar", package: "ProviderToolbar"),
@@ -136,7 +138,10 @@ let package = Package(
                 .product(name: "PluginThemeSunset", package: "PluginThemeSunset"),
                 .product(name: "PluginWelcome", package: "PluginWelcome"),
             ],
-            path: "Sources/FactoryCisum"
+            path: "Sources/FactoryCisum",
+            resources: [
+                .process("Resources"),
+            ]
         ),
     ],
     swiftLanguageModes: [.v5]

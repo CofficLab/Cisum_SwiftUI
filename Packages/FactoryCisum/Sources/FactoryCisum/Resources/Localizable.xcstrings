@@ -1,0 +1,66 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "App Support directory does not exist" : {
+      "localizations" : {
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "应用支持目录不存在" } }
+      }
+    },
+    "Container directory does not exist" : {
+      "localizations" : {
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "容器目录不存在" } }
+      }
+    },
+    "Database directory does not exist" : {
+      "localizations" : {
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "数据库目录不存在" } }
+      }
+    },
+    "DEBUG" : {
+      "localizations" : {
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "调试" } }
+      }
+    },
+    "Documents directory does not exist" : {
+      "localizations" : {
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "文稿目录不存在" } }
+      }
+    },
+    "Error Opening Directory" : {
+      "localizations" : {
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "打开目录出错" } }
+      }
+    },
+    "Open App Support Directory" : {
+      "localizations" : {
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "打开应用支持目录" } }
+      }
+    },
+    "Open Container Directory" : {
+      "localizations" : {
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "打开容器目录" } }
+      }
+    },
+    "Open Database Directory" : {
+      "localizations" : {
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "打开数据库目录" } }
+      }
+    },
+    "Open Documents Directory" : {
+      "localizations" : {
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "打开文稿目录" } }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "好" } }
+      }
+    },
+    "Theme" : {
+      "localizations" : {
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "主题" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}
