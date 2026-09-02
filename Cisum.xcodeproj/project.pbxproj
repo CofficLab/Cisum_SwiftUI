@@ -569,9 +569,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		F50253842FCE69730042F6A5 /* Plugins */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Plugins; sourceTree = "<group>"; };
 		F5826E6E2F3578070079B285 /* CisumWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (F5826E792F3578080079B285 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = CisumWidget; sourceTree = "<group>"; };
-		F5D8424B2FADC1A20058CC8D /* Packages */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Packages; sourceTree = "<group>"; };
 		F5F6D0682F396BC700857743 /* CisumApp */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (F50000000000000000000001 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = CisumApp; sourceTree = "<group>"; };
 		F5F6D24B2F396D7A00857743 /* Shared */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Shared; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -601,8 +599,6 @@
 		0B9C1C342AAF18FE001A26AF = {
 			isa = PBXGroup;
 			children = (
-				F50253842FCE69730042F6A5 /* Plugins */,
-				F5D8424B2FADC1A20058CC8D /* Packages */,
 				F5F6D24B2F396D7A00857743 /* Shared */,
 				F5F6D0682F396BC700857743 /* CisumApp */,
 				F5826E6E2F3578070079B285 /* CisumWidget */,
@@ -814,7 +810,6 @@
 				F5826E772F3578080079B285 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				F50253842FCE69730042F6A5 /* Plugins */,
 				F5F6D0682F396BC700857743 /* CisumApp */,
 				F5F6D24B2F396D7A00857743 /* Shared */,
 			);
@@ -1452,7 +1447,8 @@
 		0B1D5A492AB301AD0010DDF2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
-			files = ();
+			files = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		F5826E662F3578070079B285 /* Resources */ = {
