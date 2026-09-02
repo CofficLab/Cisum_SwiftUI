@@ -105,9 +105,11 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
 
     public func getSettingNavigationItems() -> [PluginSettingNavigationItem] {
         if let cachedSettingNavItems { return cachedSettingNavItems }
+        // 对齐 Lumi `SettingEntryItem.order` 语义：按导航项自身 order 排序，
+        // 允许插件在导航项中指定独立顺序（如「外观」紧跟「通用」排第 2）。
         let value = manager.enabledPlugins
-            .sorted { type(of: $0).metadata.order < type(of: $1).metadata.order }
             .compactMap { $0.addSettingNavigationItem() }
+            .sorted { $0.order < $1.order }
         cachedSettingNavItems = value
         return value
     }
