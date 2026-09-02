@@ -23,7 +23,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../CisumUI"),
-        .package(path: "../CisumFactory"),
+        .package(path: "../FactoryCisum"),
         // MARK: - Plugin Dependencies (keep in sync with PluginRegistry.swift)
         .package(path: "../PluginAudio"),
         .package(path: "../PluginAudioControl"),
@@ -73,7 +73,7 @@ let package = Package(
             name: "PluginRegistry",
             dependencies: [
                 "CisumUI",
-                "CisumFactory",
+                "FactoryCisum",
                 "PluginAudio",
                 "PluginAudioControl",
                 "PluginAudioCopy",

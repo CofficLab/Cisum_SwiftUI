@@ -5,7 +5,7 @@ import ProviderPlayback
 
 /// 将 `MagicPlayMan` 桥接为内核的 `PlaybackProviding`。
 ///
-/// 此一致性声明在 `CisumFactory` 中（而非 `MagicPlayMan` 包内），以避免
+/// 此一致性声明在 `FactoryCisum` 中（而非 `MagicPlayMan` 包内），以避免
 /// `MagicPlayMan → CisumKernel → MagicPlayMan` 的循环依赖。`MagicPlayMan`
 /// 已经是 `@MainActor ObservableObject`，其 `@Published` 状态（`state`、
 /// `currentURL`、`currentTime`、`duration`、`progress`、`playMode`、`likedAssets`）

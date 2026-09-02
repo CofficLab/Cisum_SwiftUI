@@ -14,13 +14,13 @@ import SwiftUI
 /// - 基础设施 Provider 注册（AppState / Playback / Theme / Cloud / Device）
 /// - 窗口 / 命令工厂方法
 ///
-/// 插件清单由宿主（app target）通过 `CisumFactoryConfiguration` 传入，Factory
+/// 插件清单由宿主（app target）通过 `FactoryCisumConfiguration` 传入，Factory
 /// 本身不依赖任何具体插件。
 ///
 /// ## 核心流程
 ///
 /// ```swift
-/// let kernel = try await CisumFactory.createMainKernel(configuration: config)
+/// let kernel = try await FactoryCisum.createMainKernel(configuration: config)
 ///
 /// // 内部:
 /// CisumKernel()
@@ -56,7 +56,7 @@ public enum CisumBuilder: SuperLog {
     /// 3. 启动内核（两阶段生命周期 + 服务校验 + 贡献聚合）
     /// 4. 恢复持久化的当前场景
     /// 5. 订阅插件启用/禁用变更
-    public static func createKernel(configuration: CisumFactoryConfiguration) async throws -> CisumKernel {
+    public static func createKernel(configuration: FactoryCisumConfiguration) async throws -> CisumKernel {
         let kernel = CisumKernel()
 
         // 1. 初始化插件
@@ -95,7 +95,7 @@ public enum CisumBuilder: SuperLog {
     }
 
     /// 创建主内核（幂等：首次调用以传入的 configuration 创建，后续调用返回已有实例）。
-    public static func createMainKernel(configuration: CisumFactoryConfiguration) async throws -> CisumKernel {
+    public static func createMainKernel(configuration: FactoryCisumConfiguration) async throws -> CisumKernel {
         if let existing = mainKernel {
             logger.info("\(Self.t)Main kernel already exists, returning existing instance")
             return existing
@@ -116,7 +116,7 @@ public enum CisumBuilder: SuperLog {
     // MARK: - Window Factory
 
     /// 创建主窗口视图。
-    public static func makeMainWindow(configuration: CisumFactoryConfiguration) -> some View {
+    public static func makeMainWindow(configuration: FactoryCisumConfiguration) -> some View {
         WindowMain(configuration: configuration)
     }
 
@@ -127,7 +127,7 @@ public enum CisumBuilder: SuperLog {
     /// 设置窗口复用 `createMainKernel` 返回的主内核（幂等，与主窗口共享同一实例）。
     /// 设置窗口 UI 本体在独立的 `ProviderSettings` 包中（只依赖 Provider 契约），
     /// 此处仅做接线：创建内核 → 解析各 Provider → 注入设置窗口。
-    public static func makeSettingsWindow(configuration: CisumFactoryConfiguration) -> some View {
+    public static func makeSettingsWindow(configuration: FactoryCisumConfiguration) -> some View {
         SettingsWindowHost(configuration: configuration)
     }
 
@@ -136,7 +136,7 @@ public enum CisumBuilder: SuperLog {
     /// 创建应用命令菜单。
     ///
     /// 命令装配集中在 Factory 包内（对齐 Lumi `FactoryLumi/AppCommands.swift`），
-    /// 宿主只需 `.commands { CisumFactory.makeCommands() }`。
+    /// 宿主只需 `.commands { FactoryCisum.makeCommands() }`。
     public static func makeCommands() -> some Commands {
         CisumAppCommands()
     }
@@ -165,9 +165,9 @@ public struct SettingsWindowHost: View {
     @State private var kernel: CisumKernel?
     @State private var initializationError: Error?
     @State private var isInitializing = true
-    private let configuration: CisumFactoryConfiguration
+    private let configuration: FactoryCisumConfiguration
 
-    public init(configuration: CisumFactoryConfiguration) {
+    public init(configuration: FactoryCisumConfiguration) {
         self.configuration = configuration
     }
 
@@ -195,7 +195,7 @@ public struct SettingsWindowHost: View {
         guard kernel == nil, initializationError == nil else { return }
 
         do {
-            kernel = try await CisumFactory.createMainKernel(configuration: configuration)
+            kernel = try await FactoryCisum.createMainKernel(configuration: configuration)
         } catch {
             initializationError = error
         }
@@ -210,9 +210,9 @@ public struct WindowMain: View {
     @State private var kernel: CisumKernel?
     @State private var initializationError: Error?
     @State private var isInitializing = true
-    private let configuration: CisumFactoryConfiguration
+    private let configuration: FactoryCisumConfiguration
 
-    public init(configuration: CisumFactoryConfiguration) {
+    public init(configuration: FactoryCisumConfiguration) {
         self.configuration = configuration
     }
 
@@ -235,7 +235,7 @@ public struct WindowMain: View {
         guard kernel == nil, initializationError == nil else { return }
 
         do {
-            kernel = try await CisumFactory.createMainKernel(configuration: configuration)
+            kernel = try await FactoryCisum.createMainKernel(configuration: configuration)
         } catch {
             initializationError = error
         }
@@ -268,7 +268,7 @@ struct KernelRootView: View {
             .environment(\.selectPluginThemeAction, { themeID in kernel.theme?.selectTheme(themeID) })
             .environment(\.resetSettingsAction, {
                 Task { @MainActor in
-                    CisumFactory.mainKernel?.storage?.resetStorageLocation()
+                    FactoryCisum.mainKernel?.storage?.resetStorageLocation()
                 }
             })
     }
@@ -325,4 +325,4 @@ private struct KernelErrorView: View {
 }
 
 /// 兼容别名。
-public typealias CisumFactory = CisumBuilder
+public typealias FactoryCisum = CisumBuilder

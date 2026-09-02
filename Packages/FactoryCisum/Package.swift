@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "CisumFactory",
+    name: "FactoryCisum",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,8 +10,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "CisumFactory",
-            targets: ["CisumFactory"]
+            name: "FactoryCisum",
+            targets: ["FactoryCisum"]
         ),
     ],
     dependencies: [
@@ -27,7 +27,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "CisumFactory",
+            name: "FactoryCisum",
             dependencies: [
                 .product(name: "CisumKernel", package: "CisumKernel"),
                 .product(name: "CisumUI", package: "CisumUI"),
@@ -39,7 +39,7 @@ let package = Package(
                 .product(name: "ProviderPlugin", package: "ProviderPlugin"),
                 .product(name: "ProviderSettings", package: "ProviderSettings"),
             ],
-            path: "Sources/CisumFactory"
+            path: "Sources/FactoryCisum"
         ),
     ],
     swiftLanguageModes: [.v5]

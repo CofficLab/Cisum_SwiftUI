@@ -1,4 +1,4 @@
-import CisumFactory
+import FactoryCisum
 import PluginRegistry
 import SwiftUI
 
@@ -8,7 +8,7 @@ import SwiftUI
 /// 由这里显式注入，保持依赖方向单向（App → Factory + Registry）。
 @MainActor
 private enum CisumAppAssembly {
-    static let configuration = try! CisumFactoryConfiguration(plugins: PluginRegistry.plugins)
+    static let configuration = try! FactoryCisumConfiguration(plugins: PluginRegistry.plugins)
 }
 
 @main
@@ -27,7 +27,7 @@ struct NewApp: App {
     var body: some Scene {
         #if os(macOS)
         WindowGroup(AppBootstrap.appName, id: AppBootstrap.mainWindowID) {
-            CisumFactory.makeMainWindow(configuration: CisumAppAssembly.configuration)
+            FactoryCisum.makeMainWindow(configuration: CisumAppAssembly.configuration)
         }
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified(showsTitle: false))
@@ -37,11 +37,11 @@ struct NewApp: App {
         )
         .commands {
             // 命令装配集中在 Factory 包内（CisumAppCommands，含「设置…」⌘,）。
-            CisumFactory.makeCommands()
+            FactoryCisum.makeCommands()
         }
 
         Window("设置", id: AppBootstrap.settingsWindowID) {
-            CisumFactory.makeSettingsWindow(configuration: CisumAppAssembly.configuration)
+            FactoryCisum.makeSettingsWindow(configuration: CisumAppAssembly.configuration)
         }
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified(showsTitle: false))
@@ -51,7 +51,7 @@ struct NewApp: App {
         )
         #else
         WindowGroup(AppBootstrap.appName, id: AppBootstrap.mainWindowID) {
-            CisumFactory.makeMainWindow(configuration: CisumAppAssembly.configuration)
+            FactoryCisum.makeMainWindow(configuration: CisumAppAssembly.configuration)
         }
         #endif
     }

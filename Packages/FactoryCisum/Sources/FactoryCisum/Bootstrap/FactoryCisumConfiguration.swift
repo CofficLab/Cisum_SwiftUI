@@ -7,7 +7,7 @@ import Foundation
 /// 对齐 Lumi 的 `FactoryConfiguration`：携带插件清单与显式启用的插件 id 集合，
 /// 在初始化时校验重复 id 与未知启用 id。插件清单由宿主（app target）提供，
 /// Factory 本身不依赖任何具体插件。
-public struct CisumFactoryConfiguration: @unchecked Sendable {
+public struct FactoryCisumConfiguration: @unchecked Sendable {
     /// 有序插件清单。
     public let plugins: [any SuperPlugin]
 
@@ -19,19 +19,19 @@ public struct CisumFactoryConfiguration: @unchecked Sendable {
         var seen = Set<String>()
         for plugin in plugins {
             guard seen.insert(plugin.id).inserted else {
-                throw CisumFactoryError.duplicatePluginID(plugin.id)
+                throw FactoryCisumError.duplicatePluginID(plugin.id)
             }
         }
         let unknown = enabledPluginIDs.subtracting(seen)
         if !unknown.isEmpty {
-            throw CisumFactoryError.unknownEnabledPluginID(unknown.sorted().joined(separator: ", "))
+            throw FactoryCisumError.unknownEnabledPluginID(unknown.sorted().joined(separator: ", "))
         }
         self.plugins = plugins
         self.enabledPluginIDs = enabledPluginIDs
     }
 }
 
-public enum CisumFactoryError: LocalizedError {
+public enum FactoryCisumError: LocalizedError {
     case duplicatePluginID(String)
     case unknownEnabledPluginID(String)
 

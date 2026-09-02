@@ -3,7 +3,7 @@ import SwiftUI
 /// Cisum 应用命令装配（对齐 Lumi `FactoryLumi/AppCommands.swift`）。
 ///
 /// 菜单栏命令的装配集中在 Factory 包内完成；宿主 App 只需
-/// `.commands { CisumFactory.makeCommands() }`，不需要关心命令从哪来。
+/// `.commands { FactoryCisum.makeCommands() }`，不需要关心命令从哪来。
 public struct CisumAppCommands: Commands {
     @Environment(\.openWindow) private var openWindow
 
