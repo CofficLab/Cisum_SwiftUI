@@ -83,20 +83,45 @@ public struct SettingsWindow: View {
     }
 
     #if os(macOS)
-    /// macOS：双栏 + `List(selection:)`（菜单栏设置窗口的标准交互）。
+    /// macOS：双栏，侧边栏对齐 Lumi `AppSettingsSidebarContainer` 结构
+    /// （顶部 app 信息 Header + 分隔线 + 入口列表，手动管理选中态）。
     private func macOSSplitView(
         settingViews: [AnyView],
         navItems: [PluginSettingNavigationItem]
     ) -> some View {
         NavigationSplitView {
-            List(selection: $selection) {
-                if !settingViews.isEmpty {
-                    Label("插件设置", systemImage: "puzzlepiece.extension")
-                        .tag(Self.allSettingsID)
-                }
-                ForEach(navItems) { item in
-                    Label(item.title, systemImage: item.iconName)
-                        .tag(item.id)
+            AppSettingsSidebarContainer(width: 220) {
+                VStack(alignment: .leading, spacing: 10) {
+                    SettingsHeaderView()
+
+                    AppSettingsDivider()
+
+                    ScrollView {
+                        VStack(spacing: 6) {
+                            if !settingViews.isEmpty {
+                                AppSettingsSidebarItem(
+                                    title: "插件设置",
+                                    systemImage: "puzzlepiece.extension",
+                                    isSelected: selection == Self.allSettingsID
+                                ) {
+                                    selection = Self.allSettingsID
+                                }
+                            }
+                            ForEach(navItems) { item in
+                                AppSettingsSidebarItem(
+                                    title: item.title,
+                                    systemImage: item.iconName,
+                                    isSelected: selection == item.id
+                                ) {
+                                    selection = item.id
+                                }
+                            }
+                        }
+                        .padding(.leading)
+                        .padding(.trailing)
+                    }
+
+                    Spacer()
                 }
             }
             .navigationSplitViewColumnWidth(min: 200, ideal: 230)
