@@ -2,7 +2,7 @@ import CisumUI
 import OSLog
 import SwiftData
 import SwiftUI
-import AudioPlugin
+import PluginAudio
 import MagicPlayMan
 
 enum AudioListFileIdentity {

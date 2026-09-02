@@ -1,8 +1,8 @@
 #if os(macOS)
 import Foundation
 import CisumUI
-import AudioPlugin
-import StorePlugin
+import PluginAudio
+import PluginStore
 import SwiftData
 import SwiftUI
 

@@ -2,7 +2,7 @@ import OSLog
 import MagicPlayMan
 import SwiftData
 import SwiftUI
-import DevicePlugin
+import PluginDevice
 
 struct BtnChapters: View {
     @EnvironmentObject var playMan: MagicPlayMan

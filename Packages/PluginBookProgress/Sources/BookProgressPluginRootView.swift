@@ -1,7 +1,7 @@
 import CisumUI
 import OSLog
-import BookPlugin
-import BookScenePlugin
+import PluginBook
+import PluginBookScene
 import SwiftData
 import SwiftUI
 

@@ -1,5 +1,5 @@
 import CisumUI
-import AudioPlugin
+import PluginAudio
 import SwiftUI
 
 struct AudioSettingsPluginView: View {

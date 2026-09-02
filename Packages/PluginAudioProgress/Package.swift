@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "AudioProgressPlugin",
+    name: "PluginAudioProgress",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,25 +10,25 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AudioProgressPlugin",
-            targets: ["AudioProgressPlugin"]
+            name: "PluginAudioProgress",
+            targets: ["PluginAudioProgress"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../AudioPlugin"),
-        .package(path: "../AudioScenePlugin"),
-        .package(path: "../AudioLikePlugin"),
-        .package(path: "../../Packages/MagicPlayMan"),
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginAudio"),
+        .package(path: "../PluginAudioScene"),
+        .package(path: "../PluginAudioLike"),
+        .package(path: "../MagicPlayMan"),
     ],
     targets: [
         .target(
-            name: "AudioProgressPlugin",
+            name: "PluginAudioProgress",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
-                .product(name: "AudioPlugin", package: "AudioPlugin"),
-                .product(name: "AudioScenePlugin", package: "AudioScenePlugin"),
-                .product(name: "AudioLikePlugin", package: "AudioLikePlugin"),
+                .product(name: "PluginAudio", package: "PluginAudio"),
+                .product(name: "PluginAudioScene", package: "PluginAudioScene"),
+                .product(name: "PluginAudioLike", package: "PluginAudioLike"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
             ],
             path: "Sources",
@@ -38,7 +38,7 @@ let package = Package(
         ),
         .testTarget(
             name: "AudioProgressPluginTests",
-            dependencies: ["AudioProgressPlugin"],
+            dependencies: ["PluginAudioProgress"],
             path: "Tests"
         )
     ]

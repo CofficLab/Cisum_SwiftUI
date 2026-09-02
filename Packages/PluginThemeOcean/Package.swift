@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "ThemeOceanPlugin",
+    name: "PluginThemeOcean",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,16 +10,16 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ThemeOceanPlugin",
-            targets: ["ThemeOceanPlugin"]
+            name: "PluginThemeOcean",
+            targets: ["PluginThemeOcean"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI")
+        .package(path: "../CisumUI")
     ],
     targets: [
         .target(
-            name: "ThemeOceanPlugin",
+            name: "PluginThemeOcean",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI")
             ],
@@ -30,7 +30,7 @@ let package = Package(
         ),
         .testTarget(
             name: "ThemeOceanPluginTests",
-            dependencies: ["ThemeOceanPlugin"],
+            dependencies: ["PluginThemeOcean"],
             path: "Tests"
         )
     ]

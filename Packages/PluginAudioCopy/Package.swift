@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "AudioCopyPlugin",
+    name: "PluginAudioCopy",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -11,22 +11,22 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AudioCopyPlugin",
-            targets: ["AudioCopyPlugin"]
+            name: "PluginAudioCopy",
+            targets: ["PluginAudioCopy"]
         ),
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../AudioPlugin"),
-        .package(path: "../StorePlugin"),
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginAudio"),
+        .package(path: "../PluginStore"),
     ],
     targets: [
         .target(
-            name: "AudioCopyPlugin",
+            name: "PluginAudioCopy",
             dependencies: [
                 "CisumUI",
-                "AudioPlugin",
-                "StorePlugin",
+                "PluginAudio",
+                "PluginStore",
             ],
             path: "Sources",
             resources: [
@@ -35,7 +35,7 @@ let package = Package(
         ),
         .testTarget(
             name: "AudioCopyPluginTests",
-            dependencies: ["AudioCopyPlugin"],
+            dependencies: ["PluginAudioCopy"],
             path: "Tests"
         ),
     ]

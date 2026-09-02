@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "ThemeSettingsPlugin",
+    name: "PluginThemeSettings",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,16 +10,16 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ThemeSettingsPlugin",
-            targets: ["ThemeSettingsPlugin"]
+            name: "PluginThemeSettings",
+            targets: ["PluginThemeSettings"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI")
+        .package(path: "../CisumUI")
     ],
     targets: [
         .target(
-            name: "ThemeSettingsPlugin",
+            name: "PluginThemeSettings",
             dependencies: ["CisumUI"],
             path: "Sources",
             resources: [
@@ -28,7 +28,7 @@ let package = Package(
         ),
         .testTarget(
             name: "ThemeSettingsPluginTests",
-            dependencies: ["ThemeSettingsPlugin"],
+            dependencies: ["PluginThemeSettings"],
             path: "Tests"
         )
     ]

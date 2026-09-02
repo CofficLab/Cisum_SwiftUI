@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "VideoPlugin",
+    name: "PluginVideo",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,8 +10,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "VideoPlugin",
-            targets: ["VideoPlugin"]
+            name: "PluginVideo",
+            targets: ["PluginVideo"]
         )
     ],
     dependencies: [
@@ -19,7 +19,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "VideoPlugin",
+            name: "PluginVideo",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI")
             ],
@@ -30,7 +30,7 @@ let package = Package(
         ),
         .testTarget(
             name: "VideoPluginTests",
-            dependencies: ["VideoPlugin"],
+            dependencies: ["PluginVideo"],
             path: "Tests"
         )
     ]

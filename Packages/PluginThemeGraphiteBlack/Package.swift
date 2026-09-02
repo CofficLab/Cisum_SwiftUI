@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "ThemeGraphiteBlackPlugin",
+    name: "PluginThemeGraphiteBlack",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,16 +10,16 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ThemeGraphiteBlackPlugin",
-            targets: ["ThemeGraphiteBlackPlugin"]
+            name: "PluginThemeGraphiteBlack",
+            targets: ["PluginThemeGraphiteBlack"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI")
+        .package(path: "../CisumUI")
     ],
     targets: [
         .target(
-            name: "ThemeGraphiteBlackPlugin",
+            name: "PluginThemeGraphiteBlack",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI")
             ],
@@ -30,7 +30,7 @@ let package = Package(
         ),
         .testTarget(
             name: "ThemeGraphiteBlackPluginTests",
-            dependencies: ["ThemeGraphiteBlackPlugin"],
+            dependencies: ["PluginThemeGraphiteBlack"],
             path: "Tests"
         )
     ]

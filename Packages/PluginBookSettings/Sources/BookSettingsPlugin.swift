@@ -1,5 +1,5 @@
 import CisumUI
-import BookPlugin
+import PluginBook
 import SwiftUI
 
 public actor BookSettingsPlugin: SuperPlugin {

@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "ThemePaperPlugin",
+    name: "PluginThemePaper",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,16 +10,16 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ThemePaperPlugin",
-            targets: ["ThemePaperPlugin"]
+            name: "PluginThemePaper",
+            targets: ["PluginThemePaper"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI")
+        .package(path: "../CisumUI")
     ],
     targets: [
         .target(
-            name: "ThemePaperPlugin",
+            name: "PluginThemePaper",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI")
             ],
@@ -30,7 +30,7 @@ let package = Package(
         ),
         .testTarget(
             name: "ThemePaperPluginTests",
-            dependencies: ["ThemePaperPlugin"],
+            dependencies: ["PluginThemePaper"],
             path: "Tests"
         )
     ]

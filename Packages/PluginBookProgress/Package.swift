@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "BookProgressPlugin",
+    name: "PluginBookProgress",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,23 +10,23 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "BookProgressPlugin",
-            targets: ["BookProgressPlugin"]
+            name: "PluginBookProgress",
+            targets: ["PluginBookProgress"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../BookPlugin"),
-        .package(path: "../BookScenePlugin"),
-        .package(path: "../../Packages/MagicPlayMan")
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginBook"),
+        .package(path: "../PluginBookScene"),
+        .package(path: "../MagicPlayMan")
     ],
     targets: [
         .target(
-            name: "BookProgressPlugin",
+            name: "PluginBookProgress",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
-                .product(name: "BookPlugin", package: "BookPlugin"),
-                .product(name: "BookScenePlugin", package: "BookScenePlugin"),
+                .product(name: "PluginBook", package: "PluginBook"),
+                .product(name: "PluginBookScene", package: "PluginBookScene"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan")
             ],
             path: "Sources",
@@ -37,8 +37,8 @@ let package = Package(
         .testTarget(
             name: "BookProgressPluginTests",
             dependencies: [
-                "BookProgressPlugin",
-                .product(name: "BookPlugin", package: "BookPlugin")
+                "PluginBookProgress",
+                .product(name: "PluginBook", package: "PluginBook")
             ],
             path: "Tests"
         )

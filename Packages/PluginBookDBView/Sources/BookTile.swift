@@ -1,6 +1,6 @@
 import CisumUI
 import OSLog
-import BookPlugin
+import PluginBook
 import SwiftData
 import SwiftUI
 

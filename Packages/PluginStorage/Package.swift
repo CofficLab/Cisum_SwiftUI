@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "StoragePlugin",
+    name: "PluginStorage",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -11,18 +11,18 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "StoragePlugin",
-            targets: ["StoragePlugin"]
+            name: "PluginStorage",
+            targets: ["PluginStorage"]
         ),
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../../Packages/CisumKernel"),
-        .package(path: "../../Packages/MagicKit"),
+        .package(path: "../CisumUI"),
+        .package(path: "../CisumKernel"),
+        .package(path: "../MagicKit"),
     ],
     targets: [
         .target(
-            name: "StoragePlugin",
+            name: "PluginStorage",
             dependencies: [
                 "CisumUI",
                 .product(name: "CisumKernel", package: "CisumKernel"),
@@ -35,7 +35,7 @@ let package = Package(
         ),
         .testTarget(
             name: "StoragePluginTests",
-            dependencies: ["StoragePlugin"],
+            dependencies: ["PluginStorage"],
             path: "Tests"
         ),
     ]

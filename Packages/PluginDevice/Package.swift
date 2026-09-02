@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "DevicePlugin",
+    name: "PluginDevice",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,8 +10,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "DevicePlugin",
-            targets: ["DevicePlugin"]
+            name: "PluginDevice",
+            targets: ["PluginDevice"]
         )
     ],
     dependencies: [
@@ -20,7 +20,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "DevicePlugin",
+            name: "PluginDevice",
             dependencies: [
                 .product(name: "CisumDeviceData", package: "DeviceData"),
                 .product(name: "CisumUI", package: "CisumUI")
@@ -32,7 +32,7 @@ let package = Package(
         ),
         .testTarget(
             name: "DevicePluginTests",
-            dependencies: ["DevicePlugin"],
+            dependencies: ["PluginDevice"],
             path: "Tests"
         )
     ]

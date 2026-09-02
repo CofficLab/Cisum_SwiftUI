@@ -1,5 +1,5 @@
 import CisumUI
-import AudioScenePlugin
+import PluginAudioScene
 import SwiftUI
 
 public actor AudioDemoPlugin: SuperPlugin {

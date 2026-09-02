@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "FileLogPlugin",
+    name: "PluginFileLog",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,16 +10,16 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "FileLogPlugin",
-            targets: ["FileLogPlugin"]
+            name: "PluginFileLog",
+            targets: ["PluginFileLog"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
+        .package(path: "../CisumUI"),
     ],
     targets: [
         .target(
-            name: "FileLogPlugin",
+            name: "PluginFileLog",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
             ],
@@ -30,7 +30,7 @@ let package = Package(
         ),
         .testTarget(
             name: "FileLogPluginTests",
-            dependencies: ["FileLogPlugin"],
+            dependencies: ["PluginFileLog"],
             path: "Tests"
         )
     ]

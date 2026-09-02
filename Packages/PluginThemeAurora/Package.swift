@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "ThemeAuroraPlugin",
+    name: "PluginThemeAurora",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,16 +10,16 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ThemeAuroraPlugin",
-            targets: ["ThemeAuroraPlugin"]
+            name: "PluginThemeAurora",
+            targets: ["PluginThemeAurora"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI")
+        .package(path: "../CisumUI")
     ],
     targets: [
         .target(
-            name: "ThemeAuroraPlugin",
+            name: "PluginThemeAurora",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI")
             ],
@@ -30,7 +30,7 @@ let package = Package(
         ),
         .testTarget(
             name: "ThemeAuroraPluginTests",
-            dependencies: ["ThemeAuroraPlugin"],
+            dependencies: ["PluginThemeAurora"],
             path: "Tests"
         )
     ]

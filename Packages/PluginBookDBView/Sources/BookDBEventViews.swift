@@ -1,5 +1,5 @@
 import Foundation
-import BookPlugin
+import PluginBook
 import SwiftUI
 
 extension View {

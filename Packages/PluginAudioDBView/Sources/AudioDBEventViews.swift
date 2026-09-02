@@ -1,4 +1,4 @@
-import AudioPlugin
+import PluginAudio
 import SwiftUI
 
 extension View {

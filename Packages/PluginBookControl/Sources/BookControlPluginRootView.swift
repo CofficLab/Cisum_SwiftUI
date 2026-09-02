@@ -1,5 +1,5 @@
 import CisumUI
-import BookScenePlugin
+import PluginBookScene
 import SwiftUI
 
 struct BookControlPluginRootView<Content>: View where Content: View {

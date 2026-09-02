@@ -2,7 +2,7 @@ import Combine
 import Foundation
 import CisumUI
 import OSLog
-import AudioLikePlugin
+import PluginAudioLike
 import SwiftData
 import SwiftUI
 

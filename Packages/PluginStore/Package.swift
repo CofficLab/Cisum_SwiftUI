@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "StorePlugin",
+    name: "PluginStore",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,20 +10,20 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "StorePlugin",
-            targets: ["StorePlugin"]
+            name: "PluginStore",
+            targets: ["PluginStore"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../AudioPlugin"),
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginAudio"),
     ],
     targets: [
         .target(
-            name: "StorePlugin",
+            name: "PluginStore",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
-                .product(name: "AudioPlugin", package: "AudioPlugin"),
+                .product(name: "PluginAudio", package: "PluginAudio"),
             ],
             path: "Sources",
             resources: [
@@ -33,7 +33,7 @@ let package = Package(
         ),
         .testTarget(
             name: "StorePluginTests",
-            dependencies: ["StorePlugin"],
+            dependencies: ["PluginStore"],
             path: "Tests"
         )
     ]

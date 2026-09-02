@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "LikeButtonPlugin",
+    name: "PluginLikeButton",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,17 +10,17 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "LikeButtonPlugin",
-            targets: ["LikeButtonPlugin"]
+            name: "PluginLikeButton",
+            targets: ["PluginLikeButton"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../../Packages/MagicPlayMan"),
+        .package(path: "../CisumUI"),
+        .package(path: "../MagicPlayMan"),
     ],
     targets: [
         .target(
-            name: "LikeButtonPlugin",
+            name: "PluginLikeButton",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
@@ -32,7 +32,7 @@ let package = Package(
         ),
         .testTarget(
             name: "LikeButtonPluginTests",
-            dependencies: ["LikeButtonPlugin"],
+            dependencies: ["PluginLikeButton"],
             path: "Tests"
         )
     ]

@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "ThemeMonoPlugin",
+    name: "PluginThemeMono",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,16 +10,16 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ThemeMonoPlugin",
-            targets: ["ThemeMonoPlugin"]
+            name: "PluginThemeMono",
+            targets: ["PluginThemeMono"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI")
+        .package(path: "../CisumUI")
     ],
     targets: [
         .target(
-            name: "ThemeMonoPlugin",
+            name: "PluginThemeMono",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI")
             ],
@@ -30,7 +30,7 @@ let package = Package(
         ),
         .testTarget(
             name: "ThemeMonoPluginTests",
-            dependencies: ["ThemeMonoPlugin"],
+            dependencies: ["PluginThemeMono"],
             path: "Tests"
         )
     ]

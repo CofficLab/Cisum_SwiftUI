@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "WelcomePlugin",
+    name: "PluginWelcome",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,17 +10,17 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "WelcomePlugin",
-            targets: ["WelcomePlugin"]
+            name: "PluginWelcome",
+            targets: ["PluginWelcome"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../../Packages/CisumKernel"),
+        .package(path: "../CisumUI"),
+        .package(path: "../CisumKernel"),
     ],
     targets: [
         .target(
-            name: "WelcomePlugin",
+            name: "PluginWelcome",
             dependencies: [
                 "CisumUI",
                 .product(name: "CisumKernel", package: "CisumKernel"),
@@ -32,7 +32,7 @@ let package = Package(
         ),
         .testTarget(
             name: "WelcomePluginTests",
-            dependencies: ["WelcomePlugin"],
+            dependencies: ["PluginWelcome"],
             path: "Tests"
         )
     ]

@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "BookLikePlugin",
+    name: "PluginBookLike",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,21 +10,21 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "BookLikePlugin",
-            targets: ["BookLikePlugin"]
+            name: "PluginBookLike",
+            targets: ["PluginBookLike"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../BookScenePlugin"),
-        .package(path: "../../Packages/MagicPlayMan")
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginBookScene"),
+        .package(path: "../MagicPlayMan")
     ],
     targets: [
         .target(
-            name: "BookLikePlugin",
+            name: "PluginBookLike",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
-                .product(name: "BookScenePlugin", package: "BookScenePlugin"),
+                .product(name: "PluginBookScene", package: "PluginBookScene"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan")
             ],
             path: "Sources",
@@ -34,7 +34,7 @@ let package = Package(
         ),
         .testTarget(
             name: "BookLikePluginTests",
-            dependencies: ["BookLikePlugin"],
+            dependencies: ["PluginBookLike"],
             path: "Tests"
         )
     ]

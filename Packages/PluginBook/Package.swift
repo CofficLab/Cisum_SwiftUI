@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "BookPlugin",
+    name: "PluginBook",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,17 +10,17 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "BookPlugin",
-            targets: ["BookPlugin"]
+            name: "PluginBook",
+            targets: ["PluginBook"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../../Packages/CisumKernel"),
+        .package(path: "../CisumUI"),
+        .package(path: "../CisumKernel"),
     ],
     targets: [
         .target(
-            name: "BookPlugin",
+            name: "PluginBook",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
                 .product(name: "CisumKernel", package: "CisumKernel"),
@@ -32,7 +32,7 @@ let package = Package(
         ),
         .testTarget(
             name: "BookPluginTests",
-            dependencies: ["BookPlugin"],
+            dependencies: ["PluginBook"],
             path: "Tests"
         )
     ]

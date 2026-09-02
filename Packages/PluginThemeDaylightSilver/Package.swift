@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "ThemeDaylightSilverPlugin",
+    name: "PluginThemeDaylightSilver",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,16 +10,16 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ThemeDaylightSilverPlugin",
-            targets: ["ThemeDaylightSilverPlugin"]
+            name: "PluginThemeDaylightSilver",
+            targets: ["PluginThemeDaylightSilver"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI")
+        .package(path: "../CisumUI")
     ],
     targets: [
         .target(
-            name: "ThemeDaylightSilverPlugin",
+            name: "PluginThemeDaylightSilver",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI")
             ],
@@ -30,7 +30,7 @@ let package = Package(
         ),
         .testTarget(
             name: "ThemeDaylightSilverPluginTests",
-            dependencies: ["ThemeDaylightSilverPlugin"],
+            dependencies: ["PluginThemeDaylightSilver"],
             path: "Tests"
         )
     ]

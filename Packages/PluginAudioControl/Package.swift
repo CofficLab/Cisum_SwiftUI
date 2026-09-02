@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "AudioControlPlugin",
+    name: "PluginAudioControl",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,23 +10,23 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AudioControlPlugin",
-            targets: ["AudioControlPlugin"]
+            name: "PluginAudioControl",
+            targets: ["PluginAudioControl"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../AudioPlugin"),
-        .package(path: "../AudioScenePlugin"),
-        .package(path: "../../Packages/MagicPlayMan"),
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginAudio"),
+        .package(path: "../PluginAudioScene"),
+        .package(path: "../MagicPlayMan"),
     ],
     targets: [
         .target(
-            name: "AudioControlPlugin",
+            name: "PluginAudioControl",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
-                .product(name: "AudioPlugin", package: "AudioPlugin"),
-                .product(name: "AudioScenePlugin", package: "AudioScenePlugin"),
+                .product(name: "PluginAudio", package: "PluginAudio"),
+                .product(name: "PluginAudioScene", package: "PluginAudioScene"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
             ],
             path: "Sources",
@@ -35,8 +35,8 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "AudioControlPluginTests",
-            dependencies: ["AudioControlPlugin"],
+            name: "PluginAudioControlTests",
+            dependencies: ["PluginAudioControl"],
             path: "Tests"
         )
     ]

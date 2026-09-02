@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "BookDBViewPlugin",
+    name: "PluginBookDBView",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -11,27 +11,27 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "BookDBViewPlugin",
-            targets: ["BookDBViewPlugin"]
+            name: "PluginBookDBView",
+            targets: ["PluginBookDBView"]
         ),
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../AudioPlugin"),
-        .package(path: "../BookPlugin"),
-        .package(path: "../BookScenePlugin"),
-        .package(path: "../DevicePlugin"),
-        .package(path: "../../Packages/MagicPlayMan"),
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginAudio"),
+        .package(path: "../PluginBook"),
+        .package(path: "../PluginBookScene"),
+        .package(path: "../PluginDevice"),
+        .package(path: "../MagicPlayMan"),
     ],
     targets: [
         .target(
-            name: "BookDBViewPlugin",
+            name: "PluginBookDBView",
             dependencies: [
                 "CisumUI",
-                "AudioPlugin",
-                "BookPlugin",
-                "BookScenePlugin",
-                "DevicePlugin",
+                "PluginAudio",
+                "PluginBook",
+                "PluginBookScene",
+                "PluginDevice",
                 "MagicPlayMan",
             ],
             path: "Sources",
@@ -41,7 +41,7 @@ let package = Package(
         ),
         .testTarget(
             name: "BookDBViewPluginTests",
-            dependencies: ["BookDBViewPlugin"],
+            dependencies: ["PluginBookDBView"],
             path: "Tests"
         ),
     ]

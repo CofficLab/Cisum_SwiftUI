@@ -2,7 +2,7 @@ import Foundation
 import CisumUI
 import MagicPlayMan
 import OSLog
-import BookPlugin
+import PluginBook
 import SwiftUI
 
 public typealias BookControlCurrentSceneProvider = @MainActor () -> String?

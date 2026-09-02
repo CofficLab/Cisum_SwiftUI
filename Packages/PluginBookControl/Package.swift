@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "BookControlPlugin",
+    name: "PluginBookControl",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,23 +10,23 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "BookControlPlugin",
-            targets: ["BookControlPlugin"]
+            name: "PluginBookControl",
+            targets: ["PluginBookControl"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../BookScenePlugin"),
-        .package(path: "../BookPlugin"),
-        .package(path: "../../Packages/MagicPlayMan")
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginBookScene"),
+        .package(path: "../PluginBook"),
+        .package(path: "../MagicPlayMan")
     ],
     targets: [
         .target(
-            name: "BookControlPlugin",
+            name: "PluginBookControl",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
-                .product(name: "BookScenePlugin", package: "BookScenePlugin"),
-                .product(name: "BookPlugin", package: "BookPlugin"),
+                .product(name: "PluginBookScene", package: "PluginBookScene"),
+                .product(name: "PluginBook", package: "PluginBook"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan")
             ],
             path: "Sources",
@@ -36,7 +36,7 @@ let package = Package(
         ),
         .testTarget(
             name: "BookControlPluginTests",
-            dependencies: ["BookControlPlugin"],
+            dependencies: ["PluginBookControl"],
             path: "Tests"
         )
     ]

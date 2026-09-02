@@ -1,6 +1,6 @@
 import CisumUI
-import AudioPlugin
-import AudioScenePlugin
+import PluginAudio
+import PluginAudioScene
 import SwiftUI
 
 struct AudioPlayModePluginRootView<Content>: View where Content: View {

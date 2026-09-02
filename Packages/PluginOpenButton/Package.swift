@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "OpenButtonPlugin",
+    name: "PluginOpenButton",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,17 +10,17 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "OpenButtonPlugin",
-            targets: ["OpenButtonPlugin"]
+            name: "PluginOpenButton",
+            targets: ["PluginOpenButton"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../../Packages/MagicPlayMan"),
+        .package(path: "../CisumUI"),
+        .package(path: "../MagicPlayMan"),
     ],
     targets: [
         .target(
-            name: "OpenButtonPlugin",
+            name: "PluginOpenButton",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
@@ -32,7 +32,7 @@ let package = Package(
         ),
         .testTarget(
             name: "OpenButtonPluginTests",
-            dependencies: ["OpenButtonPlugin"],
+            dependencies: ["PluginOpenButton"],
             path: "Tests"
         )
     ]

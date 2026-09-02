@@ -1,6 +1,6 @@
 import CisumUI
-import AudioPlugin
-import StorePlugin
+import PluginAudio
+import PluginStore
 import SwiftUI
 
 struct AudioCopyTips: View {

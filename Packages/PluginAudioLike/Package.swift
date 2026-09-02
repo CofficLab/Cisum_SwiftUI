@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "AudioLikePlugin",
+    name: "PluginAudioLike",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,21 +10,21 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AudioLikePlugin",
-            targets: ["AudioLikePlugin"]
+            name: "PluginAudioLike",
+            targets: ["PluginAudioLike"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../AudioScenePlugin"),
-        .package(path: "../../Packages/MagicPlayMan")
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginAudioScene"),
+        .package(path: "../MagicPlayMan")
     ],
     targets: [
         .target(
-            name: "AudioLikePlugin",
+            name: "PluginAudioLike",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
-                .product(name: "AudioScenePlugin", package: "AudioScenePlugin"),
+                .product(name: "PluginAudioScene", package: "PluginAudioScene"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan")
             ],
             path: "Sources",
@@ -34,7 +34,7 @@ let package = Package(
         ),
         .testTarget(
             name: "AudioLikePluginTests",
-            dependencies: ["AudioLikePlugin"],
+            dependencies: ["PluginAudioLike"],
             path: "Tests"
         )
     ]

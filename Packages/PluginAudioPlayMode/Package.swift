@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "AudioPlayModePlugin",
+    name: "PluginAudioPlayMode",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,23 +10,23 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AudioPlayModePlugin",
-            targets: ["AudioPlayModePlugin"]
+            name: "PluginAudioPlayMode",
+            targets: ["PluginAudioPlayMode"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../AudioPlugin"),
-        .package(path: "../AudioScenePlugin"),
-        .package(path: "../../Packages/MagicPlayMan")
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginAudio"),
+        .package(path: "../PluginAudioScene"),
+        .package(path: "../MagicPlayMan")
     ],
     targets: [
         .target(
-            name: "AudioPlayModePlugin",
+            name: "PluginAudioPlayMode",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
-                .product(name: "AudioPlugin", package: "AudioPlugin"),
-                .product(name: "AudioScenePlugin", package: "AudioScenePlugin"),
+                .product(name: "PluginAudio", package: "PluginAudio"),
+                .product(name: "PluginAudioScene", package: "PluginAudioScene"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan")
             ],
             path: "Sources",
@@ -36,7 +36,7 @@ let package = Package(
         ),
         .testTarget(
             name: "AudioPlayModePluginTests",
-            dependencies: ["AudioPlayModePlugin"],
+            dependencies: ["PluginAudioPlayMode"],
             path: "Tests"
         )
     ]

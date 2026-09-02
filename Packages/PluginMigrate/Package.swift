@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "MigratePlugin",
+    name: "PluginMigrate",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,8 +10,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "MigratePlugin",
-            targets: ["MigratePlugin"]
+            name: "PluginMigrate",
+            targets: ["PluginMigrate"]
         )
     ],
     dependencies: [
@@ -19,7 +19,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "MigratePlugin",
+            name: "PluginMigrate",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI")
             ],
@@ -30,7 +30,7 @@ let package = Package(
         ),
         .testTarget(
             name: "MigratePluginTests",
-            dependencies: ["MigratePlugin"],
+            dependencies: ["PluginMigrate"],
             path: "Tests"
         )
     ]

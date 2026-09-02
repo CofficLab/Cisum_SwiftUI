@@ -1,7 +1,7 @@
 import CisumUI
 import Foundation
 import OSLog
-import AudioPlugin
+import PluginAudio
 
 public actor AudioJobPlugin: SuperPlugin {
     public static let shared = AudioJobPlugin()

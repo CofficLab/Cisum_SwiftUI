@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "ThemeForestPlugin",
+    name: "PluginThemeForest",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,16 +10,16 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ThemeForestPlugin",
-            targets: ["ThemeForestPlugin"]
+            name: "PluginThemeForest",
+            targets: ["PluginThemeForest"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI")
+        .package(path: "../CisumUI")
     ],
     targets: [
         .target(
-            name: "ThemeForestPlugin",
+            name: "PluginThemeForest",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI")
             ],
@@ -30,7 +30,7 @@ let package = Package(
         ),
         .testTarget(
             name: "ThemeForestPluginTests",
-            dependencies: ["ThemeForestPlugin"],
+            dependencies: ["PluginThemeForest"],
             path: "Tests"
         )
     ]

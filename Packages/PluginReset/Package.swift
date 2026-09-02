@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "ResetPlugin",
+    name: "PluginReset",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,16 +10,16 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ResetPlugin",
-            targets: ["ResetPlugin"]
+            name: "PluginReset",
+            targets: ["PluginReset"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
+        .package(path: "../CisumUI"),
     ],
     targets: [
         .target(
-            name: "ResetPlugin",
+            name: "PluginReset",
             dependencies: [
                 "CisumUI",
             ],
@@ -30,7 +30,7 @@ let package = Package(
         ),
         .testTarget(
             name: "ResetPluginTests",
-            dependencies: ["ResetPlugin"],
+            dependencies: ["PluginReset"],
             path: "Tests"
         )
     ]

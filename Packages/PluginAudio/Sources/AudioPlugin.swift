@@ -1,7 +1,7 @@
 import CisumKernel
 import CisumUI
 import Foundation
-import AudioLikePlugin
+import PluginAudioLike
 import SwiftUI
 
 public actor AudioPlugin: SuperPlugin, CisumKernelPlugin {

@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "AudioJobPlugin",
+    name: "PluginAudioJob",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,20 +10,20 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AudioJobPlugin",
-            targets: ["AudioJobPlugin"]
+            name: "PluginAudioJob",
+            targets: ["PluginAudioJob"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../AudioPlugin"),
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginAudio"),
     ],
     targets: [
         .target(
-            name: "AudioJobPlugin",
+            name: "PluginAudioJob",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
-                .product(name: "AudioPlugin", package: "AudioPlugin"),
+                .product(name: "PluginAudio", package: "PluginAudio"),
             ],
             path: "Sources",
             resources: [
@@ -32,7 +32,7 @@ let package = Package(
         ),
         .testTarget(
             name: "AudioJobPluginTests",
-            dependencies: ["AudioJobPlugin"],
+            dependencies: ["PluginAudioJob"],
             path: "Tests"
         )
     ]

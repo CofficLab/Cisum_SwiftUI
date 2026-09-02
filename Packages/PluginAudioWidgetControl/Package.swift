@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "AudioWidgetControlPlugin",
+    name: "PluginAudioWidgetControl",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,21 +10,21 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AudioWidgetControlPlugin",
-            targets: ["AudioWidgetControlPlugin"]
+            name: "PluginAudioWidgetControl",
+            targets: ["PluginAudioWidgetControl"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../AudioPlugin"),
-        .package(path: "../../Packages/MagicPlayMan"),
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginAudio"),
+        .package(path: "../MagicPlayMan"),
     ],
     targets: [
         .target(
-            name: "AudioWidgetControlPlugin",
+            name: "PluginAudioWidgetControl",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
-                .product(name: "AudioPlugin", package: "AudioPlugin"),
+                .product(name: "PluginAudio", package: "PluginAudio"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
             ],
             path: "Sources",
@@ -34,7 +34,7 @@ let package = Package(
         ),
         .testTarget(
             name: "AudioWidgetControlPluginTests",
-            dependencies: ["AudioWidgetControlPlugin"],
+            dependencies: ["PluginAudioWidgetControl"],
             path: "Tests"
         )
     ]

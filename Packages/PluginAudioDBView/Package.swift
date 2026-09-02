@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "AudioDBViewPlugin",
+    name: "PluginAudioDBView",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,23 +10,23 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AudioDBViewPlugin",
-            targets: ["AudioDBViewPlugin"]
+            name: "PluginAudioDBView",
+            targets: ["PluginAudioDBView"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../AudioPlugin"),
-        .package(path: "../AudioScenePlugin"),
-        .package(path: "../../Packages/MagicPlayMan"),
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginAudio"),
+        .package(path: "../PluginAudioScene"),
+        .package(path: "../MagicPlayMan"),
     ],
     targets: [
         .target(
-            name: "AudioDBViewPlugin",
+            name: "PluginAudioDBView",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
-                .product(name: "AudioPlugin", package: "AudioPlugin"),
-                .product(name: "AudioScenePlugin", package: "AudioScenePlugin"),
+                .product(name: "PluginAudio", package: "PluginAudio"),
+                .product(name: "PluginAudioScene", package: "PluginAudioScene"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
             ],
             path: "Sources",
@@ -36,7 +36,7 @@ let package = Package(
         ),
         .testTarget(
             name: "AudioDBViewPluginTests",
-            dependencies: ["AudioDBViewPlugin"],
+            dependencies: ["PluginAudioDBView"],
             path: "Tests"
         )
     ]

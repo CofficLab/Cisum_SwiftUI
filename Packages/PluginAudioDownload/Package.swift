@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "AudioDownloadPlugin",
+    name: "PluginAudioDownload",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,17 +10,17 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AudioDownloadPlugin",
-            targets: ["AudioDownloadPlugin"]
+            name: "PluginAudioDownload",
+            targets: ["PluginAudioDownload"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../../Packages/MagicPlayMan")
+        .package(path: "../CisumUI"),
+        .package(path: "../MagicPlayMan")
     ],
     targets: [
         .target(
-            name: "AudioDownloadPlugin",
+            name: "PluginAudioDownload",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan")
@@ -32,7 +32,7 @@ let package = Package(
         ),
         .testTarget(
             name: "AudioDownloadPluginTests",
-            dependencies: ["AudioDownloadPlugin"],
+            dependencies: ["PluginAudioDownload"],
             path: "Tests"
         )
     ]

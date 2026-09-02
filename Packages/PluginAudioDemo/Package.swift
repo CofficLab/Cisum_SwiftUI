@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "AudioDemoPlugin",
+    name: "PluginAudioDemo",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,20 +10,20 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AudioDemoPlugin",
-            targets: ["AudioDemoPlugin"]
+            name: "PluginAudioDemo",
+            targets: ["PluginAudioDemo"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI"),
-        .package(path: "../AudioScenePlugin")
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginAudioScene")
     ],
     targets: [
         .target(
-            name: "AudioDemoPlugin",
+            name: "PluginAudioDemo",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI"),
-                .product(name: "AudioScenePlugin", package: "AudioScenePlugin")
+                .product(name: "PluginAudioScene", package: "PluginAudioScene")
             ],
             path: "Sources",
             resources: [
@@ -32,7 +32,7 @@ let package = Package(
         ),
         .testTarget(
             name: "AudioDemoPluginTests",
-            dependencies: ["AudioDemoPlugin"],
+            dependencies: ["PluginAudioDemo"],
             path: "Tests"
         )
     ]

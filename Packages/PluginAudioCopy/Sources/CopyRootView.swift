@@ -3,7 +3,7 @@
     import MagicAlert
     import MagicKit
     import OSLog
-    import AudioPlugin
+    import PluginAudio
     import SwiftData
     import SwiftUI
     import UniformTypeIdentifiers

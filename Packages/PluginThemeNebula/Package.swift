@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "ThemeNebulaPlugin",
+    name: "PluginThemeNebula",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
@@ -10,16 +10,16 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ThemeNebulaPlugin",
-            targets: ["ThemeNebulaPlugin"]
+            name: "PluginThemeNebula",
+            targets: ["PluginThemeNebula"]
         )
     ],
     dependencies: [
-        .package(path: "../../Packages/CisumUI")
+        .package(path: "../CisumUI")
     ],
     targets: [
         .target(
-            name: "ThemeNebulaPlugin",
+            name: "PluginThemeNebula",
             dependencies: [
                 .product(name: "CisumUI", package: "CisumUI")
             ],
@@ -30,7 +30,7 @@ let package = Package(
         ),
         .testTarget(
             name: "ThemeNebulaPluginTests",
-            dependencies: ["ThemeNebulaPlugin"],
+            dependencies: ["PluginThemeNebula"],
             path: "Tests"
         )
     ]

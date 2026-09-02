@@ -1,5 +1,5 @@
 import CisumUI
-import BookScenePlugin
+import PluginBookScene
 import SwiftUI
 
 public actor BookLikePlugin: SuperPlugin {

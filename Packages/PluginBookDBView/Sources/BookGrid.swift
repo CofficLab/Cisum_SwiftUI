@@ -1,8 +1,8 @@
 import CisumUI
 import MagicPlayMan
 import OSLog
-import AudioPlugin
-import BookPlugin
+import PluginAudio
+import PluginBook
 import SwiftData
 import SwiftUI
 

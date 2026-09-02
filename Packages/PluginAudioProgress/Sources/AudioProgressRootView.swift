@@ -3,8 +3,8 @@ import Foundation
 import CisumUI
 import MagicPlayMan
 import OSLog
-import AudioPlugin
-import AudioLikePlugin
+import PluginAudio
+import PluginAudioLike
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
