@@ -1,4 +1,5 @@
 import MagicPlayMan
+import ProviderPlayback
 import SwiftUI
 
 /// 当前曲目标题。

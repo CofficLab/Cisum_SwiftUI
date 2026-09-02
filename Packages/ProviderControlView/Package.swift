@@ -2,27 +2,27 @@
 import PackageDescription
 
 let package = Package(
-    name: "ProviderRootView",
+    name: "ProviderControlView",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v14),
         .iOS(.v17),
     ],
     products: [
-        .library(name: "ProviderRootView", targets: ["ProviderRootView"]),
+        .library(name: "ProviderControlView", targets: ["ProviderControlView"]),
     ],
     dependencies: [
-        .package(name: "CisumKernel", path: "../CisumKernel"),
+        .package(name: "MagicPlayMan", path: "../MagicPlayMan"),
         .package(name: "ProviderPlayback", path: "../ProviderPlayback"),
     ],
     targets: [
         .target(
-            name: "ProviderRootView",
+            name: "ProviderControlView",
             dependencies: [
-                .product(name: "CisumKernel", package: "CisumKernel"),
+                .product(name: "MagicPlayMan", package: "MagicPlayMan"),
                 .product(name: "ProviderPlayback", package: "ProviderPlayback"),
             ],
-            path: "Sources/ProviderRootView"
+            path: "Sources/ProviderControlView"
         ),
     ],
     swiftLanguageModes: [.v5]

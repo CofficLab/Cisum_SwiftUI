@@ -5,8 +5,10 @@ import MagicKit
 import MagicPlayMan
 import OSLog
 import ProviderContentView
+import ProviderControlView
 import ProviderRootView
 import ProviderSettings
+import ProviderStatusView
 import ProviderToolbar
 import SwiftUI
 
@@ -159,18 +161,22 @@ public enum CisumBuilder: SuperLog {
     /// 注册视图 Provider 默认实现（对齐 Lumi `DefaultProviderFactory` 的
     /// `makeXxxProvider()` 方法族）。
     ///
-    /// 各视图区域（根布局 / 内容区 / 工具栏）是独立的 Provider 契约，
-    /// 默认实现注册进内核；Factory 组装时只做解析 + 注入 + makeRootView。
+    /// 各视图区域（根布局 / 播放控制区 / 内容区 / 状态区 / 工具栏）是独立的
+    /// Provider 契约，默认实现注册进内核；Factory 组装时只做解析 + 注入 +
+    /// makeRootView。
     private static func registerViewProviders(into kernel: CisumKernel) {
         kernel.registerProvider((any RootViewProviding).self, DefaultRootViewProviding(kernel: kernel))
+        kernel.registerProvider((any ControlViewProviding).self, DefaultControlViewProviding())
         kernel.registerProvider((any ContentViewProviding).self, DefaultContentViewProviding())
+        kernel.registerProvider((any StatusViewProviding).self, DefaultStatusViewProviding(kernel: kernel))
         kernel.registerProvider((any ToolbarProviding).self, DefaultToolbarProviding(kernel: kernel))
     }
 
     /// 组装主视图（对齐 Lumi `DefaultViewFactory.makeMainView(kernel:)`）。
     ///
     /// 视图组装逻辑集中在此：解析 `RootViewProviding` → 注入各区域视图
-    /// （内容区来自 `ContentViewProviding`、工具栏来自 `ToolbarProviding`）→
+    /// （播放控制区来自 `ControlViewProviding`、内容区来自 `ContentViewProviding`、
+    /// 状态区来自 `StatusViewProviding`、工具栏来自 `ToolbarProviding`）→
     /// 返回 `makeRootView()`。宿主只需要一个视图，无需关心各 Provider 如何组合。
     @MainActor
     public static func assembleMainView(kernel: CisumKernel) -> AnyView {
@@ -178,9 +184,15 @@ public enum CisumBuilder: SuperLog {
             return AnyView(Text("RootViewProviding not registered"))
         }
 
+        if let control = kernel.resolveProvider((any ControlViewProviding).self) {
+            root.setControlView(control.makeControlView())
+        }
         if let content = kernel.resolveProvider((any ContentViewProviding).self) {
             refreshContentTabs(content, kernel: kernel)
             root.setContentView(content.makeContentView())
+        }
+        if let status = kernel.resolveProvider((any StatusViewProviding).self) {
+            root.setStatusView(status.makeStatusView())
         }
         if let toolbar = kernel.resolveProvider((any ToolbarProviding).self) {
             root.setToolbarContent(toolbar.makeToolbarView())

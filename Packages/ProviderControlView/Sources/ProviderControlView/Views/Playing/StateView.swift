@@ -1,4 +1,5 @@
 import MagicPlayMan
+import ProviderPlayback
 import SwiftUI
 
 /// 播放状态提示。

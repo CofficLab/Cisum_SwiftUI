@@ -1,4 +1,5 @@
 import MagicPlayMan
+import ProviderPlayback
 import SwiftUI
 
 /// 播放控制区域：封面、标题、状态、进度条和底部操作按钮。

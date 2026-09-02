@@ -86,7 +86,7 @@ struct RootLayoutView: View {
         if let controlView = provider.controlView {
             controlView
         } else {
-            ControlView()
+            ContentPlaceholderView()
         }
     }
 
@@ -103,8 +103,6 @@ struct RootLayoutView: View {
     private var statusArea: some View {
         if let statusView = provider.statusView {
             statusView
-        } else {
-            StatusView(kernel: kernel)
         }
     }
 
