@@ -47,6 +47,19 @@ public protocol CisumKernelPlugin: SuperPlugin {
     /// 在此方法中执行依赖其他服务的初始化逻辑。
     /// 此阶段在所有插件的 `onBoot` 完成后统一调用。
     @MainActor func onReady(kernel: CisumKernel) async throws
+
+    /// 阶段 3: 插件卸载或内核停止时逆序调用，撤回运行期贡献。
+    ///
+    /// 在此方法中注销插件在 `onBoot` / `onReady` 期间注册的 Provider，
+    /// 或清理插件持有的静态桥接引用。内核会在启动失败回滚、`shutdown()`、
+    /// 以及未来单插件卸载时调用。默认空实现。
+    @MainActor func onShutdown(kernel: CisumKernel) async throws
+
+    /// 阶段 4: 插件从内核注销前调用，撤回注册期贡献。
+    ///
+    /// 用于撤回不依赖运行状态的目录型贡献。在所有 `onShutdown` 完成后
+    /// 统一逆序调用。默认空实现。
+    @MainActor func onUnregister(kernel: CisumKernel) async throws
 }
 
 // MARK: - Default Implementations
@@ -57,4 +70,10 @@ extension CisumKernelPlugin {
 
     /// 默认 onReady: 无操作。
     @MainActor public func onReady(kernel: CisumKernel) async throws {}
+
+    /// 默认 onShutdown: 无操作。
+    @MainActor public func onShutdown(kernel: CisumKernel) async throws {}
+
+    /// 默认 onUnregister: 无操作。
+    @MainActor public func onUnregister(kernel: CisumKernel) async throws {}
 }

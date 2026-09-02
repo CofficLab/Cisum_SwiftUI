@@ -48,7 +48,10 @@ let package = Package(
         ),
         .testTarget(
             name: "CisumKernelTests",
-            dependencies: ["CisumKernel"],
+            dependencies: [
+                "CisumKernel",
+                .product(name: "CisumUI", package: "CisumUI"),
+            ],
             path: "Tests/CisumKernelTests"
         ),
     ],

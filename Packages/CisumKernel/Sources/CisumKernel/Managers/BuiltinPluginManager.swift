@@ -37,6 +37,9 @@ public final class BuiltinPluginManager: ObservableObject {
     /// 版本化类型名称列表，保留注册顺序。
     private var orderedPluginKeys: [String] = []
 
+    /// 已成功完成 `onBoot` 的插件键（按启动顺序），用于逆序清理与启动回滚。
+    private var bootedPluginKeys: [String] = []
+
     /// 插件启用状态持久化存储。
     private let stateStore = PluginEnabledStateStore()
 
@@ -58,6 +61,7 @@ public final class BuiltinPluginManager: ObservableObject {
         pluginRegistry.removeAll()
         orderedPluginKeys.removeAll()
         usedIDs.removeAll()
+        bootedPluginKeys.removeAll()
 
         let sortedPlugins = plugins.sorted { type(of: $0).metadata.order < type(of: $1).metadata.order }
         for plugin in sortedPlugins {
@@ -77,6 +81,9 @@ public final class BuiltinPluginManager: ObservableObject {
     /// 再启动可配置插件（受启用策略 + 用户覆盖约束）。对内核感知插件调用
     /// `onBoot(kernel:)`；对仅实现 `SuperPlugin` 的插件回退到 `onRegister()` + `onEnable()`。
     ///
+    /// 启动中途任一插件抛错时，已启动插件逆序执行 `onShutdown` 并统一
+    /// `onUnregister`，随后清空注册表，避免留下半启动内核。
+    ///
     /// - Parameter kernel: 内核容器实例。
     func onBoot(kernel: CisumKernelContainer) async throws {
         guard !pluginRegistry.isEmpty else {
@@ -84,22 +91,31 @@ public final class BuiltinPluginManager: ObservableObject {
             return
         }
 
-        // 核心插件先启动
-        for key in orderedPluginKeys {
-            guard let plugin = pluginRegistry[key] else { continue }
-            guard type(of: plugin).metadata.policy == .alwaysOn else { continue }
-            try await bootPlugin(plugin, kernel: kernel)
-        }
+        bootedPluginKeys.removeAll()
 
-        // 可配置插件随后启动
-        for key in orderedPluginKeys {
-            guard let plugin = pluginRegistry[key] else { continue }
-            guard type(of: plugin).metadata.policy != .alwaysOn else { continue }
-            guard isPluginEnabled(plugin) else {
-                if Self.verbose { os_log("\(Self.t)⏭️ Skipping disabled plugin: \(plugin.id)") }
-                continue
+        do {
+            // 核心插件先启动
+            for key in orderedPluginKeys {
+                guard let plugin = pluginRegistry[key] else { continue }
+                guard type(of: plugin).metadata.policy == .alwaysOn else { continue }
+                try await bootPlugin(plugin, kernel: kernel)
+                bootedPluginKeys.append(key)
             }
-            try await bootPlugin(plugin, kernel: kernel)
+
+            // 可配置插件随后启动
+            for key in orderedPluginKeys {
+                guard let plugin = pluginRegistry[key] else { continue }
+                guard type(of: plugin).metadata.policy != .alwaysOn else { continue }
+                guard isPluginEnabled(plugin) else {
+                    if Self.verbose { os_log("\(Self.t)⏭️ Skipping disabled plugin: \(plugin.id)") }
+                    continue
+                }
+                try await bootPlugin(plugin, kernel: kernel)
+                bootedPluginKeys.append(key)
+            }
+        } catch {
+            await teardownAll(kernel: kernel)
+            throw error
         }
     }
 
@@ -118,16 +134,72 @@ public final class BuiltinPluginManager: ObservableObject {
     /// 阶段 2: OnReady —— 依赖服务的异步初始化。
     ///
     /// 在所有 `onBoot` 完成后统一调用所有内核感知插件的 `onReady(kernel:)`。
+    /// 任一插件失败时回滚全部已启动插件（逆序 `onShutdown` + `onUnregister`），
+    /// 避免留下半初始化状态。
     ///
     /// - Parameter kernel: 内核容器实例。
     func onReady(kernel: CisumKernelContainer) async throws {
-        for key in orderedPluginKeys {
-            guard let plugin = pluginRegistry[key] else { continue }
-            guard let kernelPlugin = plugin as? any CisumKernelPlugin else { continue }
-            guard isPluginEnabled(plugin) else { continue }
+        do {
+            for key in orderedPluginKeys {
+                guard let plugin = pluginRegistry[key] else { continue }
+                guard let kernelPlugin = plugin as? any CisumKernelPlugin else { continue }
+                guard isPluginEnabled(plugin) else { continue }
 
-            if Self.verbose { os_log("\(Self.t)🚀 onReady for: \(plugin.id)") }
-            try await kernelPlugin.onReady(kernel: kernel)
+                if Self.verbose { os_log("\(Self.t)🚀 onReady for: \(plugin.id)") }
+                try await kernelPlugin.onReady(kernel: kernel)
+            }
+        } catch {
+            await teardownAll(kernel: kernel)
+            throw error
+        }
+    }
+
+    // MARK: - Shutdown & Rollback
+
+    /// 停止并注销全部插件，供内核关闭时调用。
+    ///
+    /// 已启动插件按启动逆序执行 `onShutdown`（纯 `SuperPlugin` 回退到 `onDisable()`），
+    /// 随后全部插件逆序执行 `onUnregister`，最后清空注册表。清理过程中单个插件
+    /// 的失败不会阻断其他插件清理。
+    ///
+    /// - Parameter kernel: 内核容器实例。
+    public func shutdown(kernel: CisumKernelContainer) async {
+        await teardownAll(kernel: kernel)
+    }
+
+    /// 逆序停止已启动插件，并注销全部插件、清空注册表。
+    private func teardownAll(kernel: CisumKernelContainer) async {
+        // 逆序停止已成功 onBoot 的插件
+        for key in bootedPluginKeys.reversed() {
+            guard let plugin = pluginRegistry[key] else { continue }
+            await shutdownPlugin(plugin, kernel: kernel)
+        }
+
+        // 逆序注销全部已注册插件（撤回注册期贡献）
+        for key in orderedPluginKeys.reversed() {
+            guard let plugin = pluginRegistry[key] else { continue }
+            if let kernelPlugin = plugin as? any CisumKernelPlugin {
+                if Self.verbose { os_log("\(Self.t)🗑️ onUnregister for: \(plugin.id)") }
+                try? await kernelPlugin.onUnregister(kernel: kernel)
+            }
+        }
+
+        bootedPluginKeys.removeAll()
+        pluginRegistry.removeAll()
+        orderedPluginKeys.removeAll()
+        usedIDs.removeAll()
+
+        if Self.verbose { os_log("\(Self.t)🧹 Teardown complete") }
+    }
+
+    /// 停止单个插件：内核感知插件走 `onShutdown(kernel:)`，其余回退到 `onDisable()`。
+    private func shutdownPlugin(_ plugin: any SuperPlugin, kernel: CisumKernelContainer) async {
+        if let kernelPlugin = plugin as? any CisumKernelPlugin {
+            if Self.verbose { os_log("\(Self.t)🛑 onShutdown for: \(plugin.id)") }
+            try? await kernelPlugin.onShutdown(kernel: kernel)
+        } else {
+            if Self.verbose { os_log("\(Self.t)🛑 onDisable for: \(plugin.id)") }
+            plugin.onDisable()
         }
     }
 

@@ -154,6 +154,14 @@ public final class CisumKernelContainer: ObservableObject {
         // 阶段 4: 贡献聚合 — 失效缓存并将主题同步到 CisumUI
         pluginManager.registerPluginUIContributions(in: self)
     }
+
+    /// 关闭内核，停止并注销全部插件。
+    ///
+    /// 已启动插件按启动逆序执行 `onShutdown`，随后全部插件逆序执行
+    /// `onUnregister`，最后清空插件注册表。单插件清理失败不阻断其余插件。
+    public func shutdown() async {
+        await pluginManager.shutdown(kernel: self)
+    }
 }
 
 /// 兼容别名: 使用 `CisumKernel` 替代 `CisumKernelContainer`。

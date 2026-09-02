@@ -21,6 +21,12 @@ public actor StoragePlugin: SuperPlugin, SuperLog, CisumKernelPlugin {
         kernel.registerStorage(service)
     }
 
+    /// 内核关闭时清空静态引用，避免卸载后残留对内核生命周期服务的持有。
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        StorageService.current = nil
+    }
+
     @MainActor
     public func addSettingView() -> AnyView? {
         if Self.verbose {
