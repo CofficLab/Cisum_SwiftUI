@@ -16,7 +16,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "MagicKit", path: "../MagicKit"),
-        .package(name: "LumiUI", path: "../../../LumiUI"),
+        .package(name: "LumiUI", url: "https://github.com/CofficLab/LumiUI", from: "1.1.0"),
     ],
     targets: [
         .target(

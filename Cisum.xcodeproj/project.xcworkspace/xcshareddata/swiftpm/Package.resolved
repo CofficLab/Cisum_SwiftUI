@@ -1,33 +1,42 @@
 {
-  "originHash": "c7a1bcf76e558f09a859515ecfd0a600d3e0002c52f7e9df4e6856288a224010",
-  "pins": [
+  "originHash" : "c7a1bcf76e558f09a859515ecfd0a600d3e0002c52f7e9df4e6856288a224010",
+  "pins" : [
     {
-      "identity": "id3tageditor",
-      "kind": "remoteSourceControl",
-      "location": "https://github.com/chicio/ID3TagEditor",
-      "state": {
-        "revision": "3ccc31eafae0ded1fea8c9acd5e7ef7dfdbf1e8e",
-        "version": "4.6.0"
+      "identity" : "id3tageditor",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/chicio/ID3TagEditor",
+      "state" : {
+        "revision" : "3ccc31eafae0ded1fea8c9acd5e7ef7dfdbf1e8e",
+        "version" : "4.6.0"
       }
     },
     {
-      "identity": "magicalert",
-      "kind": "remoteSourceControl",
-      "location": "https://github.com/nookery/MagicAlert.git",
-      "state": {
-        "revision": "c01ea99ac87530ecc804f082c9311d884bc53418",
-        "version": "1.0.1"
+      "identity" : "lumiui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CofficLab/LumiUI",
+      "state" : {
+        "revision" : "b60344c606c765ea4b5ec34af71af384a0a43c2c",
+        "version" : "1.1.0"
       }
     },
     {
-      "identity": "zipfoundation",
-      "kind": "remoteSourceControl",
-      "location": "https://github.com/weichsel/ZIPFoundation.git",
-      "state": {
-        "revision": "22787ffb59de99e5dc1fbfe80b19c97a904ad48d",
-        "version": "0.9.20"
+      "identity" : "magicalert",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nookery/MagicAlert.git",
+      "state" : {
+        "revision" : "c01ea99ac87530ecc804f082c9311d884bc53418",
+        "version" : "1.0.1"
+      }
+    },
+    {
+      "identity" : "zipfoundation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/weichsel/ZIPFoundation.git",
+      "state" : {
+        "revision" : "22787ffb59de99e5dc1fbfe80b19c97a904ad48d",
+        "version" : "0.9.20"
       }
     }
   ],
-  "version": 3
+  "version" : 3
 }
