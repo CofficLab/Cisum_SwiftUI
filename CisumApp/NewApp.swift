@@ -15,7 +15,6 @@ private enum CisumAppAssembly {
 struct NewApp: App {
     #if os(macOS)
     @NSApplicationDelegateAdaptor private var appDelegate: AppDelegate
-    @Environment(\.openWindow) private var openWindow
     #endif
 
     init() {
@@ -37,14 +36,8 @@ struct NewApp: App {
             height: AppBootstrap.defaultWindowSize.height
         )
         .commands {
+            // 命令装配集中在 Factory 包内（CisumAppCommands，含「设置…」⌘,）。
             CisumFactory.makeCommands()
-            // 菜单栏「设置…」入口（⌘,）——对齐 Lumi 的设置窗口入口。
-            CommandGroup(replacing: .appSettings) {
-                Button("设置…") {
-                    openWindow(id: AppBootstrap.settingsWindowID)
-                }
-                .keyboardShortcut(",", modifiers: .command)
-            }
         }
 
         Window("设置", id: AppBootstrap.settingsWindowID) {

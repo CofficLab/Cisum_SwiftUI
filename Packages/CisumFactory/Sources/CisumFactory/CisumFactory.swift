@@ -134,8 +134,11 @@ public enum CisumBuilder: SuperLog {
     // MARK: - Commands Factory
 
     /// 创建应用命令菜单。
+    ///
+    /// 命令装配集中在 Factory 包内（对齐 Lumi `FactoryLumi/AppCommands.swift`），
+    /// 宿主只需 `.commands { CisumFactory.makeCommands() }`。
     public static func makeCommands() -> some Commands {
-        EmptyCommands()
+        CisumAppCommands()
     }
 
     // MARK: - Private
