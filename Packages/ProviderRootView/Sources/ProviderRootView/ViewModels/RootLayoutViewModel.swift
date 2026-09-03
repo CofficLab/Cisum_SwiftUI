@@ -1,0 +1,33 @@
+import Combine
+import SwiftUI
+
+/// `RootLayoutView` 的状态容器：订阅 `DefaultRootViewProviding` 的
+/// `RootViewProvidingEvent` 监听机制，把各区域注入视图同步为可观察状态。
+///
+/// 取代原 `@ObservedObject provider`（ObservableObject + @Published）的直接观察，
+/// 使 Provider 本身不依赖 `ObservableObject`。
+@MainActor
+final class RootLayoutViewModel: ObservableObject {
+    @Published private(set) var controlView: AnyView?
+    @Published private(set) var contentView: AnyView?
+    @Published private(set) var statusView: AnyView?
+    @Published private(set) var toolbarContent: AnyView?
+
+    private var handle: (any RootViewProvidingObserverHandle)?
+
+    init(provider: DefaultRootViewProviding) {
+        controlView = provider.controlView
+        contentView = provider.contentView
+        statusView = provider.statusView
+        toolbarContent = provider.toolbarContent
+
+        handle = provider.addObserver { [weak self] event in
+            switch event {
+            case .controlViewChanged: self?.controlView = provider.controlView
+            case .contentViewChanged: self?.contentView = provider.contentView
+            case .statusViewChanged: self?.statusView = provider.statusView
+            case .toolbarContentChanged: self?.toolbarContent = provider.toolbarContent
+            }
+        }
+    }
+}

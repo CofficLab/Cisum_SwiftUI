@@ -4,12 +4,15 @@ import SwiftUI
 
 /// 默认 `RootViewProviding` 实现：持有各区域注入视图 + 内核引用，
 /// 渲染 Cisum 根布局（控制区 + 内容区 + 状态区 + 工具栏）。
+///
+/// 状态变更通过 `RootViewProvidingEvent` 监听机制广播（对齐其他 providing），
+/// 不依赖 `ObservableObject`。
 @MainActor
-public final class DefaultRootViewProviding: RootViewProviding, ObservableObject {
-    @Published private(set) public var controlView: AnyView?
-    @Published private(set) public var contentView: AnyView?
-    @Published private(set) public var statusView: AnyView?
-    @Published private(set) public var toolbarContent: AnyView?
+public final class DefaultRootViewProviding: RootViewProviding {
+    public private(set) var controlView: AnyView?
+    public private(set) var contentView: AnyView?
+    public private(set) var statusView: AnyView?
+    public private(set) var toolbarContent: AnyView?
     private let eventObservers = KernelEventObserverStore<RootViewProvidingEvent>()
 
     private let kernel: CisumKernel
@@ -57,12 +60,17 @@ extension KernelEventObserverHandle: RootViewProvidingObserverHandle {}
 /// 结构：顶部播放控制区 + 中间内容区 + 底部状态区；工具栏含场景切换器与
 /// 「显示/隐藏内容」按钮。各区域优先使用 Provider 注入的视图，否则回退默认实现。
 struct RootLayoutView: View {
-    @ObservedObject var provider: DefaultRootViewProviding
+    @ObservedObject private var viewModel: RootLayoutViewModel
     @ObservedObject private var themeRegistry = LumiUIThemeRegistry.shared
     let kernel: CisumKernel
     @State private var isDetailVisible = false
     @State private var rememberedHeight: CGFloat = 0
     @State private var autoResizing = false
+
+    init(provider: DefaultRootViewProviding, kernel: CisumKernel) {
+        _viewModel = ObservedObject(wrappedValue: RootLayoutViewModel(provider: provider))
+        self.kernel = kernel
+    }
 
     private var showDB: Bool { kernel.appState?.isDBViewVisible ?? false }
 
@@ -109,7 +117,7 @@ struct RootLayoutView: View {
 
     @ViewBuilder
     private var controlArea: some View {
-        if let controlView = provider.controlView {
+        if let controlView = viewModel.controlView {
             controlView
         } else {
             ContentPlaceholderView()
@@ -118,7 +126,7 @@ struct RootLayoutView: View {
 
     @ViewBuilder
     private var contentArea: some View {
-        if let contentView = provider.contentView {
+        if let contentView = viewModel.contentView {
             contentView
         } else {
             ContentPlaceholderView()
@@ -127,7 +135,7 @@ struct RootLayoutView: View {
 
     @ViewBuilder
     private var statusArea: some View {
-        if let statusView = provider.statusView {
+        if let statusView = viewModel.statusView {
             statusView
         } else {
             HStack {
@@ -141,7 +149,7 @@ struct RootLayoutView: View {
 
     @ViewBuilder
     private var toolbarArea: some View {
-        if let toolbarContent = provider.toolbarContent {
+        if let toolbarContent = viewModel.toolbarContent {
             toolbarContent
         }
     }
