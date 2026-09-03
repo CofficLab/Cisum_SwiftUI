@@ -1,4 +1,5 @@
 import KernelCore
+import ProviderDocsView
 import CisumUIComponents
 import Foundation
 import ProviderStorage
@@ -10,8 +11,18 @@ public actor BookPlugin: SuperPlugin {
         displayName: BookPluginInfo.title,
         description: BookPluginInfo.description,
         iconName: BookPluginInfo.iconName,
-        order: 1
+        order: 1,
+        category: .library,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookPluginManualView() })
+        }
+    }
 
     public static let keyOfCurrentBookURL = BookPluginInfo.keyOfCurrentBookURL
     public static let keyOfCurrentBookTime = BookPluginInfo.keyOfCurrentBookTime

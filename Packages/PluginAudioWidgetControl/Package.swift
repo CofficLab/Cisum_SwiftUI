@@ -17,6 +17,7 @@ let package = Package(
     dependencies: [
         .package(path: "../CisumUIComponents"),
         .package(path: "../KernelCore"),
+        .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
         .package(path: "../PluginAudio"),
         .package(path: "../MagicPlayMan"),
     ],
@@ -26,6 +27,7 @@ let package = Package(
             dependencies: [
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "KernelCore", package: "KernelCore"),
+                .product(name: "ProviderDocsView", package: "ProviderDocsView"),
                 .product(name: "PluginAudio", package: "PluginAudio"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
             ],

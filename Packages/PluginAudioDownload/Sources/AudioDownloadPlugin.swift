@@ -1,4 +1,5 @@
 import KernelCore
+import ProviderDocsView
 import CisumUIComponents
 import ProviderScene
 import SwiftUI
@@ -9,8 +10,18 @@ public actor AudioDownloadPlugin: SuperPlugin {
         displayName: AudioDownloadPluginInfo.title,
         description: AudioDownloadPluginInfo.description,
         iconName: AudioDownloadPluginInfo.iconName,
-        order: AudioDownloadPluginInfo.order
+        order: AudioDownloadPluginInfo.order,
+        category: .playback,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioDownloadPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioDownloadPluginManualView() })
+        }
+    }
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
 

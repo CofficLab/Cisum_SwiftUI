@@ -30,6 +30,101 @@ public enum PluginPolicy: String, Sendable, Codable {
     }
 }
 
+/// 插件分类（对齐 Lumi `PluginCategory`），用于插件管理列表的分类筛选与图标。
+public enum PluginCategory: String, Codable, Sendable, CaseIterable {
+    /// 核心能力（场景、通用设置、插件管理等）。
+    case core
+    /// 媒体库（音乐库 / 有声书 / 存储）。
+    case library
+    /// 播放控制（控制 / 播放模式 / 进度 / 下载）。
+    case playback
+    /// 喜欢与收藏。
+    case like
+    /// 设置与商店。
+    case settings
+    /// 外观主题。
+    case theme
+    /// 工具（演示 / 复制 / 小组件 / 欢迎）。
+    case tool
+    /// 系统能力（设备 / 日志 / 迁移 / 重置）。
+    case system
+    /// 通用（未归类）。
+    case general
+
+    /// 分类展示名。
+    public var displayName: String {
+        switch self {
+        case .core: "核心"
+        case .library: "媒体库"
+        case .playback: "播放"
+        case .like: "喜欢"
+        case .settings: "设置"
+        case .theme: "主题"
+        case .tool: "工具"
+        case .system: "系统"
+        case .general: "通用"
+        }
+    }
+
+    /// 分类展示图标。
+    public var systemImage: String {
+        switch self {
+        case .core: "sparkles"
+        case .library: "books.vertical"
+        case .playback: "play.circle"
+        case .like: "heart"
+        case .settings: "gearshape"
+        case .theme: "paintpalette"
+        case .tool: "hammer"
+        case .system: "cpu"
+        case .general: "square.grid.2x2"
+        }
+    }
+
+    /// 分类在筛选栏的排序。
+    public var sortOrder: Int {
+        switch self {
+        case .core: 0
+        case .library: 1
+        case .playback: 2
+        case .like: 3
+        case .settings: 4
+        case .theme: 5
+        case .tool: 6
+        case .system: 7
+        case .general: 8
+        }
+    }
+}
+
+/// 插件成熟阶段（对齐 Lumi `PluginStage`），用于插件管理详情中的阶段标签。
+public enum PluginStage: String, Codable, Sendable {
+    case experimental
+    case preview
+    case stable
+    case deprecated
+
+    public var displayName: String {
+        switch self {
+        case .experimental: "实验"
+        case .preview: "预览"
+        case .stable: "稳定"
+        case .deprecated: "已弃用"
+        }
+    }
+}
+
+/// 插件权限声明（对齐 Lumi `PluginPermission`），用于插件管理详情中的权限清单。
+public struct PluginPermission: Hashable, Codable, Sendable {
+    public let id: String
+    public let reason: String
+
+    public init(id: String, reason: String) {
+        self.id = id
+        self.reason = reason
+    }
+}
+
 public struct PluginMetadata: Equatable, Sendable {
     public let id: String
     public let displayName: String
@@ -37,6 +132,13 @@ public struct PluginMetadata: Equatable, Sendable {
     public let iconName: String
     public let order: Int
     public let policy: PluginPolicy
+    public let category: PluginCategory
+    public let stage: PluginStage
+    public let version: String
+    public let permissions: [PluginPermission]
+
+    /// 展示名别名（对齐 Lumi `PluginMetadata.name`）。
+    public var name: String { displayName }
 
     public var shouldRegister: Bool {
         policy.shouldRegister
@@ -48,7 +150,11 @@ public struct PluginMetadata: Equatable, Sendable {
         description: String,
         iconName: String = "puzzlepiece.extension",
         order: Int = 9999,
-        policy: PluginPolicy = .alwaysOn
+        policy: PluginPolicy = .alwaysOn,
+        category: PluginCategory = .general,
+        stage: PluginStage = .stable,
+        version: String = "1.0.0",
+        permissions: [PluginPermission] = []
     ) {
         self.id = id
         self.displayName = displayName
@@ -56,6 +162,10 @@ public struct PluginMetadata: Equatable, Sendable {
         self.iconName = iconName
         self.order = order
         self.policy = policy
+        self.category = category
+        self.stage = stage
+        self.version = version
+        self.permissions = permissions
     }
 }
 

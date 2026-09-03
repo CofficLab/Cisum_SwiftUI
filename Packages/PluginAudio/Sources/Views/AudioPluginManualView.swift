@@ -1,0 +1,37 @@
+import CisumUIComponents
+import SwiftUI
+
+/// 音乐库 说明书 —— 章节式文档。
+struct AudioPluginManualView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 22) {
+            ManualHeader(title: "音乐库", subtitle: "User Manual")
+
+            ManualSectionHeader(number: 1, title: "概述")
+            Text("管理、浏览与播放本地音乐文件。")
+                .font(.appBody)
+                .foregroundColor(.primary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualBulletList(items: [
+                .init("媒体库：管理本地音乐文件并分类浏览。"),
+                .init("搜索：按名称快速定位音乐。"),
+                .init("播放：从媒体库发起播放。"),
+            ])
+
+            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualStepList(items: [
+                .init("打开音乐库场景，浏览全部音乐。"),
+                .init("使用搜索框按名称过滤音乐。"),
+                .init("点击任意音乐开始播放。"),
+            ])
+
+            ManualSectionHeader(number: 4, title: "说明")
+            ManualBulletList(items: [
+                .init("音乐库依赖本地存储位置，需先在设置中配置存储。"),
+            ])
+        }
+        .frame(maxWidth: 620, alignment: .leading)
+    }
+}

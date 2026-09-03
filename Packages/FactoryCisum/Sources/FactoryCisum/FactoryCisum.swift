@@ -6,6 +6,7 @@ import MagicPlayMan
 import OSLog
 import ProviderContentView
 import ProviderControlView
+import ProviderDocsView
 import ProviderRootView
 import ProviderSettings
 import ProviderToolbar
@@ -89,6 +90,7 @@ public enum CisumBuilder: SuperLog {
 
         kernel.registerCloudService(CloudService())
         kernel.registerDeviceService(DeviceService())
+        kernel.registerDocsService(DefaultDocsViewProviding())
 
         // 3. 启动内核（插件 onBoot 注册 Storage 等服务 → 校验 → onReady → 贡献聚合）
         try await kernel.startup()

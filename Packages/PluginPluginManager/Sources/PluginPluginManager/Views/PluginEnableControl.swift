@@ -3,7 +3,7 @@ import KernelCore
 import ProviderPluginManaging
 import SwiftUI
 
-/// 展示并控制单个插件的启用状态（复刻 Lumi `PluginPluginManager.PluginEnableControl`）。
+/// 展示并控制单个插件的启用状态（对齐 Lumi `PluginPluginManager.PluginEnableControl`）。
 ///
 /// 关闭 / 打开开关会调用 `PluginManaging.enablePlugin / disablePlugin`，
 /// 完成运行期启停 + 贡献重建 + 持久化（写入 `PluginEnabledStateStore`），
@@ -11,6 +11,8 @@ import SwiftUI
 ///
 /// 不可配置的插件（alwaysOn / disabled）不渲染开关，只展示对应的策略标签。
 struct PluginEnableControl: View {
+    @LumiTheme private var theme
+
     let manager: any PluginManaging
     let plugin: any SuperPlugin
 
@@ -18,18 +20,21 @@ struct PluginEnableControl: View {
     @State private var isUpdating = false
 
     var body: some View {
-        if type(of: plugin).metadata.policy.allowUserToggle {
-            Toggle(isOn: Binding(
-                get: { manager.isEnabled(id: plugin.id) },
-                set: { newValue in toggle(newValue) }
-            )) {
-                Text("启用")
-                    .font(.body)
+        Group {
+            if type(of: plugin).metadata.policy.allowUserToggle {
+                Toggle(isOn: Binding(
+                    get: { manager.isEnabled(id: plugin.id) },
+                    set: { newValue in toggle(newValue) }
+                )) {
+                    Text("启用")
+                        .font(.appBody)
+                        .foregroundStyle(theme.textPrimary)
+                }
+                .toggleStyle(.switch)
+                .disabled(isUpdating) // 切换期间短暂禁用，防止连点
+            } else {
+                policyTag
             }
-            .toggleStyle(.switch)
-            .disabled(isUpdating) // 切换期间短暂禁用，防止连点
-        } else {
-            policyTag
         }
     }
 
@@ -53,13 +58,17 @@ struct PluginEnableControl: View {
     private var policyTag: some View {
         switch type(of: plugin).metadata.policy {
         case .alwaysOn:
-            Label("始终启用", systemImage: "lock.fill")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            AppTag(
+                "始终启用",
+                systemImage: "lock.fill",
+                style: .accent
+            )
         case .disabled:
-            Label("已停用", systemImage: "slash.circle")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            AppTag(
+                "已停用",
+                systemImage: "minus.circle",
+                style: .subtle
+            )
         case .optOut, .optIn:
             EmptyView()
         }

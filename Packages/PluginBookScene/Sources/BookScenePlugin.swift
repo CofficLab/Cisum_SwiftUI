@@ -1,4 +1,5 @@
 import KernelCore
+import ProviderDocsView
 import CisumUIComponents
 import ProviderScene
 import SwiftUI
@@ -9,8 +10,18 @@ public actor BookScenePlugin: SuperPlugin {
         displayName: BookScenePluginInfo.title,
         description: BookScenePluginInfo.description,
         iconName: BookScenePluginInfo.iconName,
-        order: BookScenePluginInfo.order
+        order: BookScenePluginInfo.order,
+        category: .core,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookScenePluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookScenePluginManualView() })
+        }
+    }
 
     nonisolated(unsafe) private var setSceneAction: (@MainActor (AppScene) -> Void)?
 

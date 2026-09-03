@@ -1,5 +1,6 @@
 import CisumUIComponents
 import KernelCore
+import ProviderDocsView
 import PluginAudio
 import SwiftUI
 
@@ -9,8 +10,18 @@ public actor AudioWidgetControlPlugin: SuperPlugin {
         displayName: AudioWidgetControlPluginInfo.title,
         description: AudioWidgetControlPluginInfo.description,
         iconName: AudioWidgetControlPluginInfo.iconName,
-        order: 100
+        order: 100,
+        category: .tool,
     )
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioWidgetControlPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioWidgetControlPluginManualView() })
+        }
+    }
+
     public nonisolated var label: String { "widgetControl" }
 
     @MainActor

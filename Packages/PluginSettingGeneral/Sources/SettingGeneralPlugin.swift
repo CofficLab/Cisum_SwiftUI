@@ -1,20 +1,38 @@
 import CisumUIComponents
 import KernelCore
+import ProviderDocsView
 import SwiftUI
 
 /// 设置 - 通用 插件（复刻 Lumi `PluginSettingGeneral`）。
 ///
 /// 在设置窗口注册「通用」导航入口（gearshape，order 1 排最前），详情展示
-/// 应用信息等通用设置项。Cisum 无 DocsView / Sparkle 更新 / 官网 / 引导重放
-/// 机制，Lumi 的新手引导、说明书、网站、更新分组按实际情况删减。
+/// 应用信息与说明书浏览器。说明书浏览器读取内核 `DocsViewProviding`
+/// 贡献的 manual 条目。
 public actor SettingGeneralPlugin: SuperPlugin {
     public static let shared = SettingGeneralPlugin()
     public static let metadata = PluginMetadata(
         displayName: "通用设置",
-        description: "在设置窗口中提供应用信息等通用设置项。",
+        description: "在设置窗口中提供应用信息与说明书等通用设置项。",
         iconName: "gearshape",
-        order: 1
+        order: 1,
+        category: .core,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { SettingGeneralPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { SettingGeneralPluginManualView() })
+        }
+    }
+
+    /// onBoot 时保存的内核引用，用于构造说明书浏览器的数据源。
+    nonisolated(unsafe) private var kernel: CisumKernel?
+
+    public func onBoot(kernel: CisumKernel) async throws {
+        self.kernel = kernel
+    }
 
     @MainActor
     public func addSettingView() -> AnyView? {
@@ -29,7 +47,7 @@ public actor SettingGeneralPlugin: SuperPlugin {
             description: Self.metadata.description,
             iconName: Self.metadata.iconName,
             order: Self.metadata.order,
-            destination: AnyView(GeneralSettingsDetailView())
+            destination: AnyView(GeneralSettingsDetailView(docsProvider: kernel?.docs))
         )
     }
 }

@@ -1,4 +1,5 @@
 import KernelCore
+import ProviderDocsView
 import CisumUIComponents
 import Foundation
 import ProviderScene
@@ -23,8 +24,18 @@ public actor ScenePlugin: SuperPlugin {
         // SceneProviding is a prerequisite for plugins that consume scene-scoped
         // views. Keep it ahead of every regular plugin during onBoot.
         order: -1000,
-        policy: .alwaysOn
+        policy: .alwaysOn,
+        category: .core,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { ScenePluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { ScenePluginManualView() })
+        }
+    }
 
     public init() {}
 

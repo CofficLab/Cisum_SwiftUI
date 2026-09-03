@@ -1,5 +1,6 @@
 import CisumUIComponents
 import KernelCore
+import ProviderDocsView
 import PluginAudio
 import SwiftUI
 
@@ -10,8 +11,18 @@ import SwiftUI
             displayName: String(localized: "Copy", bundle: .module),
             description: String(localized: String.LocalizationValue(AudioCopyPluginInfo.descriptionKey), bundle: .module),
             iconName: AudioCopyPluginInfo.iconName,
-            order: 0
+            order: 0,
+        category: .tool,
         )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { CopyPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { CopyPluginManualView() })
+        }
+    }
 
         @MainActor
         public func addStateView() -> AnyView? {

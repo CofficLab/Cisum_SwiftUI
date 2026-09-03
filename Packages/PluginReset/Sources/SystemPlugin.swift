@@ -1,5 +1,6 @@
 import CisumUIComponents
 import KernelCore
+import ProviderDocsView
 import SwiftUI
 
 public actor SystemPlugin: SuperPlugin {
@@ -8,8 +9,18 @@ public actor SystemPlugin: SuperPlugin {
         displayName: ResetPluginInfo.title,
         description: ResetPluginInfo.description,
         iconName: ResetPluginInfo.iconName,
-        order: ResetPluginInfo.order
+        order: ResetPluginInfo.order,
+        category: .system,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { SystemPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { SystemPluginManualView() })
+        }
+    }
 
     @MainActor
     public func addSettingNavigationItem() -> PluginSettingNavigationItem? {

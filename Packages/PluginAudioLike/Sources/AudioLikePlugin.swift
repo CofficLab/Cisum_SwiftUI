@@ -1,4 +1,5 @@
 import KernelCore
+import ProviderDocsView
 import CisumUIComponents
 import PluginAudioScene
 import ProviderScene
@@ -11,8 +12,18 @@ public actor AudioLikePlugin: SuperPlugin {
         description: AudioLikePluginInfo.description,
         iconName: AudioLikePluginInfo.iconName,
         order: AudioLikePluginInfo.order,
-        policy: .optIn
+        policy: .optIn,
+        category: .like,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioLikePluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioLikePluginManualView() })
+        }
+    }
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
 

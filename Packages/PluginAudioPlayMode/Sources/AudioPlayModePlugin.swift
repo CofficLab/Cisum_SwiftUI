@@ -1,4 +1,5 @@
 import KernelCore
+import ProviderDocsView
 import CisumUIComponents
 import PluginAudio
 import PluginAudioScene
@@ -11,8 +12,18 @@ public actor AudioPlayModePlugin: SuperPlugin {
         displayName: AudioPlayModePluginInfo.title,
         description: AudioPlayModePluginInfo.description,
         iconName: AudioPlayModePluginInfo.iconName,
-        order: AudioPlayModePluginInfo.order
+        order: AudioPlayModePluginInfo.order,
+        category: .playback,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioPlayModePluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioPlayModePluginManualView() })
+        }
+    }
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
 

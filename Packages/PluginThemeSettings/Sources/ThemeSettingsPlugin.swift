@@ -1,5 +1,6 @@
 import CisumUIComponents
 import KernelCore
+import ProviderDocsView
 import ProviderTheme
 import SwiftUI
 
@@ -21,8 +22,18 @@ public actor ThemeSettingsPlugin: SuperPlugin {
         displayName: ThemeSettingsPluginInfo.title,
         description: ThemeSettingsPluginInfo.description,
         iconName: ThemeSettingsPluginInfo.iconName,
-        order: ThemeSettingsPluginInfo.order
+        order: ThemeSettingsPluginInfo.order,
+        category: .settings,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { ThemeSettingsPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { ThemeSettingsPluginManualView() })
+        }
+    }
 
     nonisolated(unsafe) private let themeBox = ThemeBox()
 

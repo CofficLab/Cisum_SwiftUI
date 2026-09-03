@@ -1,5 +1,6 @@
 import CisumUIComponents
 import KernelCore
+import ProviderDocsView
 import Foundation
 
 public actor FileLogPlugin: SuperPlugin {
@@ -8,8 +9,18 @@ public actor FileLogPlugin: SuperPlugin {
         displayName: FileLogPluginInfo.title,
         description: FileLogPluginInfo.description,
         iconName: FileLogPluginInfo.iconName,
-        order: 1
+        order: 1,
+        category: .system,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { FileLogPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { FileLogPluginManualView() })
+        }
+    }
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {

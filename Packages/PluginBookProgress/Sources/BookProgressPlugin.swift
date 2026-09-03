@@ -1,4 +1,5 @@
 import KernelCore
+import ProviderDocsView
 import CisumUIComponents
 import PluginBook
 import PluginBookScene
@@ -12,8 +13,18 @@ public actor BookProgressPlugin: SuperPlugin {
         displayName: BookProgressPluginInfo.title,
         description: BookProgressPluginInfo.description,
         iconName: BookProgressPluginInfo.iconName,
-        order: BookProgressPluginInfo.order
+        order: BookProgressPluginInfo.order,
+        category: .playback,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookProgressPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookProgressPluginManualView() })
+        }
+    }
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
 

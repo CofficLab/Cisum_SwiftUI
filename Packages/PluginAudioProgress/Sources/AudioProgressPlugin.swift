@@ -1,4 +1,5 @@
 import KernelCore
+import ProviderDocsView
 import CisumUIComponents
 import PluginAudio
 import PluginAudioScene
@@ -13,8 +14,18 @@ public actor AudioProgressPlugin: SuperPlugin, SuperLog {
         displayName: String(localized: String.LocalizationValue(AudioProgressPluginInfo.titleKey), bundle: .module),
         description: String(localized: String.LocalizationValue(AudioProgressPluginInfo.descriptionKey), bundle: .module),
         iconName: "waveform",
-        order: 0
+        order: 0,
+        category: .playback,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioProgressPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioProgressPluginManualView() })
+        }
+    }
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
 

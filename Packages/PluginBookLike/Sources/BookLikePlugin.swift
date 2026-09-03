@@ -1,4 +1,5 @@
 import KernelCore
+import ProviderDocsView
 import CisumUIComponents
 import PluginBookScene
 import ProviderScene
@@ -11,8 +12,18 @@ public actor BookLikePlugin: SuperPlugin {
         description: BookLikePluginInfo.description,
         iconName: BookLikePluginInfo.iconName,
         order: BookLikePluginInfo.order,
-        policy: .optIn
+        policy: .optIn,
+        category: .like,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookLikePluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookLikePluginManualView() })
+        }
+    }
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
 

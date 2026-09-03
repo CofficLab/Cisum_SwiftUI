@@ -1,5 +1,6 @@
 import CisumUIComponents
 import KernelCore
+import ProviderDocsView
 import Foundation
 import OSLog
 import PluginAudio
@@ -10,8 +11,18 @@ public actor AudioJobPlugin: SuperPlugin {
         displayName: String(localized: "Audio Jobs", bundle: .module),
         description: String(localized: "Background tasks for audio files", bundle: .module),
         iconName: "gearshape.2",
-        order: 5
+        order: 5,
+        category: .system,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioJobPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioJobPluginManualView() })
+        }
+    }
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {

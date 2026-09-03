@@ -1,4 +1,5 @@
 import KernelCore
+import ProviderDocsView
 import CisumUIComponents
 import ProviderStorage
 import SwiftUI
@@ -11,8 +12,18 @@ public actor WelcomePlugin: SuperPlugin, SuperLog {
         displayName: WelcomePluginInfo.title,
         description: WelcomePluginInfo.description,
         iconName: WelcomePluginInfo.iconName,
-        order: WelcomePluginInfo.order
+        order: WelcomePluginInfo.order,
+        category: .tool,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { WelcomePluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { WelcomePluginManualView() })
+        }
+    }
 
     /// OnReady 阶段注入的存储能力。`WelcomePluginHost` 的闭包为 `@Sendable`，
     /// 因此通过 `nonisolated(unsafe) static` 持有，避免捕获非 Sendable 的实例。

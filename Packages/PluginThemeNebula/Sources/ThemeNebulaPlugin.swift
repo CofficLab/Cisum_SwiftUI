@@ -1,5 +1,6 @@
 import CisumUIComponents
 import KernelCore
+import ProviderDocsView
 import SwiftUI
 
 public actor ThemeNebulaPlugin: SuperPlugin {
@@ -8,8 +9,18 @@ public actor ThemeNebulaPlugin: SuperPlugin {
         displayName: NebulaTheme().displayName,
         description: NebulaTheme().description,
         iconName: NebulaTheme().iconName,
-        order: 180
+        order: 180,
+        category: .theme,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { ThemeNebulaPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { ThemeNebulaPluginManualView() })
+        }
+    }
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {

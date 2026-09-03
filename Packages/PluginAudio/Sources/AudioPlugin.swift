@@ -1,4 +1,5 @@
 import KernelCore
+import ProviderDocsView
 import CisumUIComponents
 import Foundation
 import PluginAudioLike
@@ -11,8 +12,18 @@ public actor AudioPlugin: SuperPlugin {
         displayName: String(localized: String.LocalizationValue(AudioPluginInfo.titleKey), bundle: .module),
         description: String(localized: String.LocalizationValue(AudioPluginInfo.descriptionKey), bundle: .module),
         iconName: .cisumIconMusicNote,
-        order: 1
+        order: 1,
+        category: .library,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioPluginManualView() })
+        }
+    }
 
     public static let maxAudioCount = AudioPluginInfo.maxAudioCount
     public static let supportedExtensions = AudioPluginInfo.supportedExtensions

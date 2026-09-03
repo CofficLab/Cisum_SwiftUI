@@ -1,5 +1,6 @@
 import CisumUIComponents
 import KernelCore
+import ProviderDocsView
 import SwiftUI
 
 public actor ThemeGraphiteBlackPlugin: SuperPlugin {
@@ -8,8 +9,18 @@ public actor ThemeGraphiteBlackPlugin: SuperPlugin {
         displayName: GraphiteBlackTheme().displayName,
         description: GraphiteBlackTheme().description,
         iconName: GraphiteBlackTheme().iconName,
-        order: 155
+        order: 155,
+        category: .theme,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { ThemeGraphiteBlackPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { ThemeGraphiteBlackPluginManualView() })
+        }
+    }
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {

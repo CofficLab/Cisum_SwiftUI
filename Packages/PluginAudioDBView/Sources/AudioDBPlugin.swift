@@ -1,4 +1,5 @@
 import KernelCore
+import ProviderDocsView
 import CisumUIComponents
 import PluginAudio
 import ProviderScene
@@ -10,8 +11,18 @@ public actor AudioDBPlugin: SuperPlugin {
         displayName: String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), bundle: .module),
         description: String(localized: String.LocalizationValue(AudioDBPluginInfo.descriptionKey), bundle: .module),
         iconName: "externaldrive",
-        order: 1
+        order: 1,
+        category: .library,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioDBPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { AudioDBPluginManualView() })
+        }
+    }
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
 

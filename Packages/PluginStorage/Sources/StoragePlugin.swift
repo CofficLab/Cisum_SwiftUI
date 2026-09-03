@@ -1,4 +1,5 @@
 import KernelCore
+import ProviderDocsView
 import CisumUIComponents
 import OSLog
 import ProviderStorage
@@ -17,8 +18,18 @@ public actor StoragePlugin: SuperPlugin, SuperLog {
         displayName: String(localized: String.LocalizationValue(StoragePluginInfo.titleKey), bundle: .module),
         description: String(localized: String.LocalizationValue(StoragePluginInfo.descriptionKey), bundle: .module),
         iconName: StoragePluginInfo.iconName,
-        order: 10
+        order: 10,
+        category: .library,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { StoragePluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { StoragePluginManualView() })
+        }
+    }
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {

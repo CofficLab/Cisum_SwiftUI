@@ -1,5 +1,6 @@
 import CisumUIComponents
 import KernelCore
+import ProviderDocsView
 import SwiftUI
 
 public actor ThemeStudioBluePlugin: SuperPlugin {
@@ -8,8 +9,18 @@ public actor ThemeStudioBluePlugin: SuperPlugin {
         displayName: StudioBlueTheme().displayName,
         description: StudioBlueTheme().description,
         iconName: StudioBlueTheme().iconName,
-        order: 130
+        order: 130,
+        category: .theme,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { ThemeStudioBluePluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { ThemeStudioBluePluginManualView() })
+        }
+    }
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {

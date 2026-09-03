@@ -1,4 +1,5 @@
 import KernelCore
+import ProviderDocsView
 import CisumUIComponents
 import OSLog
 import PluginBook
@@ -11,8 +12,18 @@ public actor BookDBPlugin: SuperPlugin {
         displayName: String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), bundle: .module),
         description: String(localized: String.LocalizationValue(BookDBPluginInfo.descriptionKey), bundle: .module),
         iconName: BookDBPluginInfo.iconName,
-        order: 12
+        order: 12,
+        category: .library,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookDBPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookDBPluginManualView() })
+        }
+    }
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
 

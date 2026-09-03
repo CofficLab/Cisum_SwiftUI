@@ -1,110 +1,120 @@
 import CisumUIComponents
 import KernelCore
+import ProviderDocsView
 import ProviderPluginManaging
 import SwiftUI
 
-/// 插件管理页右侧详情面板（复刻 Lumi `PluginPluginManager.PluginSettingsDetailView`）。
+/// 插件管理页右侧的详情面板（对齐 Lumi `PluginPluginManager.PluginSettingsDetailView`）。
 ///
-/// 展示选中插件的元信息（图标 / 名称 / id / 描述 / 策略）与启停开关；
-/// 最近一次启停失败的错误信息也会展示。
+/// 展示插件元信息（分类图标 + 名称 + 阶段标签 + 描述）、启用状态控件，
+/// 以及内容区。内容区优先展示插件通过 `DocsViewProviding` 贡献的 about 视图
+/// （按插件 id 匹配 `aboutEntries`）；未贡献时回退到默认 about 视图
+/// （基于 `metadata` 生成的 Hero + 只读信息区），保证每个插件都有 about 页。
 struct PluginSettingsDetailView: View {
-    @LumiTheme private var appTheme
+    @LumiTheme private var theme
+
     let manager: any PluginManaging
     let plugin: any SuperPlugin
 
+    /// 文档视图提供器：按插件 id 匹配 about 条目。
+    let docsProvider: (any DocsViewProviding)?
+
+    init(
+        manager: any PluginManaging,
+        plugin: any SuperPlugin,
+        docsProvider: (any DocsViewProviding)? = nil
+    ) {
+        self.manager = manager
+        self.plugin = plugin
+        self.docsProvider = docsProvider
+    }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            header
-
-            Divider()
-
-            descriptionSection
-
-            policySection
-
-            Divider()
-
-            PluginEnableControl(manager: manager, plugin: plugin)
-
-            if let errorDescription = manager.lastErrorDescription {
-                Label(errorDescription, systemImage: "exclamationmark.triangle")
-                    .font(.caption)
-                    .foregroundStyle(.orange)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                header
+                AppDivider()
+                aboutContent
             }
-
-            Spacer()
+            .padding(22)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
         }
-        .padding(16)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .appSurface(style: .panel, cornerRadius: 0)
     }
 
-    /// 图标 + 名称 + id。
+    // MARK: - Header
+
     private var header: some View {
-        HStack(spacing: 12) {
-            Image(systemName: type(of: plugin).metadata.iconName)
-                .font(.title2)
-                .foregroundStyle(appTheme.primary)
-                .frame(width: 36, height: 36)
-                .background(appTheme.primary.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
+        HStack(alignment: .top, spacing: 16) {
+            categoryIcon
 
-            VStack(alignment: .leading, spacing: 2) {
-                Text(type(of: plugin).metadata.displayName)
-                    .font(.title3.weight(.semibold))
-                Text(plugin.id)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .textSelection(.enabled)
+            VStack(alignment: .leading, spacing: 7) {
+                HStack(spacing: 8) {
+                    Text(type(of: plugin).metadata.displayName)
+                        .font(.title2.weight(.semibold))
+                        .foregroundStyle(theme.textPrimary)
+
+                    if type(of: plugin).metadata.stage != .stable {
+                        AppTag(
+                            type(of: plugin).metadata.stage.displayName,
+                            style: .subtle
+                        )
+                    }
+                }
+
+                if !type(of: plugin).metadata.description.isEmpty {
+                    Text(type(of: plugin).metadata.description)
+                        .font(.appCaption)
+                        .foregroundStyle(theme.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            // 启用状态控件置于右上角（可交互：运行时启停 + 持久化）
+            PluginEnableControl(manager: manager, plugin: plugin)
+                .id(plugin.id)
+                .fixedSize()
         }
     }
 
-    /// 插件描述。
-    private var descriptionSection: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("描述")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
-            Text(type(of: plugin).metadata.description.isEmpty ? "无描述" : type(of: plugin).metadata.description)
-                .font(.body)
-                .foregroundStyle(.primary)
-                .textSelection(.enabled)
-        }
+    /// 头部左侧的大号分类图标。
+    private var categoryIcon: some View {
+        Image(systemName: type(of: plugin).metadata.category.systemImage)
+            .font(.system(size: 38, weight: .semibold))
+            .foregroundStyle(theme.primary)
+            .frame(width: 64, height: 64)
+            .background(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(theme.appAccentSoftFill)
+            )
     }
 
-    /// 启用策略信息。
-    private var policySection: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("策略")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
-            HStack(spacing: 8) {
-                policyBadge
-                Text(type(of: plugin).metadata.policy.defaultEnabled ? "默认启用" : "默认禁用")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-        }
-    }
+    // MARK: - Content
 
+    /// 内容区：优先展示插件贡献的 about 视图；未贡献时回退到默认 about 视图。
     @ViewBuilder
-    private var policyBadge: some View {
-        switch type(of: plugin).metadata.policy {
-        case .alwaysOn:
-            badge("始终启用", systemImage: "lock.fill")
-        case .optOut:
-            badge("默认启用 · 可关闭", systemImage: "switch.2")
-        case .optIn:
-            badge("默认禁用 · 可开启", systemImage: "switch.2")
-        case .disabled:
-            badge("已停用", systemImage: "slash.circle")
+    private var aboutContent: some View {
+        if let aboutEntry {
+            aboutEntry.makeView()
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+        } else {
+            defaultAboutView
         }
     }
 
-    private func badge(_ text: String, systemImage: String) -> some View {
-        Label(text, systemImage: systemImage)
-            .font(.caption)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 3)
-            .background(.quaternary.opacity(0.6), in: Capsule())
+    /// 当前插件贡献的 about 条目（按 id 匹配 `DocsViewProviding.aboutEntries`）。
+    private var aboutEntry: DocsEntry? {
+        docsProvider?.aboutEntries.first(where: { $0.id == plugin.id })
+    }
+
+    /// 默认 about 视图：基于 metadata 生成的 Hero + 只读信息区，
+    /// 保证未贡献 about 的插件也有完整的关于页。
+    private var defaultAboutView: some View {
+        PluginDefaultAboutView(
+            metadata: type(of: plugin).metadata,
+            isEnabled: manager.isEnabled(id: plugin.id)
+        )
     }
 }

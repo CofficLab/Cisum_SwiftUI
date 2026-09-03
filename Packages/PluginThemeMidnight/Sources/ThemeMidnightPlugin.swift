@@ -1,5 +1,6 @@
 import CisumUIComponents
 import KernelCore
+import ProviderDocsView
 import SwiftUI
 
 public actor ThemeMidnightPlugin: SuperPlugin {
@@ -8,8 +9,18 @@ public actor ThemeMidnightPlugin: SuperPlugin {
         displayName: MidnightTheme().displayName,
         description: MidnightTheme().description,
         iconName: MidnightTheme().iconName,
-        order: 160
+        order: 160,
+        category: .theme,
     )
+
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { ThemeMidnightPluginAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { ThemeMidnightPluginManualView() })
+        }
+    }
 
     @MainActor
     public func addThemeContributions() -> [LumiUIThemeContribution] {

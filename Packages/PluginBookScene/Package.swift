@@ -17,6 +17,7 @@ let package = Package(
     dependencies: [
         .package(path: "../CisumUIComponents"),
         .package(path: "../KernelCore"),
+        .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
         .package(path: "../ProviderScene"),
     ],
     targets: [
@@ -25,6 +26,7 @@ let package = Package(
             dependencies: [
                 "CisumUIComponents",
                 .product(name: "KernelCore", package: "KernelCore"),
+                .product(name: "ProviderDocsView", package: "ProviderDocsView"),
                 .product(name: "ProviderScene", package: "ProviderScene"),
             ],
             path: ".",

@@ -2,18 +2,30 @@
 import AppKit
 #endif
 import CisumUIComponents
+import ProviderDocsView
 import SwiftUI
 
 /// 通用设置详情视图 —— 设置窗口「通用」标签页。
 ///
-/// 对齐 Lumi `GeneralSettingsDetailView` 的分组卡片形态，按 Cisum 实际情况
-/// 保留「应用信息」分组（DEBUG 下附加「调试」分组），删减了依赖 Lumi 特有
-/// 能力的分组（说明书 / 官网 / 更新 / 引导重放）。
+/// 对齐 Lumi `GeneralSettingsDetailView` 的分组卡片形态：保留「应用信息」
+/// 分组（DEBUG 下附加「调试」分组），新增「说明书」分组（打开说明书浏览器，
+/// 浏览各插件贡献的说明书），删减了依赖 Lumi 特有能力的分组（官网 / 更新 /
+/// 引导重放）。
 struct GeneralSettingsDetailView: View {
+    /// 文档视图提供器：说明书浏览器读取全部插件贡献的 manual 条目。
+    let docsProvider: (any DocsViewProviding)?
+
+    @State private var isShowingManuals = false
+
+    init(docsProvider: (any DocsViewProviding)? = nil) {
+        self.docsProvider = docsProvider
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 appInfoSection
+                manualsSection
                 #if DEBUG
                 debugSection
                 #endif
@@ -21,6 +33,9 @@ struct GeneralSettingsDetailView: View {
             .frame(maxWidth: 640, alignment: .leading)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(24)
+        }
+        .sheet(isPresented: $isShowingManuals) {
+            ManualsBrowserView(manuals: docsProvider?.manualEntries ?? [])
         }
     }
 
@@ -35,6 +50,25 @@ struct GeneralSettingsDetailView: View {
             settingRow(icon: "info.circle", title: "版本", value: MagicApp.getVersion())
             Divider()
             settingRow(icon: "hammer", title: "构建", value: MagicApp.getBuildNumber())
+        }
+    }
+
+    // MARK: - 说明书
+
+    private var manualsSection: some View {
+        settingSection(title: "说明书") {
+            HStack(spacing: 12) {
+                Image(systemName: "book")
+                    .frame(width: 22)
+                    .foregroundStyle(.secondary)
+                Text("浏览各插件贡献的说明书")
+                Spacer()
+                Button("打开") {
+                    isShowingManuals = true
+                }
+            }
+            .padding(.vertical, 10)
+            .padding(.horizontal, 14)
         }
     }
 
