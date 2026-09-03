@@ -1,34 +1,39 @@
 import Foundation
+import KernelCore
 
-/// 插件启用状态持久化存储（对齐 Lumi `ProviderStorage.PluginEnabledStateStore`）。
+/// PluginPluginManager 的状态存储服务（Services 层，对齐 Lumi `ProviderStorage.PluginEnabledStateStore`）。
 ///
-/// 保存用户对每个可配置插件（`PluginPolicy` 为 `optOut` 或 `optIn`）的启用/禁用覆盖。
-/// 以 `[pluginID: Bool]` 形式写入插件的专属磁盘目录（`<databaseRoot>/PluginManager/`），
+/// 专门负责把插件启用/禁用状态持久化到磁盘：以 `[pluginID: Bool]` 形式写入
+/// 插件的专属数据目录 `<根目录>/PluginManager/plugin-enabled-overrides.plist`，
 /// 跨启动保留。
 ///
 /// ## 文件
-/// - 路径：`<数据根目录>/PluginManager/plugin-enabled-overrides.plist`
-/// - 格式：binary plist，`[String: Bool]`。
+/// - 路径：`<rootDirectory>/PluginManager/plugin-enabled-overrides.plist`
+/// - 格式：binary plist，`[String: Bool]`（`.atomic` 写入）。
+///
+/// ## 根目录来源
+/// `rootDirectory` 由插件在 `onBoot` 阶段从内核的 `StorageProviding` 解析
+/// （`kernel.storage?.databaseRoot`），使插件管理状态落盘到与 Lumi 一致的
+/// 磁盘目录，而非 `UserDefaults`。
 ///
 /// ## 迁移
 /// 首次初始化且文件为空时，从旧版 UserDefaults key
 /// `com.coffic.cisum.pluginEnabledOverrides` 迁移，成功后清除该 key。
-///
-/// ## 有效启用状态解析
-/// - `alwaysOn` 策略: 始终启用，忽略覆盖。
-/// - `disabled` 策略: 始终禁用，忽略覆盖。
-/// - `optOut` 策略: 优先读取覆盖值，缺省时为 `true`。
-/// - `optIn` 策略: 优先读取覆盖值，缺省时为 `false`。
 @MainActor
-public final class PluginEnabledStateStore: PluginStatePersisting {
+public final class PluginManagerStateStore: PluginStatePersisting {
+    private static let subdirectory = "PluginManager"
     private static let filename = "plugin-enabled-overrides.plist"
     private static let legacyDefaultsKey = "com.coffic.cisum.pluginEnabledOverrides"
 
     private let fileURL: URL
     private var cache: [String: Bool]
 
-    public init(pluginDirectory: URL) {
-        self.fileURL = pluginDirectory.appendingPathComponent(Self.filename, isDirectory: false)
+    /// - Parameter rootDirectory: 数据库根目录（`kernel.storage?.databaseRoot`）；
+    ///   状态写入其下的 `PluginManager/` 子目录。
+    public init(rootDirectory: URL) {
+        self.fileURL = rootDirectory
+            .appendingPathComponent(Self.subdirectory, isDirectory: true)
+            .appendingPathComponent(Self.filename, isDirectory: false)
         self.cache = Self.load(from: fileURL)
 
         // 从旧版内核持有的 UserDefaults 存储迁移，保留用户既有设置。
@@ -42,19 +47,19 @@ public final class PluginEnabledStateStore: PluginStatePersisting {
     }
 
     /// 读取某个插件的用户覆盖值；`nil` 表示用户未设置（应回到默认值）。
-    public func override(for id: String) -> Bool? {
-        cache[id]
+    public func override(for pluginID: String) -> Bool? {
+        cache[pluginID]
     }
 
-    /// 设置某个插件的用户覆盖值并持久化。
-    public func setOverride(_ enabled: Bool, for id: String) {
-        cache[id] = enabled
+    /// 设置某个插件的启用状态覆盖并持久化。
+    public func setOverride(_ enabled: Bool, for pluginID: String) {
+        cache[pluginID] = enabled
         persist()
     }
 
-    /// 清除某个插件的用户覆盖值（回到默认值）。
-    public func clearOverride(for id: String) {
-        cache.removeValue(forKey: id)
+    /// 清除某个插件的启用状态覆盖（回到策略默认值）。
+    public func clearOverride(for pluginID: String) {
+        cache.removeValue(forKey: pluginID)
         persist()
     }
 

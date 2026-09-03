@@ -16,6 +16,7 @@ let package = Package(
         .package(name: "CisumUIComponents", path: "../CisumUIComponents"),
         .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
         .package(name: "ProviderPluginManaging", path: "../ProviderPluginManaging"),
+        .package(name: "ProviderStorage", path: "../ProviderStorage"),
     ],
     targets: [
         .target(
@@ -25,8 +26,16 @@ let package = Package(
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
                 .product(name: "ProviderPluginManaging", package: "ProviderPluginManaging"),
+                .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
             path: "Sources/PluginPluginManager"
+        ),
+        .testTarget(
+            name: "PluginPluginManagerTests",
+            dependencies: [
+                .target(name: "PluginPluginManager"),
+            ],
+            path: "Tests/PluginPluginManagerTests"
         ),
     ],
     swiftLanguageModes: [.v5]
