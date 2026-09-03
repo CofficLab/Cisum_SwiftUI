@@ -14,6 +14,9 @@ public actor AudioWidgetControlPlugin: SuperPlugin {
         category: .tool,
     )
 
+    nonisolated(unsafe) private var widgetViewModel: AudioWidgetControlViewModel?
+    nonisolated(unsafe) private var widgetObserver: AudioWidgetCommandObserver?
+
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
         if let docs = kernel.docs {
@@ -22,40 +25,78 @@ public actor AudioWidgetControlPlugin: SuperPlugin {
         }
     }
 
+    @MainActor
+    public func onBoot(kernel: CisumKernel) async throws {
+        installState()
+    }
+
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        teardownState()
+    }
+
     public nonisolated var label: String { "widgetControl" }
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
-        AnyView(
+        let viewModel = resolveViewModel()
+        return AnyView(
             content()
                 .background(
-                    AudioWidgetControlRootView(
-                        nextAsset: { current, verbose in
-                            guard let repo = await AudioPlugin.getAudioRepoAsync() else {
-                                throw AudioPluginError.hostNotConfigured
-                            }
-                            return try await repo.getNextOf(current, verbose: verbose)
-                        },
-                        previousAsset: { current, verbose in
-                            guard let repo = await AudioPlugin.getAudioRepoAsync() else {
-                                throw AudioPluginError.hostNotConfigured
-                            }
-                            return try await repo.getPrevOf(current, verbose: verbose)
-                        },
-                        firstAsset: {
-                            guard let repo = await AudioPlugin.getAudioRepoAsync() else {
-                                throw AudioPluginError.hostNotConfigured
-                            }
-                            return try await repo.getFirst()
-                        },
-                        lastAsset: {
-                            guard let repo = await AudioPlugin.getAudioRepoAsync() else {
-                                throw AudioPluginError.hostNotConfigured
-                            }
-                            return try await repo.getLast()
-                        }
-                    )
+                    AudioWidgetControlRootView(viewModel: viewModel)
                 )
         )
+    }
+
+    // MARK: - State assembly
+
+    @MainActor
+    private func installState() {
+        guard widgetViewModel == nil else { return }
+        let viewModel = AudioWidgetControlViewModel(
+            nextAsset: { current, verbose in
+                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+                    throw AudioPluginError.hostNotConfigured
+                }
+                return try await repo.getNextOf(current, verbose: verbose)
+            },
+            previousAsset: { current, verbose in
+                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+                    throw AudioPluginError.hostNotConfigured
+                }
+                return try await repo.getPrevOf(current, verbose: verbose)
+            },
+            firstAsset: {
+                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+                    throw AudioPluginError.hostNotConfigured
+                }
+                return try await repo.getFirst()
+            },
+            lastAsset: {
+                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+                    throw AudioPluginError.hostNotConfigured
+                }
+                return try await repo.getLast()
+            }
+        )
+        let observer = AudioWidgetCommandObserver(viewModel: viewModel)
+        widgetViewModel = viewModel
+        widgetObserver = observer
+    }
+
+    @MainActor
+    private func teardownState() {
+        widgetObserver?.cancel()
+        widgetObserver = nil
+        widgetViewModel = nil
+    }
+
+    @MainActor
+    private func resolveViewModel() -> AudioWidgetControlViewModel {
+        if let widgetViewModel {
+            return widgetViewModel
+        }
+        installState()
+        return widgetViewModel!
     }
 }

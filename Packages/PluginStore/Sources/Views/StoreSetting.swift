@@ -21,30 +21,27 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
         bundle: .module
     )
 
-    @State private var showBuySheet = false
-    @State private var showRestoreSheet = false
-    @State private var purchaseInfo: PurchaseInfo = .none
-    @State private var tierDisplayName: String = "Free"
-    @State private var statusDescription: String = "Currently using free version"
-    @State private var purchaseInfoGeneration = 0
+    @ObservedObject private var viewModel: StoreViewModel
 
-    public init() {}
+    init(viewModel: StoreViewModel) {
+        self.viewModel = viewModel
+    }
 
     public var body: some View {
         AppSettingSection(title: String(localized: "Subscription Information", bundle: .module), content: {
             // Current version
             AppSettingRow(title: String(localized: "Current Version", bundle: .module), description: String(localized: "Version you are using", bundle: .module), icon: "star.fill", content: {
                 HStack {
-                    Text(tierDisplayName)
+                    Text(viewModel.tierDisplayName)
                         .font(.footnote)
                 }
             })
 
             // Subscription status
-            AppSettingRow(title: String(localized: "Subscription Status", bundle: .module), description: statusDescription, icon: "info.circle", content: {
+            AppSettingRow(title: String(localized: "Subscription Status", bundle: .module), description: viewModel.statusDescription, icon: "info.circle", content: {
                 HStack {
-                    if purchaseInfo.isProOrHigher {
-                        if purchaseInfo.isExpired {
+                    if viewModel.purchaseInfo.isProOrHigher {
+                        if viewModel.purchaseInfo.isExpired {
                             Text("Expired", bundle: .module)
                                 .font(.footnote)
                                 .foregroundStyle(.red)
@@ -62,7 +59,7 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
             })
 
             // Expiration date (if has subscription)
-            if let expiresAt = purchaseInfo.expiresAt {
+            if let expiresAt = viewModel.purchaseInfo.expiresAt {
                 AppSettingRow(title: String(localized: "Expiration Date", bundle: .module), description: String(localized: "Subscription expiration date", bundle: .module), icon: "calendar", content: {
                     HStack {
                         Text(expiresAt.fullDateTime)
@@ -80,7 +77,7 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
                     .cisumShadowSm()
                     .cisumHoverScale(105)
                     .cisumButton({
-                        showBuySheet = true
+                        viewModel.showBuySheet = true
                     })
                     .accessibilityLabel(Self.purchaseActionLabel)
                     .help(Self.purchaseActionLabel)
@@ -95,58 +92,20 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
                     .cisumShadowSm()
                     .cisumHoverScale(105)
                     .cisumButton({
-                        showRestoreSheet = true
+                        viewModel.showRestoreSheet = true
                     })
                     .accessibilityLabel(Self.restorePurchaseActionLabel)
                     .help(Self.restorePurchaseActionLabel)
             })
         })
-        .sheet(isPresented: $showBuySheet) {
+        .sheet(isPresented: $viewModel.showBuySheet) {
             PurchaseView()
         }
-        .sheet(isPresented: $showRestoreSheet) {
+        .sheet(isPresented: $viewModel.showRestoreSheet) {
             RestoreView()
         }
         .task {
-            self.updatePurchaseInfo()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .storeTransactionUpdated)) { _ in
-            self.updatePurchaseInfo()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .Restored)) { _ in
-            self.updatePurchaseInfo()
-        }
-    }
-}
-
-// MARK: - Actions
-
-extension StoreSetting {
-    private func updatePurchaseInfo() {
-        purchaseInfoGeneration += 1
-        let generation = purchaseInfoGeneration
-
-        Task {
-            let info = await StoreService.getPurchaseInfo()
-            await MainActor.run {
-                guard StorePurchaseInfoLoadPolicy.shouldApplyResult(
-                    currentGeneration: self.purchaseInfoGeneration,
-                    resultGeneration: generation
-                ) else { return }
-
-                self.purchaseInfo = info
-                self.tierDisplayName = StoreService.tierCached().displayName
-
-                if info.isProOrHigher {
-                    if info.isExpired {
-                        self.statusDescription = String(localized: "Subscription has expired, please renew to continue using Pro features", bundle: .module)
-                    } else {
-                        self.statusDescription = String(localized: "Subscription is active, thank you for your support", bundle: .module)
-                    }
-                } else {
-                    self.statusDescription = String(localized: "Currently using free version", bundle: .module)
-                }
-            }
+            viewModel.updatePurchaseInfo()
         }
     }
 }

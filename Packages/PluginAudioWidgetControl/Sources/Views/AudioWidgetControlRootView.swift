@@ -71,7 +71,7 @@ enum AudioWidgetPlaybackRequestPolicy {
     }
 }
 
-private enum AudioWidgetCommandStore {
+enum AudioWidgetCommandStore {
     static let suiteName = "group.com.yueyi.cisum"
 
     static func withLock<T>(_ operation: () throws -> T) rethrows -> T {
@@ -97,184 +97,18 @@ private enum AudioWidgetCommandStore {
 }
 
 public struct AudioWidgetControlRootView: View {
-    private static let verbose = false
-    private static let log = Logger(subsystem: "com.yueyi.cisum", category: "AudioWidgetControl")
-    private static var isWidgetCommandListenerRegistered = false
-
     @EnvironmentObject private var man: MagicPlayMan
-    @State private var navigationTask: Task<Void, Never>?
+    @ObservedObject private var viewModel: AudioWidgetControlViewModel
 
-    private let nextAsset: AudioWidgetAdjacentAssetProvider
-    private let previousAsset: AudioWidgetAdjacentAssetProvider
-    private let firstAsset: AudioWidgetFirstAssetProvider
-    private let lastAsset: AudioWidgetLastAssetProvider
-
-    public init(
-        nextAsset: @escaping AudioWidgetAdjacentAssetProvider,
-        previousAsset: @escaping AudioWidgetAdjacentAssetProvider,
-        firstAsset: @escaping AudioWidgetFirstAssetProvider,
-        lastAsset: @escaping AudioWidgetLastAssetProvider
-    ) {
-        self.nextAsset = nextAsset
-        self.previousAsset = previousAsset
-        self.firstAsset = firstAsset
-        self.lastAsset = lastAsset
+    init(viewModel: AudioWidgetControlViewModel) {
+        self.viewModel = viewModel
     }
 
     public var body: some View {
         EmptyView()
             .onAppear {
-                setupWidgetCommandListener()
-                handleWidgetCommands()
-            }
-            .onReceive(NotificationCenter.default.publisher(for: .audioWidgetCommandReceived)) { _ in
-                handleWidgetCommands()
+                viewModel.bind(playMan: man)
+                viewModel.handleWidgetCommands()
             }
     }
-
-    private func setupWidgetCommandListener() {
-        guard !Self.isWidgetCommandListenerRegistered else { return }
-        Self.isWidgetCommandListenerRegistered = true
-
-        let center = CFNotificationCenterGetDarwinNotifyCenter()
-        let callback: CFNotificationCallback = { _, _, _, _, _ in
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .audioWidgetCommandReceived, object: nil)
-            }
-        }
-
-        CFNotificationCenterAddObserver(center, nil, callback, "com.yueyi.cisum.widgetCommand" as CFString, nil, .deliverImmediately)
-
-        if Self.verbose {
-            Self.log.debug("Registered widget command listener")
-        }
-    }
-
-    private func handleWidgetCommands() {
-        let sharedDefaults = UserDefaults(suiteName: AudioWidgetCommandStore.suiteName)
-
-        guard let sharedDefaults else { return }
-
-        consumeWidgetCommand(key: "widgetPlayPauseTrigger", from: sharedDefaults, handler: handlePlayPause)
-        consumeWidgetCommand(key: "widgetNextTrigger", from: sharedDefaults, handler: handleNext)
-        consumeWidgetCommand(key: "widgetPreviousTrigger", from: sharedDefaults, handler: handlePrevious)
-    }
-
-    private func consumeWidgetCommand(
-        key: String,
-        from sharedDefaults: UserDefaults,
-        handler: (Int) -> Void
-    ) {
-        let count = AudioWidgetCommandStore.withLock {
-            AudioWidgetPlaybackRequestPolicy.commandCount(
-                from: sharedDefaults.object(forKey: key)
-            )
-        }
-        guard count > 0 else { return }
-
-        handler(count)
-
-        AudioWidgetCommandStore.withLock {
-            let remainingCount = AudioWidgetPlaybackRequestPolicy.remainingCommandCount(
-                afterConsuming: count,
-                storedValue: sharedDefaults.object(forKey: key)
-            )
-            if remainingCount > 0 {
-                sharedDefaults.set(remainingCount, forKey: key)
-            } else {
-                sharedDefaults.removeObject(forKey: key)
-            }
-            sharedDefaults.synchronize()
-        }
-    }
-
-    private func handlePlayPause(count: Int) {
-        switch AudioWidgetPlaybackRequestPolicy.playPauseAction(
-            currentState: man.state,
-            commandCount: count
-        ) {
-        case .play:
-            man.playCurrent(reason: "Widget")
-        case .pause:
-            man.pause(reason: "Widget")
-        case .none:
-            break
-        }
-    }
-
-    private func handleNext(count: Int) {
-        enqueueNavigationTask {
-            for _ in 0..<count {
-                guard let asset = man.currentAsset else { return }
-
-                do {
-                    if let next = try await nextAsset(asset, Self.verbose) {
-                        guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
-                            requestedAsset: asset,
-                            currentAsset: man.currentAsset
-                        ) else {
-                            return
-                        }
-                        await man.play(next, autoPlay: true, reason: "Widget.Next")
-                    } else if man.playMode == .repeatAll, let first = try await firstAsset() {
-                        guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
-                            requestedAsset: asset,
-                            currentAsset: man.currentAsset
-                        ) else {
-                            return
-                        }
-                        await man.play(first, autoPlay: true, reason: "Widget.Loop")
-                    }
-                } catch {
-                    Self.log.error("Failed to get next asset: \(error.localizedDescription)")
-                    return
-                }
-            }
-        }
-    }
-
-    private func handlePrevious(count: Int) {
-        enqueueNavigationTask {
-            for _ in 0..<count {
-                guard let asset = man.currentAsset else { return }
-
-                do {
-                    if let previous = try await previousAsset(asset, Self.verbose) {
-                        guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
-                            requestedAsset: asset,
-                            currentAsset: man.currentAsset
-                        ) else {
-                            return
-                        }
-                        await man.play(previous, autoPlay: true, reason: "Widget.Previous")
-                    } else if man.playMode == .repeatAll, let last = try await lastAsset() {
-                        guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
-                            requestedAsset: asset,
-                            currentAsset: man.currentAsset
-                        ) else {
-                            return
-                        }
-                        await man.play(last, autoPlay: true, reason: "Widget.RepeatAllPrevious")
-                    }
-                } catch {
-                    Self.log.error("Failed to get previous asset: \(error.localizedDescription)")
-                    return
-                }
-            }
-        }
-    }
-
-    private func enqueueNavigationTask(_ operation: @escaping @MainActor () async -> Void) {
-        let previousTask = navigationTask
-        navigationTask = Task { @MainActor in
-            if AudioWidgetPlaybackRequestPolicy.shouldWaitForPreviousNavigation(hasPreviousTask: previousTask != nil) {
-                await previousTask?.value
-            }
-            await operation()
-        }
-    }
-}
-
-private extension Notification.Name {
-    static let audioWidgetCommandReceived = Notification.Name("audioWidgetCommandReceived")
 }

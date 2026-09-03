@@ -7,10 +7,10 @@ import SwiftUI
 struct CopyList: View, SuperLog, SuperThread {
     nonisolated static let emoji = "📬"
 
-    @State private var selection: PersistentIdentifier?
-    @State private var tasks: [CopyTask] = []
+    @ObservedObject private var viewModel: CopyViewModel
 
-    init(verbose: Bool = false) {
+    init(viewModel: CopyViewModel, verbose: Bool = false) {
+        self.viewModel = viewModel
         if verbose {
             os_log("\(Self.i)")
         }
@@ -18,37 +18,17 @@ struct CopyList: View, SuperLog, SuperThread {
 
     var body: some View {
         Group {
-            if !tasks.isEmpty {
+            if !viewModel.tasks.isEmpty {
                 taskList
             } else {
                 emptyView
             }
         }
         .onAppear {
-            refreshTasks(postCountChanged: true)
-        }
-        .onCopyTaskCountChanged { _ in
-            refreshTasks()
-        }
-        .onCopyTaskStarted { _ in
-            refreshTasks()
+            viewModel.refreshTasks(postCountChanged: true)
         }
         .background(.regularMaterial)
         .cisumShadowSm()
-    }
-
-    /// 刷新任务列表
-    private func refreshTasks(postCountChanged: Bool = false) {
-        guard let container = AudioCopyService.container else {
-            tasks = []
-            return
-        }
-        tasks = CopyDB.getAllTasks(from: container)
-
-        if postCountChanged {
-            // 将最新数量通知出去，因为 CopyWorker 的数量通知有延迟。
-            NotificationCenter.postCopyTaskCountChanged(count: tasks.count)
-        }
     }
 
     /// 空视图
@@ -61,10 +41,10 @@ struct CopyList: View, SuperLog, SuperThread {
     }
 
     private var taskList: some View {
-        List(selection: $selection) {
+        List(selection: $viewModel.selection) {
             Section {
-                ForEach(tasks) { task in
-                    AppListRow(isSelected: selection == task.id) {
+                ForEach(viewModel.tasks) { task in
+                    AppListRow(isSelected: viewModel.selection == task.id) {
                         VStack(alignment: .leading) {
                             Text(task.originalFilename)
                                 .lineLimit(1)
@@ -75,7 +55,7 @@ struct CopyList: View, SuperLog, SuperThread {
                     }
                     .tag(task.id)
                 }
-                .onDelete(perform: deleteTasks)
+                .onDelete(perform: viewModel.deleteTasks)
             } header: {
                 listHeader
             }
@@ -84,32 +64,12 @@ struct CopyList: View, SuperLog, SuperThread {
     }
 
     private var listHeader: some View {
-        let pendingCount = tasks.filter { $0.error.isEmpty }.count
-        let failedCount = tasks.filter { !$0.error.isEmpty }.count
+        let pendingCount = viewModel.tasks.filter { $0.error.isEmpty }.count
+        let failedCount = viewModel.tasks.filter { !$0.error.isEmpty }.count
 
         return HStack {
             Text(CopyStatePresentation.message(pendingCount: pendingCount, failedCount: failedCount))
             Spacer()
-        }
-    }
-
-    private func deleteTasks(at offsets: IndexSet) {
-        guard let container = AudioCopyService.container else {
-            alert_error(String(localized: "Copy service is unavailable", bundle: .module))
-            return
-        }
-
-        guard let tasksToDelete = Self.tasksToDelete(from: offsets, in: tasks) else {
-            alert_error(String(localized: "Delete failed: copy task list changed. Please try again.", bundle: .module))
-            return
-        }
-
-        do {
-            try CopyDB.deleteTasks(tasksToDelete, from: container)
-            refreshTasks(postCountChanged: true)
-        } catch {
-            os_log(.error, "\(self.t)Delete failed: \(error.localizedDescription)")
-            alert_error(String(localized: "Delete failed: \(error.localizedDescription)", bundle: .module))
         }
     }
 

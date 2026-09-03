@@ -15,6 +15,7 @@ public actor AudioJobPlugin: SuperPlugin {
         category: .system,
     )
 
+    nonisolated(unsafe) private var storageObserver: AudioJobStorageObserver?
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
@@ -27,7 +28,13 @@ public actor AudioJobPlugin: SuperPlugin {
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
         await registerJobs()
-        await setupStorageLocationObserver()
+        setupStorageLocationObserver()
+    }
+
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        storageObserver?.cancel()
+        storageObserver = nil
     }
 
     private func registerJobs() async {
@@ -38,16 +45,12 @@ public actor AudioJobPlugin: SuperPlugin {
         await manager.startJob(fsMonitorJob.identifier)
     }
 
-    private func setupStorageLocationObserver() async {
-        await MainActor.run {
-            for notification in AudioPluginHost.storageLocationDidChangeNotifications {
-                NotificationCenter.default.publisher(for: notification)
-                    .sink { [weak self] _ in
-                        Task {
-                            await self?.restartFileSystemMonitor()
-                        }
-                    }
-                    .store(in: &AudioJobNotificationObserverHolder.shared.cancellables)
+    @MainActor
+    private func setupStorageLocationObserver() {
+        guard storageObserver == nil else { return }
+        storageObserver = AudioJobStorageObserver { [weak self] in
+            Task {
+                await self?.restartFileSystemMonitor()
             }
         }
     }

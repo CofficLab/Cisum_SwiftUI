@@ -23,15 +23,16 @@ struct PluginManagementView: View {
     /// 为 nil 时（宿主未提供 DocsViewProviding）详情面板回退到元信息展示。
     let docsProvider: (any DocsViewProviding)?
 
+    @ObservedObject private var viewModel: PluginManagementViewModel
+
     @State private var selectedPluginID: String?
     @State private var searchText = ""
     @State private var selectedCategory: PluginCategory?
-    /// 插件启停变化版本号：收到 `.cisumEnabledPluginsDidChange` 时 +1，强制重建。
-    @State private var revision = 0
 
-    init(manager: any PluginManaging, docsProvider: (any DocsViewProviding)? = nil) {
+    init(manager: any PluginManaging, docsProvider: (any DocsViewProviding)? = nil, viewModel: PluginManagementViewModel) {
         self.manager = manager
         self.docsProvider = docsProvider
+        self.viewModel = viewModel
     }
 
     var body: some View {
@@ -68,10 +69,6 @@ struct PluginManagementView: View {
                 self.selectedPluginID = ids.first
                 return
             }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .cisumEnabledPluginsDidChange)) { _ in
-            // 插件启停后重建列表（isEnabled 状态、可用插件集合都可能变化）。
-            revision += 1
         }
     }
 
@@ -157,7 +154,7 @@ struct PluginManagementView: View {
                         ) {
                             selectedPluginID = plugin.id
                         }
-                        .id("\(plugin.id)-\(revision)")
+                        .id("\(plugin.id)-\(viewModel.revision)")
                     }
 
                     if filteredPlugins.isEmpty {
@@ -196,7 +193,7 @@ struct PluginManagementView: View {
     private var pluginDetailPane: some View {
         if let selectedPlugin {
             PluginSettingsDetailView(manager: manager, plugin: selectedPlugin, docsProvider: docsProvider)
-                .id(revision)
+                .id(viewModel.revision)
         } else {
             AppEmptyState(
                 icon: "puzzlepiece.extension",

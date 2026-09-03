@@ -13,6 +13,8 @@ public actor StorePlugin: SuperPlugin {
         category: .settings,
     )
 
+    nonisolated(unsafe) private var storeViewModel: StoreViewModel?
+    nonisolated(unsafe) private var storeObserver: StoreObserver?
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
@@ -23,14 +25,53 @@ public actor StorePlugin: SuperPlugin {
     }
 
     @MainActor
+    public func onBoot(kernel: CisumKernel) async throws {
+        installState()
+    }
+
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        teardownState()
+    }
+
+    @MainActor
     public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
-        PluginSettingNavigationItem(
+        let viewModel = resolveViewModel()
+        return PluginSettingNavigationItem(
             id: "store",
             title: String(localized: String.LocalizationValue(StorePluginInfo.titleKey), bundle: .module),
             description: Self.metadata.description,
-            iconName: StorePluginInfo.iconName,
+            iconName: Self.metadata.iconName,
             order: 80,
-            destination: AnyView(StoreSetting())
+            destination: AnyView(StoreSetting(viewModel: viewModel))
         )
+    }
+
+    // MARK: - State assembly
+
+    @MainActor
+    private func installState() {
+        guard storeViewModel == nil else { return }
+        let viewModel = StoreViewModel()
+        let observer = StoreObserver(viewModel: viewModel)
+        storeViewModel = viewModel
+        storeObserver = observer
+    }
+
+    @MainActor
+    private func teardownState() {
+        storeObserver?.cancel()
+        storeObserver = nil
+        storeViewModel = nil
+    }
+
+    @MainActor
+    private func resolveViewModel() -> StoreViewModel {
+        if let storeViewModel {
+            return storeViewModel
+        }
+        let viewModel = StoreViewModel()
+        storeViewModel = viewModel
+        return viewModel
     }
 }

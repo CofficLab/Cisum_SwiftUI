@@ -48,17 +48,18 @@ enum CopyStatePresentation {
 
 struct CopyStateView: View, SuperLog, SuperThread {
     @LumiTheme private var appTheme
-    @State private var showCopying = false
-    @State private var taskCount: Int = 0
-    @State private var pendingCount: Int = 0
-    @State private var failedCount: Int = 0
+    @ObservedObject private var viewModel: CopyViewModel
 
     nonisolated static let emoji = "🖥️"
     nonisolated static var verbose: Bool { false }
 
+    init(viewModel: CopyViewModel) {
+        self.viewModel = viewModel
+    }
+
     /// 是否应该显示状态视图
     private var shouldShow: Bool {
-        taskCount > 0
+        viewModel.shouldShow
     }
 
     var body: some View {
@@ -66,12 +67,12 @@ struct CopyStateView: View, SuperLog, SuperThread {
             if shouldShow {
                 HStack {
                     Image(systemName: "info.circle")
-                    Text(CopyStatePresentation.message(pendingCount: pendingCount, failedCount: failedCount))
+                    Text(CopyStatePresentation.message(pendingCount: viewModel.pendingCount, failedCount: viewModel.failedCount))
                     Image.cisumList.cisumButton {
-                        self.showCopying.toggle()
+                        viewModel.showCopying.toggle()
                     }
-                    .accessibilityLabel(CopyStatePresentation.detailsButtonLabel(isShowing: showCopying))
-                    .help(CopyStatePresentation.detailsButtonLabel(isShowing: showCopying))
+                    .accessibilityLabel(CopyStatePresentation.detailsButtonLabel(isShowing: viewModel.showCopying))
+                    .help(CopyStatePresentation.detailsButtonLabel(isShowing: viewModel.showCopying))
                 }
                 .font(.callout)
                 .foregroundStyle(appTheme.textPrimary)
@@ -79,84 +80,15 @@ struct CopyStateView: View, SuperLog, SuperThread {
                 .padding(.vertical, 6)
                 .background(appTheme.elevatedSurface)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
-                .contentTransition(.numericText(value: Double(taskCount)))
-                .popover(isPresented: $showCopying) {
-                    CopyList()
+                .contentTransition(.numericText(value: Double(viewModel.taskCount)))
+                .popover(isPresented: $viewModel.showCopying) {
+                    CopyList(viewModel: viewModel)
                 }
                 .transition(.opacity.combined(with: .scale))
                 .cisumShadowSm()
             }
         }
-        .onCopyTaskCountChanged(perform: handleCopyTaskCountChanged)
-        .onCopyTaskFinished(perform: handleCopyTaskFinished)
-        .onAppear(perform: handleAppear)
-    }
-}
-
-// MARK: - View
-
-extension CopyStateView {
-    func makeInfoView(_ i: String) -> some View {
-        HStack {
-            Image(systemName: "info.circle")
-                .foregroundStyle(appTheme.textPrimary)
-            Text(i)
-                .foregroundStyle(appTheme.textPrimary)
-        }
-        .cisumCard()
-        .font(.title3)
-    }
-}
-
-// MARK: - Event Handler
-
-extension CopyStateView {
-    func handleAppear() {
-        Task { @MainActor in
-            let tasks = await refreshTaskCounts()
-
-            guard tasks.contains(where: { $0.error.isEmpty }),
-                  let worker = AudioCopyService.getWorker() else {
-                return
-            }
-
-            await worker.run()
-        }
-    }
-
-    func handleCopyTaskCountChanged(_ count: Int) {
-        Task { @MainActor in
-            let tasks = await refreshTaskCounts()
-            if tasks.isEmpty, count > 0 {
-                taskCount = count
-                pendingCount = count
-                failedCount = 0
-            }
-        }
-    }
-
-    func handleCopyTaskFinished(_ lastCount: Int) {
-        // 任务完成，清零任务数量
-        taskCount = 0
-        pendingCount = 0
-        failedCount = 0
-        alert_info(String(localized: "Copy completed", bundle: .module))
-    }
-
-    @discardableResult
-    private func refreshTaskCounts() async -> [CopyTaskDTO] {
-        guard let db = AudioCopyService.getDB() else {
-            taskCount = 0
-            pendingCount = 0
-            failedCount = 0
-            return []
-        }
-
-        let tasks = await db.allCopyTaskDTOs()
-        taskCount = tasks.count
-        pendingCount = tasks.filter { $0.error.isEmpty }.count
-        failedCount = tasks.filter { !$0.error.isEmpty }.count
-        return tasks
+        .onAppear(perform: viewModel.handleAppear)
     }
 }
 #endif

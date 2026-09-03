@@ -29,6 +29,8 @@ public actor PluginPluginManager: SuperPlugin {
     ///
     /// 仅在主线程访问（onBoot / addSettingNavigationItem 均 @MainActor）。
     nonisolated(unsafe) private var kernel: CisumKernel?
+    nonisolated(unsafe) private var managementViewModel: PluginManagementViewModel?
+    nonisolated(unsafe) private var managementObserver: PluginManagerObserver?
 
     public init() {}
 
@@ -45,8 +47,15 @@ public actor PluginPluginManager: SuperPlugin {
         }
     }
 
+    @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
         self.kernel = kernel
+        installState()
+    }
+
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        teardownState()
     }
 
     @MainActor
@@ -58,13 +67,42 @@ public actor PluginPluginManager: SuperPlugin {
     public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
         guard let kernel else { return nil }
         let manager = DefaultPluginManaging(manager: kernel.pluginManager, kernel: kernel)
+        let viewModel = resolveViewModel()
         return PluginSettingNavigationItem(
             id: Self.settingsEntryID,
             title: "插件管理",
             description: Self.metadata.description,
             iconName: Self.metadata.iconName,
             order: Self.metadata.order,
-            destination: AnyView(PluginManagementView(manager: manager, docsProvider: kernel.docs))
+            destination: AnyView(PluginManagementView(manager: manager, docsProvider: kernel.docs, viewModel: viewModel))
         )
+    }
+
+    // MARK: - State assembly
+
+    @MainActor
+    private func installState() {
+        guard managementViewModel == nil else { return }
+        let viewModel = PluginManagementViewModel()
+        let observer = PluginManagerObserver(viewModel: viewModel)
+        managementViewModel = viewModel
+        managementObserver = observer
+    }
+
+    @MainActor
+    private func teardownState() {
+        managementObserver?.cancel()
+        managementObserver = nil
+        managementViewModel = nil
+    }
+
+    @MainActor
+    private func resolveViewModel() -> PluginManagementViewModel {
+        if let managementViewModel {
+            return managementViewModel
+        }
+        let viewModel = PluginManagementViewModel()
+        managementViewModel = viewModel
+        return viewModel
     }
 }

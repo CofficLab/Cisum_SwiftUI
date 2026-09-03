@@ -13,6 +13,8 @@ public enum AudioCopyService {
     static var container: ModelContainer?
     static var audioDiskProvider: (() -> URL?)?
     static var audioCountProvider: (() async -> Int)?
+    static var copyViewModel: CopyViewModel?
+    static var copyObserver: CopyTaskObserver?
 
     public static func configure(
         audioDiskProvider: @escaping () -> URL?,
@@ -20,10 +22,23 @@ public enum AudioCopyService {
     ) {
         Self.audioDiskProvider = audioDiskProvider
         Self.audioCountProvider = audioCountProvider
+        installCopyState()
+    }
+
+    static func installCopyState() {
+        guard copyViewModel == nil else { return }
+        let viewModel = CopyViewModel()
+        let observer = CopyTaskObserver(viewModel: viewModel)
+        copyViewModel = viewModel
+        copyObserver = observer
     }
 
     public static func getStateView() -> AnyView {
-        AnyView(CopyStateView())
+        installCopyState()
+        guard let viewModel = copyViewModel else {
+            return AnyView(CopyStateView(viewModel: CopyViewModel()))
+        }
+        return AnyView(CopyStateView(viewModel: viewModel))
     }
 
     public static func getRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView where Content: View {
