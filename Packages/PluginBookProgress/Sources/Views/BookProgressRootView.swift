@@ -265,7 +265,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
     @State private var restoreGeneration = 0
 
     private let content: Content
-    private let targetSceneName: String
+    private let targetScene: AppScene
     private let scene: (any SceneProviding)?
     private let currentBookURL: BookProgressURLProvider
     private let currentBookTime: BookProgressTimeProvider
@@ -274,7 +274,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
     private let saveBookState: BookProgressSaveBookState
 
     public init(
-        targetSceneName: String,
+        targetScene: AppScene,
         scene: (any SceneProviding)?,
         currentBookURL: @escaping BookProgressURLProvider,
         currentBookTime: @escaping BookProgressTimeProvider,
@@ -283,7 +283,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
         saveBookState: @escaping BookProgressSaveBookState,
         @ViewBuilder content: () -> Content
     ) {
-        self.targetSceneName = targetSceneName
+        self.targetScene = targetScene
         self.scene = scene
         self.currentBookURL = currentBookURL
         self.currentBookTime = currentBookTime
@@ -297,8 +297,8 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
-            .onChange(of: scene?.currentSceneName) { _, newSceneName in
-                handleCurrentSceneChanged(newSceneName)
+            .onChange(of: scene?.currentScene) { _, newScene in
+                handleCurrentSceneChanged(newScene)
             }
             .onPlayManStateChanged(handlePlayManStateChanged)
             .onReceive(NotificationCenter.default.publisher(for: .bookDBDeleted), perform: handleBookDBDeleted)
@@ -306,7 +306,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
 
     /// 检查是否应该激活书籍进度管理功能
     private var shouldActivateProgress: Bool {
-        scene?.currentSceneName == targetSceneName
+        scene?.currentScene == targetScene
     }
 }
 
@@ -317,7 +317,7 @@ private extension BookProgressRootView {
     ///
     /// 当视图首次出现时触发，恢复上次播放的书籍和进度。
     func handleOnAppear() {
-        updateProgressActivation(for: scene?.currentSceneName)
+        updateProgressActivation(for: scene?.currentScene)
     }
 
     /// 处理视图消失事件，释放播放器事件订阅。
@@ -326,12 +326,12 @@ private extension BookProgressRootView {
     }
 
     /// 处理当前场景变化，确保从其它场景切到书籍场景时也能恢复并保存进度。
-    func handleCurrentSceneChanged(_ sceneName: String?) {
-        updateProgressActivation(for: sceneName)
+    func handleCurrentSceneChanged(_ sceneValue: AppScene?) {
+        updateProgressActivation(for: sceneValue)
     }
 
-    private func updateProgressActivation(for sceneName: String?) {
-        if sceneName == targetSceneName {
+    private func updateProgressActivation(for sceneValue: AppScene?) {
+        if sceneValue == targetScene {
             activateProgress()
         } else {
             deactivateProgress()

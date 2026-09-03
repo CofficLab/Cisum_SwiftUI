@@ -2,7 +2,6 @@ import KernelCore
 import CisumUIComponents
 import OSLog
 import PluginBook
-import PluginBookScene
 import ProviderScene
 import SwiftUI
 
@@ -32,7 +31,7 @@ public actor BookDBPlugin: SuperPlugin {
 
     @MainActor
     public func addTabView(reason: String, demoMode: Bool = false) -> (view: AnyView, label: String)? {
-        guard sceneBox.scene?.currentSceneName == BookScenePlugin.sceneName else { return nil }
+        guard sceneBox.scene?.currentScene == .audiobooks else { return nil }
         let label = String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), bundle: .module)
         let dbRoot: URL
 

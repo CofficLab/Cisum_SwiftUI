@@ -1,22 +1,8 @@
-import KernelCore
-import CisumUIComponents
 import Foundation
+import KernelCore
+import ProviderScene
 import PluginScene
 import Testing
-
-private actor SceneProbePlugin: SuperPlugin {
-    static let shared = SceneProbePlugin(sceneName: nil)
-    nonisolated let sceneName: String?
-
-    init(sceneName: String?) {
-        self.sceneName = sceneName
-    }
-
-    nonisolated var id: String { "probe.\(sceneName ?? "nil")" }
-
-    @MainActor
-    func addSceneItem() -> String? { sceneName }
-}
 
 private actor SceneDependentProbePlugin: SuperPlugin {
     static let shared = SceneDependentProbePlugin()
@@ -79,20 +65,19 @@ struct ScenePluginTests {
         #expect(kernel.scene != nil)
     }
 
+    @Test
+    func exposesFixedBuiltInScenes() {
+        let service = SceneService()
+
+        #expect(service.scenes == AppScene.allCases)
+        #expect(service.scenes == [.music, .audiobooks])
+    }
+
     private func makePersistenceURL() throws -> URL {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("PluginSceneTests-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         return directory.appendingPathComponent("current-scene.json")
-    }
-
-    private func makeManager() -> BuiltinPluginManager {
-        let manager = BuiltinPluginManager()
-        manager.initializePlugins([
-            SceneProbePlugin(sceneName: "音乐库"),
-            SceneProbePlugin(sceneName: "有声书"),
-        ])
-        return manager
     }
 
     private func clearLegacyPersistence() {
@@ -107,14 +92,14 @@ struct ScenePluginTests {
         let persistenceURL = try makePersistenceURL()
         defer { try? FileManager.default.removeItem(at: persistenceURL.deletingLastPathComponent()) }
 
-        let first = SceneService(manager: makeManager(), persistenceURL: persistenceURL)
+        let first = SceneService(persistenceURL: persistenceURL)
         first.restoreCurrentScene()
-        try first.setCurrentScene("有声书")
+        first.setCurrentScene(.audiobooks)
 
-        let second = SceneService(manager: makeManager(), persistenceURL: persistenceURL)
+        let second = SceneService(persistenceURL: persistenceURL)
         second.restoreCurrentScene()
 
-        #expect(second.currentSceneName == "有声书")
+        #expect(second.currentScene == .audiobooks)
         #expect(FileManager.default.fileExists(atPath: persistenceURL.path))
     }
 
@@ -125,21 +110,10 @@ struct ScenePluginTests {
         let data = Data(#"{"sceneName":"不存在","pluginID":null}"#.utf8)
         try data.write(to: persistenceURL)
 
-        let service = SceneService(manager: makeManager(), persistenceURL: persistenceURL)
+        let service = SceneService(persistenceURL: persistenceURL)
         service.restoreCurrentScene()
 
-        #expect(service.currentSceneName == "音乐库")
-    }
-
-    @Test
-    func rejectsUnknownScene() throws {
-        let persistenceURL = try makePersistenceURL()
-        defer { try? FileManager.default.removeItem(at: persistenceURL.deletingLastPathComponent()) }
-        let service = SceneService(manager: makeManager(), persistenceURL: persistenceURL)
-
-        #expect(throws: SceneContributionError.self) {
-            try service.setCurrentScene("不存在")
-        }
+        #expect(service.currentScene == .music)
     }
 
     @Test
@@ -150,22 +124,22 @@ struct ScenePluginTests {
             clearLegacyPersistence()
             try? FileManager.default.removeItem(at: persistenceURL.deletingLastPathComponent())
         }
-        let service = SceneService(manager: makeManager(), persistenceURL: persistenceURL)
-        var observedScenes: [String?] = []
+        let service = SceneService(persistenceURL: persistenceURL)
+        var observedScenes: [AppScene?] = []
         let handle = service.addObserver { event in
-            if case let .selectionChanged(sceneName) = event {
-                observedScenes.append(sceneName)
-                #expect(service.currentSceneName == sceneName)
+            if case let .selectionChanged(scene) = event {
+                observedScenes.append(scene)
+                #expect(service.currentScene == scene)
             }
         }
         defer { handle.cancel() }
 
         service.restoreCurrentScene()
-        try service.setCurrentScene("有声书")
-        #expect(observedScenes == ["音乐库", "有声书"])
+        service.setCurrentScene(.audiobooks)
+        #expect(observedScenes == [.music, .audiobooks])
 
         handle.cancel()
-        try service.setCurrentScene("音乐库")
-        #expect(observedScenes == ["音乐库", "有声书"])
+        service.setCurrentScene(.music)
+        #expect(observedScenes == [.music, .audiobooks])
     }
 }

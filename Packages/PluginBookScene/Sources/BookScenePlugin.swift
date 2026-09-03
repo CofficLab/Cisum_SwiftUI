@@ -11,17 +11,16 @@ public actor BookScenePlugin: SuperPlugin {
         iconName: BookScenePluginInfo.iconName,
         order: BookScenePluginInfo.order
     )
-    public static let sceneName = BookScenePluginInfo.sceneName
 
-    nonisolated(unsafe) private var setSceneAction: (@MainActor (String) throws -> Void)?
+    nonisolated(unsafe) private var setSceneAction: (@MainActor (AppScene) -> Void)?
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
         guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
             throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
         }
-        self.setSceneAction = { @MainActor sceneName in
-            try scene.setCurrentScene(sceneName)
+        self.setSceneAction = { @MainActor sceneValue in
+            scene.setCurrentScene(sceneValue)
         }
     }
 
@@ -31,17 +30,7 @@ public actor BookScenePlugin: SuperPlugin {
     }
 
     @MainActor
-    public func addSceneItem() -> String? {
-        Self.sceneName
-    }
-
-    @MainActor
     public func addPosterView() -> AnyView? {
         AnyView(BookScenePluginPosterView(setCurrentScene: setSceneAction ?? { _ in }))
-    }
-
-
-    private final class SceneBox {
-        weak var scene: (any SceneProviding)?
     }
 }

@@ -4,7 +4,9 @@ Book scene and poster plugin for Cisum, providing visual scene/poster artwork fo
 
 ## Overview
 
-This plugin registers with ID `BookScenePlugin` and provides book scene/poster functionality through the Cisum plugin system.
+This plugin registers with ID `BookScenePlugin` and provides the audiobook scene poster UI through the Cisum plugin system.
+
+The audiobook scene itself is a fixed built-in enum (`AppScene.audiobooks`) owned by the `ProviderScene` package; plugins no longer register scenes via `addSceneItem()`.
 
 ## Architecture
 

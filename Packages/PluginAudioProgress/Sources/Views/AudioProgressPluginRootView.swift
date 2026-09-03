@@ -1,6 +1,5 @@
 import CisumUIComponents
 import PluginAudio
-import PluginAudioScene
 import ProviderScene
 import SwiftUI
 
@@ -17,7 +16,7 @@ struct AudioProgressPluginRootView<Content>: View where Content: View {
     var body: some View {
         AudioProgressRootView(
             scene: scene,
-            audioSceneName: AudioScenePlugin.sceneName,
+            audioScene: .music,
             audioRepo: { await AudioPlugin.getAudioRepoAsync() },
             storageResetNotifications: [Notification.Name("storageLocationDidReset")],
             saveWidgetData: { title, artist, isPlaying, coverArt in

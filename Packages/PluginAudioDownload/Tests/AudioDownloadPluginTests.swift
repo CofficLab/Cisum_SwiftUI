@@ -1,6 +1,7 @@
 import Testing
 import Foundation
-@testable import AudioDownloadPlugin
+import ProviderScene
+@testable import PluginAudioDownload
 
 @Test func pluginInfoExportsRegistrationMetadata() {
     #expect(AudioDownloadPluginInfo.iconName == "icloud.and.arrow.down")
@@ -8,7 +9,7 @@ import Foundation
 }
 
 @Test func audioDownloadUsesStableAudioSceneIdentifier() {
-    #expect(AudioDownloadPluginInfo.audioSceneName == "Music Library")
+    #expect(AppScene.music.rawValue == "Music Library")
 }
 
 @Test func audioDownloadOnlyStartsForActiveMissingAsset() {

@@ -19,15 +19,15 @@ public struct BookLikeRootView<Content>: View, SuperLog where Content: View {
     @State private var playbackSubscriptionID: UUID?
 
     private let content: Content
-    private let targetSceneName: String
+    private let targetScene: AppScene
     private let scene: (any SceneProviding)?
 
     public init(
-        targetSceneName: String,
+        targetScene: AppScene,
         scene: (any SceneProviding)?,
         @ViewBuilder content: () -> Content
     ) {
-        self.targetSceneName = targetSceneName
+        self.targetScene = targetScene
         self.scene = scene
         self.content = content()
     }
@@ -36,14 +36,14 @@ public struct BookLikeRootView<Content>: View, SuperLog where Content: View {
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
-            .onChange(of: scene?.currentSceneName) { _, newSceneName in
-                handleCurrentSceneChanged(newSceneName)
+            .onChange(of: scene?.currentScene) { _, newScene in
+                handleCurrentSceneChanged(newScene)
             }
     }
 
     /// 检查是否应该激活书籍喜欢管理功能
     private var shouldActivateLike: Bool {
-        scene?.currentSceneName == targetSceneName
+        scene?.currentScene == targetScene
     }
 }
 
@@ -54,15 +54,15 @@ private extension BookLikeRootView {
     ///
     /// 当视图首次出现时触发，执行初始化操作。
     func handleOnAppear() {
-        updateLikeActivation(for: scene?.currentSceneName)
+        updateLikeActivation(for: scene?.currentScene)
     }
 
-    func handleCurrentSceneChanged(_ sceneName: String?) {
-        updateLikeActivation(for: sceneName)
+    func handleCurrentSceneChanged(_ sceneValue: AppScene?) {
+        updateLikeActivation(for: sceneValue)
     }
 
-    private func updateLikeActivation(for sceneName: String?) {
-        if sceneName == targetSceneName {
+    private func updateLikeActivation(for sceneValue: AppScene?) {
+        if sceneValue == targetScene {
             activateLike()
         } else {
             deactivateLike()

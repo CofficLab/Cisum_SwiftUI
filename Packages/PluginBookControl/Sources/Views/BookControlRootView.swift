@@ -325,15 +325,15 @@ public struct BookControlRootView<Content>: View, SuperLog where Content: View {
     @State private var controlGeneration = 0
 
     private let content: Content
-    private let targetSceneName: String
+    private let targetScene: AppScene
     private let scene: (any SceneProviding)?
 
     public init(
-        targetSceneName: String,
+        targetScene: AppScene,
         scene: (any SceneProviding)?,
         @ViewBuilder content: () -> Content
     ) {
-        self.targetSceneName = targetSceneName
+        self.targetScene = targetScene
         self.scene = scene
         self.content = content()
     }
@@ -342,8 +342,8 @@ public struct BookControlRootView<Content>: View, SuperLog where Content: View {
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
-            .onChange(of: scene?.currentSceneName) { _, newSceneName in
-                handleCurrentSceneChanged(newSceneName)
+            .onChange(of: scene?.currentScene) { _, newScene in
+                handleCurrentSceneChanged(newScene)
             }
             .onReceive(NotificationCenter.default.publisher(for: .bookDBDeleted), perform: handleBookDBDeleted)
             .onReceive(NotificationCenter.default.publisher(for: .bookDBSynced), perform: handleBookDBRefreshed)
@@ -355,7 +355,7 @@ public struct BookControlRootView<Content>: View, SuperLog where Content: View {
 
     /// 检查是否应该激活书籍播放控制功能
     private var shouldActivateControl: Bool {
-        scene?.currentSceneName == targetSceneName
+        scene?.currentScene == targetScene
     }
 }
 
@@ -366,15 +366,15 @@ extension BookControlRootView {
     ///
     /// 当视图首次出现时触发，执行初始化操作。
     func handleOnAppear() {
-        updateControlActivation(for: scene?.currentSceneName)
+        updateControlActivation(for: scene?.currentScene)
     }
 
-    func handleCurrentSceneChanged(_ sceneName: String?) {
-        updateControlActivation(for: sceneName)
+    func handleCurrentSceneChanged(_ sceneValue: AppScene?) {
+        updateControlActivation(for: sceneValue)
     }
 
-    private func updateControlActivation(for sceneName: String?) {
-        if sceneName == targetSceneName {
+    private func updateControlActivation(for sceneValue: AppScene?) {
+        if sceneValue == targetScene {
             activateControl()
         } else {
             deactivateControl()

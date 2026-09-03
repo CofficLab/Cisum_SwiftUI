@@ -1,5 +1,4 @@
 import CisumUIComponents
-import PluginAudioScene
 import ProviderScene
 import SwiftUI
 
@@ -14,7 +13,7 @@ struct AudioLikePluginRootView<Content>: View where Content: View {
 
     var body: some View {
         AudioLikeRootView(
-            targetSceneName: AudioScenePlugin.sceneName,
+            targetScene: .music,
             scene: scene
         ) {
             content

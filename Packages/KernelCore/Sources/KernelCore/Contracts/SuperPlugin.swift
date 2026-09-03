@@ -97,7 +97,6 @@ public protocol SuperPlugin: Actor {
     static var order: Int { get }
     static var shouldRegister: Bool { get }
 
-    @MainActor func addSceneItem() -> String?
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View
     @MainActor func addGuideView() -> AnyView?
     @MainActor func completeGuidePage() -> Bool
@@ -149,7 +148,6 @@ public extension SuperPlugin {
     static var order: Int { metadata.order }
     static var shouldRegister: Bool { metadata.shouldRegister }
 
-    @MainActor func addSceneItem() -> String? { nil }
     nonisolated func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View { nil }
     nonisolated func addGuideView() -> AnyView? { nil }
     nonisolated func completeGuidePage() -> Bool { true }

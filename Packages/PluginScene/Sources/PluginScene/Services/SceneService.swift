@@ -1,9 +1,11 @@
-import KernelCore
-import CisumUIComponents
+import Combine
 import Foundation
 import ProviderScene
 
 /// `SceneProviding` 的磁盘持久化实现。
+///
+/// 场景为 Provider 内置的固定枚举（`AppScene.allCases`），不再从插件
+/// `addSceneItem()` 贡献中收集，因此本实现不再依赖 `BuiltinPluginManager`。
 @MainActor
 public final class SceneService: ObservableObject, SceneProviding {
     private struct PersistedScene: Codable {
@@ -16,61 +18,48 @@ public final class SceneService: ObservableObject, SceneProviding {
     private static let persistenceDirectoryName = "Cisum"
     private static let persistenceFileName = "current-scene.json"
 
-    private let manager: BuiltinPluginManager
     private let persistenceURL: URL?
     private var observers: [WeakObserver] = []
 
-    @Published public private(set) var currentSceneName: String?
+    @Published public private(set) var currentScene: AppScene?
 
-    public init(
-        manager: BuiltinPluginManager,
-        persistenceURL: URL? = nil
-    ) {
-        self.manager = manager
+    public init(persistenceURL: URL? = nil) {
         self.persistenceURL = persistenceURL ?? Self.defaultPersistenceURL()
-        self.currentSceneName = nil
+        self.currentScene = nil
     }
 
-    public var sceneNames: [String] {
-        manager.enabledPlugins.compactMap { $0.addSceneItem() }
+    public var scenes: [AppScene] {
+        AppScene.allCases
     }
 
-    public func setCurrentScene(_ sceneName: String) throws {
-        guard sceneNames.contains(sceneName) else {
-            throw SceneContributionError.unknownScene(sceneName)
-        }
-        if currentSceneName == sceneName {
-            if loadPersistedSceneName() == sceneName { return }
-            try persistScene(sceneName)
+    public func setCurrentScene(_ scene: AppScene) {
+        if currentScene == scene {
+            if loadPersistedSceneName() == scene.rawValue { return }
+            try? persistScene(scene)
             return
         }
 
-        try persistScene(sceneName)
-        currentSceneName = sceneName
-        notify(.selectionChanged(sceneName: sceneName))
+        try? persistScene(scene)
+        currentScene = scene
+        notify(.selectionChanged(scene: scene))
     }
 
     /// 从磁盘恢复当前场景；无记录或记录失效时回落到首个场景。
     public func restoreCurrentScene() {
-        let names = sceneNames
-        guard !names.isEmpty else {
+        let scenes = self.scenes
+        guard let first = scenes.first else {
             updateCurrentScene(nil)
             return
         }
 
         let saved = loadPersistedSceneName() ?? loadLegacySceneName()
-        if let saved, names.contains(saved) {
-            updateCurrentScene(saved)
+        if let saved, let scene = AppScene(rawValue: saved), scenes.contains(scene) {
+            updateCurrentScene(scene)
             return
         }
 
-        let first = names[0]
         updateCurrentScene(first)
         try? persistScene(first)
-    }
-
-    public func plugin(for sceneName: String) -> (any SuperPlugin)? {
-        manager.enabledPlugins.first { $0.addSceneItem() == sceneName }
     }
 
     @discardableResult
@@ -82,10 +71,10 @@ public final class SceneService: ObservableObject, SceneProviding {
         return observer
     }
 
-    private func updateCurrentScene(_ sceneName: String?) {
-        guard currentSceneName != sceneName else { return }
-        currentSceneName = sceneName
-        notify(.selectionChanged(sceneName: sceneName))
+    private func updateCurrentScene(_ scene: AppScene?) {
+        guard currentScene != scene else { return }
+        currentScene = scene
+        notify(.selectionChanged(scene: scene))
     }
 
     private func remove(_ observer: Observer) {
@@ -120,9 +109,8 @@ public final class SceneService: ObservableObject, SceneProviding {
             ?? NSUbiquitousKeyValueStore.default.string(forKey: Self.legacySceneKey)
     }
 
-    private func persistScene(_ sceneName: String) throws {
-        let pluginID = plugin(for: sceneName)?.id
-        let persisted = PersistedScene(sceneName: sceneName, pluginID: pluginID)
+    private func persistScene(_ scene: AppScene) throws {
+        let persisted = PersistedScene(sceneName: scene.rawValue, pluginID: nil)
         let data = try JSONEncoder().encode(persisted)
 
         if let persistenceURL {
@@ -135,10 +123,7 @@ public final class SceneService: ObservableObject, SceneProviding {
         }
 
         // 保留旧版键，便于从旧版本升级后继续恢复，也让已有调用方保持兼容。
-        UserDefaults.standard.set(sceneName, forKey: Self.legacySceneKey)
-        if let pluginID {
-            UserDefaults.standard.set(pluginID, forKey: Self.legacyPluginIDKey)
-        }
+        UserDefaults.standard.set(scene.rawValue, forKey: Self.legacySceneKey)
     }
 
     private final class Observer: SceneProvidingObserverHandle {

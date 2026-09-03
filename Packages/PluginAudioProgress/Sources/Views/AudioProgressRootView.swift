@@ -103,21 +103,21 @@ public struct AudioProgressRootView<Content>: View, SuperLog where Content: View
 
     private var content: Content
     private let scene: (any SceneProviding)?
-    private let audioSceneName: String
+    private let audioScene: AppScene
     private let audioRepo: @MainActor () async -> AudioRepo?
     private let storageResetNotifications: [Notification.Name]
     private let saveWidgetData: @Sendable (String, String, Bool, Data?) -> Void
 
     public init(
         scene: (any SceneProviding)?,
-        audioSceneName: String,
+        audioScene: AppScene,
         audioRepo: @escaping @MainActor () async -> AudioRepo?,
         storageResetNotifications: [Notification.Name] = [],
         saveWidgetData: @escaping @Sendable (String, String, Bool, Data?) -> Void,
         @ViewBuilder content: () -> Content
     ) {
         self.scene = scene
-        self.audioSceneName = audioSceneName
+        self.audioScene = audioScene
         self.audioRepo = audioRepo
         self.storageResetNotifications = storageResetNotifications
         self.saveWidgetData = saveWidgetData
@@ -128,8 +128,8 @@ public struct AudioProgressRootView<Content>: View, SuperLog where Content: View
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
-            .onChange(of: scene?.currentSceneName) { oldSceneName, newSceneName in
-                handleCurrentSceneChanged(from: oldSceneName, to: newSceneName)
+            .onChange(of: scene?.currentScene) { oldScene, newScene in
+                handleCurrentSceneChanged(from: oldScene, to: newScene)
             }
             .onPlayManStateChanged(handlePlayManStateChanged)
             .onPlayManAssetChanged(handlePlayManAssetChanged)
@@ -142,7 +142,7 @@ public struct AudioProgressRootView<Content>: View, SuperLog where Content: View
 
     /// 检查是否应该激活进度管理功能
     private var shouldActivateProgress: Bool {
-        scene?.currentSceneName == audioSceneName
+        scene?.currentScene == audioScene
     }
 }
 
@@ -299,7 +299,7 @@ extension AudioProgressRootView {
     /// 1. 恢复上次播放状态
     /// 2. 恢复播放模式
     func handleOnAppear() {
-        restorePlayingIfNeeded(for: scene?.currentSceneName)
+        restorePlayingIfNeeded(for: scene?.currentScene)
     }
 
     /// 处理视图消失事件，避免播放中离开页面时丢失最后进度。
@@ -312,24 +312,24 @@ extension AudioProgressRootView {
     }
 
     /// 处理当前场景变化，确保从其它场景切到音频场景时也能恢复进度。
-    func handleCurrentSceneChanged(from oldSceneName: String?, to newSceneName: String?) {
-        if newSceneName != audioSceneName {
+    func handleCurrentSceneChanged(from oldScene: AppScene?, to newScene: AppScene?) {
+        if newScene != audioScene {
             restoreGeneration += 1
         }
 
         if AudioProgressPersistencePolicy.shouldPersistWhenSceneChanges(
-            from: oldSceneName,
-            to: newSceneName,
-            audioSceneName: audioSceneName
+            from: oldScene?.rawValue,
+            to: newScene?.rawValue,
+            audioSceneName: audioScene.rawValue
         ) {
             persistCurrentTime(reason: "handleCurrentSceneChanged")
         }
 
-        restorePlayingIfNeeded(for: newSceneName)
+        restorePlayingIfNeeded(for: newScene)
     }
 
-    private func restorePlayingIfNeeded(for sceneName: String?) {
-        guard sceneName == audioSceneName else { return }
+    private func restorePlayingIfNeeded(for sceneValue: AppScene?) {
+        guard sceneValue == audioScene else { return }
 
         self.restorePlaying()
     }

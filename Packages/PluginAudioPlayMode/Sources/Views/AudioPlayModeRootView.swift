@@ -60,19 +60,19 @@ public struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View
     @State private var playModeChangeGeneration: Int = 0
 
     private let content: Content
-    private let targetSceneName: String
+    private let targetScene: AppScene
     private let scene: (any SceneProviding)?
     private let sort: AudioPlayModeSortAction
     private let shuffle: AudioPlayModeShuffleAction
 
     public init(
-        targetSceneName: String,
+        targetScene: AppScene,
         scene: (any SceneProviding)?,
         sort: @escaping AudioPlayModeSortAction,
         shuffle: @escaping AudioPlayModeShuffleAction,
         @ViewBuilder content: () -> Content
     ) {
-        self.targetSceneName = targetSceneName
+        self.targetScene = targetScene
         self.scene = scene
         self.sort = sort
         self.shuffle = shuffle
@@ -83,27 +83,27 @@ public struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
-            .onChange(of: scene?.currentSceneName) { _, newSceneName in
-                handleCurrentSceneChanged(newSceneName)
+            .onChange(of: scene?.currentScene) { _, newScene in
+                handleCurrentSceneChanged(newScene)
             }
     }
 
     private var shouldActivatePlayMode: Bool {
-        scene?.currentSceneName == targetSceneName
+        scene?.currentScene == targetScene
     }
 }
 
 private extension AudioPlayModeRootView {
     func handleOnAppear() {
-        updatePlayModeActivation(for: scene?.currentSceneName)
+        updatePlayModeActivation(for: scene?.currentScene)
     }
 
-    func handleCurrentSceneChanged(_ sceneName: String?) {
-        updatePlayModeActivation(for: sceneName)
+    func handleCurrentSceneChanged(_ sceneValue: AppScene?) {
+        updatePlayModeActivation(for: sceneValue)
     }
 
-    private func updatePlayModeActivation(for sceneName: String?) {
-        if sceneName == targetSceneName {
+    private func updatePlayModeActivation(for sceneValue: AppScene?) {
+        if sceneValue == targetScene {
             activatePlayMode()
         } else {
             deactivatePlayMode()

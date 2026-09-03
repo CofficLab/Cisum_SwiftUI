@@ -1,7 +1,7 @@
 import CisumUIComponents
 import SwiftUI
 
-public typealias BookSceneEnterAction = @MainActor () throws -> Void
+public typealias BookSceneEnterAction = @MainActor () -> Void
 public typealias BookSceneDismissAction = @MainActor () -> Void
 
 /// 有声书海报视图，展示示例书目。
@@ -40,12 +40,8 @@ public struct BookPosterView: View {
 
             Button(action: {
                 Task { @MainActor in
-                    do {
-                        try enterScene()
-                        dismissPoster()
-                    } catch {
-                        alert_error(error)
-                    }
+                    enterScene()
+                    dismissPoster()
                 }
             }) {
                 HStack(spacing: 8) {

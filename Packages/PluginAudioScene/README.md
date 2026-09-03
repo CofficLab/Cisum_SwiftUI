@@ -4,7 +4,9 @@ Audio scene and poster plugin for Cisum, providing visual scene/poster artwork f
 
 ## Overview
 
-This plugin registers with ID `AudioScenePlugin` and provides audio scene/poster functionality through the Cisum plugin system.
+This plugin registers with ID `AudioScenePlugin` and provides the music scene poster UI through the Cisum plugin system.
+
+The music scene itself is a fixed built-in enum (`AppScene.music`) owned by the `ProviderScene` package; plugins no longer register scenes via `addSceneItem()`.
 
 ## Architecture
 

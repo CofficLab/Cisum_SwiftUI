@@ -18,11 +18,11 @@ struct SceneSettingsView: View {
                     title: String(localized: "Current Scene", bundle: .module)
                 ) {
                     AppSettingRow(
-                        title: model.currentSceneName ?? String(localized: "No scene selected", bundle: .module),
+                        title: model.currentScene?.displayName ?? String(localized: "No scene selected", bundle: .module),
                         description: String(localized: "The scene currently shown in the main window", bundle: .module),
                         icon: model.currentSceneIconName
                     ) {
-                        if model.currentSceneName != nil {
+                        if model.currentScene != nil {
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundStyle(.green)
                         }
@@ -32,29 +32,29 @@ struct SceneSettingsView: View {
                 AppSettingSection(
                     title: String(localized: "Available Scenes", bundle: .module)
                 ) {
-                    if model.sceneNames.isEmpty {
+                    if model.scenes.isEmpty {
                         AppSettingRow(
                             title: String(localized: "No scenes available", bundle: .module),
-                            description: String(localized: "Enable a plugin that provides a scene", bundle: .module),
+                            description: String(localized: "No built-in scenes are available", bundle: .module),
                             icon: "rectangle.3.group"
                         ) {
                             EmptyView()
                         }
                     } else {
-                        ForEach(model.sceneNames, id: \.self) { sceneName in
+                        ForEach(model.scenes, id: \.id) { scene in
                             AppSettingRow(
-                                title: sceneName,
+                                title: scene.displayName,
                                 description: String(localized: "Switch to this scene", bundle: .module),
-                                icon: model.iconName(for: sceneName),
+                                icon: scene.iconName,
                                 titleSuffix: {
-                                    if model.currentSceneName == sceneName {
+                                    if model.currentScene == scene {
                                         Image(systemName: "checkmark.circle.fill")
                                             .foregroundStyle(.green)
                                     }
                                 },
-                                action: { model.select(sceneName) }
+                                action: { model.select(scene) }
                             ) {
-                                if model.currentSceneName == sceneName {
+                                if model.currentScene == scene {
                                     Text(String(localized: "Current", bundle: .module))
                                         .font(.footnote)
                                         .foregroundStyle(.secondary)
@@ -66,13 +66,6 @@ struct SceneSettingsView: View {
                             }
                         }
                     }
-                }
-
-                if let errorMessage = model.errorMessage {
-                    Text(errorMessage)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                        .padding(.horizontal, 8)
                 }
             }
         }

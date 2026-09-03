@@ -11,8 +11,8 @@ enum ScenePluginEvent {
 
 /// 场景 Provider 插件。
 ///
-/// 场景列表来自已启用插件的 `addSceneItem()` 贡献；当前场景保存到应用支持
-/// 目录中的 JSON 文件，并在内核进入 ready 阶段后恢复。
+/// 场景为内置固定枚举（`AppScene.allCases`），本插件仅负责把 `SceneService`
+/// 注册进内核并恢复上次场景；不再从已启用插件的 `addSceneItem()` 贡献中收集。
 public actor ScenePlugin: SuperPlugin {
     public static let shared = ScenePlugin()
     public static let metadata = PluginMetadata(
@@ -20,8 +20,8 @@ public actor ScenePlugin: SuperPlugin {
         displayName: String(localized: "Scene", bundle: .module),
         description: String(localized: "Manages the current scene", bundle: .module),
         iconName: "rectangle.3.group",
-        // SceneProviding is a prerequisite for plugins that contribute scene-
-        // scoped views. Keep it ahead of every regular plugin during onBoot.
+        // SceneProviding is a prerequisite for plugins that consume scene-scoped
+        // views. Keep it ahead of every regular plugin during onBoot.
         order: -1000,
         policy: .alwaysOn
     )
@@ -30,9 +30,7 @@ public actor ScenePlugin: SuperPlugin {
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
-        kernel.registerSceneService(
-            SceneService(manager: kernel.pluginManager)
-        )
+        kernel.registerSceneService(SceneService())
     }
 
     @MainActor

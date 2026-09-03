@@ -1,7 +1,7 @@
 import Foundation
 import MagicPlayMan
 import Testing
-@testable import AudioProgressPlugin
+@testable import PluginAudioProgress
 
 @Test func audioProgressInfoExportsMetadata() {
     #expect(AudioProgressPluginInfo.titleKey == "Audio Progress")

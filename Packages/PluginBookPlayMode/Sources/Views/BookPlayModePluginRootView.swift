@@ -1,5 +1,4 @@
 import CisumUIComponents
-import PluginBookScene
 import ProviderScene
 import SwiftUI
 
@@ -14,7 +13,7 @@ struct BookPlayModePluginRootView<Content>: View where Content: View {
 
     var body: some View {
         BookPlayModeRootView(
-            targetSceneName: BookScenePlugin.sceneName,
+            targetScene: .audiobooks,
             scene: scene
         ) {
             content

@@ -1,7 +1,7 @@
 import CisumUIComponents
 import SwiftUI
 
-public typealias AudioSceneEnterAction = @MainActor () throws -> Void
+public typealias AudioSceneEnterAction = @MainActor () -> Void
 public typealias AudioSceneDismissAction = @MainActor () -> Void
 
 /// 音频海报视图，展示示例曲目列表。
@@ -68,12 +68,8 @@ public struct AudioPosterView: View {
 
             Button(action: {
                 Task { @MainActor in
-                    do {
-                        try enterScene()
-                        dismissPoster()
-                    } catch {
-                        alert_error(error)
-                    }
+                    enterScene()
+                    dismissPoster()
                 }
             }) {
                 HStack(spacing: 4) {

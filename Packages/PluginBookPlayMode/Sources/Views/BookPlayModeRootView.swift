@@ -34,15 +34,15 @@ public struct BookPlayModeRootView<Content>: View, SuperLog where Content: View 
     @State private var playModeChangeGeneration: Int = 0
 
     private let content: Content
-    private let targetSceneName: String
+    private let targetScene: AppScene
     private let scene: (any SceneProviding)?
 
     public init(
-        targetSceneName: String,
+        targetScene: AppScene,
         scene: (any SceneProviding)?,
         @ViewBuilder content: () -> Content
     ) {
-        self.targetSceneName = targetSceneName
+        self.targetScene = targetScene
         self.scene = scene
         self.content = content()
     }
@@ -51,14 +51,14 @@ public struct BookPlayModeRootView<Content>: View, SuperLog where Content: View 
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
-            .onChange(of: scene?.currentSceneName) { _, newSceneName in
-                handleCurrentSceneChanged(newSceneName)
+            .onChange(of: scene?.currentScene) { _, newScene in
+                handleCurrentSceneChanged(newScene)
             }
     }
 
     /// 检查是否应该激活书籍播放模式管理功能
     private var shouldActivatePlayMode: Bool {
-        scene?.currentSceneName == targetSceneName
+        scene?.currentScene == targetScene
     }
 }
 
@@ -69,15 +69,15 @@ private extension BookPlayModeRootView {
     ///
     /// 当视图首次出现时触发，执行初始化操作。
     func handleOnAppear() {
-        updatePlayModeActivation(for: scene?.currentSceneName)
+        updatePlayModeActivation(for: scene?.currentScene)
     }
 
-    func handleCurrentSceneChanged(_ sceneName: String?) {
-        updatePlayModeActivation(for: sceneName)
+    func handleCurrentSceneChanged(_ sceneValue: AppScene?) {
+        updatePlayModeActivation(for: sceneValue)
     }
 
-    private func updatePlayModeActivation(for sceneName: String?) {
-        if sceneName == targetSceneName {
+    private func updatePlayModeActivation(for sceneValue: AppScene?) {
+        if sceneValue == targetScene {
             activatePlayMode()
         } else {
             deactivatePlayMode()

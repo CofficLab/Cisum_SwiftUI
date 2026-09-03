@@ -99,7 +99,7 @@ public struct AudioControlRootView<Content>: View where Content: View {
     @State private var controlGeneration = 0
 
     private let content: Content
-    private let targetSceneName: String
+    private let targetScene: AppScene
     private let scene: (any SceneProviding)?
     private let nextAsset: AudioControlAdjacentAssetProvider
     private let previousAsset: AudioControlAdjacentAssetProvider
@@ -107,7 +107,7 @@ public struct AudioControlRootView<Content>: View where Content: View {
     private let lastAsset: AudioControlLastAssetProvider
 
     public init(
-        targetSceneName: String,
+        targetScene: AppScene,
         scene: (any SceneProviding)?,
         nextAsset: @escaping AudioControlAdjacentAssetProvider,
         previousAsset: @escaping AudioControlAdjacentAssetProvider,
@@ -115,7 +115,7 @@ public struct AudioControlRootView<Content>: View where Content: View {
         lastAsset: @escaping AudioControlLastAssetProvider,
         @ViewBuilder content: () -> Content
     ) {
-        self.targetSceneName = targetSceneName
+        self.targetScene = targetScene
         self.scene = scene
         self.nextAsset = nextAsset
         self.previousAsset = previousAsset
@@ -128,8 +128,8 @@ public struct AudioControlRootView<Content>: View where Content: View {
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
-            .onChange(of: scene?.currentSceneName) { _, newSceneName in
-                handleCurrentSceneChanged(newSceneName)
+            .onChange(of: scene?.currentScene) { _, newScene in
+                handleCurrentSceneChanged(newScene)
             }
             .onReceive(NotificationCenter.default.publisher(for: .audioControlDBDeleted), perform: handleDBDeleted)
             .onReceive(NotificationCenter.default.publisher(for: .audioControlStorageLocationDidReset)) { _ in
@@ -138,21 +138,21 @@ public struct AudioControlRootView<Content>: View where Content: View {
     }
 
     private var shouldActivateControl: Bool {
-        scene?.currentSceneName == targetSceneName
+        scene?.currentScene == targetScene
     }
 }
 
 private extension AudioControlRootView {
     func handleOnAppear() {
-        updateControlActivation(for: scene?.currentSceneName)
+        updateControlActivation(for: scene?.currentScene)
     }
 
-    func handleCurrentSceneChanged(_ sceneName: String?) {
-        updateControlActivation(for: sceneName)
+    func handleCurrentSceneChanged(_ sceneValue: AppScene?) {
+        updateControlActivation(for: sceneValue)
     }
 
-    private func updateControlActivation(for sceneName: String?) {
-        if sceneName == targetSceneName {
+    private func updateControlActivation(for sceneValue: AppScene?) {
+        if sceneValue == targetScene {
             activateControl()
         } else {
             deactivateControl()

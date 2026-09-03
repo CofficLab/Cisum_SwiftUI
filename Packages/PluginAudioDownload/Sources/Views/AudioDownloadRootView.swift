@@ -71,15 +71,15 @@ public struct AudioDownloadRootView<Content>: View, SuperLog where Content: View
     public var body: some View {
         content
             .onAppear(perform: handleOnAppear)
-            .onChange(of: scene?.currentSceneName) { _, newSceneName in
-                handleCurrentSceneChanged(newSceneName)
+            .onChange(of: scene?.currentScene) { _, newScene in
+                handleCurrentSceneChanged(newScene)
             }
             .onPlayManAssetChanged(handlePlayManAssetChanged)
     }
 
     /// 检查是否应该激活下载功能
     private var shouldActivateDownload: Bool {
-        scene?.currentSceneName == AudioDownloadPluginInfo.audioSceneName
+        scene?.currentScene == AppScene.music
     }
 }
 
@@ -100,8 +100,8 @@ extension AudioDownloadRootView {
         handleCurrentSceneChanged()
     }
 
-    func handleCurrentSceneChanged(_ sceneName: String? = nil) {
-        if let sceneName, sceneName != AudioDownloadPluginInfo.audioSceneName {
+    func handleCurrentSceneChanged(_ sceneValue: AppScene? = nil) {
+        if let sceneValue, sceneValue != AppScene.music {
             downloadGeneration = AudioDownloadRequestPolicy.generationAfterDeactivation(downloadGeneration)
         }
 

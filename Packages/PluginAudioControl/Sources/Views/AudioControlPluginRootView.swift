@@ -1,6 +1,5 @@
 import CisumUIComponents
 import PluginAudio
-import PluginAudioScene
 import ProviderScene
 import SwiftUI
 
@@ -15,7 +14,7 @@ struct AudioControlPluginRootView<Content>: View where Content: View {
 
     var body: some View {
         AudioControlRootView(
-            targetSceneName: AudioScenePlugin.sceneName,
+            targetScene: .music,
             scene: scene,
             nextAsset: { current, verbose in
                 guard let repo = await AudioPlugin.getAudioRepoAsync() else {

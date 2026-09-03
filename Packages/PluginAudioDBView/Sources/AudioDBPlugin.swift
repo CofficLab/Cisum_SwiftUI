@@ -1,7 +1,6 @@
 import KernelCore
 import CisumUIComponents
 import PluginAudio
-import PluginAudioScene
 import ProviderScene
 import SwiftUI
 
@@ -36,7 +35,7 @@ public actor AudioDBPlugin: SuperPlugin {
 
     @MainActor
     public func addTabView(reason: String, demoMode: Bool = false) -> (view: AnyView, label: String)? {
-        guard sceneBox.scene?.currentSceneName == AudioScenePlugin.sceneName else { return nil }
+        guard sceneBox.scene?.currentScene == .music else { return nil }
         guard demoMode == false else { return nil }
 
         return (AnyView(AudioDBPluginTabView(demoMode: demoMode)), String(localized: "Music Repository", bundle: .module))

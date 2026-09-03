@@ -6,5 +6,4 @@ public enum AudioDownloadPluginInfo {
     public static let iconName = "icloud.and.arrow.down"
     public static let emoji = "⬇️"
     public static let order = 2
-    public static let audioSceneName = "Music Library"
 }

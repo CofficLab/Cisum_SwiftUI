@@ -4,9 +4,8 @@ import ProviderScene
 
 @MainActor
 final class SceneSettingsViewModel: ObservableObject {
-    @Published private(set) var sceneNames: [String] = []
-    @Published private(set) var currentSceneName: String?
-    @Published private(set) var errorMessage: String?
+    @Published private(set) var scenes: [AppScene] = []
+    @Published private(set) var currentScene: AppScene?
 
     private weak var scene: (any SceneProviding)?
     private var observer: SceneProvidingObserver?
@@ -16,8 +15,7 @@ final class SceneSettingsViewModel: ObservableObject {
     }
 
     var currentSceneIconName: String {
-        guard let currentSceneName else { return "rectangle.3.group" }
-        return iconName(for: currentSceneName)
+        currentScene?.iconName ?? "rectangle.3.group"
     }
 
     func attach(to scene: (any SceneProviding)?) {
@@ -35,19 +33,10 @@ final class SceneSettingsViewModel: ObservableObject {
         observer = nil
     }
 
-    func select(_ sceneName: String) {
+    func select(_ target: AppScene) {
         guard let scene else { return }
-        errorMessage = nil
-        do {
-            try scene.setCurrentScene(sceneName)
-            refresh()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    func iconName(for sceneName: String) -> String {
-        scene?.plugin(for: sceneName)?.iconName ?? "rectangle.3.group"
+        scene.setCurrentScene(target)
+        refresh()
     }
 
     func handle(_ event: ScenePluginEvent) {
@@ -58,7 +47,7 @@ final class SceneSettingsViewModel: ObservableObject {
     }
 
     private func refresh() {
-        sceneNames = scene?.sceneNames ?? []
-        currentSceneName = scene?.currentSceneName
+        scenes = scene?.scenes ?? []
+        currentScene = scene?.currentScene
     }
 }
