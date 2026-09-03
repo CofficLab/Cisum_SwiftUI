@@ -29,9 +29,10 @@ let package = Package(
                 .product(name: "PluginAudioLike", package: "PluginAudioLike"),
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
-            path: "Sources",
+            path: ".",
+            sources: ["Sources"],
             resources: [
-                .process("Localizable.xcstrings")
+                .process("Resources/Localizable.xcstrings")
             ]
         ),
         .testTarget(
