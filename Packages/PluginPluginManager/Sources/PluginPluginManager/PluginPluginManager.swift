@@ -29,6 +29,7 @@ public actor PluginPluginManager: SuperPlugin {
     ///
     /// 仅在主线程访问（onBoot / addSettingNavigationItem 均 @MainActor）。
     nonisolated(unsafe) private var kernel: CisumKernel?
+    nonisolated(unsafe) private var managementManager: (any PluginManaging)?
     nonisolated(unsafe) private var managementViewModel: PluginManagementViewModel?
     nonisolated(unsafe) private var managementObserver: PluginManagerObserver?
 
@@ -50,7 +51,7 @@ public actor PluginPluginManager: SuperPlugin {
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
         self.kernel = kernel
-        installState()
+        installState(kernel: kernel)
     }
 
     @MainActor
@@ -66,8 +67,9 @@ public actor PluginPluginManager: SuperPlugin {
     @MainActor
     public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
         guard let kernel else { return nil }
-        let manager = DefaultPluginManaging(manager: kernel.pluginManager, kernel: kernel)
         let viewModel = resolveViewModel()
+        let manager: any PluginManaging = managementManager
+            ?? DefaultPluginManaging(manager: kernel.pluginManager, kernel: kernel)
         return PluginSettingNavigationItem(
             id: Self.settingsEntryID,
             title: "插件管理",
@@ -81,10 +83,12 @@ public actor PluginPluginManager: SuperPlugin {
     // MARK: - State assembly
 
     @MainActor
-    private func installState() {
+    private func installState(kernel: CisumKernel) {
         guard managementViewModel == nil else { return }
+        let manager = DefaultPluginManaging(manager: kernel.pluginManager, kernel: kernel)
         let viewModel = PluginManagementViewModel()
-        let observer = PluginManagerObserver(viewModel: viewModel)
+        let observer = PluginManagerObserver(manager: manager, viewModel: viewModel)
+        managementManager = manager
         managementViewModel = viewModel
         managementObserver = observer
     }
@@ -94,6 +98,7 @@ public actor PluginPluginManager: SuperPlugin {
         managementObserver?.cancel()
         managementObserver = nil
         managementViewModel = nil
+        managementManager = nil
     }
 
     @MainActor

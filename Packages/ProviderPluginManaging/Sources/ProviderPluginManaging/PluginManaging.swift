@@ -2,6 +2,20 @@ import KernelCore
 import CisumUIComponents
 import Foundation
 
+/// 插件管理 Provider 的语义变更事件。
+@MainActor
+public enum PluginManagingEvent {
+    /// 已启用插件集合发生变化（运行期启停后触发）；回调执行时 Provider 状态已更新。
+    case enabledPluginsChanged
+}
+
+/// 插件管理 Provider 监听句柄。
+@MainActor
+public protocol PluginManagingObserverHandle: AnyObject {
+    /// 停止接收后续插件管理变更通知。重复调用无副作用。
+    func cancel()
+}
+
 /// 插件管理数据协议（对齐 Lumi `ProviderPluginManaging/PluginManaging`）。
 ///
 /// 设置中的插件管理页通过它读取全部插件与启用状态，并驱动运行期启停
@@ -44,4 +58,27 @@ public protocol PluginManaging: AnyObject {
 
     /// 判断插件当前是否启用（结合策略 + 用户覆盖）。
     func isEnabled(id: String) -> Bool
+
+    /// 注册插件管理状态观察者。
+    ///
+    /// 回调在主线程同步执行，且执行时 Provider 状态已经更新（如
+    /// `enabledPlugins` 已反映最新启停）。返回的句柄在释放或显式调用
+    /// `cancel()` 后停止接收通知。
+    @discardableResult
+    func addObserver(
+        _ callback: @escaping (PluginManagingEvent) -> Void
+    ) -> any PluginManagingObserverHandle
+}
+
+public extension PluginManaging {
+    @discardableResult
+    func addObserver(_ callback: @escaping (PluginManagingEvent) -> Void) -> any PluginManagingObserverHandle {
+        NoopPluginManagingObserverHandle()
+    }
+}
+
+@MainActor
+public final class NoopPluginManagingObserverHandle: PluginManagingObserverHandle {
+    public init() {}
+    public func cancel() {}
 }
