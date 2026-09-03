@@ -21,9 +21,10 @@ let package = Package(
         .target(
             name: "PluginThemeSettings",
             dependencies: ["CisumUIComponents"],
-            path: "Sources",
+            path: ".",
+            sources: ["Sources"],
             resources: [
-                .process("Localizable.xcstrings")
+                .process("Resources/Localizable.xcstrings")
             ]
         ),
         .testTarget(
