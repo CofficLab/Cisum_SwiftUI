@@ -38,9 +38,10 @@ let package = Package(
                 "MagicPlayMan",
                 "ProviderScene",
             ],
-            path: "Sources",
+            path: ".",
+            sources: ["Sources"],
             resources: [
-                .process("Localizable.xcstrings"),
+                .process("Resources/Localizable.xcstrings"),
             ]
         ),
         .testTarget(
