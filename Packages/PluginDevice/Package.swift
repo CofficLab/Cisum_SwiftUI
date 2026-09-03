@@ -25,9 +25,10 @@ let package = Package(
                 .product(name: "CisumDeviceData", package: "DeviceData"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents")
             ],
-            path: "Sources",
+            path: ".",
+            sources: ["Sources"],
             resources: [
-                .process("Localizable.xcstrings")
+                .process("Resources/Localizable.xcstrings")
             ]
         ),
         .testTarget(
