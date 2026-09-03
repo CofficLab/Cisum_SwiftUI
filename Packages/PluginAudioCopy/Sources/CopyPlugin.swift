@@ -32,7 +32,7 @@ import SwiftUI
                     AudioPlugin.getAudioDisk()
                 },
                 audioCountProvider: {
-                    guard let repo = AudioPlugin.getAudioRepo() else {
+                    guard let repo = await AudioPlugin.getAudioRepoAsync() else {
                         return 0
                     }
                     return await repo.getTotalCount()

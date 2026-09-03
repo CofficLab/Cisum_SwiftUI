@@ -2,7 +2,6 @@ import Foundation
 import SwiftData
 import SwiftUI
 
-@MainActor
 public struct AudioConfigRepo {
     public static func getContainer(databaseURL: URL) throws -> ModelContainer {
         let schema = Schema([

@@ -38,12 +38,18 @@ struct AudioRootErrorPresentation: Equatable {
     static let storageMissingReason = "Storage not found"
 }
 
+private enum AudioContainerLoadError: Error {
+    case message(String)
+}
+
 public struct AudioRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { "📢" }
     public nonisolated static var verbose: Bool { false }
 
     @State private var error: AudioPluginError? = nil
     @State private var container: ModelContainer? = nil
+    @State private var isInitializing = true
+    @State private var initGeneration = 0
     private var content: Content
     private let databaseURL: @MainActor () throws -> URL
     private let hasStorageLocation: @MainActor () -> Bool
@@ -65,12 +71,10 @@ public struct AudioRootView<Content>: View, SuperLog where Content: View {
         self.hasStorageLocation = hasStorageLocation
         self.storageLocationDidChangeNotifications = storageLocationDidChangeNotifications
         self.content = content()
-        let initialState = Self.makeContainer(
-            databaseURL: databaseURL,
-            hasStorageLocation: hasStorageLocation
-        )
-        self._container = State(initialValue: initialState.container)
-        self._error = State(initialValue: initialState.error)
+        self._container = State(initialValue: nil)
+        self._error = State(initialValue: nil)
+        self._isInitializing = State(initialValue: true)
+        self._initGeneration = State(initialValue: 0)
 
         if Self.verbose {
             os_log("\(Self.t)初始化完成")
@@ -79,7 +83,12 @@ public struct AudioRootView<Content>: View, SuperLog where Content: View {
 
     public var body: some View {
         Group {
-            if error != nil {
+            if isInitializing {
+                ProgressView {
+                    Text("Initializing...", bundle: .module)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if error != nil {
                 storageErrorView
             } else if let container = self.container {
                 ZStack {
@@ -95,6 +104,9 @@ public struct AudioRootView<Content>: View, SuperLog where Content: View {
             reloadContainer()
             handleStorageLocationChanged()
         })
+        .task {
+            reloadContainer()
+        }
     }
 
     // MARK: - Error View
@@ -153,33 +165,54 @@ private struct AudioStorageChangeModifier: ViewModifier {
 
 extension AudioRootView {
     @MainActor
-    private static func makeContainer(
-        databaseURL: @MainActor () throws -> URL,
-        hasStorageLocation: @MainActor () -> Bool
-    ) -> (container: ModelContainer?, error: AudioPluginError?) {
-        guard hasStorageLocation() else {
-            if Self.verbose {
-                os_log("\(Self.t)放弃初始化，因为: Storage 未找到")
-            }
-            return (nil, AudioPluginError.initialization(reason: AudioRootErrorPresentation.storageMissingReason))
-        }
-
-        do {
-            let container = try AudioConfigRepo.getContainer(databaseURL: databaseURL())
-            return (container, nil)
-        } catch {
-            os_log(.error, "\(Self.t)初始化失败: \(error.localizedDescription)")
-            return (nil, AudioPluginError.initialization(reason: error.localizedDescription))
-        }
-    }
-
     private func reloadContainer() {
-        let nextState = Self.makeContainer(
-            databaseURL: databaseURL,
-            hasStorageLocation: hasStorageLocation
-        )
-        container = nextState.container
-        error = nextState.error
+        initGeneration += 1
+        let generation = initGeneration
+        isInitializing = true
+        container = nil
+        error = nil
+
+        guard hasStorageLocation() else {
+            isInitializing = false
+            error = AudioPluginError.initialization(reason: AudioRootErrorPresentation.storageMissingReason)
+            return
+        }
+
+        let requestedDatabaseURL: URL
+        do {
+            requestedDatabaseURL = try databaseURL()
+        } catch {
+            isInitializing = false
+            self.error = AudioPluginError.initialization(reason: error.localizedDescription)
+            return
+        }
+
+        Task { @MainActor in
+            let result = await Task.detached(priority: .userInitiated) {
+                do {
+                    return Result<ModelContainer, AudioContainerLoadError>.success(
+                        try AudioConfigRepo.getContainer(databaseURL: requestedDatabaseURL)
+                    )
+                } catch {
+                    return Result<ModelContainer, AudioContainerLoadError>.failure(
+                        .message(error.localizedDescription)
+                    )
+                }
+            }.value
+
+            guard generation == initGeneration else { return }
+
+            switch result {
+            case .success(let container):
+                self.container = container
+                self.error = nil
+            case .failure(.message(let message)):
+                os_log(.error, "\(self.t)初始化失败: \(message)")
+                self.container = nil
+                self.error = AudioPluginError.initialization(reason: message)
+            }
+            self.isInitializing = false
+        }
     }
 
     /// 处理存储位置变化事件

@@ -58,16 +58,58 @@ public actor AudioPlugin: SuperPlugin {
 
     @MainActor
     public static func getAudioRepo() -> AudioRepo? {
-        try? AudioLikeRepositoryConfiguration.configure(databaseURL: AudioPluginHost.createDatabaseFile(name: "audio_like"))
-
-        guard let disk = Self.getAudioDisk() else {
+        guard let configuration = Self.audioRepoConfiguration() else {
             return nil
         }
 
         return try? AudioRepo(
-            disk: disk,
-            databaseURL: AudioPluginHost.createDatabaseFile(name: "audio"),
+            disk: configuration.disk,
+            databaseURL: configuration.databaseURL,
             reason: "AudioPlugin"
         )
     }
+
+    /// 后台构造音频仓库。目录和数据库 URL 的解析仍在主线程完成，
+    /// SwiftData 容器创建及仓库初始化放到 utility 任务，避免列表刷新阻塞 UI。
+    public static func getAudioRepoAsync() async -> AudioRepo? {
+        let configuration = await MainActor.run { Self.audioRepoConfiguration() }
+        guard let configuration else { return nil }
+
+        let container = await Task.detached(priority: .utility) {
+            try? AudioConfigRepo.getContainer(databaseURL: configuration.databaseURL)
+        }.value
+        guard let container else { return nil }
+
+        return await MainActor.run {
+            try? AudioRepo(
+                container: container,
+                disk: configuration.disk,
+                reason: "AudioPlugin.background"
+            )
+        }
+    }
+
+    @MainActor
+    private static func audioRepoConfiguration() -> AudioRepoConfiguration? {
+        guard let disk = Self.getAudioDisk() else { return nil }
+
+        guard let audioLikeDatabaseURL = try? AudioPluginHost.createDatabaseFile(name: "audio_like") else {
+            return nil
+        }
+        AudioLikeRepositoryConfiguration.configure(databaseURL: audioLikeDatabaseURL)
+
+        guard let databaseURL = try? AudioPluginHost.createDatabaseFile(name: "audio") else {
+            return nil
+        }
+
+        return AudioRepoConfiguration(
+            disk: disk,
+            databaseURL: databaseURL
+        )
+    }
+}
+
+private struct AudioRepoConfiguration: Sendable {
+    let disk: URL
+    let databaseURL: URL
 }

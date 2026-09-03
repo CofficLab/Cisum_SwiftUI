@@ -18,25 +18,25 @@ struct AudioControlPluginRootView<Content>: View where Content: View {
             targetSceneName: AudioScenePlugin.sceneName,
             scene: scene,
             nextAsset: { current, verbose in
-                guard let repo = AudioPlugin.getAudioRepo() else {
+                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
                     throw AudioPluginError.hostNotConfigured
                 }
                 return try await repo.getNextOf(current, verbose: verbose)
             },
             previousAsset: { current, verbose in
-                guard let repo = AudioPlugin.getAudioRepo() else {
+                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
                     throw AudioPluginError.hostNotConfigured
                 }
                 return try await repo.getPrevOf(current, verbose: verbose)
             },
             firstAsset: {
-                guard let repo = AudioPlugin.getAudioRepo() else {
+                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
                     throw AudioPluginError.hostNotConfigured
                 }
                 return try await repo.getFirst()
             },
             lastAsset: {
-                guard let repo = AudioPlugin.getAudioRepo() else {
+                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
                     throw AudioPluginError.hostNotConfigured
                 }
                 return try await repo.getLast()

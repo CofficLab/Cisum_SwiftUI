@@ -25,8 +25,11 @@ struct BookProgressPluginRootView<Content>: View where Content: View {
             storeCurrentBookTime: { BookSettingRepo.storeCurrentTime($0) },
             saveBookState: { bookURL, currentURL, time in
                 do {
-                    try await MainActor.run {
-                        let container = try BookConfig.getContainer(dbRootURL: BookPluginHost.getDBRootDir())
+                    let dbRootURL = try await MainActor.run {
+                        try BookPluginHost.getDBRootDir()
+                    }
+                    try await Task.detached(priority: .utility) {
+                        let container = try BookConfig.getContainer(dbRootURL: dbRootURL)
                         try BookProgressStatePersistence.save(
                             bookURL: bookURL,
                             currentURL: currentURL,

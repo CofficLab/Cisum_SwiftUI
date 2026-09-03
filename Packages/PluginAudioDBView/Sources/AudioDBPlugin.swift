@@ -67,7 +67,7 @@ private struct AudioDBPluginRootView<Content>: View where Content: View {
 
     private var dependencies: AudioDBDependencies {
         AudioDBDependencies(
-            audioRepo: { AudioPlugin.getAudioRepo() },
+            audioRepo: { await AudioPlugin.getAudioRepoAsync() },
             audioDisk: { AudioPlugin.getAudioDisk() },
             supportedExtensions: AudioPlugin.supportedExtensions,
             isDesktop: Self.isDesktop,
@@ -99,7 +99,7 @@ private struct AudioDBPluginTabView: View {
 
     private var dependencies: AudioDBDependencies {
         AudioDBDependencies(
-            audioRepo: { AudioPlugin.getAudioRepo() },
+            audioRepo: { await AudioPlugin.getAudioRepoAsync() },
             audioDisk: { AudioPlugin.getAudioDisk() },
             supportedExtensions: AudioPlugin.supportedExtensions,
             isDesktop: Self.isDesktop,

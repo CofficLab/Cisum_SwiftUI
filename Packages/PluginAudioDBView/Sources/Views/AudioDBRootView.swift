@@ -39,7 +39,7 @@ extension AudioDBRootView {
     private func checkAudioRepo() async {
         guard !isDemoMode else { return }
 
-        guard let repo = dependencies.audioRepo() else {
+        guard let repo = await dependencies.audioRepo() else {
             dependencies.showDBView()
             return
         }

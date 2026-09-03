@@ -18,7 +18,7 @@ struct AudioProgressPluginRootView<Content>: View where Content: View {
         AudioProgressRootView(
             scene: scene,
             audioSceneName: AudioScenePlugin.sceneName,
-            audioRepo: { AudioPlugin.getAudioRepo() },
+            audioRepo: { await AudioPlugin.getAudioRepoAsync() },
             storageResetNotifications: [Notification.Name("storageLocationDidReset")],
             saveWidgetData: { title, artist, isPlaying, coverArt in
                 AudioProgressHost.saveWidgetData(title: title, artist: artist, isPlaying: isPlaying, coverArt: coverArt)

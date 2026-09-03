@@ -160,16 +160,23 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
     var total: Int { books.count }
 
     /// Finds the book state.
-    private func findBookState(_ bookURL: URL, in container: ModelContainer) async -> BookState? {
-        let context = ModelContext(container)
-        do {
-            return try BookDBViewBookStateLookup.findBookState(for: bookURL, in: context)
-        } catch {
-            if Self.verbose {
-                os_log("\(self.t)⚠️ Failed to query book state: \(error.localizedDescription)")
+    private func findBookState(_ bookURL: URL, in container: ModelContainer) async -> (currentURL: URL?, time: TimeInterval?)? {
+        let logPrefix = self.t
+        let verbose = Self.verbose
+        return await Task.detached(priority: .utility) { () -> (currentURL: URL?, time: TimeInterval?)? in
+            let context = ModelContext(container)
+            do {
+                guard let state = try BookDBViewBookStateLookup.findBookState(for: bookURL, in: context) else {
+                    return nil
+                }
+                return (state.currentURL, state.time)
+            } catch {
+                if verbose {
+                    os_log("\(logPrefix)⚠️ Failed to query book state: \(error.localizedDescription)")
+                }
+                return nil
             }
-            return nil
-        }
+        }.value
     }
 
     /// Whether tips should be shown.
@@ -380,7 +387,10 @@ extension BookGrid {
 
         // First try to restore this book's progress from BookState.
         do {
-            let container = try BookConfig.getContainer(dbRootURL: dependencies.dbRoot)
+            let dbRoot = dependencies.dbRoot
+            let container = try await Task.detached(priority: .utility) {
+                try BookConfig.getContainer(dbRootURL: dbRoot)
+            }.value
             if let bookState = await findBookState(book.url, in: container),
                let savedURL = bookState.currentURL,
                let savedTime = bookState.time,

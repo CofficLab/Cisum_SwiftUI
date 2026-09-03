@@ -2,7 +2,7 @@ import PluginAudio
 import SwiftUI
 
 public struct AudioDBDependencies: @unchecked Sendable {
-    public var audioRepo: @MainActor @Sendable () -> AudioRepo?
+    public var audioRepo: @MainActor @Sendable () async -> AudioRepo?
     public var audioDisk: @MainActor @Sendable () -> URL?
     public var supportedExtensions: [String]
     public var isDesktop: Bool
@@ -11,7 +11,7 @@ public struct AudioDBDependencies: @unchecked Sendable {
     public var isImporting: Binding<Bool>
 
     public init(
-        audioRepo: @escaping @MainActor @Sendable () -> AudioRepo?,
+        audioRepo: @escaping @MainActor @Sendable () async -> AudioRepo?,
         audioDisk: @escaping @MainActor @Sendable () -> URL?,
         supportedExtensions: [String],
         isDesktop: Bool,

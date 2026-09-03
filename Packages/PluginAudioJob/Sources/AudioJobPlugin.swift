@@ -61,7 +61,7 @@ public actor AudioJobPlugin: SuperPlugin {
             },
             syncItems: { items, isFirst in
                 let disk = await AudioPlugin.getAudioDisk()
-                guard let repo = await AudioPlugin.getAudioRepo() else {
+                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
                     return
                 }
 
@@ -69,7 +69,7 @@ public actor AudioJobPlugin: SuperPlugin {
                 await repo.sync(items, verbose: FileSystemMonitorJob.verbose, isFirst: shouldFullSync)
             },
             deleteItems: { urls in
-                guard let repo = await AudioPlugin.getAudioRepo() else {
+                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
                     throw AudioPluginError.hostNotConfigured
                 }
 

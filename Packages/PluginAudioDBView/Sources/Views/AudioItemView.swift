@@ -384,7 +384,7 @@ extension AudioItemView {
     private func deleteFile() {
         Task {
             do {
-                guard let repo = dependencies.audioRepo() else {
+                guard let repo = await dependencies.audioRepo() else {
                     alert_error(String(localized: "Delete failed: audio repository is unavailable", bundle: .module))
                     return
                 }

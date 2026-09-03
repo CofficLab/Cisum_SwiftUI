@@ -3,7 +3,6 @@ import SwiftData
 import SwiftUI
 
 enum BookProgressStatePersistence {
-    @MainActor
     static func save(
         bookURL: URL,
         currentURL: URL?,

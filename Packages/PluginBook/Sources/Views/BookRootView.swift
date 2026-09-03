@@ -81,7 +81,9 @@ extension BookRootView {
                 let dbRootURL = try await MainActor.run {
                     try self.dbRootURL()
                 }
-                let container = try BookConfig.getContainer(dbRootURL: dbRootURL)
+                let container = try await Task.detached(priority: .userInitiated) {
+                    try BookConfig.getContainer(dbRootURL: dbRootURL)
+                }.value
                 if Self.verbose {
                     os_log("\(self.t)🎉 Container 初始化成功")
                 }

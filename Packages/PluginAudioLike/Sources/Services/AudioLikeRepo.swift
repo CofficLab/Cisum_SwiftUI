@@ -73,7 +73,21 @@ public actor AudioLikeRepo: SuperLog {
             allowsSave: true,
             cloudKitDatabase: .none
         )
-        container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        container = try await Self.makeContainer(
+            schema: schema,
+            configuration: modelConfiguration
+        )
+    }
+
+    /// SwiftData 容器初始化可能触发数据库文件创建和 schema 检查，
+    /// 不应阻塞首次播放恢复或喜欢列表打开时的主线程。
+    private nonisolated static func makeContainer(
+        schema: Schema,
+        configuration: ModelConfiguration
+    ) async throws -> ModelContainer {
+        try await Task.detached(priority: .utility) {
+            try ModelContainer(for: schema, configurations: [configuration])
+        }.value
     }
 
     @MainActor

@@ -9,19 +9,23 @@ import SwiftUI
 @preconcurrency import Combine
 
 @MainActor
-public class AudioRepo: ObservableObject, SuperLog {
+public class AudioRepo: ObservableObject, SuperLog, @unchecked Sendable {
     public nonisolated static let emoji = "🎵"
     public nonisolated static let verbose = false
 
     private var db: AudioDB
     private var disk: URL
 
-    public init(disk: URL, databaseURL: URL, reason: String) throws {
+    public convenience init(disk: URL, databaseURL: URL, reason: String) throws {
+        let container = try AudioConfigRepo.getContainer(databaseURL: databaseURL)
+        try self.init(container: container, disk: disk, reason: reason)
+    }
+
+    public init(container: ModelContainer, disk: URL, reason: String) throws {
         if Self.verbose {
             os_log("\(Self.i) with reason: 🐛 \(reason) 💾 with disk: \(disk.shortPath())")
         }
 
-        let container = try AudioConfigRepo.getContainer(databaseURL: databaseURL)
         self.db = AudioDB(container, reason: reason)
         self.disk = disk
     }

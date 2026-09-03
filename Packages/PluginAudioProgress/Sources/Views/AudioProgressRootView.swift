@@ -104,14 +104,14 @@ public struct AudioProgressRootView<Content>: View, SuperLog where Content: View
     private var content: Content
     private let scene: (any SceneProviding)?
     private let audioSceneName: String
-    private let audioRepo: @MainActor () -> AudioRepo?
+    private let audioRepo: @MainActor () async -> AudioRepo?
     private let storageResetNotifications: [Notification.Name]
     private let saveWidgetData: @Sendable (String, String, Bool, Data?) -> Void
 
     public init(
         scene: (any SceneProviding)?,
         audioSceneName: String,
-        audioRepo: @escaping @MainActor () -> AudioRepo?,
+        audioRepo: @escaping @MainActor () async -> AudioRepo?,
         storageResetNotifications: [Notification.Name] = [],
         saveWidgetData: @escaping @Sendable (String, String, Bool, Data?) -> Void,
         @ViewBuilder content: () -> Content
@@ -190,7 +190,7 @@ extension AudioProgressRootView {
             guard isCurrentRestoreRequest(generation) else { return }
 
             // 从 AudioPlugin 获取 AudioRepo 实例
-            guard let repo = audioRepo() else {
+            guard let repo = await audioRepo() else {
                 if Self.verbose {
                     os_log(.error, "\(self.t)❌ Failed to get AudioRepo")
                 }

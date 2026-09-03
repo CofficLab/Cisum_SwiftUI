@@ -393,7 +393,7 @@ extension AudioDBView {
 
         do {
             let copiedURLs = try await copyFiles(importableURLs, to: storageRoot)
-            guard let repo = dependencies.audioRepo() else {
+            guard let repo = await dependencies.audioRepo() else {
                 Self.cleanUpCopiedFiles(copiedURLs)
                 alert_error(String(localized: "Import failed: audio repository is unavailable", bundle: .module))
                 return

@@ -320,36 +320,38 @@ extension AudioList {
         let generation = loadGeneration
         isLoading = true
 
-        guard let repo = dependencies.audioRepo() else {
-            isLoading = false
-            alert_error(String(localized: "Load failed: audio repository is unavailable", bundle: .module))
-            return
-        }
-
-        Task.detached(priority: .background) {
-            let count = await repo.getTotalCount()
-            let urls = await repo.get(
-                offset: 0,
-                limit: self.pageSize,
-                reason: self.className
-            )
-
-            if Self.verbose {
-                os_log("\(self.t)✅ Loaded initial data: \(urls.count) rows, total: \(count)")
+        Task { @MainActor in
+            guard let repo = await dependencies.audioRepo() else {
+                isLoading = false
+                alert_error(String(localized: "Load failed: audio repository is unavailable", bundle: .module))
+                return
             }
 
-            await MainActor.run {
-                guard !AudioListLoadPolicy.shouldKeepLoadingStateWhenDiscardingStaleResult(
-                    currentGeneration: self.loadGeneration,
-                    resultGeneration: generation
-                ) else {
-                    return
+            Task.detached(priority: .background) {
+                let count = await repo.getTotalCount()
+                let urls = await repo.get(
+                    offset: 0,
+                    limit: self.pageSize,
+                    reason: self.className
+                )
+
+                if Self.verbose {
+                    os_log("\(self.t)✅ Loaded initial data: \(urls.count) rows, total: \(count)")
                 }
-                self.urls = urls
-                self.totalCount = count
-                self.currentPage = 1
-                self.hasMore = urls.count == self.pageSize
-                self.isLoading = false
+
+                await MainActor.run {
+                    guard !AudioListLoadPolicy.shouldKeepLoadingStateWhenDiscardingStaleResult(
+                        currentGeneration: self.loadGeneration,
+                        resultGeneration: generation
+                    ) else {
+                        return
+                    }
+                    self.urls = urls
+                    self.totalCount = count
+                    self.currentPage = 1
+                    self.hasMore = urls.count == self.pageSize
+                    self.isLoading = false
+                }
             }
         }
     }
@@ -387,70 +389,72 @@ extension AudioList {
         isLoadingMore = true
         let generation = loadGeneration
 
-        guard let repo = dependencies.audioRepo() else {
-            isLoadingMore = false
-            alert_error(String(localized: "Load failed: audio repository is unavailable", bundle: .module))
-            return
-        }
-
-        Task.detached(priority: .background) {
-            let pageSize = await self.pageSize
-            let currentPage = await self.currentPage
-            let existingUrls = await self.urls
-            let offset = AudioListLoadPolicy.nextLoadOffset(
-                loadedCount: existingUrls.count,
-                currentPage: currentPage,
-                pageSize: pageSize
-            )
-
-            if Self.verbose {
-                os_log("\(self.t)🔄 LoadMore - offset: \(offset), limit: \(pageSize)")
+        Task { @MainActor in
+            guard let repo = await dependencies.audioRepo() else {
+                isLoadingMore = false
+                alert_error(String(localized: "Load failed: audio repository is unavailable", bundle: .module))
+                return
             }
 
-            let newUrls = await repo.get(
-                offset: offset,
-                limit: pageSize,
-                reason: self.className
-            )
-
-            if Self.verbose {
-                os_log("\(self.t)🔄 LoadMore - fetched: \(newUrls.count) urls")
-            }
-
-            let uniqueNewUrls = AudioListLoadPolicy.uniqueAdditionalURLs(
-                existingURLs: existingUrls,
-                newURLs: newUrls
-            )
-
-            if Self.verbose {
-                os_log("\(self.t)🔄 LoadMore - fetched: \(newUrls.count), unique: \(uniqueNewUrls.count)")
-            }
-
-            await MainActor.run {
-                guard !AudioListLoadPolicy.shouldKeepLoadingStateWhenDiscardingStaleResult(
-                    currentGeneration: self.loadGeneration,
-                    resultGeneration: generation
-                ) else {
-                    return
-                }
-                if !uniqueNewUrls.isEmpty {
-                    self.urls.append(contentsOf: uniqueNewUrls)
-                    self.hasMore = AudioListLoadPolicy.hasMoreAfterLoading(
-                        fetchedCount: newUrls.count,
-                        pageSize: self.pageSize
-                    )
-                } else {
-                    self.hasMore = AudioListLoadPolicy.hasMoreAfterLoading(
-                        fetchedCount: newUrls.count,
-                        pageSize: self.pageSize
-                    )
-                }
-                self.currentPage = AudioListLoadPolicy.pageAfterLoading(
-                    currentPage: self.currentPage,
-                    fetchedCount: newUrls.count
+            Task.detached(priority: .background) {
+                let pageSize = await self.pageSize
+                let currentPage = await self.currentPage
+                let existingUrls = await self.urls
+                let offset = AudioListLoadPolicy.nextLoadOffset(
+                    loadedCount: existingUrls.count,
+                    currentPage: currentPage,
+                    pageSize: pageSize
                 )
 
-                self.isLoadingMore = false
+                if Self.verbose {
+                    os_log("\(self.t)🔄 LoadMore - offset: \(offset), limit: \(pageSize)")
+                }
+
+                let newUrls = await repo.get(
+                    offset: offset,
+                    limit: pageSize,
+                    reason: self.className
+                )
+
+                if Self.verbose {
+                    os_log("\(self.t)🔄 LoadMore - fetched: \(newUrls.count) urls")
+                }
+
+                let uniqueNewUrls = AudioListLoadPolicy.uniqueAdditionalURLs(
+                    existingURLs: existingUrls,
+                    newURLs: newUrls
+                )
+
+                if Self.verbose {
+                    os_log("\(self.t)🔄 LoadMore - fetched: \(newUrls.count), unique: \(uniqueNewUrls.count)")
+                }
+
+                await MainActor.run {
+                    guard !AudioListLoadPolicy.shouldKeepLoadingStateWhenDiscardingStaleResult(
+                        currentGeneration: self.loadGeneration,
+                        resultGeneration: generation
+                    ) else {
+                        return
+                    }
+                    if !uniqueNewUrls.isEmpty {
+                        self.urls.append(contentsOf: uniqueNewUrls)
+                        self.hasMore = AudioListLoadPolicy.hasMoreAfterLoading(
+                            fetchedCount: newUrls.count,
+                            pageSize: self.pageSize
+                        )
+                    } else {
+                        self.hasMore = AudioListLoadPolicy.hasMoreAfterLoading(
+                            fetchedCount: newUrls.count,
+                            pageSize: self.pageSize
+                        )
+                    }
+                    self.currentPage = AudioListLoadPolicy.pageAfterLoading(
+                        currentPage: self.currentPage,
+                        fetchedCount: newUrls.count
+                    )
+
+                    self.isLoadingMore = false
+                }
             }
         }
     }
@@ -508,11 +512,6 @@ extension AudioList {
 
     /// Loads the current page data to refresh already loaded content.
     private func loadCurrentPageData(reason: String) {
-        guard let repo = dependencies.audioRepo() else {
-            alert_error(String(localized: "Refresh failed: audio repository is unavailable", bundle: .module))
-            return
-        }
-
         AudioItemFileSizeCache.removeAll()
 
         loadGeneration += 1
@@ -521,10 +520,16 @@ extension AudioList {
         isLoading = loadingState.isLoading
         isLoadingMore = loadingState.isLoadingMore
 
-        Task.detached(priority: .background) {
-            if Self.verbose {
-                os_log("\(self.t)🔄 Reloading current page data - \(reason)")
+        Task { @MainActor in
+            guard let repo = await dependencies.audioRepo() else {
+                alert_error(String(localized: "Refresh failed: audio repository is unavailable", bundle: .module))
+                return
             }
+
+            Task.detached(priority: .background) {
+                if Self.verbose {
+                    os_log("\(self.t)🔄 Reloading current page data - \(reason)")
+                }
 
             // Get the current state.
             let currentCount = await self.urls.count
@@ -537,7 +542,7 @@ extension AudioList {
                 os_log("\(self.t)📊 Count changed: \(currentTotalCount) → \(newTotalCount), currently loaded: \(currentCount)")
             }
 
-            await MainActor.run {
+                await MainActor.run {
                 guard AudioListLoadPolicy.shouldApplyResult(
                     currentGeneration: self.loadGeneration,
                     resultGeneration: generation
@@ -588,6 +593,7 @@ extension AudioList {
                     self.totalCount = newTotalCount
                     self.isLoading = false
                     self.isLoadingMore = false
+                }
                 }
             }
         }
@@ -740,7 +746,7 @@ extension AudioList {
         }
 
         Task {
-            guard let repo = dependencies.audioRepo() else {
+            guard let repo = await dependencies.audioRepo() else {
                 alert_error(String(localized: "Delete failed: audio repository is unavailable", bundle: .module))
                 return
             }
