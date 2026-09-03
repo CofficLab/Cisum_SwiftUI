@@ -27,9 +27,10 @@ let package = Package(
                 .product(name: "CisumKernel", package: "CisumKernel"),
                 .product(name: "ProviderScene", package: "ProviderScene"),
             ],
-            path: "Sources",
+            path: ".",
+            sources: ["Sources"],
             resources: [
-                .process("Localizable.xcstrings")
+                .process("Resources/Localizable.xcstrings")
             ]
         ),
         .testTarget(
