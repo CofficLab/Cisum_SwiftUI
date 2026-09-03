@@ -19,6 +19,7 @@ public final class CloudService: ObservableObject, CloudProviding {
     }
 
     private var observer: NSObjectProtocol?
+    private let eventObservers = KernelEventObserverStore<CloudProvidingEvent>()
 
     public init() {
         refresh()
@@ -39,5 +40,13 @@ public final class CloudService: ObservableObject, CloudProviding {
         let available = MagicApp.isICloudAvailable()
         isICloudAvailable = available
         isSignedIn = available
+        eventObservers.send(.availabilityChanged(isICloudAvailable: available, isSignedIn: isSignedIn))
+    }
+
+    @discardableResult
+    public func addObserver(
+        _ callback: @escaping (CloudProvidingEvent) -> Void
+    ) -> any CloudProvidingObserverHandle {
+        eventObservers.add(callback)
     }
 }

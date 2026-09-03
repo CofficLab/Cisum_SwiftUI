@@ -309,7 +309,7 @@ public struct WindowMain: View {
         }
         .appThemedAppearance()
 #if os(macOS)
-        .overlay { ThemeWindowAppearanceBridge() }
+        .overlay { ThemeWindowAppearanceBridge().allowsHitTesting(false) }
 #endif
         .task {
             await initializeKernel()
@@ -358,7 +358,7 @@ struct KernelRootView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .appThemedAppearance()
 #if os(macOS)
-        .overlay { ThemeWindowAppearanceBridge() }
+        .overlay { ThemeWindowAppearanceBridge().allowsHitTesting(false) }
 #endif
         .task(id: contributionRevision) {
             assembledContent = FactoryCisum.assembleMainView(kernel: kernel)

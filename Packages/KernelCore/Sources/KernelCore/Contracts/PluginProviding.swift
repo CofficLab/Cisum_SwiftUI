@@ -2,6 +2,17 @@ import CisumUIComponents
 import Foundation
 import SwiftUI
 
+@MainActor
+public enum PluginProvidingEvent {
+    case pluginsChanged
+    case contributionsChanged
+}
+
+@MainActor
+public protocol PluginProvidingObserverHandle: AnyObject {
+    func cancel()
+}
+
 /// 插件管理服务能力协议。
 ///
 /// 提供插件的发现、生命周期管理以及 UI 贡献聚合。聚合规则继承自旧版
@@ -56,4 +67,20 @@ public protocol PluginProviding: AnyObject, ObservableObject {
 
     /// 失效所有缓存的聚合结果。
     func invalidateCaches()
+
+    @discardableResult
+    func addObserver(_ callback: @escaping (PluginProvidingEvent) -> Void) -> any PluginProvidingObserverHandle
+}
+
+public extension PluginProviding {
+    @discardableResult
+    func addObserver(_ callback: @escaping (PluginProvidingEvent) -> Void) -> any PluginProvidingObserverHandle {
+        NoopPluginProvidingObserverHandle()
+    }
+}
+
+@MainActor
+public final class NoopPluginProvidingObserverHandle: PluginProvidingObserverHandle {
+    public init() {}
+    public func cancel() {}
 }

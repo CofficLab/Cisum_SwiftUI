@@ -17,6 +17,8 @@ public final class BasicAppStateService: ObservableObject, AppStateProviding {
     @Published public private(set) var isDropping = false
     @Published public private(set) var stateMessage = ""
 
+    private let observers = KernelEventObserverStore<AppStateProvidingEvent>()
+
     public var hasDragOperation: Bool { isDropping }
 
     public init() {
@@ -24,11 +26,15 @@ public final class BasicAppStateService: ObservableObject, AppStateProviding {
     }
 
     public func enterDemoMode() {
+        guard !isDemoMode else { return }
         isDemoMode = true
+        observers.send(.demoModeChanged(true))
     }
 
     public func exitDemoMode() {
+        guard isDemoMode else { return }
         isDemoMode = false
+        observers.send(.demoModeChanged(false))
     }
 
     public func showDBView() {
@@ -48,11 +54,15 @@ public final class BasicAppStateService: ObservableObject, AppStateProviding {
     }
 
     public func setImporting(_ importing: Bool) {
+        guard isImporting != importing else { return }
         isImporting = importing
+        observers.send(.importingChanged(importing))
     }
 
     public func setDragOperation(_ active: Bool) {
+        guard isDropping != active else { return }
         isDropping = active
+        observers.send(.droppingChanged(active))
     }
 
     public func appendStateMessage(_ message: String) {
@@ -61,15 +71,26 @@ public final class BasicAppStateService: ObservableObject, AppStateProviding {
         } else {
             stateMessage += "\n" + message
         }
+        observers.send(.stateMessageChanged(stateMessage))
     }
 
     public func clearStateMessages() {
+        guard !stateMessage.isEmpty else { return }
         stateMessage = ""
+        observers.send(.stateMessageChanged(stateMessage))
     }
 
     private func setDBView(_ visible: Bool) {
         guard isDBViewVisible != visible else { return }
         isDBViewVisible = visible
         UserDefaults.standard.set(visible, forKey: Self.showDBKey)
+        observers.send(.dbViewVisibilityChanged(visible))
+    }
+
+    @discardableResult
+    public func addObserver(
+        _ callback: @escaping (AppStateProvidingEvent) -> Void
+    ) -> any AppStateProvidingObserverHandle {
+        observers.add(callback)
     }
 }

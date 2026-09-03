@@ -1,5 +1,5 @@
 import Testing
-@testable import StoragePlugin
+@testable import PluginStorage
 import Foundation
 
 @Test func storagePluginInfoIsExposed() {

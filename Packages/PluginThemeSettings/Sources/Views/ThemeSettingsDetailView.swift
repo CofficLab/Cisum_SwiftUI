@@ -1,4 +1,5 @@
 import CisumUIComponents
+import ProviderTheme
 import SwiftUI
 
 /// 外观设置详情页（对齐 Lumi `ThemeSettingsDetailView` 双栏版式）。
@@ -12,13 +13,18 @@ import SwiftUI
 /// `AppSearchBar` / `AppEmptyState` / `AppButton` / `AppTag` / `AppDivider`），
 /// 与 Lumi 自身实现一致，无需新增组件。
 struct ThemeSettingsDetailView: View {
-    @Environment(\.pluginThemes) private var themes
-    @Environment(\.currentPluginThemeId) private var currentThemeId
-    @Environment(\.selectPluginThemeAction) private var selectTheme
+    @StateObject private var viewModel: ThemeSettingsViewModel
 
     @State private var selectedID: String?
     @State private var searchText = ""
     @State private var appearanceFilter: ThemeAppearanceFilter = .all
+
+    init(theme: (any ThemeProviding)?) {
+        _viewModel = StateObject(wrappedValue: ThemeSettingsViewModel(theme: theme))
+    }
+
+    private var themes: [LumiUIThemeContribution] { viewModel.themes }
+    private var currentThemeId: String { viewModel.currentThemeID }
 
     private var filteredThemes: [LumiUIThemeContribution] {
         let keyword = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -152,7 +158,7 @@ struct ThemeSettingsDetailView: View {
             ThemePreviewPane(
                 item: selectedTheme,
                 isActive: currentThemeId == selectedTheme.id,
-                onApply: { selectTheme(selectedTheme.id) }
+                onApply: { viewModel.selectTheme(selectedTheme.id) }
             )
         } else {
             AppEmptyState(icon: "paintpalette", title: "选择一个主题")

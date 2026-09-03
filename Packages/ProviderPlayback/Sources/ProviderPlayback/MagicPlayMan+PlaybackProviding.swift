@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import MagicPlayMan
 
@@ -38,4 +39,61 @@ extension MagicPlayMan: PlaybackProviding {
     public func setPlayMode(_ mode: MagicPlayMode) {
         changePlayMode(mode)
     }
+
+    @discardableResult
+    public func addObserver(
+        _ callback: @escaping (PlaybackProvidingEvent) -> Void
+    ) -> any PlaybackProvidingObserverHandle {
+        PlaybackObserver(player: self, callback: callback)
+    }
+}
+
+@MainActor
+private final class PlaybackObserver: PlaybackProvidingObserverHandle {
+    private var cancellables: Set<AnyCancellable> = []
+    private var cancelled = false
+
+    init(player: MagicPlayMan, callback: @escaping (PlaybackProvidingEvent) -> Void) {
+        let center = NotificationCenter.default
+
+        center.publisher(for: .playManStateChanged, object: player)
+            .sink { [weak player] _ in
+                guard let player else { return }
+                callback(.stateChanged(player.state))
+            }
+            .store(in: &cancellables)
+
+        center.publisher(for: .playManAssetChanged, object: player)
+            .sink { notification in
+                callback(.assetChanged(notification.userInfo?["asset"] as? URL))
+            }
+            .store(in: &cancellables)
+
+        center.publisher(for: .playManTimeUpdate, object: player)
+            .compactMap { notification -> (TimeInterval, Double)? in
+                guard let currentTime = notification.userInfo?["currentTime"] as? TimeInterval,
+                      let progress = notification.userInfo?["progress"] as? Double else {
+                    return nil
+                }
+                return (currentTime, progress)
+            }
+            .sink { currentTime, progress in
+                callback(.timeChanged(currentTime: currentTime, progress: progress))
+            }
+            .store(in: &cancellables)
+
+        center.publisher(for: .playManDurationChanged, object: player)
+            .sink { notification in
+                guard let duration = notification.userInfo?["duration"] as? TimeInterval else { return }
+                callback(.durationChanged(duration))
+            }
+            .store(in: &cancellables)
+    }
+
+    func cancel() {
+        guard !cancelled else { return }
+        cancelled = true
+        cancellables.removeAll()
+    }
+
 }

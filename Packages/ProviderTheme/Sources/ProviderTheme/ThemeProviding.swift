@@ -2,6 +2,17 @@ import CisumUIComponents
 import Foundation
 import SwiftUI
 
+@MainActor
+public enum ThemeProvidingEvent {
+    case themesChanged([LumiUIThemeContribution])
+    case selectionChanged(String)
+}
+
+@MainActor
+public protocol ThemeProvidingObserverHandle: AnyObject {
+    func cancel()
+}
+
 /// 主题服务能力协议。
 ///
 /// 吸收旧版 `ThemeVM` + `ThemeService` + `LumiUIThemeRegistry` 的编排职责：
@@ -37,4 +48,20 @@ public protocol ThemeProviding: AnyObject, ObservableObject {
 
     /// 将主题状态同步到 CisumUI 主题注册中心（`LumiUIThemeRegistry`）。
     func syncToCisumUI()
+
+    @discardableResult
+    func addObserver(_ callback: @escaping (ThemeProvidingEvent) -> Void) -> any ThemeProvidingObserverHandle
+}
+
+public extension ThemeProviding {
+    @discardableResult
+    func addObserver(_ callback: @escaping (ThemeProvidingEvent) -> Void) -> any ThemeProvidingObserverHandle {
+        NoopThemeProvidingObserverHandle()
+    }
+}
+
+@MainActor
+public final class NoopThemeProvidingObserverHandle: ThemeProvidingObserverHandle {
+    public init() {}
+    public func cancel() {}
 }

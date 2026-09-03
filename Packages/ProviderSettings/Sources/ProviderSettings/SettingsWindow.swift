@@ -23,9 +23,7 @@ public struct SettingsWindow: View {
     @State private var selection: String
     @LumiTheme private var appTheme
 
-    /// 插件启停变化版本号：收到 `.cisumEnabledPluginsDidChange` 时 +1，强制重建
-    /// 设置项列表（禁用某插件后其贡献的入口会消失）。
-    @State private var revision = 0
+    @StateObject private var viewModel: SettingsWindowViewModel
 
     private let settings: (any PluginProviding)?
     private let appState: (any AppStateProviding)?
@@ -44,11 +42,12 @@ public struct SettingsWindow: View {
         self.theme = theme
         self.scene = scene
         self.storage = storage
+        self._viewModel = StateObject(wrappedValue: SettingsWindowViewModel(settings: settings))
         self._selection = State(initialValue: "")
     }
 
     public var body: some View {
-        let navItems = settings?.getSettingNavigationItems() ?? []
+        let navItems = viewModel.navigationItems
         // 未选中时默认展示首个入口。
         let currentSelection = selection.isEmpty ? (navItems.first?.id ?? "") : selection
 
@@ -67,11 +66,6 @@ public struct SettingsWindow: View {
                 )
             }
         }
-        // 插件启停变化时重建设置入口列表。
-        .id(revision)
-        .onReceive(NotificationCenter.default.publisher(for: .cisumEnabledPluginsDidChange)) { _ in
-            revision += 1
-        }
         .modifier(KernelEnvironmentModifier(
             settings: settings,
             appState: appState,
@@ -81,7 +75,7 @@ public struct SettingsWindow: View {
         ))
         .appThemedAppearance()
 #if os(macOS)
-        .overlay { ThemeWindowAppearanceBridge() }
+        .overlay { ThemeWindowAppearanceBridge().allowsHitTesting(false) }
 #endif
     }
 

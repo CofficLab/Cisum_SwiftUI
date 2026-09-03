@@ -1,17 +1,20 @@
 import CisumUIComponents
 import OSLog
+import ProviderStorage
 import SwiftUI
 
 public struct StorageSettingView: View, SuperLog {
     public nonisolated static let emoji: String = "🍴"
 
     @Environment(\.pluginStorageDependencies) private var dependencies
+    @StateObject private var viewModel: StorageSettingsViewModel
     @State private var showMigrationProgress = false
     @State private var targetLocation: StoragePluginLocation
     @State private var hasChanges = false
     @State private var location: StoragePluginLocation?
 
-    public init() {
+    public init(storage: (any StorageProviding)? = nil) {
+        _viewModel = StateObject(wrappedValue: StorageSettingsViewModel(storage: storage))
         _targetLocation = State(initialValue: .local)
     }
 
@@ -20,43 +23,43 @@ public struct StorageSettingView: View, SuperLog {
             VStack(spacing: 0) {
                 AppSettingRow(
                     title: String(localized: "iCloud Drive", bundle: .module),
-                    description: isICloudAvailable
+                    description: viewModel.isICloudAvailable
                         ? String(localized: "Store media files in iCloud Drive", bundle: .module)
                         : String(localized: "iCloud Drive is unavailable", bundle: .module),
                     icon: .cisumIconCloud,
-                    action: isICloudAvailable ? {
+                    action: viewModel.isICloudAvailable ? {
                         beginMigration(to: .icloud)
                     } : nil
                 ) {
                     if location == .icloud {
                         Image(systemName: .cisumIconCheckmarkSimple)
                             .foregroundColor(.accentColor)
-                    } else if !isICloudAvailable {
+                    } else if !viewModel.isICloudAvailable {
                         Text("Unavailable", bundle: .module)
                             .font(.footnote)
                     }
                 }
-                .opacity(isICloudAvailable ? 1 : 0.5)
+                .opacity(viewModel.isICloudAvailable ? 1 : 0.5)
 
                 AppSettingRow(
                     title: String(localized: "Local", bundle: .module),
-                    description: isLocalStorageAvailable
+                    description: viewModel.isLocalStorageAvailable
                         ? String(localized: "Store within app, data will be lost if app is deleted", bundle: .module)
                         : String(localized: "Local storage is unavailable", bundle: .module),
                     icon: .cisumIconFolder,
-                    action: isLocalStorageAvailable ? {
+                    action: viewModel.isLocalStorageAvailable ? {
                         beginMigration(to: .local)
                     } : nil
                 ) {
                     if location == .local {
                         Image(systemName: .cisumIconCheckmarkSimple)
                             .foregroundColor(.accentColor)
-                    } else if !isLocalStorageAvailable {
+                    } else if !viewModel.isLocalStorageAvailable {
                         Text("Unavailable", bundle: .module)
                             .font(.footnote)
                     }
                 }
-                .opacity(isLocalStorageAvailable ? 1 : 0.5)
+                .opacity(viewModel.isLocalStorageAvailable ? 1 : 0.5)
             }
         }
         .sheet(isPresented: $showMigrationProgress) {
@@ -72,7 +75,7 @@ public struct StorageSettingView: View, SuperLog {
             )
         }
         .onAppear {
-            applyStorageLocationUpdate(dependencies.getStorageLocation())
+            applyStorageLocationUpdate(viewModel.location)
         }
         .onChange(of: targetLocation) {
             hasChanges = Self.hasSelectionChanges(
@@ -80,8 +83,11 @@ public struct StorageSettingView: View, SuperLog {
                 storageLocation: dependencies.getStorageLocation()
             )
         }
+        .onChange(of: viewModel.location) { _, newLocation in
+            applyStorageLocationUpdate(newLocation)
+        }
         .onStoragePluginLocationChanged {
-            applyStorageLocationUpdate(dependencies.getStorageLocation())
+            applyStorageLocationUpdate(viewModel.location)
         }
     }
 

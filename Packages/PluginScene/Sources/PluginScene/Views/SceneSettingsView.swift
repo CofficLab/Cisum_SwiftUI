@@ -5,10 +5,10 @@ import SwiftUI
 /// 场景设置页：展示当前场景，并通过 `SceneProviding` 切换场景。
 struct SceneSettingsView: View {
     @Environment(\.sceneProviding) private var scene
-    @StateObject private var model: SceneSettingsModel
+    @StateObject private var model: SceneSettingsViewModel
 
     init() {
-        _model = StateObject(wrappedValue: SceneSettingsModel(scene: nil))
+        _model = StateObject(wrappedValue: SceneSettingsViewModel(scene: nil))
     }
 
     var body: some View {
@@ -82,66 +82,5 @@ struct SceneSettingsView: View {
         .onDisappear {
             model.detach()
         }
-    }
-}
-
-@MainActor
-private final class SceneSettingsModel: ObservableObject {
-    @Published private(set) var sceneNames: [String] = []
-    @Published private(set) var currentSceneName: String?
-    @Published private(set) var errorMessage: String?
-
-    private weak var scene: (any SceneProviding)?
-    private var observer: (any SceneProvidingObserverHandle)?
-
-    init(scene: (any SceneProviding)?) {
-        self.scene = scene
-        refresh()
-    }
-
-    var currentSceneIconName: String {
-        guard let currentSceneName else { return "rectangle.3.group" }
-        return iconName(for: currentSceneName)
-    }
-
-    func attach(to scene: (any SceneProviding)?) {
-        guard observer == nil else {
-            refresh()
-            return
-        }
-
-        detach()
-        self.scene = scene
-        refresh()
-
-        guard let scene else { return }
-        observer = scene.addObserver { [weak self] _ in
-            self?.refresh()
-        }
-    }
-
-    func detach() {
-        observer?.cancel()
-        observer = nil
-    }
-
-    func select(_ sceneName: String) {
-        guard let scene else { return }
-        errorMessage = nil
-        do {
-            try scene.setCurrentScene(sceneName)
-            refresh()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    func iconName(for sceneName: String) -> String {
-        scene?.plugin(for: sceneName)?.iconName ?? "rectangle.3.group"
-    }
-
-    private func refresh() {
-        sceneNames = scene?.sceneNames ?? []
-        currentSceneName = scene?.currentSceneName
     }
 }

@@ -1,6 +1,12 @@
 import CisumUIComponents
 import KernelCore
+import ProviderTheme
 import SwiftUI
+
+@MainActor
+enum ThemeSettingsPluginEvent {
+    case providerChanged(ThemeProvidingEvent)
+}
 
 /// 主题设置插件（对齐 Lumi `ThemePackPlugin` 的设置入口范式）。
 ///
@@ -18,6 +24,18 @@ public actor ThemeSettingsPlugin: SuperPlugin {
         order: ThemeSettingsPluginInfo.order
     )
 
+    nonisolated(unsafe) private let themeBox = ThemeBox()
+
+    @MainActor
+    public func onBoot(kernel: CisumKernel) async throws {
+        themeBox.theme = kernel.theme
+    }
+
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        themeBox.theme = nil
+    }
+
     @MainActor
     public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
         PluginSettingNavigationItem(
@@ -26,7 +44,11 @@ public actor ThemeSettingsPlugin: SuperPlugin {
             description: Self.metadata.description,
             iconName: "paintpalette",
             order: 2,
-            destination: AnyView(ThemeSettingsDetailView())
+            destination: AnyView(ThemeSettingsDetailView(theme: themeBox.theme))
         )
+    }
+
+    private final class ThemeBox {
+        weak var theme: (any ThemeProviding)?
     }
 }

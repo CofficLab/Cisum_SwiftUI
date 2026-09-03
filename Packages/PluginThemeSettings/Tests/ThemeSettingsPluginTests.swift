@@ -1,4 +1,4 @@
-import ThemeSettingsPlugin
+import PluginThemeSettings
 import Testing
 
 @Test func pluginInfoExportsRegistrationMetadata() {

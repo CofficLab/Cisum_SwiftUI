@@ -1,5 +1,16 @@
 import Foundation
 
+@MainActor
+public enum StorageProvidingEvent {
+    case locationChanged(StorageLocation?)
+    case storageAvailabilityChanged
+}
+
+@MainActor
+public protocol StorageProvidingObserverHandle: AnyObject {
+    func cancel()
+}
+
 /// 存储服务能力协议。
 ///
 /// 统一管理应用的持久化存储位置（iCloud / 本地 / 自定义），吸收了旧版
@@ -46,4 +57,20 @@ public protocol StorageProviding: AnyObject, ObservableObject {
 
     /// 清除存储位置配置并广播重置事件。
     func resetStorageLocation()
+
+    @discardableResult
+    func addObserver(_ callback: @escaping (StorageProvidingEvent) -> Void) -> any StorageProvidingObserverHandle
+}
+
+public extension StorageProviding {
+    @discardableResult
+    func addObserver(_ callback: @escaping (StorageProvidingEvent) -> Void) -> any StorageProvidingObserverHandle {
+        NoopStorageProvidingObserverHandle()
+    }
+}
+
+@MainActor
+public final class NoopStorageProvidingObserverHandle: StorageProvidingObserverHandle {
+    public init() {}
+    public func cancel() {}
 }

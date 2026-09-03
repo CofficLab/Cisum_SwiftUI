@@ -1,6 +1,16 @@
 import Foundation
 import SwiftUI
 
+@MainActor
+public enum DeviceProvidingEvent {
+    case deviceChanged
+}
+
+@MainActor
+public protocol DeviceProvidingObserverHandle: AnyObject {
+    func cancel()
+}
+
 /// 设备数据服务能力协议。
 ///
 /// 提供当前设备信息和平台适配数据。
@@ -12,7 +22,7 @@ import SwiftUI
 /// let isPad = kernel.device?.isPad ?? false
 /// ```
 @MainActor
-public protocol DeviceProviding: AnyObject {
+public protocol DeviceProviding: AnyObject, ObservableObject {
     /// 当前是否为 macOS。
     var isMac: Bool { get }
 
@@ -33,4 +43,20 @@ public protocol DeviceProviding: AnyObject {
 
     /// 可用屏幕高度。
     var screenHeight: CGFloat { get }
+
+    @discardableResult
+    func addObserver(_ callback: @escaping (DeviceProvidingEvent) -> Void) -> any DeviceProvidingObserverHandle
+}
+
+public extension DeviceProviding {
+    @discardableResult
+    func addObserver(_ callback: @escaping (DeviceProvidingEvent) -> Void) -> any DeviceProvidingObserverHandle {
+        NoopDeviceProvidingObserverHandle()
+    }
+}
+
+@MainActor
+public final class NoopDeviceProvidingObserverHandle: DeviceProvidingObserverHandle {
+    public init() {}
+    public func cancel() {}
 }

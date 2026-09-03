@@ -18,6 +18,7 @@ public final class ThemeService: ObservableObject, ThemeProviding {
 
     @Published public private(set) var allThemeContributions: [LumiUIThemeContribution] = []
     @Published public private(set) var selectedThemeID: String = ""
+    private let observers = KernelEventObserverStore<ThemeProvidingEvent>()
 
     public init(
         registry: LumiUIThemeRegistry = .shared,
@@ -50,6 +51,9 @@ public final class ThemeService: ObservableObject, ThemeProviding {
         } else {
             selectedThemeID = contributions.first?.id ?? ""
         }
+
+        observers.send(.themesChanged(contributions))
+        observers.send(.selectionChanged(selectedThemeID))
     }
 
     public func selectTheme(_ themeID: String) {
@@ -58,6 +62,7 @@ public final class ThemeService: ObservableObject, ThemeProviding {
         selectedThemeID = themeID
         UserDefaults.standard.set(themeID, forKey: Self.selectedThemeKey)
         syncToCisumUI()
+        observers.send(.selectionChanged(themeID))
         NotificationCenter.default.post(name: .cisumThemeDidChange, object: nil)
     }
 
@@ -70,5 +75,12 @@ public final class ThemeService: ObservableObject, ThemeProviding {
         } catch {
             // 忽略主题注册错误（无主题/重复 id 等），保持降级运行。
         }
+    }
+
+    @discardableResult
+    public func addObserver(
+        _ callback: @escaping (ThemeProvidingEvent) -> Void
+    ) -> any ThemeProvidingObserverHandle {
+        observers.add(callback)
     }
 }

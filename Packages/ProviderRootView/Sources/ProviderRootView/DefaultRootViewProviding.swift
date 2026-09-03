@@ -10,6 +10,7 @@ public final class DefaultRootViewProviding: RootViewProviding, ObservableObject
     @Published private(set) public var contentView: AnyView?
     @Published private(set) public var statusView: AnyView?
     @Published private(set) public var toolbarContent: AnyView?
+    private let eventObservers = KernelEventObserverStore<RootViewProvidingEvent>()
 
     private let kernel: CisumKernel
 
@@ -19,24 +20,37 @@ public final class DefaultRootViewProviding: RootViewProviding, ObservableObject
 
     public func setControlView(_ view: AnyView?) {
         controlView = view
+        eventObservers.send(.controlViewChanged)
     }
 
     public func setContentView(_ view: AnyView?) {
         contentView = view
+        eventObservers.send(.contentViewChanged)
     }
 
     public func setStatusView(_ view: AnyView?) {
         statusView = view
+        eventObservers.send(.statusViewChanged)
     }
 
     public func setToolbarContent(_ view: AnyView?) {
         toolbarContent = view
+        eventObservers.send(.toolbarContentChanged)
+    }
+
+    @discardableResult
+    public func addObserver(
+        _ callback: @escaping (RootViewProvidingEvent) -> Void
+    ) -> any RootViewProvidingObserverHandle {
+        eventObservers.add(callback)
     }
 
     public func makeRootView() -> AnyView {
         AnyView(RootLayoutView(provider: self, kernel: kernel))
     }
 }
+
+extension KernelEventObserverHandle: RootViewProvidingObserverHandle {}
 
 /// 根布局视图（迁移自 FactoryCisum `AppLayoutView`）。
 ///

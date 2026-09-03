@@ -8,6 +8,7 @@ import SwiftUI
 @MainActor
 public final class DefaultToolbarProviding: ToolbarProviding, ObservableObject {
     private let kernel: CisumKernel
+    private let eventObservers = KernelEventObserverStore<ToolbarProvidingEvent>()
 
     public init(kernel: CisumKernel) {
         self.kernel = kernel
@@ -16,4 +17,13 @@ public final class DefaultToolbarProviding: ToolbarProviding, ObservableObject {
     public func makeToolbarView() -> AnyView {
         AnyView(SceneSwitcher(kernel: kernel))
     }
+
+    @discardableResult
+    public func addObserver(
+        _ callback: @escaping (ToolbarProvidingEvent) -> Void
+    ) -> any ToolbarProvidingObserverHandle {
+        eventObservers.add(callback)
+    }
 }
+
+extension KernelEventObserverHandle: ToolbarProvidingObserverHandle {}

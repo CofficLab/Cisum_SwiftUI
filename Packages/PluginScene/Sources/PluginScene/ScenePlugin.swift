@@ -4,6 +4,11 @@ import Foundation
 import ProviderScene
 import SwiftUI
 
+@MainActor
+enum ScenePluginEvent {
+    case providerChanged(SceneProvidingEvent)
+}
+
 /// 场景 Provider 插件。
 ///
 /// 场景列表来自已启用插件的 `addSceneItem()` 贡献；当前场景保存到应用支持

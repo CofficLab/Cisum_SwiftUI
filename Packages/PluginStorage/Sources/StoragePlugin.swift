@@ -1,7 +1,13 @@
 import KernelCore
 import CisumUIComponents
 import OSLog
+import ProviderStorage
 import SwiftUI
+
+@MainActor
+enum StoragePluginEvent {
+    case providerChanged(StorageProvidingEvent)
+}
 
 public actor StoragePlugin: SuperPlugin, SuperLog {
     public static let shared = StoragePlugin()
@@ -36,7 +42,7 @@ public actor StoragePlugin: SuperPlugin, SuperLog {
             iconName: StoragePluginInfo.iconName,
             order: 10,
             destination: AnyView(
-                StorageSettingView()
+                StorageSettingView(storage: StorageService.current)
                     .pluginStorageDependencies(StorageService.makePluginDependencies())
             )
         )

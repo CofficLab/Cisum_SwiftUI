@@ -13,7 +13,7 @@ import ProviderDevice
 ///
 /// 包装 `MagicApp` 的设备/平台信息，并提供屏幕尺寸（macOS 取主屏幕，iOS 取主 UIScreen）。
 @MainActor
-public final class DeviceService: DeviceProviding {
+public final class DeviceService: ObservableObject, DeviceProviding {
     public var isMac: Bool { MagicApp.isDesktop }
     public var isIOS: Bool { MagicApp.isiOS }
 

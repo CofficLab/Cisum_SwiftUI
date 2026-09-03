@@ -17,6 +17,7 @@ public final class StorageService: ObservableObject, StorageProviding {
 
     /// 缓存的数据库根目录（init 时尽力创建）。
     public let databaseRoot: URL
+    private let eventObservers = KernelEventObserverStore<StorageProvidingEvent>()
 
     public init() {
         #if DEBUG
@@ -63,12 +64,23 @@ public final class StorageService: ObservableObject, StorageProviding {
 
     public func setStorageLocation(_ location: StorageLocation?) {
         UserDefaults.standard.set(location?.rawValue, forKey: Self.storageLocationKey)
+        eventObservers.send(.locationChanged(location))
+        eventObservers.send(.storageAvailabilityChanged)
         NotificationCenter.default.post(name: .cisumStorageLocationDidChange, object: nil)
     }
 
     public func resetStorageLocation() {
         UserDefaults.standard.removeObject(forKey: Self.storageLocationKey)
+        eventObservers.send(.locationChanged(nil))
+        eventObservers.send(.storageAvailabilityChanged)
         NotificationCenter.default.post(name: .cisumStorageLocationDidReset, object: nil)
+    }
+
+    @discardableResult
+    public func addObserver(
+        _ callback: @escaping (StorageProvidingEvent) -> Void
+    ) -> any StorageProvidingObserverHandle {
+        eventObservers.add(callback)
     }
 
     // MARK: - Bridging（为旧版 `StorageDependencies` 视图提供兼容入口）

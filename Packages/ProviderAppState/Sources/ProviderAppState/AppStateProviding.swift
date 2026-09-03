@@ -1,5 +1,19 @@
 import Foundation
 
+@MainActor
+public enum AppStateProvidingEvent {
+    case demoModeChanged(Bool)
+    case dbViewVisibilityChanged(Bool)
+    case importingChanged(Bool)
+    case droppingChanged(Bool)
+    case stateMessageChanged(String)
+}
+
+@MainActor
+public protocol AppStateProvidingObserverHandle: AnyObject {
+    func cancel()
+}
+
 /// 应用状态服务能力协议。
 ///
 /// 提供应用级的 UI 状态管理，吸收了旧版 `AppVM`（Demo 模式、数据库视图、
@@ -61,4 +75,21 @@ public protocol AppStateProviding: AnyObject, ObservableObject {
 
     /// 清空状态消息。
     func clearStateMessages()
+
+    /// 注册应用状态观察者。
+    @discardableResult
+    func addObserver(_ callback: @escaping (AppStateProvidingEvent) -> Void) -> any AppStateProvidingObserverHandle
+}
+
+public extension AppStateProviding {
+    @discardableResult
+    func addObserver(_ callback: @escaping (AppStateProvidingEvent) -> Void) -> any AppStateProvidingObserverHandle {
+        NoopAppStateProvidingObserverHandle()
+    }
+}
+
+@MainActor
+public final class NoopAppStateProvidingObserverHandle: AppStateProvidingObserverHandle {
+    public init() {}
+    public func cancel() {}
 }

@@ -1,5 +1,15 @@
 import Foundation
 
+@MainActor
+public enum CloudProvidingEvent {
+    case availabilityChanged(isICloudAvailable: Bool, isSignedIn: Bool?)
+}
+
+@MainActor
+public protocol CloudProvidingObserverHandle: AnyObject {
+    func cancel()
+}
+
 /// 云同步服务能力协议。
 ///
 /// 包装 `MagicApp.isICloudAvailable()` 与系统 `CKAccountChanged` 通知，
@@ -15,4 +25,20 @@ public protocol CloudProviding: AnyObject, ObservableObject {
 
     /// 账户状态的可读描述。
     var accountStatusDescription: String { get }
+
+    @discardableResult
+    func addObserver(_ callback: @escaping (CloudProvidingEvent) -> Void) -> any CloudProvidingObserverHandle
+}
+
+public extension CloudProviding {
+    @discardableResult
+    func addObserver(_ callback: @escaping (CloudProvidingEvent) -> Void) -> any CloudProvidingObserverHandle {
+        NoopCloudProvidingObserverHandle()
+    }
+}
+
+@MainActor
+public final class NoopCloudProvidingObserverHandle: CloudProvidingObserverHandle {
+    public init() {}
+    public func cancel() {}
 }

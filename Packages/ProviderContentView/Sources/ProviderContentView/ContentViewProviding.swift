@@ -1,6 +1,16 @@
 import Combine
 import SwiftUI
 
+@MainActor
+public enum ContentViewProvidingEvent {
+    case tabsChanged(ids: [String])
+}
+
+@MainActor
+public protocol ContentViewProvidingObserverHandle: AnyObject {
+    func cancel()
+}
+
 /// 内容区 Tab 项。
 ///
 /// 对应 Cisum 内容区的一个可切换页签（由插件通过 `ContentViewProviding` 贡献）。
@@ -35,4 +45,20 @@ public protocol ContentViewProviding: AnyObject, ObservableObject {
 
     /// 返回当前主内容视图；未设置 Tab 时返回占位视图。
     func makeContentView() -> AnyView
+
+    @discardableResult
+    func addObserver(_ callback: @escaping (ContentViewProvidingEvent) -> Void) -> any ContentViewProvidingObserverHandle
+}
+
+public extension ContentViewProviding {
+    @discardableResult
+    func addObserver(_ callback: @escaping (ContentViewProvidingEvent) -> Void) -> any ContentViewProvidingObserverHandle {
+        NoopContentViewProvidingObserverHandle()
+    }
+}
+
+@MainActor
+public final class NoopContentViewProvidingObserverHandle: ContentViewProvidingObserverHandle {
+    public init() {}
+    public func cancel() {}
 }

@@ -1,6 +1,21 @@
 import Foundation
 import MagicPlayMan
 
+@MainActor
+public enum PlaybackProvidingEvent {
+    case stateChanged(PlaybackState)
+    case assetChanged(URL?)
+    case timeChanged(currentTime: TimeInterval, progress: Double)
+    case durationChanged(TimeInterval)
+    case playModeChanged(MagicPlayMode)
+    case likedAssetsChanged(Set<URL>)
+}
+
+@MainActor
+public protocol PlaybackProvidingObserverHandle: AnyObject {
+    func cancel()
+}
+
 /// 播放服务能力协议。
 ///
 /// 直接复用 `MagicPlayMan` 的真实类型（`PlaybackState` / `MagicPlayMode`），
@@ -70,4 +85,20 @@ public protocol PlaybackProviding: AnyObject, ObservableObject {
 
     /// 循环切换播放模式。
     func togglePlayMode()
+
+    @discardableResult
+    func addObserver(_ callback: @escaping (PlaybackProvidingEvent) -> Void) -> any PlaybackProvidingObserverHandle
+}
+
+public extension PlaybackProviding {
+    @discardableResult
+    func addObserver(_ callback: @escaping (PlaybackProvidingEvent) -> Void) -> any PlaybackProvidingObserverHandle {
+        NoopPlaybackProvidingObserverHandle()
+    }
+}
+
+@MainActor
+public final class NoopPlaybackProvidingObserverHandle: PlaybackProvidingObserverHandle {
+    public init() {}
+    public func cancel() {}
 }

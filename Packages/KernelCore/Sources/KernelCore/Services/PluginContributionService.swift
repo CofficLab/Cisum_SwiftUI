@@ -24,6 +24,7 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
     private var cachedSettingNavItems: [PluginSettingNavigationItem]?
     private var cachedToolBarButtons: [(id: String, view: AnyView)]?
     private var cachedThemeContributions: [LumiUIThemeContribution]?
+    private let observers = KernelEventObserverStore<PluginProvidingEvent>()
 
     public init(manager: BuiltinPluginManager) {
         self.manager = manager
@@ -136,5 +137,13 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
         cachedToolBarButtons = nil
         cachedThemeContributions = nil
         objectWillChange.send()
+        observers.send(.contributionsChanged)
+    }
+
+    @discardableResult
+    public func addObserver(
+        _ callback: @escaping (PluginProvidingEvent) -> Void
+    ) -> any PluginProvidingObserverHandle {
+        observers.add(callback)
     }
 }

@@ -1,6 +1,19 @@
 import Combine
 import SwiftUI
 
+@MainActor
+public enum RootViewProvidingEvent {
+    case controlViewChanged
+    case contentViewChanged
+    case statusViewChanged
+    case toolbarContentChanged
+}
+
+@MainActor
+public protocol RootViewProvidingObserverHandle: AnyObject {
+    func cancel()
+}
+
 /// 根视图提供能力协议（对齐 Lumi `ProviderRootView/RootViewProviding`）。
 ///
 /// 定义「内核 → 应用根布局视图」这一段的最小契约：宿主在启动时通过内核
@@ -35,6 +48,9 @@ public protocol RootViewProviding: AnyObject, ObservableObject {
 
     /// 返回根布局视图（控制区 + 内容区 + 状态区 + 工具栏）。
     func makeRootView() -> AnyView
+
+    @discardableResult
+    func addObserver(_ callback: @escaping (RootViewProvidingEvent) -> Void) -> any RootViewProvidingObserverHandle
 }
 
 public extension RootViewProviding {
@@ -42,4 +58,14 @@ public extension RootViewProviding {
     func setContentView(_ view: AnyView?) {}
     func setStatusView(_ view: AnyView?) {}
     func setToolbarContent(_ view: AnyView?) {}
+    @discardableResult
+    func addObserver(_ callback: @escaping (RootViewProvidingEvent) -> Void) -> any RootViewProvidingObserverHandle {
+        NoopRootViewProvidingObserverHandle()
+    }
+}
+
+@MainActor
+public final class NoopRootViewProvidingObserverHandle: RootViewProvidingObserverHandle {
+    public init() {}
+    public func cancel() {}
 }
