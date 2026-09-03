@@ -332,6 +332,8 @@ struct KernelRootView: View {
     @ObservedObject var kernel: CisumKernel
     /// 插件贡献版本号：插件启用/禁用变化时 +1，触发根视图重新组装。
     @State private var contributionRevision = 0
+    /// 已组装的根视图。组装会更新各个 ObservableObject Provider，不能在 body 求值期间执行。
+    @State private var assembledContent: AnyView?
 
     var body: some View {
         NavigationStack {
@@ -347,12 +349,18 @@ struct KernelRootView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(CisumMagicBackground.sunset.opacity(1))
+        .task(id: contributionRevision) {
+            assembledContent = FactoryCisum.assembleMainView(kernel: kernel)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .cisumEnabledPluginsDidChange)) { _ in
+            contributionRevision += 1
+        }
     }
 
     @ViewBuilder
     private var rootContent: some View {
-        let content = FactoryCisum.assembleMainView(kernel: kernel)
-        let bridged = wrap(content)
+        if let assembledContent {
+            let bridged = wrap(assembledContent)
             // 插件贡献变化（.id 变化）时整棵子树重建，重新注入内容 Tab 等。
             .id(contributionRevision)
             .environment(\.demoMode, kernel.appState?.isDemoMode ?? false)
@@ -372,13 +380,13 @@ struct KernelRootView: View {
                     FactoryCisum.mainKernel?.storage?.resetStorageLocation()
                 }
             })
-            .onReceive(NotificationCenter.default.publisher(for: .cisumEnabledPluginsDidChange)) { _ in
-                contributionRevision += 1
+            if let playMan = kernel.playback as? MagicPlayMan {
+                bridged.environmentObject(playMan)
+            } else {
+                bridged
             }
-        if let playMan = kernel.playback as? MagicPlayMan {
-            bridged.environmentObject(playMan)
         } else {
-            bridged
+            ProgressView("Loading…")
         }
     }
 
