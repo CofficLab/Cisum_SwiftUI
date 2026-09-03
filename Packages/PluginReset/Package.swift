@@ -25,9 +25,10 @@ let package = Package(
                 "CisumUIComponents",
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
-            path: "Sources",
+            path: ".",
+            sources: ["Sources"],
             resources: [
-                .process("Localizable.xcstrings")
+                .process("Resources/Localizable.xcstrings")
             ]
         ),
         .testTarget(
