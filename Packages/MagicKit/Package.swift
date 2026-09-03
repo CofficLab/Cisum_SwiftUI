@@ -28,12 +28,13 @@ let package = Package(
                "ID3TagEditor",
                "ZIPFoundation",
            ],
-           path: "Sources",
+           path: ".",
            exclude: [
-               "MagicDemo",
-               "MagicKit",
+               "Sources/MagicDemo",
+               "Sources/MagicKit",
            ],
-           resources: [.process("Icons.xcassets"), .process("Resources")],
+            sources: ["Sources"],
+           resources: [.process("Resources")],
            swiftSettings: [
                .enableExperimentalFeature("StrictConcurrency=minimal"),
            ]
