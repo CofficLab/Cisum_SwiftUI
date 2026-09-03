@@ -24,7 +24,8 @@ let package = Package(
             dependencies: [
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
             ],
-            path: "Sources",
+            path: ".",
+            sources: ["Sources"],
             resources: [
                 .process("Resources"),
             ]
