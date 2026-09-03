@@ -140,7 +140,8 @@ let package = Package(
                 .product(name: "PluginThemeSunset", package: "PluginThemeSunset"),
                 .product(name: "PluginWelcome", package: "PluginWelcome"),
             ],
-            path: "Sources/FactoryCisum",
+            path: ".",
+            sources: ["Sources/FactoryCisum"],
             resources: [
                 .process("Resources"),
             ]
