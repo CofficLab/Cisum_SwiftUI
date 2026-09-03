@@ -37,9 +37,10 @@ let package = Package(
                 .product(name: "ProviderScene", package: "ProviderScene"),
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
-            path: "Sources",
+            path: ".",
+            sources: ["Sources"],
             resources: [
-                .process("Localizable.xcstrings")
+                .process("Resources/Localizable.xcstrings")
             ]
         ),
         .testTarget(
