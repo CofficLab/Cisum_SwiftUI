@@ -17,14 +17,10 @@ struct SceneSwitcher: View {
             Button {
                 isPresented.toggle()
             } label: {
-                HStack(spacing: 4) {
-                    Image(systemName: current.iconName)
-                    Text(current.displayName)
-                        .font(.caption)
-                }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 6))
+                Image(systemName: current.iconName)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 6))
             }
             .buttonStyle(.plain)
             .popover(isPresented: $isPresented) {
