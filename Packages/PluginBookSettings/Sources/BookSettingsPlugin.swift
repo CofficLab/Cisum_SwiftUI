@@ -14,6 +14,8 @@ public actor BookSettingsPlugin: SuperPlugin {
         category: .settings,
     )
 
+    nonisolated(unsafe) private var settingsViewModel: BookSettingsViewModel?
+    nonisolated(unsafe) private var settingsObserver: BookSettingsObserver?
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
@@ -24,14 +26,62 @@ public actor BookSettingsPlugin: SuperPlugin {
     }
 
     @MainActor
+    public func onBoot(kernel: CisumKernel) async throws {
+        installState()
+    }
+
+    @MainActor
+    public func onEnable(kernel: CisumKernel) async throws {
+        installState()
+    }
+
+    @MainActor
+    public func onDisable(kernel: CisumKernel) async throws {
+        teardownState()
+    }
+
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        teardownState()
+    }
+
+    @MainActor
     public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
-        PluginSettingNavigationItem(
+        let viewModel = resolveViewModel()
+        return PluginSettingNavigationItem(
             id: "book-settings",
             title: BookSettingsPluginInfo.title,
             description: Self.metadata.description,
             iconName: "book",
             order: BookSettingsPluginInfo.order,
-            destination: AnyView(BookSettingsPluginView())
+            destination: AnyView(BookSettingsPluginView(viewModel: viewModel))
         )
+    }
+
+    // MARK: - State assembly
+
+    @MainActor
+    private func installState() {
+        guard settingsViewModel == nil else { return }
+        let viewModel = BookSettingsViewModel()
+        let observer = BookSettingsObserver(viewModel: viewModel)
+        settingsViewModel = viewModel
+        settingsObserver = observer
+    }
+
+    @MainActor
+    private func teardownState() {
+        settingsObserver?.cancel()
+        settingsObserver = nil
+        settingsViewModel = nil
+    }
+
+    @MainActor
+    private func resolveViewModel() -> BookSettingsViewModel {
+        if let settingsViewModel {
+            return settingsViewModel
+        }
+        installState()
+        return settingsViewModel!
     }
 }

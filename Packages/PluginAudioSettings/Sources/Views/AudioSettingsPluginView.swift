@@ -3,24 +3,15 @@ import PluginAudio
 import SwiftUI
 
 struct AudioSettingsPluginView: View {
-    @State private var refreshToken = 0
+    @ObservedObject private var viewModel: AudioSettingsViewModel
+
+    init(viewModel: AudioSettingsViewModel) {
+        self.viewModel = viewModel
+    }
 
     var body: some View {
-        AudioSettingsView(refreshToken: refreshToken) {
+        AudioSettingsView(refreshToken: viewModel.refreshToken) {
             AudioPlugin.getAudioDisk()
-        }
-        .modifier(AudioSettingsStorageChangeModifier(refreshToken: $refreshToken))
-    }
-}
-
-struct AudioSettingsStorageChangeModifier: ViewModifier {
-    @Binding var refreshToken: Int
-
-    func body(content: Content) -> some View {
-        AudioPluginHost.storageLocationDidChangeNotifications.reduce(AnyView(content)) { partial, name in
-            AnyView(partial.onReceive(NotificationCenter.default.publisher(for: name)) { _ in
-                refreshToken += 1
-            })
         }
     }
 }

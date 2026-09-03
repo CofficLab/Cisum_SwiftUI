@@ -5,22 +5,23 @@ public struct BookLikeSettingsView: View, SuperLog {
     public nonisolated static var emoji: String { "❤️" }
     private static var verbose: Bool { false }
 
-    @State private var likedBooks: [BookLikeItem] = []
-    @State private var isLoading = true
+    @ObservedObject private var viewModel: BookLikeViewModel
 
-    public init() {}
+    init(viewModel: BookLikeViewModel) {
+        self.viewModel = viewModel
+    }
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Liked Books", bundle: .module)
                 .font(.headline)
 
-            if isLoading {
+            if viewModel.isLoading {
                 ProgressView {
                     Text(Self.loadingText)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else if likedBooks.isEmpty {
+            } else if viewModel.likedBooks.isEmpty {
                 VStack(spacing: 12) {
                     Image(systemName: "heart.slash")
                         .font(.largeTitle)
@@ -30,7 +31,7 @@ public struct BookLikeSettingsView: View, SuperLog {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                List(likedBooks) { book in
+                List(viewModel.likedBooks) { book in
                     HStack {
                         VStack(alignment: .leading) {
                             Text(book.title)
@@ -51,16 +52,8 @@ public struct BookLikeSettingsView: View, SuperLog {
         .padding()
         .frame(minWidth: 300, minHeight: 400)
         .onAppear {
-            loadLikedBooks()
+            viewModel.handleAppear()
         }
-        .onReceive(NotificationCenter.default.publisher(for: .BookLikeStatusChanged)) { _ in
-            loadLikedBooks()
-        }
-    }
-
-    private func loadLikedBooks() {
-        likedBooks = BookLikeStore.likedBooks()
-        isLoading = false
     }
 }
 

@@ -316,354 +316,37 @@ enum BookControlChapterCache {
     }
 }
 
-public struct BookControlRootView<Content>: View, SuperLog where Content: View {
-    public nonisolated static var emoji: String { BookControlPluginInfo.emoji }
-    private let verbose = false
-
+public struct BookControlRootView<Content>: View where Content: View {
     @EnvironmentObject private var man: MagicPlayMan
-    @State private var playbackSubscriptionID: UUID?
-    @State private var controlGeneration = 0
+    @ObservedObject private var viewModel: BookControlViewModel
 
     private let content: Content
     private let targetScene: AppScene
     private let scene: (any SceneProviding)?
 
-    public init(
+    init(
         targetScene: AppScene,
         scene: (any SceneProviding)?,
+        viewModel: BookControlViewModel,
         @ViewBuilder content: () -> Content
     ) {
         self.targetScene = targetScene
         self.scene = scene
+        self.viewModel = viewModel
         self.content = content()
     }
 
     public var body: some View {
         content
-            .onAppear(perform: handleOnAppear)
-            .onDisappear(perform: handleOnDisappear)
+            .onAppear {
+                viewModel.bind(playMan: man)
+                viewModel.handleSceneChange(scene?.currentScene)
+            }
+            .onDisappear {
+                viewModel.handleSceneChange(nil)
+            }
             .onChange(of: scene?.currentScene) { _, newScene in
-                handleCurrentSceneChanged(newScene)
+                viewModel.handleSceneChange(newScene)
             }
-            .onReceive(NotificationCenter.default.publisher(for: .bookDBDeleted), perform: handleBookDBDeleted)
-            .onReceive(NotificationCenter.default.publisher(for: .bookDBSynced), perform: handleBookDBRefreshed)
-            .onReceive(NotificationCenter.default.publisher(for: .bookDBUpdated), perform: handleBookDBRefreshed)
-            .onReceive(NotificationCenter.default.publisher(for: .bookControlStorageLocationDidReset)) { _ in
-                handleStorageLocationDidReset()
-            }
-    }
-
-    /// 检查是否应该激活书籍播放控制功能
-    private var shouldActivateControl: Bool {
-        scene?.currentScene == targetScene
-    }
-}
-
-// MARK: - Action
-
-extension BookControlRootView {
-    /// 处理视图出现事件
-    ///
-    /// 当视图首次出现时触发，执行初始化操作。
-    func handleOnAppear() {
-        updateControlActivation(for: scene?.currentScene)
-    }
-
-    func handleCurrentSceneChanged(_ sceneValue: AppScene?) {
-        updateControlActivation(for: sceneValue)
-    }
-
-    private func updateControlActivation(for sceneValue: AppScene?) {
-        if sceneValue == targetScene {
-            activateControl()
-        } else {
-            deactivateControl()
-        }
-    }
-
-    private func activateControl() {
-        guard shouldActivateControl else {
-            if verbose {
-                os_log("\(self.t)⏭️ Skipping audiobook playback controls: current scene is not Books")
-            }
-            return
-        }
-
-        if verbose {
-            os_log("\(self.t)👀 View appeared, initializing audiobook playback controls")
-        }
-
-        // 订阅播放器事件
-        guard playbackSubscriptionID == nil else { return }
-
-        playbackSubscriptionID = man.subscribe(
-            name: "BookControlPlugin",
-            onPreviousRequested: { asset in
-                handlePreviousRequested(asset)
-            },
-            onNextRequested: { asset in
-                handleNextRequested(asset)
-            }
-        )
-    }
-
-    func handleOnDisappear() {
-        deactivateControl()
-    }
-
-    private func deactivateControl() {
-        controlGeneration = BookControlPlaybackRequestPolicy.generationAfterDeactivation(controlGeneration)
-        BookControlChapterCache.removeAll()
-
-        guard let playbackSubscriptionID else { return }
-
-        man.unsubscribe(playbackSubscriptionID)
-        self.playbackSubscriptionID = nil
-    }
-
-    func bookRoot(containing asset: URL) -> URL {
-        BookControlBookRootResolver.bookRoot(containing: asset, bookDisk: BookPlugin.getBookDisk())
-    }
-
-    func relativePath(_ url: URL, in root: URL) -> String {
-        BookControlChapterLoader.relativePath(url, in: root)
-    }
-
-    func playableChapters(of asset: URL) -> [URL] {
-        let bookDisk = BookPlugin.getBookDisk()
-        guard BookControlPlaybackRequestPolicy.shouldNavigateBookAsset(asset, bookDisk: bookDisk) else {
-            return []
-        }
-
-        let root = BookControlBookRootResolver.bookRoot(containing: asset, bookDisk: bookDisk)
-        return BookControlChapterLoader.playableChapters(in: root)
-    }
-
-    func adjacentAsset(to asset: URL, offset: Int) -> URL? {
-        let chapters = playableChapters(of: asset)
-        return Self.adjacentAsset(
-            in: chapters,
-            current: asset,
-            offset: offset,
-            playMode: man.playMode
-        )
-    }
-
-    func contains(_ parent: URL, asset: URL) -> Bool {
-        let parentPath = parent.standardizedFileURL.path
-        let assetPath = asset.standardizedFileURL.path
-        return assetPath == parentPath || assetPath.hasPrefix(parentPath + "/")
-    }
-
-    func handleBookDBDeleted(_ notification: Notification) {
-        guard let deletedURLs = notification.userInfo?["urls"] as? [URL] else {
-            return
-        }
-
-        if BookControlPlaybackRequestPolicy.shouldInvalidateChapterCacheAfterDeletion(deletedURLs: deletedURLs) {
-            BookControlChapterCache.removeAll()
-        }
-
-        guard BookControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
-            currentAsset: man.asset,
-            deletedURLs: deletedURLs
-        ) else {
-            return
-        }
-
-        let generation = controlGeneration
-        Task {
-            guard BookControlPlaybackRequestPolicy.shouldApplyDeletionReset(
-                currentAsset: man.asset,
-                deletedURLs: deletedURLs,
-                currentGeneration: controlGeneration,
-                requestGeneration: generation
-            ) else {
-                return
-            }
-            await man.reset(reason: "BookControlRootView.deletedCurrentAsset")
-        }
-    }
-
-    func handleBookDBRefreshed(_ notification: Notification) {
-        guard BookControlPlaybackRequestPolicy.shouldInvalidateChapterCacheAfterLibraryRefresh() else {
-            return
-        }
-
-        BookControlChapterCache.removeAll()
-    }
-
-    func handleStorageLocationDidReset() {
-        guard BookControlPlaybackRequestPolicy.shouldResetForStorageLocationChange(isSceneActive: shouldActivateControl) else {
-            return
-        }
-
-        BookControlChapterCache.removeAll()
-
-        let generation = controlGeneration
-        Task {
-            guard BookControlPlaybackRequestPolicy.shouldApplyStorageReset(
-                currentGeneration: controlGeneration,
-                requestGeneration: generation,
-                isSceneActive: shouldActivateControl
-            ) else {
-                return
-            }
-
-            await man.reset(reason: "BookControlRootView.storageLocationDidReset")
-        }
-    }
-
-    /// 处理上一章请求
-    /// - Parameter asset: 当前播放的书籍章节资源
-    func handlePreviousRequested(_ asset: URL) {
-        guard shouldActivateControl else { return }
-
-        if verbose {
-            os_log("\(self.t)⏮️ Previous chapter requested")
-        }
-
-        let bookDisk = BookPlugin.getBookDisk()
-        guard BookControlPlaybackRequestPolicy.shouldNavigateBookAsset(asset, bookDisk: bookDisk) else {
-            return
-        }
-
-        let root = BookControlBookRootResolver.bookRoot(containing: asset, bookDisk: bookDisk)
-        let playMode = man.playMode
-        let generation = controlGeneration
-        Task {
-            let prev = await Self.adjacentAssetLoadingChapters(
-                in: root,
-                current: asset,
-                offset: -1,
-                playMode: playMode
-            )
-
-            if let prev {
-                guard BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
-                    requestedAsset: asset,
-                    currentAsset: man.currentAsset,
-                    isSceneActive: shouldActivateControl,
-                    currentGeneration: controlGeneration,
-                    requestGeneration: generation
-                ) else {
-                    return
-                }
-                await man.play(prev, reason: "handlePreviousRequested")
-                if verbose {
-                    os_log("\(self.t)✅ Playing previous chapter: \(prev.lastPathComponent)")
-                }
-            } else if verbose {
-                os_log("\(self.t)⚠️ No previous chapter")
-            }
-        }
-    }
-
-    static func adjacentAssetLoadingChapters(
-        in root: URL,
-        current asset: URL,
-        offset: Int,
-        playMode: MagicPlayMode
-    ) async -> URL? {
-        if let chapters = BookControlChapterCache.cachedChapters(in: root) {
-            return BookControlChapterLoader.adjacentAsset(
-                in: chapters,
-                current: asset,
-                offset: offset,
-                playMode: playMode
-            )
-        }
-
-        let chapters = await Task.detached(priority: .userInitiated) {
-            BookControlChapterLoader.playableChapters(in: root)
-        }.value
-        BookControlChapterCache.store(chapters, in: root)
-
-        return BookControlChapterLoader.adjacentAsset(
-            in: chapters,
-            current: asset,
-            offset: offset,
-            playMode: playMode
-        )
-    }
-
-    /// 处理下一章请求
-    /// - Parameter asset: 当前播放的书籍章节资源
-    func handleNextRequested(_ asset: URL) {
-        guard shouldActivateControl else { return }
-
-        if verbose {
-            os_log("\(self.t)⏭️ Next chapter requested")
-        }
-
-        let bookDisk = BookPlugin.getBookDisk()
-        guard BookControlPlaybackRequestPolicy.shouldNavigateBookAsset(asset, bookDisk: bookDisk) else {
-            return
-        }
-
-        let root = BookControlBookRootResolver.bookRoot(containing: asset, bookDisk: bookDisk)
-        let playMode = man.playMode
-        let generation = controlGeneration
-        Task {
-            let next = await Self.adjacentAssetLoadingChapters(
-                in: root,
-                current: asset,
-                offset: 1,
-                playMode: playMode
-            )
-
-            if let next {
-                guard BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
-                    requestedAsset: asset,
-                    currentAsset: man.currentAsset,
-                    isSceneActive: shouldActivateControl,
-                    currentGeneration: controlGeneration,
-                    requestGeneration: generation
-                ) else {
-                    return
-                }
-                await man.play(next, reason: "handleNextRequested")
-                if verbose {
-                    os_log("\(self.t)✅ Playing next chapter: \(next.lastPathComponent)")
-                }
-            } else if verbose {
-                os_log("\(self.t)⚠️ No next chapter")
-            }
-        }
-    }
-}
-
-private extension Notification.Name {
-    static let bookControlStorageLocationDidReset = Notification.Name("storageLocationDidReset")
-}
-
-extension BookControlRootView {
-    nonisolated static func adjacentAsset(
-        in chapters: [URL],
-        current asset: URL,
-        offset: Int,
-        playMode: MagicPlayMode
-    ) -> URL? {
-        BookControlChapterLoader.adjacentAsset(
-            in: chapters,
-            current: asset,
-            offset: offset,
-            playMode: playMode
-        )
-    }
-
-    @MainActor
-    static func adjacentAssetLoadingChaptersForTesting(
-        in root: URL,
-        current asset: URL,
-        offset: Int,
-        playMode: MagicPlayMode
-    ) async -> URL? {
-        await adjacentAssetLoadingChapters(
-            in: root,
-            current: asset,
-            offset: offset,
-            playMode: playMode
-        )
     }
 }
