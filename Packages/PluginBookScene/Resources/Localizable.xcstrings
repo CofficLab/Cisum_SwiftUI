@@ -15,13 +15,13 @@
             "value" : "有声书场景"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "有聲書場景"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "有聲書場景"
@@ -43,13 +43,13 @@
             "value" : "进入有声书仓库"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "進入有聲書倉庫"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "進入有聲書倉庫"
@@ -71,13 +71,13 @@
             "value" : "提供有声书场景"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "提供有聲書場景"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "提供有聲書場景"

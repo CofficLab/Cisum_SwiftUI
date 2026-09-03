@@ -24,15 +24,15 @@
             "value" : "%1$@ (%2$lld)"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "%1$@ (%2$lld)"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "%1$@ (%2$lld)"
           }
         }
@@ -52,13 +52,13 @@
             "value" : "首 %@ 仅 %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "首 %@ 僅 %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "首 %@ 僅 %@"
@@ -83,13 +83,13 @@
             "value" : "%lld 天"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 天"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 天"
@@ -111,13 +111,13 @@
             "value" : "%lld 个月"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 個月"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 個月"
@@ -139,13 +139,13 @@
             "value" : "%lld 个订阅选项"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld 個訂閱選項"
+            "value" : "%lld 個訂閲選項"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 個訂閱選項"
@@ -167,13 +167,13 @@
             "value" : "%lld 个订阅选项"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld 個訂閱選項"
+            "value" : "%lld 個訂閲選項"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 個訂閱選項"
@@ -195,16 +195,16 @@
             "value" : "%lld 周"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld 週"
+            "value" : "%lld 周"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld 週"
+            "value" : "%lld 周"
           }
         }
       }
@@ -223,13 +223,13 @@
             "value" : "%lld 年"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 年"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 年"
@@ -252,13 +252,13 @@
             "value" : "%lld 个订阅选项"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld 個訂閱選項"
+            "value" : "%lld 個訂閲選項"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 個訂閱選項"
@@ -280,13 +280,13 @@
             "value" : "活跃"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "活躍"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "活躍"
@@ -311,13 +311,13 @@
             "value" : "恢复时出错，请稍后重试"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "恢復時出錯，請稍後重試"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "恢復時出錯，請稍後重試"
@@ -342,13 +342,13 @@
             "value" : "Apple ID 验证"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apple ID 驗證"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apple ID 驗證"
@@ -370,13 +370,13 @@
             "value" : "无法加载订阅选项"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法載入訂閱選項"
+            "value" : "無法加載訂閲選項"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "無法載入訂閱選項"
@@ -407,13 +407,13 @@
             "value" : "跨设备恢复"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "跨裝置恢復"
+            "value" : "跨設備恢復"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "跨裝置恢復"
@@ -435,13 +435,13 @@
             "value" : "当前版本"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "當前版本"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "當前版本"
@@ -463,13 +463,13 @@
             "value" : "当前使用免费版"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "當前使用免費版"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "當前使用免費版"
@@ -491,13 +491,13 @@
             "value" : "天"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "天"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "天"
@@ -519,13 +519,13 @@
             "value" : "完成"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "完成"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "完成"
@@ -547,13 +547,13 @@
             "value" : "未来新功能优先体验"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "未來新功能優先體驗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "未來新功能優先體驗"
@@ -575,13 +575,13 @@
             "value" : "到期日期"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "到期日期"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "到期日期"
@@ -603,13 +603,13 @@
             "value" : "已过期"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "已過期"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "已過期"
@@ -631,13 +631,13 @@
             "value" : "功能恢复"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "功能恢復"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "功能恢復"
@@ -659,13 +659,13 @@
             "value" : "免费"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "免費"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "免費"
@@ -687,13 +687,13 @@
             "value" : "免费 %@ 期"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "免費 %@ 期"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "免費 %@ 期"
@@ -715,13 +715,13 @@
             "value" : "免费版"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "免費版"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "免費版"
@@ -743,13 +743,13 @@
             "value" : "恢复成功后获得所有已购买功能"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "恢復成功後獲得所有已購買功能"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "恢復成功後獲得所有已購買功能"
@@ -786,13 +786,13 @@
             "value" : "应用内购买"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "應用內購買"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "應用內購買"
@@ -815,13 +815,13 @@
             "value" : "应用内购买和订阅"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "應用內購買和訂閱"
+            "value" : "應用內購買和訂閲"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "應用內購買和訂閱"
@@ -843,13 +843,13 @@
             "value" : "许可协议"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "許可協議"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "許可協議"
@@ -871,13 +871,13 @@
             "value" : "正在加载订阅选项..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正在載入訂閱選項..."
+            "value" : "正在加載訂閲選項..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在載入訂閱選項..."
@@ -899,13 +899,13 @@
             "value" : "个月"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "個月"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "個月"
@@ -927,13 +927,13 @@
             "value" : "暂无订阅选项"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "暫無訂閱選項"
+            "value" : "暫無訂閲選項"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "暫無訂閱選項"
@@ -958,13 +958,13 @@
             "value" : "确定"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "確定"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "確定"
@@ -986,13 +986,13 @@
             "value" : "首 %@ 付费 %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "首 %@ 付費 %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "首 %@ 付費 %@"
@@ -1014,13 +1014,13 @@
             "value" : "周期"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "週期"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "週期"
@@ -1042,16 +1042,16 @@
             "value" : "请检查网络后重试。"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請檢查網絡後重試。"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查網絡後重試。"
+            "value" : "請檢查網路後重試。"
           }
         }
       }
@@ -1070,13 +1070,13 @@
             "value" : "请稍候，正在验证您的购买记录..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請稍候，正在驗證您的購買記錄..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請稍候，正在驗證您的購買記錄..."
@@ -1098,13 +1098,13 @@
             "value" : "隐私政策"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "隱私政策"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "隱私政策"
@@ -1126,13 +1126,13 @@
             "value" : "专业版"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "專業版"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "專業版"
@@ -1154,13 +1154,13 @@
             "value" : "处理中..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "處理中..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "處理中..."
@@ -1191,13 +1191,13 @@
             "value" : "恢复失败"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "恢復失敗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "恢復失敗"
@@ -1219,13 +1219,13 @@
             "value" : "恢复购买"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "恢復購買"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "恢復購買"
@@ -1247,13 +1247,13 @@
             "value" : "恢复在其他设备上的购买"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "恢復在其他裝置上的購買"
+            "value" : "恢復在其他設備上的購買"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "恢復在其他裝置上的購買"
@@ -1275,13 +1275,13 @@
             "value" : "恢复成功"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "恢復成功"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "恢復成功"
@@ -1303,13 +1303,13 @@
             "value" : "正在恢复购买"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在恢復購買"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在恢復購買"
@@ -1331,13 +1331,13 @@
             "value" : "重试恢复"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試恢復"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試恢復"
@@ -1359,13 +1359,13 @@
             "value" : "%@ 特惠"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ 特惠"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ 特惠"
@@ -1394,13 +1394,13 @@
             "value" : "商店"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "商店"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "商店"
@@ -1425,13 +1425,13 @@
             "value" : "订阅专业版解锁所有功能"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "訂閱專業版解鎖所有功能"
+            "value" : "訂閲專業版解鎖所有功能"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "訂閱專業版解鎖所有功能"
@@ -1456,13 +1456,13 @@
             "value" : "订阅到期日期"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "訂閱到期日期"
+            "value" : "訂閲到期日期"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "訂閱到期日期"
@@ -1487,13 +1487,13 @@
             "value" : "订阅已过期，请续费以继续使用专业版功能"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "訂閱已過期，請續費以繼續使用專業版功能"
+            "value" : "訂閲已過期，請續費以繼續使用專業版功能"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "訂閱已過期，請續費以繼續使用專業版功能"
@@ -1515,13 +1515,13 @@
             "value" : "订阅信息"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "訂閱資訊"
+            "value" : "訂閲信息"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "訂閱資訊"
@@ -1543,16 +1543,16 @@
             "value" : "订阅有效，感谢您的支持"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "訂閱有效，感謝您的支持"
+            "value" : "訂閲有效，感謝您的支持"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "訂閱有效，感謝您的支持"
+            "value" : "訂閱有效，感謝您的支援"
           }
         }
       }
@@ -1571,13 +1571,13 @@
             "value" : "订阅状态"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "訂閱狀態"
+            "value" : "訂閲狀態"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "訂閱狀態"
@@ -1602,13 +1602,13 @@
             "value" : "成功恢复您的购买记录，所有功能已解锁"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "成功恢復您的購買記錄，所有功能已解鎖"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "成功恢復您的購買記錄，所有功能已解鎖"
@@ -1630,16 +1630,16 @@
             "value" : "支持我们做得更好"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "支持我們做得更好"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "支持我們做得更好"
+            "value" : "支援我們做得更好"
           }
         }
       }
@@ -1658,13 +1658,13 @@
             "value" : "重试"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試"
@@ -1686,13 +1686,13 @@
             "value" : "旗舰版"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "旗艦版"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "旗艦版"
@@ -1714,16 +1714,16 @@
             "value" : "无限制音频"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "無限制音頻"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無限制音頻"
+            "value" : "無限制音訊"
           }
         }
       }
@@ -1742,13 +1742,13 @@
             "value" : "解锁完整体验"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "解鎖完整體驗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "解鎖完整體驗"
@@ -1770,16 +1770,16 @@
             "value" : "最多 %lld 首音频"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "最多 %lld 首音頻"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "最多 %lld 首音頻"
+            "value" : "最多 %lld 首音訊"
           }
         }
       }
@@ -1798,13 +1798,13 @@
             "value" : "使用购买时使用的相同 Apple ID"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用購買時使用的相同 Apple ID"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用購買時使用的相同 Apple ID"
@@ -1826,13 +1826,13 @@
             "value" : "您正在使用的版本"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "您正在使用的版本"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "您正在使用的版本"
@@ -1854,16 +1854,16 @@
             "value" : "周"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "週"
+            "value" : "周"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "週"
+            "value" : "周"
           }
         }
       }
@@ -1882,13 +1882,13 @@
             "value" : "年"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "年"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "年"
@@ -1911,13 +1911,13 @@
             "value" : "专业版"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "專業版"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "專業版"
@@ -1940,13 +1940,13 @@
             "value" : "免费版"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "免費版"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "免費版"
@@ -1969,16 +1969,16 @@
             "value" : "最多 %lld 首音频"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "最多 %lld 首音頻"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "最多 %lld 首音頻"
+            "value" : "最多 %lld 首音訊"
           }
         }
       }
@@ -2007,16 +2007,16 @@
             "value" : "支持我们做得更好"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "支持我們做得更好"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "支持我們做得更好"
+            "value" : "支援我們做得更好"
           }
         }
       }
@@ -2036,16 +2036,16 @@
             "value" : "无限制音频"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "無限制音頻"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無限制音頻"
+            "value" : "無限制音訊"
           }
         }
       }
@@ -2065,13 +2065,13 @@
             "value" : "暂无订阅选项"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "暫無訂閱選項"
+            "value" : "暫無訂閲選項"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "暫無訂閱選項"
@@ -2097,13 +2097,13 @@
             "value" : "未来新功能优先体验"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "未來新功能優先體驗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "未來新功能優先體驗"
@@ -2138,13 +2138,13 @@
             "value" : "解锁完整体验"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "解鎖完整體驗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "解鎖完整體驗"

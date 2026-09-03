@@ -18,13 +18,13 @@
             "value" : "发生了错误"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "發生了錯誤"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "發生了錯誤"

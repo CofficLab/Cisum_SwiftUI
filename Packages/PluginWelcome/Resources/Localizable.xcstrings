@@ -15,13 +15,13 @@
             "value" : "应用本地存储"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "應用本地儲存"
+            "value" : "應用本地存儲"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "應用本地儲存"
@@ -43,16 +43,16 @@
             "value" : "文件存储在 iCloud 中\n可在其他设备上访问\n请确保有足够的 iCloud 存储空间"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "檔案儲存在 iCloud 中\n可在其他裝置上存取\n請確保有足夠的 iCloud 儲存空間"
+            "value" : "文件存儲在 iCloud 中\n可在其他設備上訪問\n請確保有足夠的 iCloud 存儲空間"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "檔案儲存在 iCloud 中\n可在其他裝置上存取\n請確保有足夠的 iCloud 儲存空間"
+            "value" : "檔案儲存在 iCloud 中\n可在其他裝置上訪問\n請確保有足夠的 iCloud 儲存空間"
           }
         }
       }
@@ -71,13 +71,13 @@
             "value" : "精彩即将呈现"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "精彩即將呈現"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "精彩即將呈現"
@@ -99,16 +99,16 @@
             "value" : "iCloud 云盘"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iCloud 雲端硬碟"
+            "value" : "iCloud 雲盤"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iCloud 雲端硬碟"
+            "value" : "iCloud 雲盤"
           }
         }
       }
@@ -127,13 +127,13 @@
             "value" : "媒体存储位置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "媒體儲存位置"
+            "value" : "媒體存儲位置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "媒體儲存位置"
@@ -155,13 +155,13 @@
             "value" : "准备好探索你的音乐世界"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "準備好探索你的音樂世界"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "準備好探索你的音樂世界"
@@ -183,13 +183,13 @@
             "value" : "推荐"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "推薦"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "推薦"
@@ -211,13 +211,13 @@
             "value" : "请在系统设置中登录 iCloud 以使用此选项"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請在系統設定中登入 iCloud 以使用此選項"
+            "value" : "請在系統設置中登錄 iCloud 以使用此選項"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請在系統設定中登入 iCloud 以使用此選項"
@@ -239,16 +239,16 @@
             "value" : "存储在应用内，删除应用后数据将丢失"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "儲存在應用內，刪除應用後資料將遺失"
+            "value" : "存儲在應用內，刪除應用後數據將丟失"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "儲存在應用內，刪除應用後資料將遺失"
+            "value" : "儲存在應用內，刪除應用後資料將丟失"
           }
         }
       }
@@ -267,13 +267,13 @@
             "value" : "欢迎"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "歡迎"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "歡迎"
@@ -295,13 +295,13 @@
             "value" : "欢迎界面"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "歡迎介面"
+            "value" : "歡迎界面"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "歡迎介面"

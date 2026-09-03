@@ -15,13 +15,13 @@
             "value" : "%lld 已下载"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 已下載"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 已下載"
@@ -43,13 +43,13 @@
             "value" : "%lld个已下载, %lld个未下载"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld個已下載, %lld個未下載"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld個已下載, %lld個未下載"
@@ -71,13 +71,13 @@
             "value" : "%lld 下载中"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 下載中"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 下載中"
@@ -99,13 +99,13 @@
             "value" : "%lld 未下载"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 未下載"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 未下載"
@@ -127,13 +127,13 @@
             "value" : "• 取消操作：保持原位置不变"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "• 取消操作：保持原位置不變"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "• 取消操作：保持原位置不變"
@@ -155,13 +155,13 @@
             "value" : "• 迁移过程中请勿关闭应用，取消迁移可能导致数据不完整"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• 遷移過程中請勿關閉應用，取消遷移可能導致資料不完整"
+            "value" : "• 遷移過程中請勿關閉應用，取消遷移可能導致數據不完整"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "• 遷移過程中請勿關閉應用，取消遷移可能導致資料不完整"
@@ -183,13 +183,13 @@
             "value" : "• 如果源数据在 iCloud 中且有未下载的文件，需要等待下载完成，可能需要较长时间"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• 如果源資料在 iCloud 中且有未下載的檔案，需要等待下載完成，可能需要較長時間"
+            "value" : "• 如果源數據在 iCloud 中且有未下載的文件，需要等待下載完成，可能需要較長時間"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "• 如果源資料在 iCloud 中且有未下載的檔案，需要等待下載完成，可能需要較長時間"
@@ -211,13 +211,13 @@
             "value" : "• 迁移数据：将现有数据迁移到新位置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• 遷移資料：將現有資料遷移到新位置"
+            "value" : "• 遷移數據：將現有數據遷移到新位置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "• 遷移資料：將現有資料遷移到新位置"
@@ -239,13 +239,13 @@
             "value" : "• 直接使用：直接使用新位置，原有数据保持不变"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• 直接使用：直接使用新位置，原有資料保持不變"
+            "value" : "• 直接使用：直接使用新位置，原有數據保持不變"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "• 直接使用：直接使用新位置，原有資料保持不變"
@@ -267,13 +267,13 @@
             "value" : "计算中..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "計算中..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "計算中..."
@@ -295,13 +295,13 @@
             "value" : "取消操作"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消操作"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消操作"
@@ -323,13 +323,13 @@
             "value" : "取消迁移"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消遷移"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消遷移"
@@ -351,13 +351,13 @@
             "value" : "确定要取消迁移吗？"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "確定要取消遷移嗎？"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "確定要取消遷移嗎？"
@@ -379,13 +379,13 @@
             "value" : "取消迁移可能会导致数据不完整，建议等待迁移完成。"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "取消遷移可能會導致資料不完整，建議等待遷移完成。"
+            "value" : "取消遷移可能會導致數據不完整，建議等待遷移完成。"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消遷移可能會導致資料不完整，建議等待遷移完成。"
@@ -407,13 +407,13 @@
             "value" : "正在取消..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在取消..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在取消..."
@@ -435,13 +435,13 @@
             "value" : "检查中 (%lld/%lld)"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "檢查中 (%lld/%lld)"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "檢查中 (%lld/%lld)"
@@ -463,13 +463,13 @@
             "value" : "正在检查目录 %@ (%lld/%lld)"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在檢查目錄 %@ (%lld/%lld)"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在檢查目錄 %@ (%lld/%lld)"
@@ -491,13 +491,13 @@
             "value" : "检查中..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "檢查中..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "檢查中..."
@@ -519,13 +519,13 @@
             "value" : "确定取消"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "確定取消"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "確定取消"
@@ -547,13 +547,13 @@
             "value" : "继续迁移"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "繼續遷移"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "繼續遷移"
@@ -575,13 +575,13 @@
             "value" : "完成"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "完成"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "完成"
@@ -603,13 +603,13 @@
             "value" : "已下载"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "已下載"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "已下載"
@@ -635,13 +635,13 @@
             "value" : "下载中 %lld%"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "下載中 %lld%"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "下載中 %lld%"
@@ -663,13 +663,13 @@
             "value" : "空文件夹"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "空資料夾"
+            "value" : "空文件夾"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "空資料夾"
@@ -691,13 +691,13 @@
             "value" : "文件操作失败: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "檔案操作失敗: %@"
+            "value" : "文件操作失敗: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "檔案操作失敗: %@"
@@ -719,13 +719,13 @@
             "value" : "放弃"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "放棄"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "放棄"
@@ -747,13 +747,13 @@
             "value" : "iCloud Drive"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "iCloud Drive"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "iCloud Drive"
@@ -775,13 +775,13 @@
             "value" : "iCloud Drive 不可用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "iCloud Drive 不可用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "iCloud Drive 不可用"
@@ -803,13 +803,13 @@
             "value" : "重要提示："
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "重要提示："
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "重要提示："
@@ -831,13 +831,13 @@
             "value" : "保持原位置不变"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "保持原位置不變"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "保持原位置不變"
@@ -859,16 +859,16 @@
             "value" : "本地"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "本機"
+            "value" : "本地"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "本機"
+            "value" : "本地"
           }
         }
       }
@@ -887,13 +887,13 @@
             "value" : "本地文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "本地檔案"
+            "value" : "本地文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "本地檔案"
@@ -915,13 +915,13 @@
             "value" : "本地目录"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "本地目錄"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "本地目錄"
@@ -943,16 +943,16 @@
             "value" : "本地存储不可用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "本機儲存不可用"
+            "value" : "本地存儲不可用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "本機儲存不可用"
+            "value" : "本地儲存不可用"
           }
         }
       }
@@ -971,13 +971,13 @@
             "value" : "媒体存储位置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "媒體儲存位置"
+            "value" : "媒體存儲位置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "媒體儲存位置"
@@ -999,13 +999,13 @@
             "value" : "迁移数据"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "遷移資料"
+            "value" : "遷移數據"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移資料"
@@ -1027,13 +1027,13 @@
             "value" : "迁移中..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移中..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移中..."
@@ -1055,13 +1055,13 @@
             "value" : "迁移已取消"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移已取消"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移已取消"
@@ -1083,13 +1083,13 @@
             "value" : "迁移已完成"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移已完成"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移已完成"
@@ -1111,13 +1111,13 @@
             "value" : "迁移出现问题: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移出現問題: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移出現問題: %@"
@@ -1139,13 +1139,13 @@
             "value" : "迁移状态"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移狀態"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移狀態"
@@ -1167,13 +1167,13 @@
             "value" : "迁移已取消，部分文件可能已经迁移"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "遷移已取消，部分檔案可能已經遷移"
+            "value" : "遷移已取消，部分文件可能已經遷移"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移已取消，部分檔案可能已經遷移"
@@ -1195,13 +1195,13 @@
             "value" : "不存在"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "不存在"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "不存在"
@@ -1223,13 +1223,13 @@
             "value" : "将现有数据迁移到新位置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "將現有資料遷移到新位置"
+            "value" : "將現有數據遷移到新位置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "將現有資料遷移到新位置"
@@ -1251,13 +1251,13 @@
             "value" : "名称"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "名稱"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "名稱"
@@ -1279,13 +1279,13 @@
             "value" : "未下载"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "未下載"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "未下載"
@@ -1307,13 +1307,13 @@
             "value" : "未设置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未設定"
+            "value" : "未設置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "未設定"
@@ -1335,13 +1335,13 @@
             "value" : "重试"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試"
@@ -1363,13 +1363,13 @@
             "value" : "重试迁移"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試遷移"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試遷移"
@@ -1391,13 +1391,13 @@
             "value" : "大小"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "大小"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "大小"
@@ -1419,16 +1419,16 @@
             "value" : "无法找到源文件夹"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法找到來源資料夾"
+            "value" : "無法找到源文件夾"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法找到來源資料夾"
+            "value" : "無法找到原始檔夾"
           }
         }
       }
@@ -1447,13 +1447,13 @@
             "value" : "源媒体库"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "源媒體庫"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "源媒體庫"
@@ -1475,13 +1475,13 @@
             "value" : "状态"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "狀態"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "狀態"
@@ -1504,16 +1504,16 @@
             "value" : "存储设置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "存儲設置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "存儲設置"
+            "value" : "儲存設定"
           }
         }
       }
@@ -1532,13 +1532,13 @@
             "value" : "将媒体文件存储在 iCloud Drive"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "將媒體檔案儲存在 iCloud Drive"
+            "value" : "將媒體文件存儲在 iCloud Drive"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "將媒體檔案儲存在 iCloud Drive"
@@ -1560,16 +1560,16 @@
             "value" : "存储在应用内，删除应用会丢失数据"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "儲存在應用內，刪除應用會遺失資料"
+            "value" : "存儲在應用內，刪除應用會丟失數據"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "儲存在應用內，刪除應用會遺失資料"
+            "value" : "儲存在應用內，刪除應用會丟失資料"
           }
         }
       }
@@ -1588,13 +1588,13 @@
             "value" : "已切换到新位置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "已切換到新位置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "已切換到新位置"
@@ -1616,16 +1616,16 @@
             "value" : "目标文件夹不能位于源文件夹内"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "目標資料夾不能位於來源資料夾內"
+            "value" : "目標文件夾不能位於源文件夾內"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "目標資料夾不能位於來源資料夾內"
+            "value" : "目標資料夾不能位於原始檔夾內"
           }
         }
       }
@@ -1644,13 +1644,13 @@
             "value" : "无法找到目标文件夹"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法找到目標資料夾"
+            "value" : "無法找到目標文件夾"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "無法找到目標資料夾"
@@ -1672,13 +1672,13 @@
             "value" : "目标媒体库"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "目標媒體庫"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "目標媒體庫"
@@ -1700,13 +1700,13 @@
             "value" : "无法读取文件列表"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法讀取檔案列表"
+            "value" : "無法讀取文件列表"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "無法讀取檔案列表"
@@ -1728,13 +1728,13 @@
             "value" : "不可用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "不可用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "不可用"
@@ -1756,13 +1756,13 @@
             "value" : "直接使用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "直接使用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "直接使用"
@@ -1784,13 +1784,13 @@
             "value" : "直接使用新位置，原有数据保持不变"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "直接使用新位置，原有資料保持不變"
+            "value" : "直接使用新位置，原有數據保持不變"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "直接使用新位置，原有資料保持不變"
@@ -1813,13 +1813,13 @@
             "value" : "保持原位置不变"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "保持原位置不變"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "保持原位置不變"
@@ -1842,13 +1842,13 @@
             "value" : "取消操作"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消操作"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消操作"
@@ -1871,13 +1871,13 @@
             "value" : "取消迁移"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消遷移"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消遷移"
@@ -1900,13 +1900,13 @@
             "value" : "取消迁移可能会导致数据不完整，建议等待迁移完成。"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "取消遷移可能會導致資料不完整，建議等待遷移完成。"
+            "value" : "取消遷移可能會導致數據不完整，建議等待遷移完成。"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消遷移可能會導致資料不完整，建議等待遷移完成。"
@@ -1929,13 +1929,13 @@
             "value" : "完成"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "完成"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "完成"
@@ -1958,13 +1958,13 @@
             "value" : "将现有数据迁移到新位置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "將現有資料遷移到新位置"
+            "value" : "將現有數據遷移到新位置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "將現有資料遷移到新位置"
@@ -1987,13 +1987,13 @@
             "value" : "放弃"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "放棄"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "放棄"
@@ -2016,13 +2016,13 @@
             "value" : "直接使用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "直接使用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "直接使用"
@@ -2045,13 +2045,13 @@
             "value" : "直接使用新位置，原有数据保持不变"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "直接使用新位置，原有資料保持不變"
+            "value" : "直接使用新位置，原有數據保持不變"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "直接使用新位置，原有資料保持不變"
@@ -2074,13 +2074,13 @@
             "value" : "确定取消"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "確定取消"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "確定取消"
@@ -2103,13 +2103,13 @@
             "value" : "确定要取消迁移吗？"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "確定要取消遷移嗎？"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "確定要取消遷移嗎？"
@@ -2135,13 +2135,13 @@
             "value" : "继续迁移"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "繼續遷移"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "繼續遷移"
@@ -2164,13 +2164,13 @@
             "value" : "计算中..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "計算中..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "計算中..."
@@ -2193,13 +2193,13 @@
             "value" : "迁移中..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移中..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移中..."
@@ -2222,13 +2222,13 @@
             "value" : "迁移出现问题: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移出現問題: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移出現問題: %@"
@@ -2251,13 +2251,13 @@
             "value" : "迁移已取消"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移已取消"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移已取消"
@@ -2280,13 +2280,13 @@
             "value" : "迁移数据"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "遷移資料"
+            "value" : "遷移數據"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移資料"
@@ -2309,13 +2309,13 @@
             "value" : "迁移状态"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移狀態"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移狀態"
@@ -2338,13 +2338,13 @@
             "value" : "重试"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試"
@@ -2367,13 +2367,13 @@
             "value" : "重试迁移"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試遷移"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試遷移"

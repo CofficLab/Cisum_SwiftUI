@@ -15,13 +15,13 @@
             "value" : "深灰空间与蓝色点缀，适合夜间听歌"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "深灰空間與藍色點綴，適合夜間聽歌"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "深灰空間與藍色點綴，適合夜間聽歌"
@@ -43,13 +43,13 @@
             "value" : "午夜幽蓝"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "午夜幽藍"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "午夜幽藍"
@@ -72,13 +72,13 @@
             "value" : "夜间听歌主题"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "夜間聽歌主題"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "夜間聽歌主題"

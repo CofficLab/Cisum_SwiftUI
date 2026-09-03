@@ -15,13 +15,13 @@
             "value" : "书籍播放模式管理"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "書籍播放模式管理"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "書籍播放模式管理"
@@ -43,16 +43,16 @@
             "value" : "负责书籍播放模式的设置和管理"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "負責書籍播放模式的設置和管理"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "負責書籍播放模式的設置和管理"
+            "value" : "負責書籍播放模式的設定和管理"
           }
         }
       }
@@ -71,16 +71,16 @@
             "value" : "单章循环"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "單章循環"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "單章循環"
+            "value" : "單章迴圈"
           }
         }
       }
@@ -99,13 +99,13 @@
             "value" : "顺序播放"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "順序播放"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "順序播放"
@@ -127,13 +127,13 @@
             "value" : "随机播放"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "隨機播放"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "隨機播放"

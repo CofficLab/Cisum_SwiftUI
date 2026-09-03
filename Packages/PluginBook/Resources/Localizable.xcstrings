@@ -15,16 +15,16 @@
             "value" : "插件初始化过程中发生错误"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "插件初始化過程中發生錯誤"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "插件初始化過程中發生錯誤"
+            "value" : "外掛初始化過程中發生錯誤"
           }
         }
       }
@@ -43,13 +43,13 @@
             "value" : "有声书"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "有聲書"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "有聲書"
@@ -71,13 +71,13 @@
             "value" : "有声书播放功能"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "有聲書播放功能"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "有聲書播放功能"
@@ -99,16 +99,16 @@
             "value" : "有声书插件宿主配置未完成"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "有聲書插件宿主配置未完成"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "有聲書插件宿主配置未完成"
+            "value" : "有聲書外掛宿主配置未完成"
           }
         }
       }
@@ -127,16 +127,16 @@
             "value" : "请检查磁盘权限与路径设置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查磁碟權限與路徑設定"
+            "value" : "請檢查磁盤權限與路徑設置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查磁碟權限與路徑設定"
+            "value" : "請檢查磁碟許可權與路徑設定"
           }
         }
       }
@@ -155,13 +155,13 @@
             "value" : "请检查应用启动流程"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查應用啟動流程"
+            "value" : "請檢查應用啓動流程"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請檢查應用啟動流程"
@@ -183,16 +183,16 @@
             "value" : "请检查播放顺序或选择其他条目"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查播放順序或選擇其他項目"
+            "value" : "請檢查播放順序或選擇其他條目"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查播放順序或選擇其他項目"
+            "value" : "請檢查播放順序或選擇其他條目"
           }
         }
       }
@@ -211,13 +211,13 @@
             "value" : "磁盘未找到"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "磁碟未找到"
+            "value" : "磁盤未找到"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "磁碟未找到"
@@ -239,13 +239,13 @@
             "value" : "初始化失败"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "初始化失敗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "初始化失敗"
@@ -267,13 +267,13 @@
             "value" : "初始化失败: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "初始化失敗: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "初始化失敗: %@"
@@ -295,13 +295,13 @@
             "value" : "正在初始化..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在初始化..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在初始化..."
@@ -323,13 +323,13 @@
             "value" : "没有下一个章节/文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "沒有下一個章節/檔案"
+            "value" : "沒有下一個章節/文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "沒有下一個章節/檔案"
@@ -351,13 +351,13 @@
             "value" : "没有上一个章节/文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "沒有上一個章節/檔案"
+            "value" : "沒有上一個章節/文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "沒有上一個章節/檔案"
@@ -379,13 +379,13 @@
             "value" : "应用尚未注入数据库和存储路径配置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "應用尚未注入資料庫和儲存路徑配置"
+            "value" : "應用尚未注入數據庫和存儲路徑配置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "應用尚未注入資料庫和儲存路徑配置"
@@ -407,16 +407,16 @@
             "value" : "当前已是第一个条目"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "目前已是第一個項目"
+            "value" : "當前已是第一個條目"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "目前已是第一個項目"
+            "value" : "當前已是第一個條目"
           }
         }
       }
@@ -435,16 +435,16 @@
             "value" : "当前已是最后一个条目"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "目前已是最後一個項目"
+            "value" : "當前已是最後一個條目"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "目前已是最後一個項目"
+            "value" : "當前已是最後一個條目"
           }
         }
       }
@@ -463,16 +463,16 @@
             "value" : "指定的磁盘路径不存在或无法访问"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "指定的磁碟路徑不存在或無法存取"
+            "value" : "指定的磁盤路徑不存在或無法訪問"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "指定的磁碟路徑不存在或無法存取"
+            "value" : "指定的磁碟路徑不存在或無法訪問"
           }
         }
       }
@@ -491,13 +491,13 @@
             "value" : "请尝试重启应用或检查设置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請嘗試重啟應用或檢查設定"
+            "value" : "請嘗試重啓應用或檢查設置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請嘗試重啟應用或檢查設定"
@@ -519,16 +519,16 @@
             "value" : "无法访问磁盘"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法存取磁碟"
+            "value" : "無法訪問磁盤"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法存取磁碟"
+            "value" : "無法訪問磁碟"
           }
         }
       }
@@ -548,13 +548,13 @@
             "value" : "初始化失败"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "初始化失敗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "初始化失敗"
@@ -577,13 +577,13 @@
             "value" : "正在初始化..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在初始化..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在初始化..."

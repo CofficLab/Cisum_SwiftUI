@@ -15,16 +15,16 @@
             "value" : "音频喜欢管理"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音頻喜歡管理"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻喜歡管理"
+            "value" : "音訊喜歡管理"
           }
         }
       }
@@ -43,13 +43,13 @@
             "value" : "AudioLike 数据库路径未配置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AudioLike 資料庫路徑未配置"
+            "value" : "AudioLike 數據庫路徑未配置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "AudioLike 資料庫路徑未配置"
@@ -71,13 +71,13 @@
             "value" : "数据容器不可用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "資料容器不可用"
+            "value" : "數據容器不可用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "資料容器不可用"
@@ -99,13 +99,13 @@
             "value" : "保存喜欢状态失败: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "儲存喜歡狀態失敗: %@"
+            "value" : "保存喜歡狀態失敗: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "儲存喜歡狀態失敗: %@"
@@ -127,16 +127,16 @@
             "value" : "喜欢的音频"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "喜歡的音頻"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "喜歡的音頻"
+            "value" : "喜歡的音訊"
           }
         }
       }
@@ -155,16 +155,16 @@
             "value" : "加载中..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "加載中..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "加載中..."
+            "value" : "載入中..."
           }
         }
       }
@@ -183,16 +183,16 @@
             "value" : "负责音频喜欢状态的独立管理和存储"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "負責音頻喜歡狀態的獨立管理和存儲"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "負責音頻喜歡狀態的獨立管理和存儲"
+            "value" : "負責音訊喜歡狀態的獨立管理和儲存"
           }
         }
       }
@@ -211,16 +211,16 @@
             "value" : "还没有喜欢的音频"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "還沒有喜歡的音頻"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "還沒有喜歡的音頻"
+            "value" : "還沒有喜歡的音訊"
           }
         }
       }
@@ -239,16 +239,16 @@
             "value" : "未知音频"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "未知音頻"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未知音頻"
+            "value" : "未知音訊"
           }
         }
       }
@@ -268,16 +268,16 @@
             "value" : "加载中..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "加載中..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "加載中..."
+            "value" : "載入中..."
           }
         }
       }
@@ -297,16 +297,16 @@
             "value" : "喜欢的音频"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "喜歡的音頻"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "喜歡的音頻"
+            "value" : "喜歡的音訊"
           }
         }
       }
@@ -329,16 +329,16 @@
             "value" : "未知音频"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "未知音頻"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未知音頻"
+            "value" : "未知音訊"
           }
         }
       }
@@ -358,16 +358,16 @@
             "value" : "还没有喜欢的音频"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "還沒有喜歡的音頻"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "還沒有喜歡的音頻"
+            "value" : "還沒有喜歡的音訊"
           }
         }
       }

@@ -18,16 +18,16 @@
             "value" : "添加"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "添加"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "添加"
+            "value" : "新增"
           }
         }
       }
@@ -47,16 +47,16 @@
             "value" : "音频文件数据库视图"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻檔案資料庫視圖"
+            "value" : "音頻文件數據庫視圖"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻檔案資料庫視圖"
+            "value" : "音訊檔案資料庫檢視"
           }
         }
       }
@@ -76,16 +76,16 @@
             "value" : "音频仓库"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音頻倉庫"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻倉庫"
+            "value" : "音訊倉庫"
           }
         }
       }
@@ -104,13 +104,13 @@
             "value" : "取消"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消"
@@ -132,13 +132,13 @@
             "value" : "删除"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "刪除"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "刪除"
@@ -160,13 +160,13 @@
             "value" : "删除文件失败: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "刪除檔案失敗: %@"
+            "value" : "刪除文件失敗: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "刪除檔案失敗: %@"
@@ -188,16 +188,16 @@
             "value" : "删除失败：音频仓库不可用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "刪除失敗：音頻倉庫不可用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "刪除失敗：音頻倉庫不可用"
+            "value" : "刪除失敗：音訊倉庫不可用"
           }
         }
       }
@@ -216,16 +216,16 @@
             "value" : "删除失败：音频列表已变化，请重试。"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "刪除失敗：音頻列表已變更，請重試。"
+            "value" : "刪除失敗：音頻列表已變化，請重試。"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "刪除失敗：音頻列表已變更，請重試。"
+            "value" : "刪除失敗：音訊列表已變化，請重試。"
           }
         }
       }
@@ -244,13 +244,13 @@
             "value" : "确定要删除这个文件吗？"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "確定要刪除這個檔案嗎？"
+            "value" : "確定要刪除這個文件嗎？"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "確定要刪除這個檔案嗎？"
@@ -272,13 +272,13 @@
             "value" : "已删除 %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "已刪除 %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "已刪除 %@"
@@ -300,16 +300,16 @@
             "value" : "将音乐文件拖到这里可添加"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "將音樂檔案拖到這裡即可添加"
+            "value" : "將音樂文件拖到這裏可添加"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "將音樂檔案拖到這裡即可添加"
+            "value" : "將音樂檔案拖到這裡可新增"
           }
         }
       }
@@ -328,13 +328,13 @@
             "value" : "导出文件失败: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "匯出檔案失敗: %@"
+            "value" : "導出文件失敗: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "匯出檔案失敗: %@"
@@ -356,13 +356,13 @@
             "value" : "导出到下载目录"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "匯出到下載目錄"
+            "value" : "導出到下載目錄"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "匯出到下載目錄"
@@ -384,13 +384,13 @@
             "value" : "文件已复制到下载目录"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "檔案已複製到下載目錄"
+            "value" : "文件已複製到下載目錄"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "檔案已複製到下載目錄"
@@ -412,13 +412,13 @@
             "value" : "文件已删除"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "檔案已刪除"
+            "value" : "文件已刪除"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "檔案已刪除"
@@ -440,13 +440,13 @@
             "value" : "导入失败：%@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "匯入失敗：%@"
+            "value" : "導入失敗：%@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "匯入失敗：%@"
@@ -468,16 +468,16 @@
             "value" : "导入失败：音频仓库不可用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "匯入失敗：音頻倉庫不可用"
+            "value" : "導入失敗：音頻倉庫不可用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "匯入失敗：音頻倉庫不可用"
+            "value" : "匯入失敗：音訊倉庫不可用"
           }
         }
       }
@@ -496,13 +496,13 @@
             "value" : "正在导入，请稍候"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正在匯入，請稍候"
+            "value" : "正在導入，請稍候"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在匯入，請稍候"
@@ -524,16 +524,16 @@
             "value" : "加载失败：音频仓库不可用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "載入失敗：音頻倉庫不可用"
+            "value" : "加載失敗：音頻倉庫不可用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "載入失敗：音頻倉庫不可用"
+            "value" : "載入失敗：音訊倉庫不可用"
           }
         }
       }
@@ -552,13 +552,13 @@
             "value" : "正在加载更多..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正在載入更多..."
+            "value" : "正在加載更多..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在載入更多..."
@@ -580,13 +580,13 @@
             "value" : "音乐仓库"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音樂倉庫"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音樂倉庫"
@@ -608,13 +608,13 @@
             "value" : "歌曲仓库为空"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "歌曲倉庫為空"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "歌曲倉庫為空"
@@ -636,16 +636,16 @@
             "value" : "没有添加文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "沒有加入檔案"
+            "value" : "沒有添加文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "沒有加入檔案"
+            "value" : "沒有新增檔案"
           }
         }
       }
@@ -664,16 +664,16 @@
             "value" : "打开仓库目录并放入文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "打開倉庫目錄並放入檔案"
+            "value" : "打開倉庫目錄並放入文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "打開倉庫目錄並放入檔案"
+            "value" : "開啟倉庫目錄並放入檔案"
           }
         }
       }
@@ -692,13 +692,13 @@
             "value" : "或"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "或"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "或"
@@ -720,16 +720,16 @@
             "value" : "没有权限访问原始文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "沒有權限存取原始檔案"
+            "value" : "沒有權限訪問原始文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "沒有權限存取原始檔案"
+            "value" : "沒有許可權訪問原始檔案"
           }
         }
       }
@@ -748,13 +748,13 @@
             "value" : "播放"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "播放"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "播放"
@@ -776,13 +776,13 @@
             "value" : "正在读取仓库"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在讀取倉庫"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在讀取倉庫"
@@ -804,16 +804,16 @@
             "value" : "刷新失败：音频仓库不可用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "重新整理失敗：音頻倉庫不可用"
+            "value" : "刷新失敗：音頻倉庫不可用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "重新整理失敗：音頻倉庫不可用"
+            "value" : "重新整理失敗：音訊倉庫不可用"
           }
         }
       }
@@ -832,13 +832,13 @@
             "value" : "在 Finder 中显示"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "在 Finder 中顯示"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "在 Finder 中顯示"
@@ -860,13 +860,13 @@
             "value" : "正在随机排序..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在隨機排序..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在隨機排序..."
@@ -888,13 +888,13 @@
             "value" : "部分拖放的文件无法加载"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "部分拖放的檔案無法載入"
+            "value" : "部分拖放的文件無法加載"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "部分拖放的檔案無法載入"
@@ -916,16 +916,16 @@
             "value" : "部分文件已跳过，因为它们不是受支持的音频文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "部分檔案已略過，因為它們不是受支援的音頻檔案"
+            "value" : "部分文件已跳過，因為它們不是受支持的音頻文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "部分檔案已略過，因為它們不是受支援的音頻檔案"
+            "value" : "部分檔案已跳過，因為它們不是受支援的音訊檔案"
           }
         }
       }
@@ -944,13 +944,13 @@
             "value" : "正在排序"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在排序"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在排序"
@@ -972,13 +972,13 @@
             "value" : "正在顺序排序..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在順序排序..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在順序排序..."
@@ -1000,13 +1000,13 @@
             "value" : "正在排序..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在排序..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在排序..."
@@ -1028,13 +1028,13 @@
             "value" : "存储位置不可用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "儲存位置不可用"
+            "value" : "存儲位置不可用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "儲存位置不可用"
@@ -1056,13 +1056,13 @@
             "value" : "支持的格式：%@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "支援的格式：%@"
+            "value" : "支持的格式：%@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "支援的格式：%@"
@@ -1084,13 +1084,13 @@
             "value" : "共 %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "共 %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "共 %@"
@@ -1112,13 +1112,13 @@
             "value" : "不可用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "不可用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "不可用"
@@ -1144,13 +1144,13 @@
             "value" : "共 %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "共 %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "共 %@"
@@ -1173,13 +1173,13 @@
             "value" : "删除"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "刪除"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "刪除"
@@ -1202,13 +1202,13 @@
             "value" : "取消"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消"
@@ -1231,13 +1231,13 @@
             "value" : "在 Finder 中显示"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "在 Finder 中顯示"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "在 Finder 中顯示"
@@ -1260,13 +1260,13 @@
             "value" : "导出到下载目录"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "匯出到下載目錄"
+            "value" : "導出到下載目錄"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "匯出到下載目錄"
@@ -1289,13 +1289,13 @@
             "value" : "或"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "或"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "或"
@@ -1318,16 +1318,16 @@
             "value" : "打开仓库目录并放入文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "打開倉庫目錄並放入檔案"
+            "value" : "打開倉庫目錄並放入文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "打開倉庫目錄並放入檔案"
+            "value" : "開啟倉庫目錄並放入檔案"
           }
         }
       }
@@ -1347,13 +1347,13 @@
             "value" : "播放"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "播放"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "播放"
@@ -1376,13 +1376,13 @@
             "value" : "支持的格式：%@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "支援的格式：%@"
+            "value" : "支持的格式：%@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "支援的格式：%@"
@@ -1405,13 +1405,13 @@
             "value" : "正在加载更多..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正在載入更多..."
+            "value" : "正在加載更多..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在載入更多..."
@@ -1434,13 +1434,13 @@
             "value" : "正在排序"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在排序"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在排序"
@@ -1463,13 +1463,13 @@
             "value" : "正在读取仓库"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在讀取倉庫"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在讀取倉庫"
@@ -1492,16 +1492,16 @@
             "value" : "添加"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "添加"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "添加"
+            "value" : "新增"
           }
         }
       }
@@ -1521,13 +1521,13 @@
             "value" : "确定要删除这个文件吗？"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "確定要刪除這個檔案嗎？"
+            "value" : "確定要刪除這個文件嗎？"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "確定要刪除這個檔案嗎？"

@@ -15,16 +15,16 @@
             "value" : "音频播放控制"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音頻播放控制"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻播放控制"
+            "value" : "音訊播放控制"
           }
         }
       }
@@ -43,16 +43,16 @@
             "value" : "音频播放控制，如上一首和下一首"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻播放控制，例如上一首和下一首"
+            "value" : "音頻播放控制，如上一首和下一首"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻播放控制，例如上一首和下一首"
+            "value" : "音訊播放控制，如上一首和下一首"
           }
         }
       }
@@ -71,13 +71,13 @@
             "value" : "无法播放下一首: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "無法播放下一首: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "無法播放下一首: %@"
@@ -99,13 +99,13 @@
             "value" : "无法播放上一首: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "無法播放上一首: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "無法播放上一首: %@"
@@ -127,13 +127,13 @@
             "value" : "当前文件已被删除，正在播放第一首"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "當前檔案已被刪除，正在播放第一首"
+            "value" : "當前文件已被刪除，正在播放第一首"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "當前檔案已被刪除，正在播放第一首"
@@ -155,13 +155,13 @@
             "value" : "媒体库中没有文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "媒體庫中沒有檔案"
+            "value" : "媒體庫中沒有文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "媒體庫中沒有檔案"
@@ -183,13 +183,13 @@
             "value" : "已到达最后一首，正在播放第一首"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "已到達最後一首，正在播放第一首"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "已到達最後一首，正在播放第一首"

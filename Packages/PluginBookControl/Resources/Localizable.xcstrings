@@ -15,13 +15,13 @@
             "value" : "书籍播放控制"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "書籍播放控制"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "書籍播放控制"
@@ -43,13 +43,13 @@
             "value" : "负责书籍播放控制功能，如上一章、下一章"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "負責書籍播放控制功能，如上一章、下一章"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "負責書籍播放控制功能，如上一章、下一章"

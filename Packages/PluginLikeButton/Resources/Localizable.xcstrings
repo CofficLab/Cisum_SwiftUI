@@ -18,13 +18,13 @@
             "value" : "喜欢/取消喜欢 按钮"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "喜歡/取消喜歡 按鈕"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "喜歡/取消喜歡 按鈕"

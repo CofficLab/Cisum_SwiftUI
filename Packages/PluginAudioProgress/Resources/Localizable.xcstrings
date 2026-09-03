@@ -16,16 +16,16 @@
             "value" : "音频进度管理"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音頻進度管理"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻進度管理"
+            "value" : "音訊進度管理"
           }
         }
       }
@@ -45,16 +45,16 @@
             "value" : "负责音频播放进度的保存和恢复"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "負責音頻播放進度的保存和恢復"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "負責音頻播放進度的保存和恢復"
+            "value" : "負責音訊播放進度的儲存和恢復"
           }
         }
       }

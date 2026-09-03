@@ -15,13 +15,13 @@
             "value" : "极光紫"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "極光紫"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "極光紫"
@@ -44,13 +44,13 @@
             "value" : "沉浸式播放主题"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "沉浸式播放主題"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "沉浸式播放主題"
@@ -72,13 +72,13 @@
             "value" : "低饱和紫色点缀，保留轻盈空间感"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "低飽和紫色點綴，保留輕盈空間感"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "低飽和紫色點綴，保留輕盈空間感"

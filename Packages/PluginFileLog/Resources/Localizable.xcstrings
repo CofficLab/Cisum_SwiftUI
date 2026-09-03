@@ -15,16 +15,16 @@
             "value" : "收集系统日志到磁盘文件，支持自动轮转和清理"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "收集系統日誌到磁盤檔案，支持自動輪轉和清理"
+            "value" : "收集系統日誌到磁盤文件，支持自動輪轉和清理"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "收集系統日誌到磁盤檔案，支持自動輪轉和清理"
+            "value" : "收集系統日誌到磁碟檔案，支援自動輪轉和清理"
           }
         }
       }
@@ -43,13 +43,13 @@
             "value" : "文件日志"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "檔案日誌"
+            "value" : "文件日誌"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "檔案日誌"

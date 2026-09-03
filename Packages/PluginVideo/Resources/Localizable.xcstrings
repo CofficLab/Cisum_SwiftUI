@@ -3,56 +3,56 @@
   "strings": {
     "Calculating...": {
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calculating..."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "正在计算..."
           }
         },
-        "zh-HK": {
+        "zh-Hant-HK": {
           "stringUnit": {
             "state": "translated",
             "value": "正在計算..."
           }
         },
-        "zh-Hant": {
+        "zh-Hant-TW": {
           "stringUnit": {
             "state": "translated",
             "value": "正在計算..."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Calculating..."
           }
         }
       }
     },
     "No video files available": {
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No video files available"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "没有可用的视频文件"
           }
         },
-        "zh-HK": {
+        "zh-Hant-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "沒有可用的視頻文件"
+          }
+        },
+        "zh-Hant-TW": {
           "stringUnit": {
             "state": "translated",
             "value": "沒有可用的影片檔案"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "沒有可用的影片檔案"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No video files available"
           }
         }
       }
@@ -62,56 +62,56 @@
     },
     "Unavailable": {
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unavailable"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "不可用"
           }
         },
-        "zh-HK": {
+        "zh-Hant-HK": {
           "stringUnit": {
             "state": "translated",
             "value": "不可用"
           }
         },
-        "zh-Hant": {
+        "zh-Hant-TW": {
           "stringUnit": {
             "state": "translated",
             "value": "不可用"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unavailable"
           }
         }
       }
     },
     "Video": {
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Video"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "视频"
           }
         },
-        "zh-HK": {
+        "zh-Hant-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "視頻"
+          }
+        },
+        "zh-Hant-TW": {
           "stringUnit": {
             "state": "translated",
             "value": "影片"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "影片"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Video"
           }
         }
       }

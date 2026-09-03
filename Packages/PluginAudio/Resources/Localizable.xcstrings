@@ -15,13 +15,13 @@
             "value" : "数据同步过程中发生错误"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "資料同步過程中發生錯誤"
+            "value" : "數據同步過程中發生錯誤"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "資料同步過程中發生錯誤"
@@ -43,13 +43,13 @@
             "value" : "应用初始化过程中发生错误"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "應用初始化過程中發生錯誤"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "應用初始化過程中發生錯誤"
@@ -71,13 +71,13 @@
             "value" : "音频库初始化失败"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音訊庫初始化失敗"
+            "value" : "音頻庫初始化失敗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音訊庫初始化失敗"
@@ -99,13 +99,13 @@
             "value" : "音频未找到: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音訊未找到: %@"
+            "value" : "音頻未找到: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音訊未找到: %@"
@@ -128,16 +128,16 @@
             "value" : "音频播放功能"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音頻播放功能"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻播放功能"
+            "value" : "音訊播放功能"
           }
         }
       }
@@ -156,16 +156,16 @@
             "value" : "音频插件宿主配置未完成"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音訊插件宿主配置未完成"
+            "value" : "音頻插件宿主配置未完成"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音訊插件宿主配置未完成"
+            "value" : "音訊外掛宿主配置未完成"
           }
         }
       }
@@ -184,13 +184,13 @@
             "value" : "请检查应用设置或重新安装"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查應用設定或重新安裝"
+            "value" : "請檢查應用設置或重新安裝"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請檢查應用設定或重新安裝"
@@ -212,16 +212,16 @@
             "value" : "请检查磁盘空间和访问权限"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查磁碟空間和存取權限"
+            "value" : "請檢查磁盤空間和訪問權限"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查磁碟空間和存取權限"
+            "value" : "請檢查磁碟空間和訪問許可權"
           }
         }
       }
@@ -240,16 +240,16 @@
             "value" : "请检查磁盘空间和权限"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查磁碟空間和權限"
+            "value" : "請檢查磁盤空間和權限"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查磁碟空間和權限"
+            "value" : "請檢查磁碟空間和許可權"
           }
         }
       }
@@ -268,16 +268,16 @@
             "value" : "请检查文件权限和磁盘状态"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查檔案權限和磁碟狀態"
+            "value" : "請檢查文件權限和磁盤狀態"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查檔案權限和磁碟狀態"
+            "value" : "請檢查檔案許可權和磁碟狀態"
           }
         }
       }
@@ -296,16 +296,16 @@
             "value" : "请检查文件权限或关闭相关应用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查檔案權限或關閉相關應用"
+            "value" : "請檢查文件權限或關閉相關應用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查檔案權限或關閉相關應用"
+            "value" : "請檢查檔案許可權或關閉相關應用"
           }
         }
       }
@@ -324,13 +324,13 @@
             "value" : "请检查应用启动流程"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查應用啟動流程"
+            "value" : "請檢查應用啓動流程"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請檢查應用啟動流程"
@@ -352,13 +352,13 @@
             "value" : "请检查数据源或重新下载"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查資料來源或重新下載"
+            "value" : "請檢查數據源或重新下載"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請檢查資料來源或重新下載"
@@ -380,16 +380,16 @@
             "value" : "请检查磁盘路径和访问权限"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查磁碟路徑和存取權限"
+            "value" : "請檢查磁盤路徑和訪問權限"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查磁碟路徑和存取權限"
+            "value" : "請檢查磁碟路徑和訪問許可權"
           }
         }
       }
@@ -408,13 +408,13 @@
             "value" : "请检查网络连接或稍后重试"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查網路連線或稍後重試"
+            "value" : "請檢查網絡連接或稍後重試"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請檢查網路連線或稍後重試"
@@ -436,13 +436,13 @@
             "value" : "请检查网络连接"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查網路連線"
+            "value" : "請檢查網絡連接"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請檢查網路連線"
@@ -464,16 +464,16 @@
             "value" : "请检查播放列表或切换到其他播放模式"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查播放清單或切換到其他播放模式"
+            "value" : "請檢查播放列表或切換到其他播放模式"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查播放清單或切換到其他播放模式"
+            "value" : "請檢查播放列表或切換到其他播放模式"
           }
         }
       }
@@ -492,13 +492,13 @@
             "value" : "请检查文件是否存在或重新同步"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請檢查檔案是否存在或重新同步"
+            "value" : "請檢查文件是否存在或重新同步"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請檢查檔案是否存在或重新同步"
@@ -520,13 +520,13 @@
             "value" : "配置错误 [%@]: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "配置錯誤 [%@]: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "配置錯誤 [%@]: %@"
@@ -548,13 +548,13 @@
             "value" : "数据库未找到"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "資料庫未找到"
+            "value" : "數據庫未找到"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "資料庫未找到"
@@ -576,13 +576,13 @@
             "value" : "数据库操作失败 [%@]: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "資料庫操作失敗 [%@]: %@"
+            "value" : "數據庫操作失敗 [%@]: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "資料庫操作失敗 [%@]: %@"
@@ -604,13 +604,13 @@
             "value" : "删除操作失败"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "刪除操作失敗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "刪除操作失敗"
@@ -632,16 +632,16 @@
             "value" : "磁盘访问失败 [%@]: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "磁碟存取失敗 [%@]: %@"
+            "value" : "磁盤訪問失敗 [%@]: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "磁碟存取失敗 [%@]: %@"
+            "value" : "磁碟訪問失敗 [%@]: %@"
           }
         }
       }
@@ -660,13 +660,13 @@
             "value" : "请重新下载或选择其他音频文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請重新下載或選擇其他音訊檔案"
+            "value" : "請重新下載或選擇其他音頻文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請重新下載或選擇其他音訊檔案"
@@ -688,13 +688,13 @@
             "value" : "数据删除失败: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "資料刪除失敗: %@"
+            "value" : "數據刪除失敗: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "資料刪除失敗: %@"
@@ -716,13 +716,13 @@
             "value" : "数据保存失败: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "資料儲存失敗: %@"
+            "value" : "數據保存失敗: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "資料儲存失敗: %@"
@@ -744,13 +744,13 @@
             "value" : "切换喜欢状态失败: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "切換喜歡狀態失敗: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "切換喜歡狀態失敗: %@"
@@ -772,13 +772,13 @@
             "value" : "文件损坏: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "檔案損壞: %@"
+            "value" : "文件損壞: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "檔案損壞: %@"
@@ -800,13 +800,13 @@
             "value" : "文件监控失败: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "檔案監控失敗: %@"
+            "value" : "文件監控失敗: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "檔案監控失敗: %@"
@@ -828,13 +828,13 @@
             "value" : "文件系统错误 [%@]: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "檔案系統錯誤 [%@]: %@"
+            "value" : "文件系統錯誤 [%@]: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "檔案系統錯誤 [%@]: %@"
@@ -856,16 +856,16 @@
             "value" : "文件系统权限不足或文件被占用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "檔案系統權限不足或檔案被佔用"
+            "value" : "文件系統權限不足或文件被佔用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "檔案系統權限不足或檔案被佔用"
+            "value" : "檔案系統許可權不足或檔案被佔用"
           }
         }
       }
@@ -884,13 +884,13 @@
             "value" : "初始化失败: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "初始化失敗: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "初始化失敗: %@"
@@ -915,13 +915,13 @@
             "value" : "数据无效: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "資料無效: %@"
+            "value" : "數據無效: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "資料無效: %@"
@@ -943,13 +943,13 @@
             "value" : "状态无效，期望: %@，实际: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "狀態無效，期望: %@，實際: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "狀態無效，期望: %@，實際: %@"
@@ -972,13 +972,13 @@
             "value" : "音乐"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音樂"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音樂"
@@ -1000,13 +1000,13 @@
             "value" : "网络错误 [%@]: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "網路錯誤 [%@]: %@"
+            "value" : "網絡錯誤 [%@]: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "網路錯誤 [%@]: %@"
@@ -1028,13 +1028,13 @@
             "value" : "没有下一个音频文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "沒有下一個音訊檔案"
+            "value" : "沒有下一個音頻文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "沒有下一個音訊檔案"
@@ -1056,13 +1056,13 @@
             "value" : "没有上一个音频文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "沒有上一個音訊檔案"
+            "value" : "沒有上一個音頻文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "沒有上一個音訊檔案"
@@ -1084,16 +1084,16 @@
             "value" : "请重启应用或检查系统权限"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請重啟應用或檢查系統權限"
+            "value" : "請重啓應用或檢查系統權限"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請重啟應用或檢查系統權限"
+            "value" : "請重啟應用或檢查系統許可權"
           }
         }
       }
@@ -1112,13 +1112,13 @@
             "value" : "请先设置媒体仓库的存储位置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請先設定媒體倉庫的儲存位置"
+            "value" : "請先設置媒體倉庫的存儲位置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請先設定媒體倉庫的儲存位置"
@@ -1140,16 +1140,16 @@
             "value" : "存储位置发生了变化"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "存儲位置發生了變化"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "存儲位置發生了變化"
+            "value" : "儲存位置發生了變化"
           }
         }
       }
@@ -1168,13 +1168,13 @@
             "value" : "存储位置未设置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "儲存位置未設定"
+            "value" : "存儲位置未設置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "儲存位置未設定"
@@ -1196,13 +1196,13 @@
             "value" : "同步失败: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "同步失敗: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "同步失敗: %@"
@@ -1224,13 +1224,13 @@
             "value" : "应用尚未注入数据库和存储路径配置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "應用尚未注入資料庫和儲存路徑配置"
+            "value" : "應用尚未注入數據庫和存儲路徑配置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "應用尚未注入資料庫和儲存路徑配置"
@@ -1252,13 +1252,13 @@
             "value" : "应用状态与预期不符"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "應用狀態與預期不符"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "應用狀態與預期不符"
@@ -1280,13 +1280,13 @@
             "value" : "音频文件可能已损坏或不完整"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音訊檔案可能已損壞或不完整"
+            "value" : "音頻文件可能已損壞或不完整"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音訊檔案可能已損壞或不完整"
@@ -1308,16 +1308,16 @@
             "value" : "当前音频是播放列表中的第一个"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "目前音訊是播放清單中的第一個"
+            "value" : "當前音頻是播放列表中的第一個"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "目前音訊是播放清單中的第一個"
+            "value" : "當前音訊是播放列表中的第一個"
           }
         }
       }
@@ -1336,16 +1336,16 @@
             "value" : "当前音频是播放列表中的最后一个"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "目前音訊是播放清單中的最後一個"
+            "value" : "當前音頻是播放列表中的最後一個"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "目前音訊是播放清單中的最後一個"
+            "value" : "當前音訊是播放列表中的最後一個"
           }
         }
       }
@@ -1364,13 +1364,13 @@
             "value" : "数据删除操作失败"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "資料刪除操作失敗"
+            "value" : "數據刪除操作失敗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "資料刪除操作失敗"
@@ -1392,13 +1392,13 @@
             "value" : "数据格式不符合预期"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "資料格式不符合預期"
+            "value" : "數據格式不符合預期"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "資料格式不符合預期"
@@ -1420,13 +1420,13 @@
             "value" : "数据持久化操作失败"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "資料持久化操作失敗"
+            "value" : "數據持久化操作失敗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "資料持久化操作失敗"
@@ -1448,13 +1448,13 @@
             "value" : "数据库连接丢失或数据库文件损坏"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "資料庫連線丟失或資料庫檔案損壞"
+            "value" : "數據庫連接丟失或數據庫文件損壞"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "資料庫連線丟失或資料庫檔案損壞"
@@ -1476,13 +1476,13 @@
             "value" : "数据库操作执行失败"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "資料庫操作執行失敗"
+            "value" : "數據庫操作執行失敗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "資料庫操作執行失敗"
@@ -1504,13 +1504,13 @@
             "value" : "数据库更新操作执行失败"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "資料庫更新操作執行失敗"
+            "value" : "數據庫更新操作執行失敗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "資料庫更新操作執行失敗"
@@ -1532,13 +1532,13 @@
             "value" : "文件系统监控服务失败"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "檔案系統監控服務失敗"
+            "value" : "文件系統監控服務失敗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "檔案系統監控服務失敗"
@@ -1560,13 +1560,13 @@
             "value" : "文件系统操作失败"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "檔案系統操作失敗"
+            "value" : "文件系統操作失敗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "檔案系統操作失敗"
@@ -1588,13 +1588,13 @@
             "value" : "网络连接或数据传输失败"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "網路連線或資料傳輸失敗"
+            "value" : "網絡連接或數據傳輸失敗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "網路連線或資料傳輸失敗"
@@ -1616,13 +1616,13 @@
             "value" : "请求的音频文件不存在"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請求的音訊檔案不存在"
+            "value" : "請求的音頻文件不存在"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請求的音訊檔案不存在"
@@ -1644,16 +1644,16 @@
             "value" : "无法访问指定的磁盘位置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法存取指定的磁碟位置"
+            "value" : "無法訪問指定的磁盤位置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法存取指定的磁碟位置"
+            "value" : "無法訪問指定的磁碟位置"
           }
         }
       }
@@ -1672,16 +1672,16 @@
             "value" : "指定的磁盘路径不存在或无法访问"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "指定的磁碟路徑不存在或無法存取"
+            "value" : "指定的磁盤路徑不存在或無法訪問"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "指定的磁碟路徑不存在或無法存取"
+            "value" : "指定的磁碟路徑不存在或無法訪問"
           }
         }
       }
@@ -1700,13 +1700,13 @@
             "value" : "应用配置存在问题"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "應用配置存在問題"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "應用配置存在問題"
@@ -1728,13 +1728,13 @@
             "value" : "请稍后重试"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請稍後重試"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請稍後重試"
@@ -1756,13 +1756,13 @@
             "value" : "请尝试重新打开应用或检查媒体仓库设置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請嘗試重新開啟應用或檢查媒體倉庫設定"
+            "value" : "請嘗試重新打開應用或檢查媒體倉庫設置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請嘗試重新開啟應用或檢查媒體倉庫設定"
@@ -1784,16 +1784,16 @@
             "value" : "请尝试重启应用或重置数据库"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請嘗試重啟應用或重設資料庫"
+            "value" : "請嘗試重啓應用或重置數據庫"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請嘗試重啟應用或重設資料庫"
+            "value" : "請嘗試重啟應用或重置資料庫"
           }
         }
       }
@@ -1812,13 +1812,13 @@
             "value" : "请尝试重启应用或重新同步"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請嘗試重啟應用或重新同步"
+            "value" : "請嘗試重啓應用或重新同步"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請嘗試重啟應用或重新同步"
@@ -1840,13 +1840,13 @@
             "value" : "请尝试重启应用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請嘗試重啟應用"
+            "value" : "請嘗試重啓應用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請嘗試重啟應用"
@@ -1868,13 +1868,13 @@
             "value" : "请尝试重新操作"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請嘗試重新操作"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請嘗試重新操作"
@@ -1896,16 +1896,16 @@
             "value" : "无法访问磁盘"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法存取磁碟"
+            "value" : "無法訪問磁盤"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法存取磁碟"
+            "value" : "無法訪問磁碟"
           }
         }
       }
@@ -1925,16 +1925,16 @@
             "value" : "存储位置未设置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "存儲位置未設置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "存儲位置未設置"
+            "value" : "儲存位置未設定"
           }
         }
       }
@@ -1957,16 +1957,16 @@
             "value" : "请先设置媒体仓库的存储位置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "請先設置媒體倉庫的存儲位置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請先設置媒體倉庫的存儲位置"
+            "value" : "請先設定媒體倉庫的儲存位置"
           }
         }
       }

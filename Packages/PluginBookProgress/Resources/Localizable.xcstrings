@@ -15,13 +15,13 @@
             "value" : "书籍进度管理"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "書籍進度管理"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "書籍進度管理"
@@ -43,13 +43,13 @@
             "value" : "下载失败: %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "下載失敗: %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "下載失敗: %@"
@@ -71,16 +71,16 @@
             "value" : "负责书籍播放进度的保存和恢复"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "負責書籍播放進度的保存和恢復"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "負責書籍播放進度的保存和恢復"
+            "value" : "負責書籍播放進度的儲存和恢復"
           }
         }
       }

@@ -15,13 +15,13 @@
             "value" : "Cisum"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cisum"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cisum"
@@ -44,16 +44,16 @@
             "value" : "Cisum 默认主题"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cisum 默認主題"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cisum 默認主題"
+            "value" : "Cisum 預設主題"
           }
         }
       }
@@ -75,13 +75,13 @@
             "value" : "沿用原始日落渐变配色"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "沿用原始日落漸變配色"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "沿用原始日落漸變配色"

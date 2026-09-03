@@ -15,13 +15,13 @@
             "value" : "星云粉"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "星雲粉"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "星雲粉"
@@ -43,13 +43,13 @@
             "value" : "柔和粉色点缀，保持干净阅读层次"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "柔和粉色點綴，保持乾淨閱讀層次"
+            "value" : "柔和粉色點綴，保持乾淨閲讀層次"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "柔和粉色點綴，保持乾淨閱讀層次"
@@ -72,13 +72,13 @@
             "value" : "柔和暖色主题"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "柔和暖色主題"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "柔和暖色主題"

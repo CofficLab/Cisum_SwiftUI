@@ -15,16 +15,16 @@
             "value" : "音频播放模式管理"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音頻播放模式管理"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻播放模式管理"
+            "value" : "音訊播放模式管理"
           }
         }
       }
@@ -43,16 +43,16 @@
             "value" : "负责音频播放模式的设置和管理"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "負責音頻播放模式的設置和管理"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "負責音頻播放模式的設置和管理"
+            "value" : "負責音訊播放模式的設定和管理"
           }
         }
       }
@@ -71,13 +71,13 @@
             "value" : "无法更新播放队列：%@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法更新播放佇列：%@"
+            "value" : "無法更新播放隊列：%@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "無法更新播放佇列：%@"
@@ -99,16 +99,16 @@
             "value" : "单曲循环"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "單曲循環"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "單曲循環"
+            "value" : "單曲迴圈"
           }
         }
       }
@@ -127,13 +127,13 @@
             "value" : "顺序播放"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "順序播放"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "順序播放"
@@ -155,13 +155,13 @@
             "value" : "随机播放"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "隨機播放"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "隨機播放"

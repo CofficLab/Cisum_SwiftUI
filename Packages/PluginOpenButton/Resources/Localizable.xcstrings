@@ -18,16 +18,16 @@
             "value" : "当前资源打开按钮"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "目前資源開啟按鈕"
+            "value" : "當前資源打開按鈕"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "目前資源開啟按鈕"
+            "value" : "當前資源開啟按鈕"
           }
         }
       }
@@ -46,16 +46,16 @@
             "value" : "在访达中显示"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在 Finder 中顯示"
+            "value" : "在訪達中顯示"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在 Finder 中顯示"
+            "value" : "在訪達中顯示"
           }
         }
       }

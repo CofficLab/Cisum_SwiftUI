@@ -16,13 +16,13 @@
             "value" : "有声书阅读主题"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "有聲書閱讀主題"
+            "value" : "有聲書閲讀主題"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "有聲書閱讀主題"
@@ -45,13 +45,13 @@
             "value" : "Paper"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paper"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paper"
@@ -73,13 +73,13 @@
             "value" : "纸张暖白背景，适合有声书"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "紙張暖白背景，適合有聲書"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "紙張暖白背景，適合有聲書"

@@ -15,13 +15,13 @@
             "value" : "蓝灰录音室质感，适合专注听音"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "藍灰錄音室質感，適合專注聽音"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "藍灰錄音室質感，適合專注聽音"
@@ -43,13 +43,13 @@
             "value" : "Studio Blue"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Studio Blue"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Studio Blue"
@@ -72,13 +72,13 @@
             "value" : "录音室蓝灰主题"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "錄音室藍灰主題"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "錄音室藍灰主題"

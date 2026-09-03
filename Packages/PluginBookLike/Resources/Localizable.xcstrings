@@ -15,13 +15,13 @@
             "value" : "书籍喜欢管理"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "書籍喜歡管理"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "書籍喜歡管理"
@@ -43,13 +43,13 @@
             "value" : "喜欢的书籍"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "喜歡的書籍"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "喜歡的書籍"
@@ -71,16 +71,16 @@
             "value" : "加载中..."
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "加載中..."
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "加載中..."
+            "value" : "載入中..."
           }
         }
       }
@@ -99,16 +99,16 @@
             "value" : "负责书籍喜欢状态的独立管理和存储"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "負責書籍喜歡狀態的獨立管理和存儲"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "負責書籍喜歡狀態的獨立管理和存儲"
+            "value" : "負責書籍喜歡狀態的獨立管理和儲存"
           }
         }
       }
@@ -127,13 +127,13 @@
             "value" : "还没有喜欢的书籍"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "還沒有喜歡的書籍"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "還沒有喜歡的書籍"

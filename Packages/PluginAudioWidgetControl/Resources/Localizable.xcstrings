@@ -15,16 +15,16 @@
             "value" : "响应小组件的播放控制命令"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "響應小組件的播放控制命令"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "響應小組件的播放控制命令"
+            "value" : "響應小元件的播放控制命令"
           }
         }
       }
@@ -43,13 +43,13 @@
             "value" : "Widget 控制"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Widget 控制"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Widget 控制"

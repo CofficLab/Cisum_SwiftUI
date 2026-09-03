@@ -15,13 +15,13 @@
             "value" : "%lld %@失败"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld %@失敗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld %@失敗"
@@ -43,13 +43,13 @@
             "value" : "基础版本最多支持 %lld 个文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "基礎版本最多支援 %lld 個檔案"
+            "value" : "基礎版本最多支持 %lld 個文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "基礎版本最多支援 %lld 個檔案"
@@ -74,13 +74,13 @@
             "value" : "复制完成"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "複製完成"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "複製完成"
@@ -102,16 +102,16 @@
             "value" : "在后台复制文件，注意仅用于 macOS"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在背景複製檔案，僅適用於 macOS"
+            "value" : "在後台複製文件，注意僅用於 macOS"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在背景複製檔案，僅適用於 macOS"
+            "value" : "在後臺複製檔案，注意僅用於 macOS"
           }
         }
       }
@@ -130,13 +130,13 @@
             "value" : "已达到复制数量限制"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "已達到複製數量限制"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "已達到複製數量限制"
@@ -158,13 +158,13 @@
             "value" : "复制服务不可用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "複製服務不可用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "複製服務不可用"
@@ -186,13 +186,13 @@
             "value" : "个复制任务"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "個複製任務"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "個複製任務"
@@ -214,13 +214,13 @@
             "value" : "个复制任务"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "個複製任務"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "個複製任務"
@@ -242,13 +242,13 @@
             "value" : "正在复制 %lld %@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在複製 %lld %@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在複製 %lld %@"
@@ -270,13 +270,13 @@
             "value" : "正在复制 %lld %@，%lld 个失败"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在複製 %lld %@，%lld 個失敗"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在複製 %lld %@，%lld 個失敗"
@@ -298,13 +298,13 @@
             "value" : "当前订阅："
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "當前訂閱："
+            "value" : "當前訂閲："
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "當前訂閱："
@@ -326,13 +326,13 @@
             "value" : "删除失败：%@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "刪除失敗：%@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "刪除失敗：%@"
@@ -354,16 +354,16 @@
             "value" : "删除失败：复制任务列表已变化，请重试。"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "刪除失敗：複製任務列表已變更，請重試。"
+            "value" : "刪除失敗：複製任務列表已變化，請重試。"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "刪除失敗：複製任務列表已變更，請重試。"
+            "value" : "刪除失敗：複製任務列表已變化，請重試。"
           }
         }
       }
@@ -382,16 +382,16 @@
             "value" : "拖放音乐文件到这里"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "拖放音樂文件到此處"
+            "value" : "拖放音樂文件到這裏"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "拖放音樂文件到此處"
+            "value" : "拖放音樂檔案到這裡"
           }
         }
       }
@@ -410,16 +410,16 @@
             "value" : "准备文件失败：%@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "準備文件失敗：%@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "準備文件失敗：%@"
+            "value" : "準備檔案失敗：%@"
           }
         }
       }
@@ -438,13 +438,13 @@
             "value" : "个文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "個檔案"
+            "value" : "個文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "個檔案"
@@ -466,13 +466,13 @@
             "value" : "个文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "個檔案"
+            "value" : "個文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "個檔案"
@@ -494,13 +494,13 @@
             "value" : "进行中"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "進行中"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "進行中"
@@ -522,13 +522,13 @@
             "value" : "暂无复制任务"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "暫無複製任務"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "暫無複製任務"
@@ -550,16 +550,16 @@
             "value" : "没有添加任何文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "沒有新增任何文件"
+            "value" : "沒有添加任何文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "沒有新增任何文件"
+            "value" : "沒有新增任何檔案"
           }
         }
       }
@@ -578,13 +578,13 @@
             "value" : "由于免费版复制额度即将用完，仅添加了 %lld 个文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "由於免費版複製額度即將用完，僅新增了 %lld 個檔案"
+            "value" : "由於免費版複製額度即將用完，僅添加了 %lld 個文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "由於免費版複製額度即將用完，僅新增了 %lld 個檔案"
@@ -606,16 +606,16 @@
             "value" : "没有访问原文件的权限"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "沒有存取原文件的權限"
+            "value" : "沒有訪問原文件的權限"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "沒有存取原文件的權限"
+            "value" : "沒有訪問原檔案的許可權"
           }
         }
       }
@@ -634,13 +634,13 @@
             "value" : "部分拖放的文件无法加载"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "部分拖放的檔案無法載入"
+            "value" : "部分拖放的文件無法加載"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "部分拖放的檔案無法載入"
@@ -662,16 +662,16 @@
             "value" : "部分文件已跳过，因为它们不是受支持的音频文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "部分檔案已略過，因為它們不是受支援的音頻檔案"
+            "value" : "部分文件已跳過，因為它們不是受支持的音頻文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "部分檔案已略過，因為它們不是受支援的音頻檔案"
+            "value" : "部分檔案已跳過，因為它們不是受支援的音訊檔案"
           }
         }
       }
@@ -690,13 +690,13 @@
             "value" : "存储位置不可用"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "儲存位置不可用"
+            "value" : "存儲位置不可用"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "儲存位置不可用"
@@ -718,13 +718,13 @@
             "value" : "支持的格式"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "支援的格式"
+            "value" : "支持的格式"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "支援的格式"
@@ -746,16 +746,16 @@
             "value" : "无法再访问原文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法再存取原文件"
+            "value" : "無法再訪問原文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法再存取原文件"
+            "value" : "無法再訪問原檔案"
           }
         }
       }
@@ -774,13 +774,13 @@
             "value" : "等待复制"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "等待複製"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "等待複製"
@@ -806,13 +806,13 @@
             "value" : "基础版本最多支持 %lld 个文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "基礎版本最多支援 %lld 個檔案"
+            "value" : "基礎版本最多支持 %lld 個文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "基礎版本最多支援 %lld 個檔案"
@@ -835,13 +835,13 @@
             "value" : "当前订阅："
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "當前訂閱："
+            "value" : "當前訂閲："
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "當前訂閱："
@@ -864,16 +864,16 @@
             "value" : "拖放音乐文件到这里"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "拖放音樂文件到此處"
+            "value" : "拖放音樂文件到這裏"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "拖放音樂文件到此處"
+            "value" : "拖放音樂檔案到這裡"
           }
         }
       }
@@ -893,13 +893,13 @@
             "value" : "支持的格式"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "支援的格式"
+            "value" : "支持的格式"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "支援的格式"
@@ -922,13 +922,13 @@
             "value" : "暂无复制任务"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "暫無複製任務"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "暫無複製任務"
@@ -951,13 +951,13 @@
             "value" : "正在复制 %lld"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在複製 %lld"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在複製 %lld"
@@ -980,13 +980,13 @@
             "value" : "正在复制 %lld 个文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正在複製 %lld 個檔案"
+            "value" : "正在複製 %lld 個文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在複製 %lld 個檔案"

@@ -16,16 +16,16 @@
             "value" : "%d 个文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%d 個文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%d 個文件"
+            "value" : "%d 個檔案"
           }
         }
       }
@@ -44,16 +44,16 @@
             "value" : "%lld 个文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 個文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld 個文件"
+            "value" : "%lld 個檔案"
           }
         }
       }
@@ -72,16 +72,16 @@
             "value" : "%lld 个文件"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 個文件"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld 個文件"
+            "value" : "%lld 個檔案"
           }
         }
       }
@@ -100,16 +100,16 @@
             "value" : "音频插件的设置入口"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音頻插件的設置入口"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻插件的設置入口"
+            "value" : "音訊外掛的設定入口"
           }
         }
       }
@@ -128,16 +128,16 @@
             "value" : "音频设置"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音頻設置"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻設置"
+            "value" : "音訊設定"
           }
         }
       }
@@ -157,16 +157,16 @@
             "value" : "无法获取音乐库信息"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "無法獲取音樂庫信息"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法獲取音樂庫信息"
+            "value" : "無法獲取音樂庫資訊"
           }
         }
       }
@@ -186,13 +186,13 @@
             "value" : "错误"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "錯誤"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "錯誤"
@@ -215,16 +215,16 @@
             "value" : "文件数量"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "文件數量"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "文件數量"
+            "value" : "檔案數量"
           }
         }
       }
@@ -243,16 +243,16 @@
             "value" : "iCloud 云盘，将同步"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iCloud 雲端硬碟，將同步"
+            "value" : "iCloud 雲盤，將同步"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iCloud 雲端硬碟，將同步"
+            "value" : "iCloud 雲盤，將同步"
           }
         }
       }
@@ -272,13 +272,13 @@
             "value" : "库大小"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "庫大小"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "庫大小"
@@ -300,13 +300,13 @@
             "value" : "本地目录，不会同步"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "本地目錄，不會同步"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "本地目錄，不會同步"
@@ -329,13 +329,13 @@
             "value" : "音乐库"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音樂庫"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音樂庫"
@@ -358,16 +358,16 @@
             "value" : "打开库"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "打開庫"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "打開庫"
+            "value" : "開啟庫"
           }
         }
       }
@@ -387,16 +387,16 @@
             "value" : "库中的文件总数"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "庫中的文件總數"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "庫中的文件總數"
+            "value" : "庫中的檔案總數"
           }
         }
       }
@@ -416,16 +416,16 @@
             "value" : "在 Finder 中查看"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "在 Finder 中查看"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在 Finder 中查看"
+            "value" : "在 Finder 中檢視"
           }
         }
       }

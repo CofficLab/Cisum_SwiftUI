@@ -15,16 +15,16 @@
             "value" : "音频下载管理"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音頻下載管理"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻下載管理"
+            "value" : "音訊下載管理"
           }
         }
       }
@@ -43,16 +43,16 @@
             "value" : "负责音频文件的自动下载"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "負責音頻檔案的自動下載"
+            "value" : "負責音頻文件的自動下載"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "負責音頻檔案的自動下載"
+            "value" : "負責音訊檔案的自動下載"
           }
         }
       }
@@ -71,13 +71,13 @@
             "value" : "下载失败：%@"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "下載失敗：%@"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "下載失敗：%@"
@@ -100,13 +100,13 @@
             "value" : "音乐库"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音樂庫"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音樂庫"

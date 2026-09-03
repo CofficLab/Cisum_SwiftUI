@@ -15,16 +15,16 @@
             "value" : "添加"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "添加"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "添加"
+            "value" : "新增"
           }
         }
       }
@@ -43,16 +43,16 @@
             "value" : "音频文件数据库视图"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻檔案資料庫視圖"
+            "value" : "音頻文件數據庫視圖"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻檔案資料庫視圖"
+            "value" : "音訊檔案資料庫檢視"
           }
         }
       }
@@ -71,16 +71,16 @@
             "value" : "音频仓库"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音頻倉庫"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "音頻倉庫"
+            "value" : "音訊倉庫"
           }
         }
       }
@@ -99,13 +99,13 @@
             "value" : "音乐仓库"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音樂倉庫"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "音樂倉庫"
@@ -127,13 +127,13 @@
             "value" : "共 %lld"
           }
         },
-        "zh-Hant" : {
+        "zh-Hant-HK" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "共 %lld"
           }
         },
-        "zh-HK" : {
+        "zh-Hant-TW" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "共 %lld"

@@ -8,6 +8,18 @@
             "state" : "translated",
             "value" : "可用场景"
           }
+        },
+        "zh-Hant-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可用場景"
+          }
+        },
+        "zh-Hant-TW" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可用場景"
+          }
         }
       }
     },
@@ -18,6 +30,18 @@
             "state" : "translated",
             "value" : "当前"
           }
+        },
+        "zh-Hant-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當前"
+          }
+        },
+        "zh-Hant-TW" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當前"
+          }
         }
       }
     },
@@ -27,6 +51,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "当前场景"
+          }
+        },
+        "zh-Hant-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當前場景"
+          }
+        },
+        "zh-Hant-TW" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當前場景"
           }
         }
       }
@@ -39,6 +75,18 @@
             "state" : "translated",
             "value" : "启用一个提供场景的插件"
           }
+        },
+        "zh-Hant-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "啓用一個提供場景的插件"
+          }
+        },
+        "zh-Hant-TW" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "啟用一個提供場景的外掛"
+          }
         }
       }
     },
@@ -48,6 +96,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "管理当前场景"
+          }
+        },
+        "zh-Hant-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "管理當前場景"
+          }
+        },
+        "zh-Hant-TW" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "管理當前場景"
           }
         }
       }
@@ -62,6 +122,18 @@
             "state" : "translated",
             "value" : "未选择场景"
           }
+        },
+        "zh-Hant-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未選擇場景"
+          }
+        },
+        "zh-Hant-TW" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未選擇場景"
+          }
         }
       }
     },
@@ -71,6 +143,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "没有可用场景"
+          }
+        },
+        "zh-Hant-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有可用場景"
+          }
+        },
+        "zh-Hant-TW" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有可用場景"
           }
         }
       }
@@ -82,6 +166,18 @@
             "state" : "translated",
             "value" : "场景"
           }
+        },
+        "zh-Hant-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "場景"
+          }
+        },
+        "zh-Hant-TW" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "場景"
+          }
         }
       }
     },
@@ -92,6 +188,18 @@
             "state" : "translated",
             "value" : "切换到此场景"
           }
+        },
+        "zh-Hant-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "切換到此場景"
+          }
+        },
+        "zh-Hant-TW" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "切換到此場景"
+          }
         }
       }
     },
@@ -101,6 +209,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "主窗口当前显示的场景"
+          }
+        },
+        "zh-Hant-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "主窗口當前顯示的場景"
+          }
+        },
+        "zh-Hant-TW" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "主視窗當前顯示的場景"
           }
         }
       }
