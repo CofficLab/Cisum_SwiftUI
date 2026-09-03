@@ -37,6 +37,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
     }
 
     @EnvironmentObject var repo: BookRepo
+    @EnvironmentObject var viewModel: BookGridViewModel
     @Environment(\.bookDBViewDependencies) private var dependencies
     @LumiTheme private var appTheme
 
@@ -111,22 +112,18 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
         .task(id: BookTileLoadIdentity(bookURL: url, dbRoot: dependencies.dbRoot, stateRevision: stateRevision)) {
             await loadTileData()
         }
-        .onReceive(NotificationCenter.default.publisher(for: .bookStateUpdated), perform: handleBookStateUpdated)
+        .onChange(of: viewModel.lastStateUpdatedURL) { _, updatedURL in
+            guard BookTileStateRefreshPolicy.shouldReloadTile(bookURL: url, updatedBookURL: updatedURL) else {
+                return
+            }
+            stateRevision = BookTileStateRefreshPolicy.nextRevision(after: stateRevision)
+        }
     }
 }
 
 // MARK: - Action
 
 extension BookTile {
-    func handleBookStateUpdated(_ notification: Notification) {
-        let updatedBookURL = notification.userInfo?["url"] as? URL
-        guard BookTileStateRefreshPolicy.shouldReloadTile(bookURL: url, updatedBookURL: updatedBookURL) else {
-            return
-        }
-
-        stateRevision = BookTileStateRefreshPolicy.nextRevision(after: stateRevision)
-    }
-
     @MainActor
     func loadTileData() async {
         cover = nil

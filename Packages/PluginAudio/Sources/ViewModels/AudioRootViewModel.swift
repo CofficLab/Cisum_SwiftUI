@@ -3,7 +3,7 @@ import OSLog
 import SwiftData
 
 /// 音频容器加载的内部错误（迁移 Phase 2，原位于 `AudioRootView`）。
-private enum AudioContainerLoadError: Error {
+enum AudioContainerLoadError: Error {
     case message(String)
 
     static let storageMissingReason = "Storage not found"
@@ -52,7 +52,7 @@ final class AudioRootViewModel: ObservableObject {
             requestedDatabaseURL = try databaseURL()
         } catch {
             isInitializing = false
-            error = AudioPluginError.initialization(reason: error.localizedDescription)
+            self.error = AudioPluginError.initialization(reason: error.localizedDescription)
             return
         }
 

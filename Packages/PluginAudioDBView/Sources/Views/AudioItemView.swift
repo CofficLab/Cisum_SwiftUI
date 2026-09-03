@@ -127,7 +127,7 @@ struct AudioItemView: View, Equatable, SuperLog {
     nonisolated static let verbose = false
 
     @EnvironmentObject var playMan: MagicPlayMan
-    @Environment(\.audioDBDependencies) private var dependencies
+    @EnvironmentObject var listViewModel: AudioListViewModel
     @LumiTheme private var appTheme
 
     let url: URL
@@ -380,38 +380,8 @@ extension AudioItemView {
         #endif
     }
 
-    /// 删除文件
+    /// 删除文件（经 AudioListViewModel 委托，View 只发意图）。
     private func deleteFile() {
-        Task {
-            do {
-                guard let repo = await dependencies.audioRepo() else {
-                    alert_error(String(localized: "Delete failed: audio repository is unavailable", bundle: .module))
-                    return
-                }
-
-                try await repo.deleteAudios([url])
-
-                if AudioDeletePlaybackPolicy.shouldResetDirectlyAfterDelete(
-                    currentURL: playMan.currentURL,
-                    deletedURLs: [url],
-                    isPlaybackControllerHandlingDeletion: true
-                ) {
-                    await playMan.reset(reason: "Delete file")
-                    if Self.verbose {
-                        os_log("\(Self.t)⏹️ Stopped playback for current file")
-                    }
-                }
-
-                if Self.verbose {
-                    os_log("\(Self.t)🗑️ File deleted: \(url.path)")
-                }
-                alert_info(String(localized: "File deleted", bundle: .module))
-            } catch {
-                if Self.verbose {
-                    os_log("\(Self.t)❌ Failed to delete file: \(error.localizedDescription)")
-                }
-                alert_error(String(localized: "Delete failed: \(error.localizedDescription)", bundle: .module))
-            }
-        }
+        listViewModel.deleteFile(url)
     }
 }

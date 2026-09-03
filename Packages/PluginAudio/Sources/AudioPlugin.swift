@@ -34,8 +34,12 @@ public actor AudioPlugin: SuperPlugin {
         public static let dbDirName = AudioPluginInfo.dbDirName
     #endif
 
+    nonisolated(unsafe) private var rootViewModel: AudioRootViewModel?
+    nonisolated(unsafe) private var rootObserver: AudioStorageObserver?
+
     /// OnReady 阶段（Storage 服务已注册）将 `AudioPluginHost` 桥接到内核
-    /// `StorageProviding`，使历史插件代码无需改动即可继续工作。
+    /// `StorageProviding`，使历史插件代码无需改动即可继续工作，并安装
+    /// 音频根视图的 ViewModel 与存储观察者。
     @MainActor
     public func onReady(kernel: CisumKernel) async throws {
         guard let storage = kernel.storage else { return }
@@ -45,16 +49,58 @@ public actor AudioPlugin: SuperPlugin {
             hasStorageLocation: { storage.hasUsableStorageLocation },
             storageLocationDidChangeNotifications: [.cisumStorageLocationDidChange, .cisumStorageLocationDidReset]
         )
+        installRootState(kernel: kernel)
     }
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
-        AnyView(AudioRootView(
+        // View 贡献可能在启动前被请求：保证返回稳定、长期存在的 ViewModel。
+        let viewModel = rootViewModel ?? {
+            let viewModel = AudioRootViewModel(
+                databaseURL: { try AudioPluginHost.createDatabaseFile(name: "audio") },
+                hasStorageLocation: { AudioPluginHost.hasStorageLocation() }
+            )
+            rootViewModel = viewModel
+            return viewModel
+        }()
+        return AnyView(AudioRootView(viewModel: viewModel, content: content))
+    }
+
+    @MainActor
+    public func onEnable(kernel: CisumKernel) async throws {
+        installRootState(kernel: kernel)
+    }
+
+    @MainActor
+    public func onDisable(kernel: CisumKernel) async throws {
+        teardownRootState()
+    }
+
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        teardownRootState()
+    }
+
+    // MARK: - Root state assembly
+
+    @MainActor
+    private func installRootState(kernel: CisumKernel) {
+        guard rootViewModel == nil else { return }
+        guard let storage = kernel.storage else { return }
+        let viewModel = AudioRootViewModel(
             databaseURL: { try AudioPluginHost.createDatabaseFile(name: "audio") },
-            hasStorageLocation: { AudioPluginHost.hasStorageLocation() },
-            storageLocationDidChangeNotifications: AudioPluginHost.storageLocationDidChangeNotifications,
-            content: content
-        ))
+            hasStorageLocation: { AudioPluginHost.hasStorageLocation() }
+        )
+        let observer = AudioStorageObserver(provider: storage, viewModel: viewModel)
+        rootViewModel = viewModel
+        rootObserver = observer
+    }
+
+    @MainActor
+    private func teardownRootState() {
+        rootObserver?.cancel()
+        rootObserver = nil
+        rootViewModel = nil
     }
 
     @MainActor

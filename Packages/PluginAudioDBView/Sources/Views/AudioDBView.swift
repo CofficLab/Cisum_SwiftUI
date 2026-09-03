@@ -15,14 +15,9 @@ public struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     public nonisolated static let verbose = false
 
     @Environment(\.audioDBDependencies) private var dependencies
+    @EnvironmentObject private var dbViewModel: AudioDBViewModel
     @LumiTheme private var appTheme
     private let isDemoMode: Bool
-
-    /// 是否正在排序
-    @State private var isSorting: Bool = false
-
-    /// 当前排序模式
-    @State private var sortMode: SortMode = .none
 
     /// 是否正在拖拽音频文件
     @State private var isDropping: Bool = false
@@ -47,8 +42,8 @@ public struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
             }
         }
         .overlay(alignment: .center) {
-            if isSorting {
-                AudioDBTips(variant: .sorting, sortingMessage: sortMode.description)
+            if dbViewModel.isSorting {
+                AudioDBTips(variant: .sorting, sortingMessage: dbViewModel.sortMode.description)
                     .transition(.opacity)
             }
         }
@@ -61,38 +56,6 @@ public struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
             onCompletion: handleFileImport
         )
         .onDrop(of: [UTType.fileURL], isTargeted: $isDropping, perform: handleDrop)
-        .onDBSorting(perform: handleSorting)
-        .onDBSortDone(perform: handleSortDone)
-    }
-
-    /// 排序模式枚举
-    ///
-    /// 定义音频列表的排序方式和对应的 UI 显示。
-    enum SortMode: String {
-        /// 随机排序
-        case random
-        /// 顺序排序
-        case order
-        /// 未指定排序方式
-        case none
-
-        /// 排序模式对应的图标
-        var icon: String {
-            switch self {
-            case .random: return "shuffle"
-            case .order: return "arrow.up.arrow.down"
-            case .none: return "arrow.triangle.2.circlepath"
-            }
-        }
-
-        /// 排序模式对应的描述文本
-        var description: String {
-            switch self {
-            case .random: return String(localized: "Shuffling...", bundle: .module)
-            case .order: return String(localized: "Sorting in Order...", bundle: .module)
-            case .none: return String(localized: "Sorting...", bundle: .module)
-            }
-        }
     }
 }
 
@@ -460,48 +423,5 @@ extension AudioDBView {
         }
 
         return true
-    }
-
-    /// 处理排序开始事件
-    ///
-    /// 当数据库开始排序时触发，显示排序动画和提示。
-    ///
-    /// - Parameter notification: 包含排序模式信息的通知
-    func handleSorting(_ notification: Notification) {
-        if Self.verbose {
-            os_log("\(self.t)🔄 Sorting started")
-        }
-
-        withAnimation {
-            isSorting = true
-        }
-
-        if let mode = notification.userInfo?["mode"] as? String {
-            sortMode = Self.sortMode(from: mode)
-
-            if Self.verbose {
-                os_log("\(self.t)📋 Sort mode: \(mode)")
-            }
-        }
-    }
-
-    /// 处理排序完成事件
-    ///
-    /// 当数据库排序完成时触发，隐藏排序动画。
-    ///
-    /// - Parameter notification: 排序完成的通知
-    func handleSortDone(_ notification: Notification) {
-        if Self.verbose {
-            os_log("\(self.t)✅ Sorting finished")
-        }
-
-        withAnimation {
-            isSorting = false
-        }
-    }
-
-    nonisolated static func sortMode(from rawValue: String) -> SortMode {
-        let normalized = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
-        return SortMode(rawValue: normalized) ?? .none
     }
 }

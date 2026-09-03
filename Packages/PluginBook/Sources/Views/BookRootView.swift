@@ -1,50 +1,29 @@
 import Foundation
 import CisumUIComponents
-import OSLog
 import SwiftData
 import SwiftUI
-import UniformTypeIdentifiers
-
-@MainActor
-public final class BookRepoState: ObservableObject {
-    @Published var repo: BookRepo? = nil
-    @Published var container: ModelContainer? = nil
-    @Published var error: Error? = nil
-    @Published var isLoading: Bool = true
-}
 
 public struct BookRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { "🏓" }
     public nonisolated static var verbose: Bool { false }
 
+    @ObservedObject private var viewModel: BookRootViewModel
     private var content: Content
-    private let dbRootURL: @MainActor () throws -> URL
-    private let bookDisk: @MainActor () -> URL?
-    private let storageLocationDidChangeNotifications: [Notification.Name]
-    @StateObject private var bookRepoState = BookRepoState()
-    @State private var initGeneration = 0
 
-    public init(
-        dbRootURL: @escaping @MainActor () throws -> URL,
-        bookDisk: @escaping @MainActor () -> URL?,
-        storageLocationDidChangeNotifications: [Notification.Name] = [],
-        @ViewBuilder content: () -> Content
-    ) {
-        self.dbRootURL = dbRootURL
-        self.bookDisk = bookDisk
-        self.storageLocationDidChangeNotifications = storageLocationDidChangeNotifications
+    init(viewModel: BookRootViewModel, @ViewBuilder content: () -> Content) {
+        self.viewModel = viewModel
         self.content = content()
     }
 
     public var body: some View {
         Group {
-            if let error = bookRepoState.error {
+            if let error = viewModel.error {
                 error.makeView()
-            } else if bookRepoState.isLoading {
+            } else if viewModel.isLoading {
                 ProgressView {
                     Text("Initializing...", bundle: .module)
                 }
-            } else if let container = bookRepoState.container, let repo = bookRepoState.repo {
+            } else if let container = viewModel.container, let repo = viewModel.repo {
                 ZStack {
                     content
                 }
@@ -54,97 +33,8 @@ public struct BookRootView<Content>: View, SuperLog where Content: View {
                 Text("Initialization Failed", bundle: .module)
             }
         }
-        .modifier(BookStorageChangeModifier(notificationNames: storageLocationDidChangeNotifications) {
-            self.initAll()
-        })
         .onAppear {
-            self.initAll()
-        }
-    }
-}
-
-// MARK: - Action
-
-extension BookRootView {
-    private func initAll() {
-        if Self.verbose {
-            os_log("\(self.t)InitAll")
-        }
-        initGeneration += 1
-        let generation = initGeneration
-        bookRepoState.isLoading = true
-        bookRepoState.error = nil
-
-        Task {
-            do {
-                // 1. 初始化 Container
-                let dbRootURL = try await MainActor.run {
-                    try self.dbRootURL()
-                }
-                let container = try await Task.detached(priority: .userInitiated) {
-                    try BookConfig.getContainer(dbRootURL: dbRootURL)
-                }.value
-                if Self.verbose {
-                    os_log("\(self.t)🎉 Container 初始化成功")
-                }
-
-                // 2. 获取 Disk
-                let disk = await MainActor.run {
-                    self.bookDisk()
-                }
-                guard let disk else {
-                    await MainActor.run {
-                        self.setBookRepoState(nil, container: nil, error: BookPluginError.initialization(reason: String(localized: "Disk not found", bundle: .module)), generation: generation)
-                    }
-                    return
-                }
-                if Self.verbose {
-                    os_log("\(self.t)🎉 Disk 获取成功: \(disk.shortPath())")
-                }
-
-                // 3. 初始化 BookRepo
-                let db = BookDB(container, reason: self.className)
-                let repo = try BookRepo(disk: disk, db: db)
-
-                await MainActor.run {
-                    self.setBookRepoState(repo, container: container, generation: generation)
-                    if Self.verbose {
-                        os_log("\(self.t)🎉 BookRepo 初始化成功")
-                    }
-                }
-            } catch {
-                await MainActor.run {
-                    self.setBookRepoState(nil, container: nil, error: error, generation: generation)
-                    os_log("❌初始化失败: \(error.localizedDescription)")
-                }
-            }
-        }
-    }
-}
-
-// MARK: - Setter
-
-extension BookRootView {
-    @MainActor private func setBookRepoState(_ repo: BookRepo?, container: ModelContainer?, error: Error? = nil, generation: Int) {
-        guard generation == initGeneration else { return }
-        bookRepoState.repo = repo
-        bookRepoState.container = container
-        bookRepoState.error = error
-        bookRepoState.isLoading = false
-    }
-}
-
-// MARK: - Event Handler
-
-private struct BookStorageChangeModifier: ViewModifier {
-    let notificationNames: [Notification.Name]
-    let action: () -> Void
-
-    func body(content: Content) -> some View {
-        notificationNames.reduce(AnyView(content)) { view, name in
-            AnyView(view.onReceive(NotificationCenter.default.publisher(for: name)) { _ in
-                action()
-            })
+            viewModel.reloadContainer()
         }
     }
 }

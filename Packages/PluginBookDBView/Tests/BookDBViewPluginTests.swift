@@ -1,7 +1,7 @@
 import Testing
-@testable import BookDBViewPlugin
+@testable import PluginBookDBView
 import Foundation
-import BookPlugin
+import PluginBook
 import SwiftData
 import UniformTypeIdentifiers
 

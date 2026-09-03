@@ -16,6 +16,9 @@ public actor BookDBPlugin: SuperPlugin {
         category: .library,
     )
 
+    nonisolated(unsafe) private let sceneBox = SceneBox()
+    nonisolated(unsafe) private var gridViewModel: BookGridViewModel?
+    nonisolated(unsafe) private var databaseObserver: BookDatabaseObserver?
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
@@ -25,19 +28,29 @@ public actor BookDBPlugin: SuperPlugin {
         }
     }
 
-    nonisolated(unsafe) private let sceneBox = SceneBox()
-
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
         guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
             throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
         }
         sceneBox.scene = scene
+        installState()
+    }
+
+    @MainActor
+    public func onEnable(kernel: CisumKernel) async throws {
+        installState()
+    }
+
+    @MainActor
+    public func onDisable(kernel: CisumKernel) async throws {
+        teardownState()
     }
 
     @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
         sceneBox.scene = nil
+        teardownState()
     }
 
     @MainActor
@@ -60,9 +73,39 @@ public actor BookDBPlugin: SuperPlugin {
             isDesktop: ConfigShim.isDesktop,
             isNotDesktop: ConfigShim.isNotDesktop
         )
+        let viewModel = resolveViewModel()
         let view = BookDBView()
+            .environmentObject(viewModel)
             .bookDBViewDependencies(dependencies)
         return (AnyView(view), label)
+    }
+
+    // MARK: - State assembly
+
+    @MainActor
+    private func installState() {
+        guard gridViewModel == nil else { return }
+        let viewModel = BookGridViewModel()
+        let observer = BookDatabaseObserver(viewModel: viewModel)
+        gridViewModel = viewModel
+        databaseObserver = observer
+    }
+
+    @MainActor
+    private func teardownState() {
+        databaseObserver?.cancel()
+        databaseObserver = nil
+        gridViewModel = nil
+    }
+
+    @MainActor
+    private func resolveViewModel() -> BookGridViewModel {
+        if let gridViewModel {
+            return gridViewModel
+        }
+        let viewModel = BookGridViewModel()
+        gridViewModel = viewModel
+        return viewModel
     }
 
     private final class SceneBox {
@@ -92,9 +135,4 @@ private enum ConfigShim {
     }
 
     static var isNotDesktop: Bool { !isDesktop }
-
-
-    private final class SceneBox {
-        weak var scene: (any SceneProviding)?
-    }
 }

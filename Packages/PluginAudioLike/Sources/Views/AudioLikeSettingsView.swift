@@ -2,33 +2,26 @@ import CisumUIComponents
 import SwiftData
 import SwiftUI
 
-struct AudioLikeSettingsLoadPolicy {
-    static func shouldApplyResult(currentGeneration: Int, resultGeneration: Int) -> Bool {
-        resultGeneration == currentGeneration
-    }
-}
-
 public struct AudioLikeSettingsView: View, SuperLog {
     public nonisolated static var emoji: String { "⚙️❤️" }
-    private let verbose = false
 
-    @State private var likedAudios: [AudioLikeModel] = []
-    @State private var isLoading = true
-    @State private var loadGeneration = 0
+    @ObservedObject private var viewModel: AudioLikeViewModel
 
-    public init() {}
+    init(viewModel: AudioLikeViewModel) {
+        self.viewModel = viewModel
+    }
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Liked audio", bundle: .module)
                 .font(.headline)
 
-            if isLoading {
+            if viewModel.isLoading {
                 ProgressView {
                     Text("Loading...", bundle: .module)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else if likedAudios.isEmpty {
+            } else if viewModel.likedAudios.isEmpty {
                 VStack(spacing: 12) {
                     Image(systemName: "heart.slash")
                         .font(.largeTitle)
@@ -38,7 +31,7 @@ public struct AudioLikeSettingsView: View, SuperLog {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                List(likedAudios, id: \.audioId) { audio in
+                List(viewModel.likedAudios, id: \.audioId) { audio in
                     HStack {
                         VStack(alignment: .leading) {
                             Text(audio.title ?? audio.url?.lastPathComponent ?? String(localized: "Unknown audio", bundle: .module))
@@ -61,28 +54,7 @@ public struct AudioLikeSettingsView: View, SuperLog {
         .padding()
         .frame(minWidth: 300, minHeight: 400)
         .onAppear {
-            loadLikedAudios()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .AudioLikeStatusChanged)) { _ in
-            loadLikedAudios()
-        }
-    }
-
-    private func loadLikedAudios() {
-        loadGeneration += 1
-        let generation = loadGeneration
-
-        Task {
-            let audios = await AudioLikeRepo.shared.getAllLiked()
-            await MainActor.run {
-                guard AudioLikeSettingsLoadPolicy.shouldApplyResult(
-                    currentGeneration: self.loadGeneration,
-                    resultGeneration: generation
-                ) else { return }
-
-                self.likedAudios = audios
-                self.isLoading = false
-            }
+            viewModel.reloadLikedAudios()
         }
     }
 }

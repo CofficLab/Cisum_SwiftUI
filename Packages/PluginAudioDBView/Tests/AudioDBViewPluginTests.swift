@@ -1,5 +1,5 @@
 import Testing
-@testable import AudioDBViewPlugin
+@testable import PluginAudioDBView
 import Foundation
 import UniformTypeIdentifiers
 
@@ -8,9 +8,9 @@ import UniformTypeIdentifiers
 }
 
 @Test func audioDBSortModeRestoresTrimmedNotificationValues() {
-    #expect(AudioDBView.sortMode(from: "random") == .random)
-    #expect(AudioDBView.sortMode(from: " order\n") == .order)
-    #expect(AudioDBView.sortMode(from: "missing") == .none)
+    #expect(AudioDBViewModel.sortMode(from: "random") == .random)
+    #expect(AudioDBViewModel.sortMode(from: " order\n") == .order)
+    #expect(AudioDBViewModel.sortMode(from: "missing") == .none)
 }
 
 @Test func audioImportCleansCopiedFilesWhenBatchFails() async throws {
@@ -108,13 +108,13 @@ import UniformTypeIdentifiers
         root.appendingPathComponent("two.mp3"),
     ]
 
-    #expect(AudioList.urlsToDelete(from: IndexSet(integer: 1), in: urls) == [urls[1]])
-    #expect(AudioList.urlsToDelete(from: IndexSet(integer: 2), in: urls) == nil)
+    #expect(AudioListViewModel.urlsToDelete(from: IndexSet(integer: 1), in: urls) == [urls[1]])
+    #expect(AudioListViewModel.urlsToDelete(from: IndexSet(integer: 2), in: urls) == nil)
 }
 
 @Test func audioListLoadsMoreFromCurrentLoadedCount() {
-    #expect(AudioList.nextLoadOffset(loadedCount: 90) == 90)
-    #expect(AudioList.nextLoadOffset(loadedCount: 100) == 100)
+    #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 90, currentPage: 0, pageSize: 50) == 90)
+    #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 100, currentPage: 0, pageSize: 50) == 100)
     #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 90, currentPage: 2, pageSize: 50) == 100)
     #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 120, currentPage: 2, pageSize: 50) == 120)
     #expect(AudioListLoadPolicy.pageAfterLoading(currentPage: 2, fetchedCount: 50) == 3)
