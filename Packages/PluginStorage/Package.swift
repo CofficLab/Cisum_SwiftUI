@@ -30,9 +30,10 @@ let package = Package(
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
-            path: "Sources",
+            path: ".",
+            sources: ["Sources"],
             resources: [
-                .process("Localizable.xcstrings"),
+                .process("Resources/Localizable.xcstrings"),
             ]
         ),
         .testTarget(
