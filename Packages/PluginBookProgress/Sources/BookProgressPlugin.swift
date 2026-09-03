@@ -1,4 +1,4 @@
-import CisumKernel
+import KernelCore
 import CisumUIComponents
 import PluginBook
 import PluginBookScene
@@ -6,7 +6,7 @@ import ProviderScene
 import SwiftData
 import SwiftUI
 
-public actor BookProgressPlugin: SuperPlugin, CisumKernelPlugin {
+public actor BookProgressPlugin: SuperPlugin {
     public static let shared = BookProgressPlugin()
     public static let metadata = PluginMetadata(
         displayName: BookProgressPluginInfo.title,

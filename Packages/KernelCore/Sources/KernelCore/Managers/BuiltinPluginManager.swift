@@ -79,7 +79,7 @@ public final class BuiltinPluginManager: ObservableObject {
     ///
     /// 先启动所有 `alwaysOn` 插件（核心服务先行，例如 Storage 提供数据目录），
     /// 再启动可配置插件（受启用策略 + 用户覆盖约束）。对内核感知插件调用
-    /// `onBoot(kernel:)`；对仅实现 `SuperPlugin` 的插件回退到 `onRegister()` + `onEnable()`。
+    /// 统一调用 `SuperPlugin` 的 Kernel 生命周期。
     ///
     /// 启动中途任一插件抛错时，已启动插件逆序执行 `onShutdown` 并统一
     /// `onUnregister`，随后清空注册表，避免留下半启动内核。
@@ -94,6 +94,13 @@ public final class BuiltinPluginManager: ObservableObject {
         bootedPluginKeys.removeAll()
 
         do {
+            // 注册阶段对所有参与装配的插件执行一次，允许插件登记目录型贡献。
+            for key in orderedPluginKeys {
+                guard let plugin = pluginRegistry[key] else { continue }
+                if Self.verbose { os_log("\(Self.t)📋 onRegister for: \(plugin.id)") }
+                try await plugin.onRegister(kernel: kernel)
+            }
+
             // 核心插件先启动
             for key in orderedPluginKeys {
                 guard let plugin = pluginRegistry[key] else { continue }
@@ -119,16 +126,10 @@ public final class BuiltinPluginManager: ObservableObject {
         }
     }
 
-    /// 启动单个插件（内核感知插件走 onBoot，其余走 onRegister + onEnable）。
+    /// 启动单个插件。
     private func bootPlugin(_ plugin: any SuperPlugin, kernel: CisumKernelContainer) async throws {
-        if let kernelPlugin = plugin as? any CisumKernelPlugin {
-            if Self.verbose { os_log("\(Self.t)🔌 onBoot for kernel plugin: \(plugin.id)") }
-            try await kernelPlugin.onBoot(kernel: kernel)
-        } else {
-            if Self.verbose { os_log("\(Self.t)📋 onRegister for: \(plugin.id)") }
-            plugin.onRegister()
-            plugin.onEnable()
-        }
+        if Self.verbose { os_log("\(Self.t)🔌 onBoot for plugin: \(plugin.id)") }
+        try await plugin.onBoot(kernel: kernel)
     }
 
     /// 阶段 2: OnReady —— 依赖服务的异步初始化。
@@ -142,11 +143,10 @@ public final class BuiltinPluginManager: ObservableObject {
         do {
             for key in orderedPluginKeys {
                 guard let plugin = pluginRegistry[key] else { continue }
-                guard let kernelPlugin = plugin as? any CisumKernelPlugin else { continue }
                 guard isPluginEnabled(plugin) else { continue }
 
                 if Self.verbose { os_log("\(Self.t)🚀 onReady for: \(plugin.id)") }
-                try await kernelPlugin.onReady(kernel: kernel)
+                try await plugin.onReady(kernel: kernel)
             }
         } catch {
             await teardownAll(kernel: kernel)
@@ -158,7 +158,7 @@ public final class BuiltinPluginManager: ObservableObject {
 
     /// 停止并注销全部插件，供内核关闭时调用。
     ///
-    /// 已启动插件按启动逆序执行 `onShutdown`（纯 `SuperPlugin` 回退到 `onDisable()`），
+    /// 已启动插件按启动逆序执行 `onShutdown`，
     /// 随后全部插件逆序执行 `onUnregister`，最后清空注册表。清理过程中单个插件
     /// 的失败不会阻断其他插件清理。
     ///
@@ -178,10 +178,8 @@ public final class BuiltinPluginManager: ObservableObject {
         // 逆序注销全部已注册插件（撤回注册期贡献）
         for key in orderedPluginKeys.reversed() {
             guard let plugin = pluginRegistry[key] else { continue }
-            if let kernelPlugin = plugin as? any CisumKernelPlugin {
-                if Self.verbose { os_log("\(Self.t)🗑️ onUnregister for: \(plugin.id)") }
-                try? await kernelPlugin.onUnregister(kernel: kernel)
-            }
+            if Self.verbose { os_log("\(Self.t)🗑️ onUnregister for: \(plugin.id)") }
+            try? await plugin.onUnregister(kernel: kernel)
         }
 
         bootedPluginKeys.removeAll()
@@ -192,15 +190,10 @@ public final class BuiltinPluginManager: ObservableObject {
         if Self.verbose { os_log("\(Self.t)🧹 Teardown complete") }
     }
 
-    /// 停止单个插件：内核感知插件走 `onShutdown(kernel:)`，其余回退到 `onDisable()`。
+    /// 停止单个插件。
     private func shutdownPlugin(_ plugin: any SuperPlugin, kernel: CisumKernelContainer) async {
-        if let kernelPlugin = plugin as? any CisumKernelPlugin {
-            if Self.verbose { os_log("\(Self.t)🛑 onShutdown for: \(plugin.id)") }
-            try? await kernelPlugin.onShutdown(kernel: kernel)
-        } else {
-            if Self.verbose { os_log("\(Self.t)🛑 onDisable for: \(plugin.id)") }
-            plugin.onDisable()
-        }
+        if Self.verbose { os_log("\(Self.t)🛑 onShutdown for: \(plugin.id)") }
+        try? await plugin.onShutdown(kernel: kernel)
     }
 
     // MARK: - Contribution Aggregation
@@ -263,6 +256,12 @@ public final class BuiltinPluginManager: ObservableObject {
             throw CisumKernelError.pluginNotConfigurable(id: id)
         }
         setOverride(true, for: id)
+        do {
+            try await plugin.onEnable(kernel: kernel)
+        } catch {
+            setOverride(false, for: id)
+            throw error
+        }
         rebuildAllContributions(in: kernel)
     }
 
@@ -277,6 +276,7 @@ public final class BuiltinPluginManager: ObservableObject {
         guard type(of: plugin).metadata.policy.allowUserToggle else {
             throw CisumKernelError.pluginNotConfigurable(id: id)
         }
+        try await plugin.onDisable(kernel: kernel)
         setOverride(false, for: id)
         rebuildAllContributions(in: kernel)
     }

@@ -15,7 +15,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "CisumKernel", path: "../CisumKernel"),
+        .package(name: "KernelCore", path: "../KernelCore"),
         .package(name: "CisumUIComponents", path: "../CisumUIComponents"),
         .package(name: "MagicKit", path: "../MagicKit"),
         .package(name: "MagicPlayMan", path: "../MagicPlayMan"),
@@ -24,7 +24,6 @@ let package = Package(
         .package(name: "ProviderControlView", path: "../ProviderControlView"),
         .package(name: "ProviderDevice", path: "../ProviderDevice"),
         .package(name: "ProviderPlayback", path: "../ProviderPlayback"),
-        .package(name: "ProviderPlugin", path: "../ProviderPlugin"),
         .package(name: "ProviderRootView", path: "../ProviderRootView"),
         .package(name: "ProviderScene", path: "../ProviderScene"),
         .package(name: "ProviderSettings", path: "../ProviderSettings"),
@@ -79,7 +78,7 @@ let package = Package(
             .target(
                 name: "FactoryCisum",
             dependencies: [
-                .product(name: "CisumKernel", package: "CisumKernel"),
+                .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
@@ -88,7 +87,6 @@ let package = Package(
                 .product(name: "ProviderControlView", package: "ProviderControlView"),
                 .product(name: "ProviderDevice", package: "ProviderDevice"),
                 .product(name: "ProviderPlayback", package: "ProviderPlayback"),
-                .product(name: "ProviderPlugin", package: "ProviderPlugin"),
                 .product(name: "ProviderRootView", package: "ProviderRootView"),
                 .product(name: "ProviderScene", package: "ProviderScene"),
                 .product(name: "ProviderSettings", package: "ProviderSettings"),

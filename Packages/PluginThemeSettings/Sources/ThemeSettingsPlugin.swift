@@ -1,4 +1,5 @@
 import CisumUIComponents
+import KernelCore
 import SwiftUI
 
 /// 主题设置插件（对齐 Lumi `ThemePackPlugin` 的设置入口范式）。

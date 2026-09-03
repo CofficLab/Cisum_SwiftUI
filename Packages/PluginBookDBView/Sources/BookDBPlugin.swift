@@ -1,4 +1,4 @@
-import CisumKernel
+import KernelCore
 import CisumUIComponents
 import OSLog
 import PluginBook
@@ -6,7 +6,7 @@ import PluginBookScene
 import ProviderScene
 import SwiftUI
 
-public actor BookDBPlugin: SuperPlugin, CisumKernelPlugin {
+public actor BookDBPlugin: SuperPlugin {
     public static let shared = BookDBPlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), bundle: .module),

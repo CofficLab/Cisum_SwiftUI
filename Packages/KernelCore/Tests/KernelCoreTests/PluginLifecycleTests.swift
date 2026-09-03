@@ -1,7 +1,7 @@
 import CisumUIComponents
 import Foundation
 import Testing
-@testable import CisumKernel
+@testable import KernelCore
 
 // MARK: - 生命周期测试探针
 
@@ -17,7 +17,7 @@ final class CallRecorder {
 }
 
 /// 测试探针插件：记录全部生命周期回调，可配置在 Boot / Ready 阶段抛错。
-actor LifecycleProbePlugin: SuperPlugin, CisumKernelPlugin {
+actor LifecycleProbePlugin: SuperPlugin {
     nonisolated let recorder: CallRecorder
     let name: String
     let orderValue: Int
@@ -38,6 +38,11 @@ actor LifecycleProbePlugin: SuperPlugin, CisumKernelPlugin {
     )
     nonisolated static var metadata: PluginMetadata {
         PluginMetadata(displayName: "", description: "")
+    }
+
+    @MainActor
+    func onRegister(kernel: CisumKernel) async throws {
+        recorder.record("register.\(name)")
     }
 
     @MainActor
@@ -83,6 +88,7 @@ struct PluginLifecycleTests {
 
         // 启动按 order 升序，停止按启动逆序。
         #expect(recorder.calls == [
+            "register.a", "register.b",
             "boot.a", "boot.b",
             "ready.a", "ready.b",
             "shutdown.b", "shutdown.a",
@@ -105,6 +111,7 @@ struct PluginLifecycleTests {
 
         // a 已 boot → 逆序 shutdown；fail 与 a 统一 unregister。
         #expect(recorder.calls == [
+            "register.a", "register.fail",
             "boot.a",
             "shutdown.a",
             "unregister.fail",
@@ -131,6 +138,7 @@ struct PluginLifecycleTests {
 
         // 两个插件均已 boot → 逆序 shutdown + unregister。
         #expect(recorder.calls == [
+            "register.a", "register.fail",
             "boot.a", "boot.fail",
             "ready.a",
             "shutdown.fail", "shutdown.a",
@@ -150,7 +158,7 @@ struct PluginLifecycleTests {
         try await kernel.pluginManager.onBoot(kernel: kernel)
         await kernel.shutdown()
 
-        #expect(recorder.calls == ["boot.a", "shutdown.a", "unregister.a"])
+        #expect(recorder.calls == ["register.a", "boot.a", "shutdown.a", "unregister.a"])
         #expect(kernel.pluginManager.allPlugins.isEmpty)
     }
 }

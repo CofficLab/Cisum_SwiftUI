@@ -1,4 +1,4 @@
-import CisumKernel
+import KernelCore
 import CisumUIComponents
 import Foundation
 import ProviderScene
@@ -8,7 +8,7 @@ import SwiftUI
 ///
 /// 场景列表来自已启用插件的 `addSceneItem()` 贡献；当前场景保存到应用支持
 /// 目录中的 JSON 文件，并在内核进入 ready 阶段后恢复。
-public actor ScenePlugin: SuperPlugin, CisumKernelPlugin {
+public actor ScenePlugin: SuperPlugin {
     public static let shared = ScenePlugin()
     public static let metadata = PluginMetadata(
         id: "scene",

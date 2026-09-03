@@ -1,4 +1,4 @@
-import CisumKernel
+import KernelCore
 import Foundation
 
 /// 插件启停控制协议（对齐 Lumi `ProviderPluginControl/PluginControlling`）。

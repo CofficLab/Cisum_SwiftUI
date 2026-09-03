@@ -1,10 +1,10 @@
-import CisumKernel
+import KernelCore
 import CisumUIComponents
 import PluginBookScene
 import ProviderScene
 import SwiftUI
 
-public actor BookControlPlugin: SuperPlugin, CisumKernelPlugin {
+public actor BookControlPlugin: SuperPlugin {
     public static let shared = BookControlPlugin()
     public static let metadata = PluginMetadata(
         displayName: BookControlPluginInfo.title,

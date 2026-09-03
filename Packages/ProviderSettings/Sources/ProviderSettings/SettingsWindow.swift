@@ -1,7 +1,7 @@
-import CisumKernel
+import KernelCore
 import CisumUIComponents
 import ProviderAppState
-import ProviderPlugin
+import KernelCore
 import ProviderScene
 import ProviderStorage
 import ProviderTheme

@@ -1,4 +1,4 @@
-import CisumKernel
+import KernelCore
 import CisumUIComponents
 import ProviderPluginManaging
 import SwiftUI
@@ -8,7 +8,7 @@ import SwiftUI
 /// 在设置窗口注册「插件管理」导航入口（puzzlepiece.extension，order 90），
 /// 详情展示所有可配置插件的列表 + 启停开关。onBoot 保存内核引用，
 /// 供 `addSettingNavigationItem()` 构造 `PluginManaging` 数据源。
-public actor PluginPluginManager: SuperPlugin, CisumKernelPlugin {
+public actor PluginPluginManager: SuperPlugin {
     public static let shared = PluginPluginManager()
     public static let metadata = PluginMetadata(
         displayName: "插件管理",

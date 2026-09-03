@@ -17,6 +17,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../CisumUIComponents"),
+        .package(path: "../KernelCore"),
         .package(path: "../PluginAudio"),
         .package(path: "../PluginStore"),
     ],
@@ -25,6 +26,7 @@ let package = Package(
             name: "PluginAudioCopy",
             dependencies: [
                 "CisumUIComponents",
+                "KernelCore",
                 "PluginAudio",
                 "PluginStore",
             ],

@@ -1,11 +1,11 @@
-import CisumKernel
+import KernelCore
 import CisumUIComponents
 import PluginAudio
 import PluginAudioScene
 import ProviderScene
 import SwiftUI
 
-public actor AudioDBPlugin: SuperPlugin, CisumKernelPlugin {
+public actor AudioDBPlugin: SuperPlugin {
     public static let shared = AudioDBPlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), bundle: .module),

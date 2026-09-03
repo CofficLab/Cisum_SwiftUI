@@ -1,9 +1,9 @@
-import CisumKernel
+import KernelCore
 import CisumUIComponents
 import OSLog
 import SwiftUI
 
-public actor StoragePlugin: SuperPlugin, SuperLog, CisumKernelPlugin {
+public actor StoragePlugin: SuperPlugin, SuperLog {
     public static let shared = StoragePlugin()
     public nonisolated static let emoji = "💾"
     public static let verbose = true

@@ -1,4 +1,5 @@
 import CisumUIComponents
+import KernelCore
 import Foundation
 
 public actor FileLogPlugin: SuperPlugin {
@@ -10,7 +11,8 @@ public actor FileLogPlugin: SuperPlugin {
         order: 1
     )
 
-    public nonisolated func onRegister() {
+    @MainActor
+    public func onBoot(kernel: CisumKernel) async throws {
         FileLogCoordinator.shared.configuration = AppFileLogConfiguration()
         FileLogCoordinator.shared.start()
 
@@ -19,7 +21,8 @@ public actor FileLogPlugin: SuperPlugin {
         #endif
     }
 
-    public nonisolated func onDisable() {
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
         #if os(macOS)
             FileLogTerminationObserver.shared.stopObserving()
         #endif

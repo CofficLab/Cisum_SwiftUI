@@ -5,8 +5,6 @@ import ProviderAudioLibrary
 import ProviderCloud
 import ProviderDevice
 import ProviderPlayback
-import ProviderPlugin
-import ProviderScene
 import ProviderStorage
 import ProviderTheme
 
@@ -31,11 +29,6 @@ extension CisumKernelContainer {
     /// 注册插件管理服务。
     public func registerPluginService(_ plugin: any PluginProviding) {
         registerProvider(PluginProviding.self, plugin)
-    }
-
-    /// 注册场景管理服务。
-    public func registerSceneService(_ scene: any SceneProviding) {
-        registerProvider(SceneProviding.self, scene)
     }
 
     /// 注册主题服务。

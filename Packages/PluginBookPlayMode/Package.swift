@@ -18,7 +18,7 @@ let package = Package(
         .package(path: "../CisumUIComponents"),
         .package(path: "../PluginBookScene"),
         .package(path: "../MagicPlayMan"),
-        .package(path: "../CisumKernel"),
+        .package(path: "../KernelCore"),
         .package(path: "../ProviderScene")
     ],
     targets: [
@@ -28,7 +28,7 @@ let package = Package(
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "PluginBookScene", package: "PluginBookScene"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
-                .product(name: "CisumKernel", package: "CisumKernel"),
+                .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderScene", package: "ProviderScene")
             ],
             path: ".",

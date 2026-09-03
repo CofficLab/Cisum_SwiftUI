@@ -15,13 +15,15 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../CisumUIComponents")
+        .package(path: "../CisumUIComponents"),
+        .package(path: "../KernelCore"),
     ],
     targets: [
         .target(
             name: "PluginSettingGeneral",
             dependencies: [
-                .product(name: "CisumUIComponents", package: "CisumUIComponents")
+                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
+                .product(name: "KernelCore", package: "KernelCore"),
             ],
             path: "Sources"
         )

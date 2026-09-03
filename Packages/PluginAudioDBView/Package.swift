@@ -16,7 +16,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../CisumUIComponents"),
-        .package(path: "../CisumKernel"),
+        .package(path: "../KernelCore"),
         .package(path: "../PluginAudio"),
         .package(path: "../PluginAudioScene"),
         .package(path: "../MagicPlayMan"),
@@ -27,7 +27,7 @@ let package = Package(
             name: "PluginAudioDBView",
             dependencies: [
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
-                .product(name: "CisumKernel", package: "CisumKernel"),
+                .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "PluginAudio", package: "PluginAudio"),
                 .product(name: "PluginAudioScene", package: "PluginAudioScene"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),

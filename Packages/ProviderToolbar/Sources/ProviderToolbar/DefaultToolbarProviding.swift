@@ -1,4 +1,4 @@
-import CisumKernel
+import KernelCore
 import SwiftUI
 
 /// 默认 `ToolbarProviding` 实现：渲染场景切换器（迁移自 FactoryCisum `SceneSwitcher`）。

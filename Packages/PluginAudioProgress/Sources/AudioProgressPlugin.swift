@@ -1,11 +1,11 @@
-import CisumKernel
+import KernelCore
 import CisumUIComponents
 import PluginAudio
 import PluginAudioScene
 import ProviderScene
 import SwiftUI
 
-public actor AudioProgressPlugin: SuperPlugin, SuperLog, CisumKernelPlugin {
+public actor AudioProgressPlugin: SuperPlugin, SuperLog {
     public static let shared = AudioProgressPlugin()
     public nonisolated static let emoji = "💾"
     public static let verbose = true

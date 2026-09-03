@@ -1,4 +1,4 @@
-import CisumKernel
+import KernelCore
 import CisumUIComponents
 import ProviderScene
 import SwiftUI

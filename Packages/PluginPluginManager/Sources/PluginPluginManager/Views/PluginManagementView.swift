@@ -1,4 +1,5 @@
 import CisumUIComponents
+import KernelCore
 import ProviderPluginManaging
 import SwiftUI
 

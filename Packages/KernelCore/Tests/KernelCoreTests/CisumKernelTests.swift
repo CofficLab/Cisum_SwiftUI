@@ -1,5 +1,5 @@
 import Testing
-@testable import CisumKernel
+@testable import KernelCore
 
 @Test func example() async throws {
     // placeholder

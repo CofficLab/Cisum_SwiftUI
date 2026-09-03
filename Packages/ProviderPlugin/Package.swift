@@ -12,13 +12,13 @@ let package = Package(
         .library(name: "ProviderPlugin", targets: ["ProviderPlugin"]),
     ],
     dependencies: [
-        .package(name: "CisumUIComponents", path: "../CisumUIComponents"),
+        .package(name: "KernelCore", path: "../KernelCore"),
     ],
     targets: [
         .target(
             name: "ProviderPlugin",
             dependencies: [
-                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
+                .product(name: "KernelCore", package: "KernelCore"),
             ],
             path: "Sources/ProviderPlugin"
         ),

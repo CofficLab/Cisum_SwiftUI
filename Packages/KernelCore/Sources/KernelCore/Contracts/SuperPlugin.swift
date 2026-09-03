@@ -1,3 +1,4 @@
+import CisumUIComponents
 import SwiftUI
 
 public enum PluginPolicy: String, Sendable, Codable {
@@ -109,9 +110,21 @@ public protocol SuperPlugin: Actor {
     @MainActor func addToolBarButtons() -> [(id: String, view: AnyView)]
     @MainActor func addThemeContributions() -> [LumiUIThemeContribution]
 
-    nonisolated func onRegister()
-    nonisolated func onEnable()
-    nonisolated func onDisable()
+    /// 注册阶段：插件可向 Kernel 注册 Provider 或共享目录贡献。
+    @MainActor func onRegister(kernel: CisumKernelContainer) async throws
+    /// 启动阶段：所有已注册 Provider 可被插件使用。
+    @MainActor func onBoot(kernel: CisumKernelContainer) async throws
+    /// 就绪阶段：全部插件完成 Boot 后执行依赖初始化。
+    @MainActor func onReady(kernel: CisumKernelContainer) async throws
+    /// 停止阶段：撤回运行期 Provider、监听器和外部资源。
+    @MainActor func onShutdown(kernel: CisumKernelContainer) async throws
+    /// 注销阶段：撤回注册阶段的目录型贡献。
+    @MainActor func onUnregister(kernel: CisumKernelContainer) async throws
+
+    /// 运行时启用：恢复被禁用时停止的监听器与外部资源。
+    @MainActor func onEnable(kernel: CisumKernelContainer) async throws
+    /// 运行时禁用：停止监听器与外部资源。
+    @MainActor func onDisable(kernel: CisumKernelContainer) async throws
 }
 
 public extension SuperPlugin {
@@ -149,9 +162,13 @@ public extension SuperPlugin {
     nonisolated func addToolBarButtons() -> [(id: String, view: AnyView)] { [] }
     @MainActor func addThemeContributions() -> [LumiUIThemeContribution] { [] }
 
-    nonisolated func onRegister() {}
-    nonisolated func onEnable() {}
-    nonisolated func onDisable() {}
+    @MainActor func onRegister(kernel: CisumKernelContainer) async throws {}
+    @MainActor func onBoot(kernel: CisumKernelContainer) async throws {}
+    @MainActor func onReady(kernel: CisumKernelContainer) async throws {}
+    @MainActor func onShutdown(kernel: CisumKernelContainer) async throws {}
+    @MainActor func onUnregister(kernel: CisumKernelContainer) async throws {}
+    @MainActor func onEnable(kernel: CisumKernelContainer) async throws {}
+    @MainActor func onDisable(kernel: CisumKernelContainer) async throws {}
 }
 
 public extension SuperPlugin {

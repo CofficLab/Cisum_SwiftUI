@@ -164,5 +164,9 @@ public final class CisumKernelContainer: ObservableObject {
     }
 }
 
+/// KernelCore 对外暴露的内核类型；保留 CisumKernelContainer 作为实现名，
+/// 以兼容现有 Cisum 调用方。
+public typealias KernelCore = CisumKernelContainer
+
 /// 兼容别名: 使用 `CisumKernel` 替代 `CisumKernelContainer`。
 public typealias CisumKernel = CisumKernelContainer

@@ -1,4 +1,5 @@
 import CisumUIComponents
+import KernelCore
 import Foundation
 import OSLog
 import PluginAudio
@@ -12,11 +13,10 @@ public actor AudioJobPlugin: SuperPlugin {
         order: 5
     )
 
-    public nonisolated func onRegister() {
-        Task {
-            await registerJobs()
-            await setupStorageLocationObserver()
-        }
+    @MainActor
+    public func onBoot(kernel: CisumKernel) async throws {
+        await registerJobs()
+        await setupStorageLocationObserver()
     }
 
     private func registerJobs() async {

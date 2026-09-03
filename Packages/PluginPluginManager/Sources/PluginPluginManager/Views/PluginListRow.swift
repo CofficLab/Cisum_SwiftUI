@@ -1,4 +1,5 @@
 import CisumUIComponents
+import KernelCore
 import SwiftUI
 
 /// 插件管理页左侧列表中的单行渲染（复刻 Lumi `PluginPluginManager.PluginListRow`）。

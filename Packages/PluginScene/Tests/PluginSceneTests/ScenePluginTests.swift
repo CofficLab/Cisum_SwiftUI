@@ -1,4 +1,4 @@
-import CisumKernel
+import KernelCore
 import CisumUIComponents
 import Foundation
 import PluginScene
@@ -18,7 +18,7 @@ private actor SceneProbePlugin: SuperPlugin {
     func addSceneItem() -> String? { sceneName }
 }
 
-private actor SceneDependentProbePlugin: SuperPlugin, CisumKernelPlugin {
+private actor SceneDependentProbePlugin: SuperPlugin {
     static let shared = SceneDependentProbePlugin()
 
     nonisolated var id: String { "scene-dependent-probe" }

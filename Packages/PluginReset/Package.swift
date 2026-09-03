@@ -16,6 +16,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../CisumUIComponents"),
+        .package(path: "../KernelCore"),
         .package(path: "../ProviderStorage"),
     ],
     targets: [
@@ -23,6 +24,7 @@ let package = Package(
             name: "PluginReset",
             dependencies: [
                 "CisumUIComponents",
+                "KernelCore",
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
             path: ".",

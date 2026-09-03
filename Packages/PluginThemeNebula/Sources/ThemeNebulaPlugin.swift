@@ -1,4 +1,5 @@
 import CisumUIComponents
+import KernelCore
 import SwiftUI
 
 public actor ThemeNebulaPlugin: SuperPlugin {

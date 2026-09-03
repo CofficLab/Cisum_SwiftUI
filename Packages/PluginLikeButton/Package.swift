@@ -16,6 +16,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../CisumUIComponents"),
+        .package(path: "../KernelCore"),
         .package(path: "../MagicPlayMan"),
     ],
     targets: [
@@ -23,6 +24,7 @@ let package = Package(
             name: "PluginLikeButton",
             dependencies: [
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
+                .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
             ],
             path: ".",

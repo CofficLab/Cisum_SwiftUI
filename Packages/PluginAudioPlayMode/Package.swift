@@ -19,7 +19,7 @@ let package = Package(
         .package(path: "../PluginAudio"),
         .package(path: "../PluginAudioScene"),
         .package(path: "../MagicPlayMan"),
-        .package(path: "../CisumKernel"),
+        .package(path: "../KernelCore"),
         .package(path: "../ProviderScene")
     ],
     targets: [
@@ -30,7 +30,7 @@ let package = Package(
                 .product(name: "PluginAudio", package: "PluginAudio"),
                 .product(name: "PluginAudioScene", package: "PluginAudioScene"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
-                .product(name: "CisumKernel", package: "CisumKernel"),
+                .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderScene", package: "ProviderScene")
             ],
             path: ".",

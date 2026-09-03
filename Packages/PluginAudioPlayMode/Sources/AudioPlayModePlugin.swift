@@ -1,11 +1,11 @@
-import CisumKernel
+import KernelCore
 import CisumUIComponents
 import PluginAudio
 import PluginAudioScene
 import ProviderScene
 import SwiftUI
 
-public actor AudioPlayModePlugin: SuperPlugin, CisumKernelPlugin {
+public actor AudioPlayModePlugin: SuperPlugin {
     public static let shared = AudioPlayModePlugin()
     public static let metadata = PluginMetadata(
         displayName: AudioPlayModePluginInfo.title,
