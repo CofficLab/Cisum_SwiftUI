@@ -23,9 +23,10 @@ let package = Package(
             dependencies: [
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
             ],
-            path: "Sources",
+            path: ".",
+            sources: ["Sources"],
             resources: [
-                .process("Localizable.xcstrings")
+                .process("Resources/Localizable.xcstrings")
             ]
         ),
         .testTarget(
