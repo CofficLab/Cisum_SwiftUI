@@ -28,7 +28,6 @@ let package = Package(
         .package(name: "ProviderRootView", path: "../ProviderRootView"),
         .package(name: "ProviderScene", path: "../ProviderScene"),
         .package(name: "ProviderSettings", path: "../ProviderSettings"),
-        .package(name: "ProviderStatusView", path: "../ProviderStatusView"),
         .package(name: "ProviderToolbar", path: "../ProviderToolbar"),
         // MARK: - Plugin Dependencies (直接由 Factory 装配)
         .package(name: "PluginAudio", path: "../PluginAudio"),
@@ -93,7 +92,6 @@ let package = Package(
                 .product(name: "ProviderRootView", package: "ProviderRootView"),
                 .product(name: "ProviderScene", package: "ProviderScene"),
                 .product(name: "ProviderSettings", package: "ProviderSettings"),
-                .product(name: "ProviderStatusView", package: "ProviderStatusView"),
                 .product(name: "ProviderToolbar", package: "ProviderToolbar"),
                 .product(name: "PluginAudio", package: "PluginAudio"),
                 .product(name: "PluginAudioControl", package: "PluginAudioControl"),
