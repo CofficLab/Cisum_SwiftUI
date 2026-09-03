@@ -1,91 +1,94 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
-    "Minimal grayscale, emphasizing content itself": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "极简灰阶，强调内容本身"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Minimal grayscale, emphasizing content itself" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimal grayscale, emphasizing content itself"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "極簡灰階，強調內容本身"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "极简灰阶，强调内容本身"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "極簡灰階，強調內容本身"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "極簡灰階，強調內容本身"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Minimal grayscale, emphasizing content itself"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "極簡灰階，強調內容本身"
           }
         }
       }
     },
-    "Mono High Contrast": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "黑白高对比"
+    "Mono High Contrast" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mono High Contrast"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "黑白高對比"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "黑白高对比"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "黑白高對比"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "黑白高對比"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mono High Contrast"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "黑白高對比"
           }
         }
       }
     },
-    "Readability-first theme": {
-      "extractionState": "stale",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "可读性优先主题"
+    "Readability-first theme" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Readability-first theme"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "可讀性優先主題"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可读性优先主题"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "可讀性優先主題"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可讀性優先主題"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Readability-first theme"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可讀性優先主題"
           }
         }
       }
+    },
+    "极简的黑白灰单色主题。" : {
+
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }

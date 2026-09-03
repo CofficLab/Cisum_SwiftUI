@@ -1,91 +1,94 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
-    "Nebula Pink": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "星云粉"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Nebula Pink" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nebula Pink"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "星雲粉"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "星云粉"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "星雲粉"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "星雲粉"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nebula Pink"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "星雲粉"
           }
         }
       }
     },
-    "Soft pink accents, maintaining clean reading layers": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "柔和粉色点缀，保持干净阅读层次"
+    "Soft pink accents, maintaining clean reading layers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soft pink accents, maintaining clean reading layers"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "柔和粉色點綴，保持乾淨閱讀層次"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "柔和粉色点缀，保持干净阅读层次"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "柔和粉色點綴，保持乾淨閱讀層次"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "柔和粉色點綴，保持乾淨閱讀層次"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Soft pink accents, maintaining clean reading layers"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "柔和粉色點綴，保持乾淨閱讀層次"
           }
         }
       }
     },
-    "Soft warm theme": {
-      "extractionState": "stale",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "柔和暖色主题"
+    "Soft warm theme" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soft warm theme"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "柔和暖色主題"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "柔和暖色主题"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "柔和暖色主題"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "柔和暖色主題"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Soft warm theme"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "柔和暖色主題"
           }
         }
       }
+    },
+    "梦幻的星云色彩主题。" : {
+
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }

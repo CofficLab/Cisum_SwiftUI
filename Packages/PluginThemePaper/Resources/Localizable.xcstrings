@@ -1,92 +1,95 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
-    "Audiobook reading theme": {
-      "extractionState": "stale",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "有声书阅读主题"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Audiobook reading theme" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audiobook reading theme"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "有聲書閱讀主題"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有声书阅读主题"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "有聲書閱讀主題"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有聲書閱讀主題"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Audiobook reading theme"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有聲書閱讀主題"
           }
         }
       }
     },
-    "Paper": {
-      "extractionState": "stale",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Paper"
+    "Paper" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paper"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Paper"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paper"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Paper"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paper"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Paper"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paper"
           }
         }
       }
     },
-    "Warm white paper background, ideal for audiobooks": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "纸张暖白背景，适合有声书"
+    "Warm white paper background, ideal for audiobooks" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warm white paper background, ideal for audiobooks"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "紙張暖白背景，適合有聲書"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "纸张暖白背景，适合有声书"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "紙張暖白背景，適合有聲書"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "紙張暖白背景，適合有聲書"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Warm white paper background, ideal for audiobooks"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "紙張暖白背景，適合有聲書"
           }
         }
       }
+    },
+    "温暖的纸张质感主题。" : {
+
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }

@@ -1,64 +1,67 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
-    "Audio Progress": {
-      "extractionState": "stale",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "音频进度管理"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Audio Progress" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio Progress"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "音頻進度管理"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音频进度管理"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "音頻進度管理"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音頻進度管理"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Audio Progress"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音頻進度管理"
           }
         }
       }
     },
-    "Save and restore audio playback progress": {
-      "extractionState": "stale",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "负责音频播放进度的保存和恢复"
+    "Save and restore audio playback progress" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save and restore audio playback progress"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "負責音頻播放進度的保存和恢復"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "负责音频播放进度的保存和恢复"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "負責音頻播放進度的保存和恢復"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "負責音頻播放進度的保存和恢復"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Save and restore audio playback progress"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "負責音頻播放進度的保存和恢復"
           }
         }
       }
+    },
+    "展示与拖动音乐播放进度。" : {
+
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }

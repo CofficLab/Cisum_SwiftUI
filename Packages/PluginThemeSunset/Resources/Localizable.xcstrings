@@ -1,91 +1,94 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
-    "Sunset Orange": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "日落橙"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Sunset Orange" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunset Orange"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "日落橙"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日落橙"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "日落橙"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日落橙"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sunset Orange"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日落橙"
           }
         }
       }
     },
-    "Warm accent theme": {
-      "extractionState": "stale",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "暖色点缀主题"
+    "Warm accent theme" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warm accent theme"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "暖色點綴主題"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暖色点缀主题"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "暖色點綴主題"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暖色點綴主題"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Warm accent theme"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暖色點綴主題"
           }
         }
       }
     },
-    "Warm orange accents, background stays clean white": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "温暖橙色点缀，背景保持留白"
+    "Warm orange accents, background stays clean white" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warm orange accents, background stays clean white"
           }
         },
-        "zh-HK": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "溫暖橙色點綴，背景保持留白"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "温暖橙色点缀，背景保持留白"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "溫暖橙色點綴，背景保持留白"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "溫暖橙色點綴，背景保持留白"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Warm orange accents, background stays clean white"
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "溫暖橙色點綴，背景保持留白"
           }
         }
       }
+    },
+    "温暖的日落橙色渐变主题。" : {
+
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }
