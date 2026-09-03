@@ -1,10 +1,14 @@
-import KernelCore
-import CisumUIComponents
 import Foundation
+import KernelCore
+import ProviderPluginManaging
 
-/// 直接读取 `BuiltinPluginManager` 的插件管理实现。
+/// PluginPluginManager 自带的 `PluginManaging` 实现（不使用 Provider 包默认实现）。
+///
+/// 直接封装 `BuiltinPluginManager` + 内核：读取全部插件与启用状态，驱动运行期
+/// 启停（写入用户覆盖 + 重建贡献 + 持久化），并订阅内核
+/// `.cisumEnabledPluginsDidChange` 通知，转发为 `enabledPluginsChanged` 语义事件。
 @MainActor
-public final class DefaultPluginManaging: PluginManaging {
+public final class PluginManagerManaging: PluginManaging {
     public private(set) var lastErrorDescription: String?
     private let manager: BuiltinPluginManager
     private weak var kernel: CisumKernel?
@@ -102,7 +106,7 @@ public final class DefaultPluginManaging: PluginManaging {
     ) -> any PluginManagingObserverHandle {
         let id = UUID()
         observerCallbacks[id] = callback
-        return PluginManagingObserverHandleBox(owner: self, id: id)
+        return PluginManagerManagingObserverHandle(owner: self, id: id)
     }
 
     private func send(_ event: PluginManagingEvent) {
@@ -119,12 +123,12 @@ public final class DefaultPluginManaging: PluginManaging {
 
 /// 插件管理监听句柄实现；`cancel()` 后从所属 Provider 移除回调。
 @MainActor
-private final class PluginManagingObserverHandleBox: PluginManagingObserverHandle {
-    private weak var owner: DefaultPluginManaging?
+private final class PluginManagerManagingObserverHandle: PluginManagingObserverHandle {
+    private weak var owner: PluginManagerManaging?
     private let id: UUID
     private var isCancelled = false
 
-    init(owner: DefaultPluginManaging, id: UUID) {
+    init(owner: PluginManagerManaging, id: UUID) {
         self.owner = owner
         self.id = id
     }
