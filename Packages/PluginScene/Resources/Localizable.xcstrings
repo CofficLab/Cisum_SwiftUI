@@ -3,52 +3,106 @@
   "strings" : {
     "Available Scenes" : {
       "localizations" : {
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "可用场景" } }
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可用场景"
+          }
+        }
       }
     },
     "Current" : {
       "localizations" : {
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "当前" } }
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前"
+          }
+        }
       }
     },
     "Current Scene" : {
       "localizations" : {
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "当前场景" } }
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前场景"
+          }
+        }
       }
     },
     "Enable a plugin that provides a scene" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "启用一个提供场景的插件" } }
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用一个提供场景的插件"
+          }
+        }
       }
     },
     "Manages the current scene" : {
       "localizations" : {
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "管理当前场景" } }
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "管理当前场景"
+          }
+        }
       }
     },
-    "Scene" : {
-      "localizations" : {
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "场景" } }
-      }
+    "No built-in scenes are available" : {
+
     },
     "No scene selected" : {
       "localizations" : {
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "未选择场景" } }
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未选择场景"
+          }
+        }
       }
     },
     "No scenes available" : {
       "localizations" : {
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "没有可用场景" } }
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有可用场景"
+          }
+        }
+      }
+    },
+    "Scene" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "场景"
+          }
+        }
       }
     },
     "Switch to this scene" : {
       "localizations" : {
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "切换到此场景" } }
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "切换到此场景"
+          }
+        }
       }
     },
     "The scene currently shown in the main window" : {
       "localizations" : {
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "主窗口当前显示的场景" } }
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "主窗口当前显示的场景"
+          }
+        }
       }
     }
   },
