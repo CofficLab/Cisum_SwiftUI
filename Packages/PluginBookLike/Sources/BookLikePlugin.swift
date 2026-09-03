@@ -11,7 +11,7 @@ public actor BookLikePlugin: SuperPlugin {
         description: BookLikePluginInfo.description,
         iconName: BookLikePluginInfo.iconName,
         order: BookLikePluginInfo.order,
-        policy: .optOut
+        policy: .optIn
     )
 
     nonisolated(unsafe) private let sceneBox = SceneBox()

@@ -10,7 +10,8 @@ public actor AudioLikePlugin: SuperPlugin {
         displayName: AudioLikePluginInfo.title,
         description: AudioLikePluginInfo.description,
         iconName: AudioLikePluginInfo.iconName,
-        order: AudioLikePluginInfo.order
+        order: AudioLikePluginInfo.order,
+        policy: .optIn
     )
 
     nonisolated(unsafe) private let sceneBox = SceneBox()

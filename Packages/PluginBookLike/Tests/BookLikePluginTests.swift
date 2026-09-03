@@ -1,4 +1,4 @@
-@testable import BookLikePlugin
+@testable import PluginBookLike
 import Testing
 import Foundation
 

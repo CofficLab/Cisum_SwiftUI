@@ -1,5 +1,5 @@
 import Foundation
-@testable import AudioLikePlugin
+@testable import PluginAudioLike
 import Testing
 
 private final class NotificationObserverToken: @unchecked Sendable {
