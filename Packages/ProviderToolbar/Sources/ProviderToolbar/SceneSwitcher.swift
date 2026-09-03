@@ -1,4 +1,5 @@
 import CisumKernel
+import CisumUIComponents
 import ProviderScene
 import SwiftUI
 
@@ -17,25 +18,81 @@ struct SceneSwitcher: View {
 
     var body: some View {
         if sceneNames.count > 1, let current {
-            Menu {
-                ForEach(sceneNames, id: \.self) { name in
-                    Button {
-                        try? scene?.setCurrentScene(name)
-                    } label: {
-                        if name == current {
-                            Label(name, systemImage: "checkmark")
-                        } else {
-                            Label(name, systemImage: icon(for: name))
-                        }
-                    }
-                }
+            Button {
+                isPresented.toggle()
             } label: {
-                Label(current, systemImage: icon(for: current))
+                HStack(spacing: 4) {
+                    Image(systemName: icon(for: current))
+                    Text(current)
+                        .font(.caption)
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 6))
             }
-        } else if let current {
-            // 仅一个场景时，纯展示当前场景名，不可切换。
-            Label(current, systemImage: icon(for: current))
-                .foregroundStyle(.secondary)
+            .buttonStyle(.plain)
+            .popover(isPresented: $isPresented) {
+                PostersView(isPresented: $isPresented, kernel: kernel)
+                    .frame(minWidth: 350)
+            }
         }
+    }
+
+    @State private var isPresented = false
+}
+
+private struct PostersView: View {
+    struct Item: Identifiable {
+        let id: String
+        let title: String
+        let description: String
+        let view: AnyView
+    }
+
+    @Binding var isPresented: Bool
+    let kernel: CisumKernel
+    @State private var selectedID = ""
+    @State private var items: [Item] = []
+
+    var body: some View {
+        VStack {
+            Picker("", selection: $selectedID) {
+                ForEach(items) { item in
+                    Text(item.title.isEmpty ? item.id : item.title)
+                        .tag(item.id)
+                }
+            }
+            .pickerStyle(.segmented)
+            .padding()
+
+            if let item = items.first(where: { $0.id == selectedID }) {
+                VStack {
+                    if !item.description.isEmpty {
+                        Text(item.description)
+                    }
+
+                    GroupBox {
+                        item.view
+                            .environment(\.posterDismissAction, { isPresented = false })
+                    }
+                    .padding()
+                }
+                Spacer()
+            }
+        }
+        .onAppear { loadItems() }
+    }
+
+    private func loadItems() {
+        items = (kernel.plugin?.allPlugins ?? []).compactMap { plugin in
+            guard let view = plugin.addPosterView() else { return nil }
+            return Item(
+                id: plugin.label,
+                title: plugin.title,
+                description: plugin.description,
+                view: view
+            )
+        }
+        selectedID = items.first?.id ?? ""
     }
 }

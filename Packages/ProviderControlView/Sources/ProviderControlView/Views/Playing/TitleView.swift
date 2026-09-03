@@ -1,5 +1,4 @@
 import MagicPlayMan
-import ProviderPlayback
 import SwiftUI
 
 /// 当前曲目标题。
@@ -8,22 +7,18 @@ import SwiftUI
 struct TitleView: View {
     @EnvironmentObject private var man: MagicPlayMan
 
-    private var title: String {
-        man.currentURL?.deletingPathExtension().lastPathComponent ?? "Cisum"
-    }
+    private var title: String { man.currentURL?.deletingPathExtension().lastPathComponent ?? "" }
 
     var body: some View {
-        VStack(spacing: 6) {
+        GeometryReader { geometry in
             Text(title)
-                .font(.system(size: 25, weight: .medium))
+                .font(.system(size: 24))
                 .lineLimit(2)
+                .minimumScaleFactor(0.3)
                 .multilineTextAlignment(.center)
-            Text(man.hasAsset ? "正在播放" : "未选择资源")
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
+                .frame(width: max(0, geometry.size.width - 32))
+                .frame(maxHeight: .infinity)
+                .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.top, 16)
     }
 }

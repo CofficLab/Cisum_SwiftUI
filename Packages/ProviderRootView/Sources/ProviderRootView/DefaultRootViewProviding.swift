@@ -1,4 +1,5 @@
 import CisumKernel
+import CisumUIComponents
 import SwiftUI
 
 /// 默认 `RootViewProviding` 实现：持有各区域注入视图 + 内核引用，
@@ -44,38 +45,44 @@ public final class DefaultRootViewProviding: RootViewProviding, ObservableObject
 struct RootLayoutView: View {
     @ObservedObject var provider: DefaultRootViewProviding
     let kernel: CisumKernel
-    @State private var isDetailVisible = true
+    @State private var isDetailVisible = false
+    @State private var rememberedHeight: CGFloat = 0
+    @State private var autoResizing = false
+
+    private var showDB: Bool { kernel.appState?.isDBViewVisible ?? false }
 
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
                 controlArea
-                    .frame(height: isDetailVisible ? min(420, max(320, geometry.size.height * 0.48)) : nil)
+                    .frame(height: isDetailVisible ? 250 : geometry.size.height)
 
                 if isDetailVisible {
                     contentArea
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
 
                 statusArea
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
+            .onAppear { handleOnAppear() }
+            .onChange(of: showDB) { _, newValue in
+                handleShowDBChange(newValue, geometry: geometry)
+            }
+            .onChange(of: geometry.size.height) { _, newHeight in
+                handleGeometryChange(newHeight)
+            }
         }
-        .background(.background)
+        .background(CisumMagicBackground.sunset.opacity(1))
         .toolbar {
             ToolbarItem(placement: .navigation) {
                 toolbarArea
             }
-            ToolbarItem(placement: .primaryAction) {
-                Button {
-                    withAnimation(.easeInOut(duration: 0.22)) {
-                        isDetailVisible.toggle()
+            if !(kernel.plugin?.getToolBarButtons() ?? []).isEmpty {
+                ToolbarItemGroup(placement: .cancellationAction) {
+                    Spacer()
+                    ForEach(Array((kernel.plugin?.getToolBarButtons() ?? []).enumerated()), id: \.offset) { _, item in
+                        item.view
                     }
-                } label: {
-                    Label(
-                        isDetailVisible ? "隐藏内容" : "显示内容",
-                        systemImage: "rectangle.bottomhalf.inset.filled"
-                    )
                 }
             }
         }
@@ -103,6 +110,13 @@ struct RootLayoutView: View {
     private var statusArea: some View {
         if let statusView = provider.statusView {
             statusView
+        } else {
+            HStack {
+                Spacer()
+                ForEach(Array((kernel.plugin?.getStatusViews() ?? []).enumerated()), id: \.offset) { _, view in
+                    view
+                }
+            }
         }
     }
 
@@ -111,6 +125,56 @@ struct RootLayoutView: View {
         if let toolbarContent = provider.toolbarContent {
             toolbarContent
         }
+    }
+
+    private func handleOnAppear() {
+        rememberedHeight = windowHeight()
+        isDetailVisible = showDB
+    }
+
+    private func handleShowDBChange(_ newValue: Bool, geometry: GeometryProxy) {
+        withAnimation {
+            isDetailVisible = newValue
+        }
+
+        if !newValue, geometry.size.height != rememberedHeight, rememberedHeight > 0 {
+            autoResizing = true
+            setWindowHeight(rememberedHeight)
+        } else if newValue, geometry.size.height - 250 <= 200 {
+            autoResizing = true
+            setWindowHeight(450)
+        }
+    }
+
+    private func handleGeometryChange(_ newHeight: CGFloat) {
+        if !autoResizing {
+            rememberedHeight = windowHeight()
+        }
+        autoResizing = false
+
+        if newHeight <= 270 {
+            kernel.appState?.closeDBView()
+        }
+    }
+
+    private func windowHeight() -> CGFloat {
+        #if os(macOS)
+            NSApplication.shared.windows.first?.frame.height ?? 0
+        #else
+            0
+        #endif
+    }
+
+    private func setWindowHeight(_ height: CGFloat) {
+        #if os(macOS)
+            guard let window = NSApplication.shared.windows.first else { return }
+            var frame = window.frame
+            frame.origin.y += frame.height - height
+            frame.size.height = height
+            window.setFrame(frame, display: true)
+        #else
+            _ = height
+        #endif
     }
 }
 

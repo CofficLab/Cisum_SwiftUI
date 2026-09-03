@@ -162,7 +162,14 @@ public enum CisumBuilder: SuperLog {
     /// makeRootView。
     private static func registerViewProviders(into kernel: CisumKernel) {
         kernel.registerProvider((any RootViewProviding).self, DefaultRootViewProviding(kernel: kernel))
-        kernel.registerProvider((any ControlViewProviding).self, DefaultControlViewProviding())
+        kernel.registerProvider(
+            (any ControlViewProviding).self,
+            DefaultControlViewProviding(
+                stateViews: { kernel.plugin?.getStateViews() ?? [] },
+                stateMessage: { kernel.appState?.stateMessage ?? "" },
+                toggleDBView: { kernel.appState?.toggleDBView() }
+            )
+        )
         kernel.registerProvider((any ContentViewProviding).self, DefaultContentViewProviding())
         kernel.registerProvider((any ToolbarProviding).self, DefaultToolbarProviding(kernel: kernel))
     }
@@ -327,7 +334,25 @@ struct KernelRootView: View {
     @State private var contributionRevision = 0
 
     var body: some View {
-        rootContent
+        NavigationStack {
+            ZStack {
+                CisumMagicBackground.sunset.opacity(1)
+                    .ignoresSafeArea()
+
+                rootContent
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .frame(minWidth: 350, minHeight: 250)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(CisumMagicBackground.sunset.opacity(1))
+    }
+
+    @ViewBuilder
+    private var rootContent: some View {
+        let content = FactoryCisum.assembleMainView(kernel: kernel)
+        let bridged = wrap(content)
             // 插件贡献变化（.id 变化）时整棵子树重建，重新注入内容 Tab 等。
             .id(contributionRevision)
             .environment(\.demoMode, kernel.appState?.isDemoMode ?? false)
@@ -350,15 +375,10 @@ struct KernelRootView: View {
             .onReceive(NotificationCenter.default.publisher(for: .cisumEnabledPluginsDidChange)) { _ in
                 contributionRevision += 1
             }
-    }
-
-    @ViewBuilder
-    private var rootContent: some View {
-        let content = FactoryCisum.assembleMainView(kernel: kernel)
         if let playMan = kernel.playback as? MagicPlayMan {
-            wrap(content).environmentObject(playMan)
+            bridged.environmentObject(playMan)
         } else {
-            wrap(content)
+            bridged
         }
     }
 

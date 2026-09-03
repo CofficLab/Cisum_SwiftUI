@@ -1,3 +1,4 @@
+import CisumUIComponents
 import SwiftUI
 
 /// 默认 `ContentViewProviding` 实现：持有注入的 Tab 列表，渲染内容区 Tab 容器
@@ -23,65 +24,88 @@ public final class DefaultContentViewProviding: ContentViewProviding, Observable
 struct ContentAreaView: View {
     @ObservedObject var provider: DefaultContentViewProviding
     @State private var selectedTab = 0
+    @Environment(\.demoMode) private var isDemoMode
 
     private var tabs: [ContentTabItem] { provider.tabs }
 
     var body: some View {
-        VStack(spacing: 0) {
-            tabBar
-            Divider()
-            tabContent
+        Group {
+            if isDemoMode {
+                customTabView
+            } else {
+                regularTabView
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.background.secondary)
+        .background(.background)
         .onChange(of: tabs.count) { _, newCount in
             if selectedTab >= newCount { selectedTab = max(0, newCount - 1) }
         }
     }
 
-    private var tabBar: some View {
-        HStack(spacing: 4) {
-            ForEach(Array(tabs.enumerated()), id: \.offset) { index, tab in
-                TabButton(title: tab.title, icon: "music.note", isSelected: selectedTab == index) {
-                    withAnimation(.easeInOut(duration: 0.16)) {
-                        selectedTab = index
-                    }
-                }
-            }
-            Spacer()
-        }
-        .padding(.horizontal, 18)
-        .padding(.vertical, 10)
-        .background(.background)
-    }
-
     @ViewBuilder
-    private var tabContent: some View {
+    private var regularTabView: some View {
         if tabs.isEmpty {
             EmptyTabView()
-        } else if let tab = tabs[safe: selectedTab] {
-            tab.content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else {
+            #if os(macOS)
+                if #available(macOS 15.0, *) {
+                    tabView
+                        .tabViewStyle(GroupedTabViewStyle())
+                        .padding(.top, 2)
+                } else {
+                    tabView
+                        .padding(.top, 2)
+                }
+            #else
+                tabView
+            #endif
         }
     }
-}
 
-private struct TabButton: View {
-    let title: String
-    let icon: String
-    let isSelected: Bool
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Label(title, systemImage: icon)
-                .font(.callout.weight(isSelected ? .semibold : .regular))
-                .foregroundStyle(isSelected ? Color.accentColor : Color.secondary)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(isSelected ? Color.accentColor.opacity(0.12) : .clear, in: Capsule())
+    private var tabView: some View {
+        TabView(selection: $selectedTab) {
+            ForEach(Array(tabs.enumerated()), id: \.offset) { index, tab in
+                tab.content
+                    .tag(index)
+                    .tabItem { Label(tab.title, systemImage: "music.note") }
+            }
         }
-        .buttonStyle(.plain)
+    }
+
+    private var customTabView: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 0) {
+                ForEach(Array(tabs.enumerated()), id: \.offset) { index, tab in
+                    Button {
+                        withAnimation { selectedTab = index }
+                    } label: {
+                        Text(tab.title)
+                            .font(.caption)
+                            .lineLimit(1)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 8)
+                            .foregroundStyle(selectedTab == index ? Color.accentColor : Color.secondary)
+                            .background(
+                                selectedTab == index ? Color.accentColor.opacity(0.1) : .clear,
+                                in: RoundedRectangle(cornerRadius: 8)
+                            )
+                    }
+                    .buttonStyle(.plain)
+                }
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 0)
+            .background(.secondary.opacity(0.1))
+
+            if let tab = tabs[safe: selectedTab] {
+                tab.content
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .clipped()
+            } else {
+                EmptyTabView()
+            }
+        }
     }
 }
 

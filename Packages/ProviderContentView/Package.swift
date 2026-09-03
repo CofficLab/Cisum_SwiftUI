@@ -11,11 +11,15 @@ let package = Package(
     products: [
         .library(name: "ProviderContentView", targets: ["ProviderContentView"]),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(name: "CisumUIComponents", path: "../CisumUIComponents"),
+    ],
     targets: [
         .target(
             name: "ProviderContentView",
-            dependencies: [],
+            dependencies: [
+                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
+            ],
             path: "Sources/ProviderContentView"
         ),
     ],
