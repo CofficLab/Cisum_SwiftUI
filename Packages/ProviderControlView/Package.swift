@@ -12,6 +12,7 @@ let package = Package(
         .library(name: "ProviderControlView", targets: ["ProviderControlView"]),
     ],
     dependencies: [
+        .package(name: "CisumUIComponents", path: "../CisumUIComponents"),
         .package(name: "MagicPlayMan", path: "../MagicPlayMan"),
         .package(name: "ProviderPlayback", path: "../ProviderPlayback"),
     ],
@@ -19,6 +20,7 @@ let package = Package(
         .target(
             name: "ProviderControlView",
             dependencies: [
+                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
                 .product(name: "ProviderPlayback", package: "ProviderPlayback"),
             ],

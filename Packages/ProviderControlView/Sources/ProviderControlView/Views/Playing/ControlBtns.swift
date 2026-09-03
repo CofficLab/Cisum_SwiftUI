@@ -1,3 +1,4 @@
+import CisumUIComponents
 import MagicPlayMan
 import SwiftUI
 
@@ -10,15 +11,33 @@ struct ControlBtns: View {
         HStack(spacing: 4) {
             Spacer(minLength: 1)
 
-            Button(action: toggleDBView) {
-                Image(systemName: "ellipsis.circle")
-            }
-            .buttonStyle(.plain)
-
-            man.makePreviousButtonView()
-            man.makePlayPauseButtonView()
-            man.makeNextButtonView()
-            man.makePlayModeButtonView()
+            AppCircularIconButton(
+                systemImage: "ellipsis",
+                accessibilityLabel: "More",
+                action: toggleDBView
+            )
+            AppCircularIconButton(
+                systemImage: "backward.end.fill",
+                accessibilityLabel: "Previous",
+                action: man.previous
+            )
+            AppCircularIconButton(
+                systemImage: man.isPlaying ? "pause.fill" : "play.fill",
+                accessibilityLabel: man.isPlaying ? "Pause" : "Play",
+                isActive: man.isPlaying,
+                action: { man.toggle(reason: "ControlBtns") }
+            )
+            AppCircularIconButton(
+                systemImage: "forward.end.fill",
+                accessibilityLabel: "Next",
+                action: man.next
+            )
+            AppCircularIconButton(
+                systemImage: man.playMode.iconName,
+                accessibilityLabel: "Playback mode",
+                isActive: man.playMode != .sequence,
+                action: man.togglePlayMode
+            )
 
             Spacer(minLength: 1)
         }
