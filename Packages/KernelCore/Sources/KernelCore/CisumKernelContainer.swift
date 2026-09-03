@@ -46,6 +46,12 @@ public final class CisumKernelContainer: ObservableObject {
     /// 内置插件管理器。
     public let pluginManager: BuiltinPluginManager
 
+    /// 插件启用状态持久化存储（对齐 Lumi `KernelCore.stateStore`）。
+    ///
+    /// 由存储插件在 `onBoot` 注入（写入 `<databaseRoot>/PluginManager/`）；
+    /// 未注入时插件启用状态回落策略默认值、运行期启停不持久化。
+    public var stateStore: (any PluginStatePersisting)?
+
     /// 内核统一事件分发器。
     public let eventManager: EventManager
 

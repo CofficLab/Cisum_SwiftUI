@@ -62,6 +62,12 @@ public final class StorageService: ObservableObject, StorageProviding {
         return dir.appendingPathComponent("\(name).db")
     }
 
+    public func pluginDataDirectory(for pluginID: String) -> URL {
+        let dir = databaseRoot.appendingPathComponent(pluginID, isDirectory: true)
+        try? Self.ensureDirectory(at: dir)
+        return dir
+    }
+
     public func setStorageLocation(_ location: StorageLocation?) {
         UserDefaults.standard.set(location?.rawValue, forKey: Self.storageLocationKey)
         eventObservers.send(.locationChanged(location))

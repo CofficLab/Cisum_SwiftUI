@@ -52,6 +52,14 @@ public protocol StorageProviding: AnyObject, ObservableObject {
     /// - Returns: 数据库文件 URL。
     func databaseFile(name: String) throws -> URL
 
+    /// 获取（或创建）指定插件的专属数据目录：`<databaseRoot>/<pluginID>/`。
+    ///
+    /// 每个插件用它保存自己的持久化数据（对齐 Lumi `StorageProviding.pluginDataDirectory(for:)`）。
+    ///
+    /// - Parameter pluginID: 插件 ID。
+    /// - Returns: 插件数据目录 URL。
+    func pluginDataDirectory(for pluginID: String) -> URL
+
     /// 设置存储位置并持久化，同时广播变更事件。
     func setStorageLocation(_ location: StorageLocation?)
 

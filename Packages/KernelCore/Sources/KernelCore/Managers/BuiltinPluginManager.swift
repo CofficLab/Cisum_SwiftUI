@@ -40,8 +40,12 @@ public final class BuiltinPluginManager: ObservableObject {
     /// 已成功完成 `onBoot` 的插件键（按启动顺序），用于逆序清理与启动回滚。
     private var bootedPluginKeys: [String] = []
 
-    /// 插件启用状态持久化存储。
-    private let stateStore = PluginEnabledStateStore()
+    /// 插件启用状态持久化存储（由存储插件注入到 `kernel.stateStore`，
+    /// 写入 `<databaseRoot>/PluginManager/plugin-enabled-overrides.plist`）。
+    /// 未注入时为 `nil`：启用状态回落策略默认值，运行期启停不持久化。
+    private var stateStore: (any PluginStatePersisting)? {
+        kernel?.stateStore
+    }
 
     /// 已使用的插件 ID 集合，用于检测重复。
     private var usedIDs: Set<String> = []
@@ -225,23 +229,23 @@ public final class BuiltinPluginManager: ObservableObject {
         let metadata = type(of: plugin).metadata
         return Self.effectiveEnabled(
             policy: metadata.policy,
-            override: stateStore.override(for: plugin.id)
+            override: stateStore?.override(for: plugin.id)
         )
     }
 
     /// 获取用户对某插件的启用/禁用覆盖值。
     public func override(for pluginID: String) -> Bool? {
-        stateStore.override(for: pluginID)
+        stateStore?.override(for: pluginID)
     }
 
     /// 设置用户对某插件的启用/禁用覆盖值。
     public func setOverride(_ enabled: Bool, for pluginID: String) {
-        stateStore.setOverride(enabled, for: pluginID)
+        stateStore?.setOverride(enabled, for: pluginID)
     }
 
     /// 清除用户对某插件的覆盖，回落到策略默认值。
     public func clearOverride(for pluginID: String) {
-        stateStore.clearOverride(for: pluginID)
+        stateStore?.clearOverride(for: pluginID)
     }
 
     /// 运行期启用插件：写入用户覆盖 + 重建全部贡献（对齐 Lumi

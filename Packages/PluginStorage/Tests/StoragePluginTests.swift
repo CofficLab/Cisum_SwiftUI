@@ -1023,3 +1023,31 @@ import Foundation
     #expect(viewModel.location == nil)
 }
 
+
+// MARK: - Plugin Data Directory（迁移：插件状态存储到自己的磁盘目录）
+
+@MainActor
+@Test func pluginDataDirectoryResolvesUnderDatabaseRootAndCreates() {
+    let service = StorageService()
+    let dir = service.pluginDataDirectory(for: "PluginManager")
+
+    // 路径为 <databaseRoot>/PluginManager/
+    #expect(dir.path.hasPrefix(service.databaseRoot.path))
+    #expect(dir.lastPathComponent == "PluginManager")
+
+    // 目录已按需创建
+    var isDirectory: ObjCBool = false
+    #expect(FileManager.default.fileExists(atPath: dir.path, isDirectory: &isDirectory))
+    #expect(isDirectory.boolValue)
+}
+
+@MainActor
+@Test func pluginDataDirectoryKeepsPerPluginSubdirectories() {
+    let service = StorageService()
+    let first = service.pluginDataDirectory(for: "PluginAlpha")
+    let second = service.pluginDataDirectory(for: "PluginBeta")
+
+    #expect(first.lastPathComponent == "PluginAlpha")
+    #expect(second.lastPathComponent == "PluginBeta")
+    #expect(first.path != second.path)
+}

@@ -40,6 +40,14 @@ public actor StoragePlugin: SuperPlugin, SuperLog {
         let service = StorageService()
         StorageService.current = service
         kernel.registerStorage(service)
+
+        // 注入插件启用状态持久化存储（对齐 Lumi：存储到 PluginManager 插件的
+        // 专属数据目录 `<databaseRoot>/PluginManager/plugin-enabled-overrides.plist`），
+        // 使 BuiltinPluginManager 在可配置插件启动判断前就能读取用户禁用状态。
+        kernel.stateStore = PluginEnabledStateStore(
+            pluginDirectory: service.pluginDataDirectory(for: "PluginManager")
+        )
+
         installSettingsState(kernel: kernel)
     }
 
