@@ -2,6 +2,7 @@ import CisumKernel
 import CisumUIComponents
 import ProviderAppState
 import ProviderPlugin
+import ProviderScene
 import ProviderStorage
 import ProviderTheme
 import SwiftUI
@@ -29,16 +30,19 @@ public struct SettingsWindow: View {
     private let settings: (any PluginProviding)?
     private let appState: (any AppStateProviding)?
     private let theme: (any ThemeProviding)?
+    private let scene: (any SceneProviding)?
     private let storage: (any StorageProviding)?
     public init(
         settings: (any PluginProviding)?,
         appState: (any AppStateProviding)?,
         theme: (any ThemeProviding)?,
-        storage: (any StorageProviding)?
+        storage: (any StorageProviding)?,
+        scene: (any SceneProviding)? = nil
     ) {
         self.settings = settings
         self.appState = appState
         self.theme = theme
+        self.scene = scene
         self.storage = storage
         self._selection = State(initialValue: "")
     }
@@ -72,6 +76,7 @@ public struct SettingsWindow: View {
             settings: settings,
             appState: appState,
             theme: theme,
+            scene: scene,
             storage: storage
         ))
         .appThemedAppearance()
@@ -169,6 +174,7 @@ private struct KernelEnvironmentModifier: ViewModifier {
     let settings: (any PluginProviding)?
     let appState: (any AppStateProviding)?
     let theme: (any ThemeProviding)?
+    let scene: (any SceneProviding)?
     let storage: (any StorageProviding)?
 
     func body(content: Content) -> some View {
@@ -183,6 +189,7 @@ private struct KernelEnvironmentModifier: ViewModifier {
             )
             .environment(\.showAudioDBViewAction, { appState?.showDBView() })
             .environment(\.pluginThemes, theme?.allThemeContributions ?? [])
+            .environment(\.sceneProviding, scene)
             .environment(\.currentPluginThemeId, appTheme.id)
             .environment(\.selectPluginThemeAction, { themeID in theme?.selectTheme(themeID) })
             .environment(\.resetSettingsAction, {

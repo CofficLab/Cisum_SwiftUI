@@ -262,7 +262,8 @@ public struct SettingsWindowHost: View {
                     settings: kernel.plugin,
                     appState: kernel.appState,
                     theme: kernel.theme,
-                    storage: kernel.storage
+                    storage: kernel.storage,
+                    scene: kernel.scene
                 )
             }
         }

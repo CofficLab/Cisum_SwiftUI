@@ -55,6 +55,15 @@ struct ScenePluginTests {
     }
 
     @Test
+    func contributesSceneSettingsNavigationItem() {
+        let item = ScenePlugin().addSettingNavigationItem()
+
+        #expect(item?.id == "scene")
+        #expect(item?.title == "Scene")
+        #expect(item?.iconName == "rectangle.3.group")
+    }
+
+    @Test
     func bootsBeforeSameOrderSceneDependentPlugins() async throws {
         let kernel = CisumKernel()
         let manager = kernel.pluginManager

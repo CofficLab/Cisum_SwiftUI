@@ -18,6 +18,7 @@ let package = Package(
         .package(name: "ProviderAppState", path: "../ProviderAppState"),
         .package(name: "ProviderPlugin", path: "../ProviderPlugin"),
         .package(name: "ProviderStorage", path: "../ProviderStorage"),
+        .package(name: "ProviderScene", path: "../ProviderScene"),
         .package(name: "ProviderTheme", path: "../ProviderTheme"),
     ],
     targets: [
@@ -29,6 +30,7 @@ let package = Package(
                 .product(name: "ProviderAppState", package: "ProviderAppState"),
                 .product(name: "ProviderPlugin", package: "ProviderPlugin"),
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
+                .product(name: "ProviderScene", package: "ProviderScene"),
                 .product(name: "ProviderTheme", package: "ProviderTheme"),
             ],
             path: "Sources/ProviderSettings"

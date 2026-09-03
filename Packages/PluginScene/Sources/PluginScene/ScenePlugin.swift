@@ -36,6 +36,18 @@ public actor ScenePlugin: SuperPlugin, CisumKernelPlugin {
     }
 
     @MainActor
+    public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
+        PluginSettingNavigationItem(
+            id: Self.metadata.id,
+            title: Self.metadata.displayName,
+            description: Self.metadata.description,
+            iconName: Self.metadata.iconName,
+            order: Self.metadata.order,
+            destination: AnyView(SceneSettingsView())
+        )
+    }
+
+    @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
         kernel.unregisterProvider((any SceneProviding).self)
     }
