@@ -15,7 +15,9 @@ public actor ScenePlugin: SuperPlugin, CisumKernelPlugin {
         displayName: String(localized: "Scene", bundle: .module),
         description: String(localized: "Manages the current scene", bundle: .module),
         iconName: "rectangle.3.group",
-        order: 0,
+        // SceneProviding is a prerequisite for plugins that contribute scene-
+        // scoped views. Keep it ahead of every regular plugin during onBoot.
+        order: -1000,
         policy: .alwaysOn
     )
 

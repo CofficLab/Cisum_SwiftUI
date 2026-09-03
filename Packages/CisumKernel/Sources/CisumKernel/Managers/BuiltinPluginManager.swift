@@ -85,7 +85,7 @@ public final class BuiltinPluginManager: ObservableObject {
     /// `onUnregister`，随后清空注册表，避免留下半启动内核。
     ///
     /// - Parameter kernel: 内核容器实例。
-    func onBoot(kernel: CisumKernelContainer) async throws {
+    public func onBoot(kernel: CisumKernelContainer) async throws {
         guard !pluginRegistry.isEmpty else {
             if Self.verbose { os_log("\(Self.t)⚠️ No plugins initialized, skipping onBoot") }
             return

@@ -18,6 +18,28 @@ private actor SceneProbePlugin: SuperPlugin {
     func addSceneItem() -> String? { sceneName }
 }
 
+private actor SceneDependentProbePlugin: SuperPlugin, CisumKernelPlugin {
+    static let shared = SceneDependentProbePlugin()
+
+    nonisolated var id: String { "scene-dependent-probe" }
+
+    static var metadata: PluginMetadata {
+        PluginMetadata(
+            id: "scene-dependent-probe",
+            displayName: "Scene dependent probe",
+            description: "",
+            order: 0
+        )
+    }
+
+    @MainActor
+    func onBoot(kernel: CisumKernel) async throws {
+        guard kernel.scene != nil else {
+            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
+        }
+    }
+}
+
 @MainActor
 struct ScenePluginTests {
     @Test
@@ -30,6 +52,22 @@ struct ScenePluginTests {
 
         try await plugin.onShutdown(kernel: kernel)
         #expect(kernel.scene == nil)
+    }
+
+    @Test
+    func bootsBeforeSameOrderSceneDependentPlugins() async throws {
+        let kernel = CisumKernel()
+        let manager = kernel.pluginManager
+
+        // The dependent plugin is intentionally registered first and has the
+        // old order value 0. ScenePlugin must still register its provider first.
+        manager.initializePlugins([
+            SceneDependentProbePlugin(),
+            ScenePlugin(),
+        ])
+
+        try await manager.onBoot(kernel: kernel)
+        #expect(kernel.scene != nil)
     }
 
     private func makePersistenceURL() throws -> URL {
