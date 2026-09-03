@@ -28,7 +28,8 @@ let package = Package(
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "ProviderScene", package: "ProviderScene"),
             ],
-            path: "Sources/PluginScene",
+            path: ".",
+            sources: ["Sources/PluginScene"],
             resources: [
                 .process("Resources"),
             ]
