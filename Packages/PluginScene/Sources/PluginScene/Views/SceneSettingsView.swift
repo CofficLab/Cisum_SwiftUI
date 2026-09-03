@@ -1,15 +1,12 @@
 import CisumUIComponents
-import ProviderScene
 import SwiftUI
 
-/// 场景设置页：展示当前场景，并通过 `SceneProviding` 切换场景。
+/// 场景设置页：展示当前场景，并通过 `SceneSettingsViewModel` 切换场景。
+///
+/// 只观察入口注入的 ViewModel，不直接读取 Provider，也不在 `.onAppear` /
+/// `.onDisappear` 中创建/销毁监听。
 struct SceneSettingsView: View {
-    @Environment(\.sceneProviding) private var scene
-    @StateObject private var model: SceneSettingsViewModel
-
-    init() {
-        _model = StateObject(wrappedValue: SceneSettingsViewModel(scene: nil))
-    }
+    @ObservedObject var model: SceneSettingsViewModel
 
     var body: some View {
         AppSettingsContentScaffold {
@@ -68,12 +65,6 @@ struct SceneSettingsView: View {
                     }
                 }
             }
-        }
-        .onAppear {
-            model.attach(to: scene)
-        }
-        .onDisappear {
-            model.detach()
         }
     }
 }

@@ -1,7 +1,7 @@
 import Foundation
 import KernelCore
 import ProviderScene
-import PluginScene
+@testable import PluginScene
 import Testing
 
 private actor SceneDependentProbePlugin: SuperPlugin {
@@ -141,5 +141,92 @@ struct ScenePluginTests {
         handle.cancel()
         service.setCurrentScene(.music)
         #expect(observedScenes == [.music, .audiobooks])
+    }
+
+    // MARK: - Observer + ViewModel 生命周期（迁移 Phase 1）
+
+    @Test
+    func observerPerformsInitialSyncBeforeInstallingListener() throws {
+        let persistenceURL = try makePersistenceURL()
+        clearLegacyPersistence()
+        defer {
+            clearLegacyPersistence()
+            try? FileManager.default.removeItem(at: persistenceURL.deletingLastPathComponent())
+        }
+        let service = SceneService(persistenceURL: persistenceURL)
+        service.restoreCurrentScene()
+        service.setCurrentScene(.audiobooks)
+
+        let viewModel = SceneSettingsViewModel(scene: service)
+        let observer = SceneProvidingObserver(provider: service, viewModel: viewModel)
+        defer { observer.cancel() }
+
+        // 监听安装前已经存在的状态不能丢失。
+        #expect(viewModel.scenes == AppScene.allCases)
+        #expect(viewModel.currentScene == .audiobooks)
+    }
+
+    @Test
+    func observerForwardsProviderEventsToViewModel() throws {
+        let persistenceURL = try makePersistenceURL()
+        clearLegacyPersistence()
+        defer {
+            clearLegacyPersistence()
+            try? FileManager.default.removeItem(at: persistenceURL.deletingLastPathComponent())
+        }
+        let service = SceneService(persistenceURL: persistenceURL)
+        service.restoreCurrentScene()
+
+        let viewModel = SceneSettingsViewModel(scene: service)
+        let observer = SceneProvidingObserver(provider: service, viewModel: viewModel)
+        defer { observer.cancel() }
+
+        service.setCurrentScene(.audiobooks)
+        #expect(viewModel.currentScene == .audiobooks)
+    }
+
+    @Test
+    func observerCancelStopsViewModelUpdates() throws {
+        let persistenceURL = try makePersistenceURL()
+        clearLegacyPersistence()
+        defer {
+            clearLegacyPersistence()
+            try? FileManager.default.removeItem(at: persistenceURL.deletingLastPathComponent())
+        }
+        let service = SceneService(persistenceURL: persistenceURL)
+        service.restoreCurrentScene()
+
+        let viewModel = SceneSettingsViewModel(scene: service)
+        let observer = SceneProvidingObserver(provider: service, viewModel: viewModel)
+
+        service.setCurrentScene(.audiobooks)
+        #expect(viewModel.currentScene == .audiobooks)
+
+        observer.cancel()
+        service.setCurrentScene(.music)
+        // cancel 后事件不再改变 ViewModel。
+        #expect(viewModel.currentScene == .audiobooks)
+    }
+
+    @Test
+    func pluginAssemblySurvivesEnableDisableCycles() async throws {
+        let kernel = CisumKernel()
+        let plugin = ScenePlugin()
+
+        try await plugin.onBoot(kernel: kernel)
+        try await plugin.onReady(kernel: kernel)
+
+        let first = plugin.addSettingNavigationItem()?.destination
+        let second = plugin.addSettingNavigationItem()?.destination
+        #expect(first != nil)
+        // 同一个长期存在的 ViewModel：两次请求不重建状态对象。
+        #expect(second != nil)
+
+        try await plugin.onDisable(kernel: kernel)
+        try await plugin.onEnable(kernel: kernel)
+        // 禁用再启用后仍可注入设置导航项。
+        #expect(plugin.addSettingNavigationItem() != nil)
+
+        try await plugin.onShutdown(kernel: kernel)
     }
 }

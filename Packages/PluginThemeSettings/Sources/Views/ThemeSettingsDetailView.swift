@@ -1,5 +1,4 @@
 import CisumUIComponents
-import ProviderTheme
 import SwiftUI
 
 /// 外观设置详情页（对齐 Lumi `ThemeSettingsDetailView` 双栏版式）。
@@ -12,15 +11,18 @@ import SwiftUI
 /// 全部使用 LumiUI 组件（`AppSettingsContentScaffold` / `AppListRow` /
 /// `AppSearchBar` / `AppEmptyState` / `AppButton` / `AppTag` / `AppDivider`），
 /// 与 Lumi 自身实现一致，无需新增组件。
+///
+/// 只观察入口注入的 `ThemeSettingsViewModel`，不自行创建状态对象；
+/// `selectedID` / `searchText` / `appearanceFilter` 为本地 UI 状态。
 struct ThemeSettingsDetailView: View {
-    @StateObject private var viewModel: ThemeSettingsViewModel
+    @ObservedObject var viewModel: ThemeSettingsViewModel
 
     @State private var selectedID: String?
     @State private var searchText = ""
     @State private var appearanceFilter: ThemeAppearanceFilter = .all
 
-    init(theme: (any ThemeProviding)?) {
-        _viewModel = StateObject(wrappedValue: ThemeSettingsViewModel(theme: theme))
+    init(viewModel: ThemeSettingsViewModel) {
+        self.viewModel = viewModel
     }
 
     private var themes: [LumiUIThemeContribution] { viewModel.themes }

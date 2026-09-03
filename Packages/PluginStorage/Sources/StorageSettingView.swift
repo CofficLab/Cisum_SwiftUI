@@ -1,20 +1,17 @@
 import CisumUIComponents
 import OSLog
-import ProviderStorage
 import SwiftUI
 
 public struct StorageSettingView: View, SuperLog {
     public nonisolated static let emoji: String = "🍴"
 
-    @Environment(\.pluginStorageDependencies) private var dependencies
-    @StateObject private var viewModel: StorageSettingsViewModel
+    @ObservedObject var viewModel: StorageSettingsViewModel
     @State private var showMigrationProgress = false
     @State private var targetLocation: StoragePluginLocation
     @State private var hasChanges = false
-    @State private var location: StoragePluginLocation?
 
-    public init(storage: (any StorageProviding)? = nil) {
-        _viewModel = StateObject(wrappedValue: StorageSettingsViewModel(storage: storage))
+    init(viewModel: StorageSettingsViewModel) {
+        self.viewModel = viewModel
         _targetLocation = State(initialValue: .local)
     }
 
@@ -31,7 +28,7 @@ public struct StorageSettingView: View, SuperLog {
                         beginMigration(to: .icloud)
                     } : nil
                 ) {
-                    if location == .icloud {
+                    if viewModel.location == .icloud {
                         Image(systemName: .cisumIconCheckmarkSimple)
                             .foregroundColor(.accentColor)
                     } else if !viewModel.isICloudAvailable {
@@ -51,7 +48,7 @@ public struct StorageSettingView: View, SuperLog {
                         beginMigration(to: .local)
                     } : nil
                 ) {
-                    if location == .local {
+                    if viewModel.location == .local {
                         Image(systemName: .cisumIconCheckmarkSimple)
                             .foregroundColor(.accentColor)
                     } else if !viewModel.isLocalStorageAvailable {
@@ -64,13 +61,13 @@ public struct StorageSettingView: View, SuperLog {
         }
         .sheet(isPresented: $showMigrationProgress) {
             MigrationProgressView(
-                sourceLocation: dependencies.getStorageLocation(),
+                sourceLocation: viewModel.location,
                 targetLocation: targetLocation,
-                sourceURL: dependencies.getStorageRoot(),
-                targetURL: dependencies.getStorageRootForLocation(targetLocation),
+                sourceURL: viewModel.storageRoot,
+                targetURL: viewModel.storageRoot(for: targetLocation),
                 onDismiss: {
                     showMigrationProgress = false
-                    self.hasChanges = targetLocation != dependencies.getStorageLocation()
+                    self.hasChanges = targetLocation != viewModel.location
                 }
             )
         }
@@ -80,14 +77,13 @@ public struct StorageSettingView: View, SuperLog {
         .onChange(of: targetLocation) {
             hasChanges = Self.hasSelectionChanges(
                 targetLocation: targetLocation,
-                storageLocation: dependencies.getStorageLocation()
+                storageLocation: viewModel.location
             )
         }
+        // 纯派生 UI 状态：ViewModel 的存储位置变化（由 Observer 驱动）同步到
+        // 本地的 targetLocation / hasChanges。
         .onChange(of: viewModel.location) { _, newLocation in
             applyStorageLocationUpdate(newLocation)
-        }
-        .onStoragePluginLocationChanged {
-            applyStorageLocationUpdate(viewModel.location)
         }
     }
 
@@ -96,25 +92,16 @@ public struct StorageSettingView: View, SuperLog {
             currentTarget: targetLocation,
             storageLocation: storageLocation
         )
-        location = storageLocation
         targetLocation = state.targetLocation
         hasChanges = state.hasChanges
     }
 
     private func beginMigration(to newLocation: StoragePluginLocation) {
-        guard newLocation != location else { return }
-        guard dependencies.getStorageRootForLocation(newLocation) != nil else { return }
+        guard newLocation != viewModel.location else { return }
+        guard viewModel.storageRoot(for: newLocation) != nil else { return }
 
         targetLocation = newLocation
         showMigrationProgress = true
-    }
-
-    private var isICloudAvailable: Bool {
-        dependencies.getStorageRootForLocation(.icloud) != nil
-    }
-
-    private var isLocalStorageAvailable: Bool {
-        dependencies.getStorageRootForLocation(.local) != nil
     }
 
     nonisolated static func targetLocationAfterStorageUpdate(

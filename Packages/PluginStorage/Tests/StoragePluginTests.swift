@@ -982,3 +982,44 @@ import Foundation
     #expect(FileManager.default.fileExists(atPath: source.appendingPathComponent("track.mp3").path))
     #expect(!FileManager.default.fileExists(atPath: target.appendingPathComponent("track.mp3").path))
 }
+
+// MARK: - Storage Observer + ViewModel 生命周期（迁移 Phase 1）
+
+@MainActor
+@Test func storageObserverPerformsInitialSync() {
+    let service = StorageService()
+    let viewModel = StorageSettingsViewModel(storage: service)
+    let observer = StorageProvidingObserver(provider: service, viewModel: viewModel)
+    defer { observer.cancel() }
+
+    // 监听安装前已经存在的状态不能丢失。
+    #expect(viewModel.location == service.currentStorageLocation.map { StoragePluginLocation($0) })
+    #expect(viewModel.isICloudAvailable == (service.storageRoot(for: .icloud) != nil))
+    #expect(viewModel.isLocalStorageAvailable == (service.storageRoot(for: .local) != nil))
+}
+
+@MainActor
+@Test func storageObserverForwardsLocationChangeToViewModel() {
+    let service = StorageService()
+    let viewModel = StorageSettingsViewModel(storage: service)
+    let observer = StorageProvidingObserver(provider: service, viewModel: viewModel)
+    defer { observer.cancel() }
+
+    service.setStorageLocation(.local)
+    #expect(viewModel.location == .local)
+
+    service.resetStorageLocation()
+    #expect(viewModel.location == nil)
+}
+
+@MainActor
+@Test func storageObserverCancelStopsViewModelUpdates() {
+    let service = StorageService()
+    let viewModel = StorageSettingsViewModel(storage: service)
+    let observer = StorageProvidingObserver(provider: service, viewModel: viewModel)
+
+    observer.cancel()
+    service.setStorageLocation(.local)
+    #expect(viewModel.location == nil)
+}
+

@@ -9,20 +9,25 @@ final class StorageSettingsViewModel: ObservableObject {
     @Published private(set) var isLocalStorageAvailable = false
 
     private weak var storage: (any StorageProviding)?
-    private var observer: StorageProvidingObserver?
 
     init(storage: (any StorageProviding)?) {
-        attach(to: storage)
-    }
-
-    func attach(to storage: (any StorageProviding)?) {
-        observer?.cancel()
-        observer = nil
         self.storage = storage
         refresh()
+    }
 
-        guard let storage else { return }
-        observer = StorageProvidingObserver(provider: storage, viewModel: self)
+    /// 当前存储位置解析出的根 URL；不可用时为 `nil`。
+    var storageRoot: URL? {
+        storage?.storageRoot
+    }
+
+    /// 解析指定存储位置对应的根 URL；不可用时返回 `nil`。
+    func storageRoot(for location: StoragePluginLocation) -> URL? {
+        storage?.storageRoot(for: StorageLocation(location))
+    }
+
+    /// 用户意图：设置存储位置。
+    func setStorageLocation(_ location: StoragePluginLocation?) {
+        storage?.setStorageLocation(location.map { StorageLocation($0) })
     }
 
     func handle(_ event: StoragePluginEvent) {

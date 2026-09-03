@@ -14,6 +14,10 @@ enum ScenePluginEvent {
 ///
 /// 场景为内置固定枚举（`AppScene.allCases`），本插件仅负责把 `SceneService`
 /// 注册进内核并恢复上次场景；不再从已启用插件的 `addSceneItem()` 贡献中收集。
+///
+/// 入口在 `onReady` 创建并持有长期存在的 `SceneSettingsViewModel` 与
+/// `SceneProvidingObserver`，设置导航项注入同一个 ViewModel；View 不自行创建
+/// 状态对象、也不直接读取 Provider。
 public actor ScenePlugin: SuperPlugin {
     public static let shared = ScenePlugin()
     public static let metadata = PluginMetadata(
@@ -28,6 +32,10 @@ public actor ScenePlugin: SuperPlugin {
         category: .core,
     )
 
+    nonisolated(unsafe) private var settingsViewModel: SceneSettingsViewModel?
+    nonisolated(unsafe) private var settingsObserver: SceneProvidingObserver?
+
+    public init() {}
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
@@ -37,8 +45,6 @@ public actor ScenePlugin: SuperPlugin {
         }
     }
 
-    public init() {}
-
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
         kernel.registerSceneService(SceneService())
@@ -47,22 +53,60 @@ public actor ScenePlugin: SuperPlugin {
     @MainActor
     public func onReady(kernel: CisumKernel) async throws {
         kernel.scene?.restoreCurrentScene()
+        installSettingsState(kernel: kernel)
+    }
+
+    @MainActor
+    public func onEnable(kernel: CisumKernel) async throws {
+        installSettingsState(kernel: kernel)
+    }
+
+    @MainActor
+    public func onDisable(kernel: CisumKernel) async throws {
+        teardownSettingsState()
     }
 
     @MainActor
     public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
-        PluginSettingNavigationItem(
+        // View 贡献可能在插件启动前被请求：保证返回一个稳定、长期存在的
+        // ViewModel，而不是每次请求都重新创建。
+        let viewModel = settingsViewModel ?? {
+            let viewModel = SceneSettingsViewModel(scene: nil)
+            settingsViewModel = viewModel
+            return viewModel
+        }()
+        return PluginSettingNavigationItem(
             id: Self.metadata.id,
             title: Self.metadata.displayName,
             description: Self.metadata.description,
             iconName: Self.metadata.iconName,
             order: Self.metadata.order,
-            destination: AnyView(SceneSettingsView())
+            destination: AnyView(SceneSettingsView(model: viewModel))
         )
     }
 
     @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
+        teardownSettingsState()
         kernel.unregisterProvider((any SceneProviding).self)
+    }
+
+    // MARK: - Settings state assembly
+
+    @MainActor
+    private func installSettingsState(kernel: CisumKernel) {
+        guard settingsViewModel == nil else { return }
+        guard let scene = kernel.scene else { return }
+        let viewModel = SceneSettingsViewModel(scene: scene)
+        let observer = SceneProvidingObserver(provider: scene, viewModel: viewModel)
+        settingsViewModel = viewModel
+        settingsObserver = observer
+    }
+
+    @MainActor
+    private func teardownSettingsState() {
+        settingsObserver?.cancel()
+        settingsObserver = nil
+        settingsViewModel = nil
     }
 }
