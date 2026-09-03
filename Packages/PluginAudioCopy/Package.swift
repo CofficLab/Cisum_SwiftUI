@@ -28,9 +28,10 @@ let package = Package(
                 "PluginAudio",
                 "PluginStore",
             ],
-            path: "Sources",
+            path: ".",
+            sources: ["Sources"],
             resources: [
-                .process("Localizable.xcstrings"),
+                .process("Resources/Localizable.xcstrings"),
             ]
         ),
         .testTarget(
