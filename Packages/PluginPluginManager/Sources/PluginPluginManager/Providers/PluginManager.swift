@@ -8,7 +8,7 @@ import ProviderPluginManaging
 /// 启停（写入用户覆盖 + 重建贡献 + 持久化），并订阅内核
 /// `.cisumEnabledPluginsDidChange` 通知，转发为 `enabledPluginsChanged` 语义事件。
 @MainActor
-public final class PluginManagerManaging: PluginManaging {
+public final class PluginManager: PluginManaging {
     public private(set) var lastErrorDescription: String?
     private let manager: BuiltinPluginManager
     private weak var kernel: CisumKernel?
@@ -106,7 +106,7 @@ public final class PluginManagerManaging: PluginManaging {
     ) -> any PluginManagingObserverHandle {
         let id = UUID()
         observerCallbacks[id] = callback
-        return PluginManagerManagingObserverHandle(owner: self, id: id)
+        return PluginManagerObserverHandle(owner: self, id: id)
     }
 
     private func send(_ event: PluginManagingEvent) {
@@ -123,12 +123,12 @@ public final class PluginManagerManaging: PluginManaging {
 
 /// 插件管理监听句柄实现；`cancel()` 后从所属 Provider 移除回调。
 @MainActor
-private final class PluginManagerManagingObserverHandle: PluginManagingObserverHandle {
-    private weak var owner: PluginManagerManaging?
+private final class PluginManagerObserverHandle: PluginManagingObserverHandle {
+    private weak var owner: PluginManager?
     private let id: UUID
     private var isCancelled = false
 
-    init(owner: PluginManagerManaging, id: UUID) {
+    init(owner: PluginManager, id: UUID) {
         self.owner = owner
         self.id = id
     }

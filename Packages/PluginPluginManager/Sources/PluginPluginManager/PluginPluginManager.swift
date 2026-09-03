@@ -78,7 +78,7 @@ public actor PluginPluginManager: SuperPlugin {
         guard let kernel else { return nil }
         let viewModel = resolveViewModel()
         let manager: any PluginManaging = managementManager
-            ?? PluginManagerManaging(manager: kernel.pluginManager, kernel: kernel)
+            ?? PluginManager(manager: kernel.pluginManager, kernel: kernel)
         return PluginSettingNavigationItem(
             id: Self.settingsEntryID,
             title: "插件管理",
@@ -94,7 +94,7 @@ public actor PluginPluginManager: SuperPlugin {
     @MainActor
     private func installState(kernel: CisumKernel) {
         guard managementViewModel == nil else { return }
-        let manager = PluginManagerManaging(manager: kernel.pluginManager, kernel: kernel)
+        let manager = PluginManager(manager: kernel.pluginManager, kernel: kernel)
         let viewModel = PluginManagementViewModel()
         let observer = PluginManagerObserver(manager: manager, viewModel: viewModel)
         managementManager = manager
