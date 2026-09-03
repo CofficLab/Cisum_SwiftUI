@@ -4,10 +4,10 @@ import Foundation
 
 /// 插件管理数据协议（对齐 Lumi `ProviderPluginManaging/PluginManaging`）。
 ///
-/// 设置中的插件管理页通过它读取全部插件与启用状态，并通过继承的
-/// `PluginControlling` 启停插件。
+/// 设置中的插件管理页通过它读取全部插件与启用状态，并驱动运行期启停
+/// （写入用户覆盖 + 重建贡献 + 持久化）。
 @MainActor
-public protocol PluginManaging: PluginControlling {
+public protocol PluginManaging: AnyObject {
     /// 全部已注册插件（含未启用的）。
     var allPlugins: [any SuperPlugin] { get }
 
@@ -28,6 +28,22 @@ public protocol PluginManaging: PluginControlling {
 
     /// 从候选插件中筛出当前启用的。
     func enabledPlugins(from candidates: [any SuperPlugin]) -> [any SuperPlugin]
+
+    /// 最近一次启停操作的错误描述（供设置页展示）。
+    var lastErrorDescription: String? { get }
+
+    /// 运行期启用插件。
+    ///
+    /// - Returns: 是否成功；失败时 `lastErrorDescription` 记录原因。
+    func enablePlugin(id: String) async -> Bool
+
+    /// 运行期禁用插件。
+    ///
+    /// - Returns: 是否成功；失败时 `lastErrorDescription` 记录原因。
+    func disablePlugin(id: String) async -> Bool
+
+    /// 判断插件当前是否启用（结合策略 + 用户覆盖）。
+    func isEnabled(id: String) -> Bool
 }
 
 /// 直接读取 `BuiltinPluginManager` 的插件管理实现。
@@ -35,11 +51,11 @@ public protocol PluginManaging: PluginControlling {
 public final class DefaultPluginManaging: PluginManaging {
     public private(set) var lastErrorDescription: String?
     private let manager: BuiltinPluginManager
-    private let controlling: PluginControlling
+    private weak var kernel: CisumKernel?
 
     public init(manager: BuiltinPluginManager, kernel: CisumKernel) {
         self.manager = manager
-        self.controlling = DefaultPluginControlling(manager: manager, kernel: kernel)
+        self.kernel = kernel
     }
 
     // MARK: - PluginManaging
@@ -72,17 +88,40 @@ public final class DefaultPluginManaging: PluginManaging {
         candidates.filter { manager.isPluginEnabled($0) }
     }
 
-    // MARK: - PluginControlling
+    // MARK: - Plugin Control
 
     public func enablePlugin(id: String) async -> Bool {
-        await controlling.enablePlugin(id: id)
+        guard let kernel else {
+            lastErrorDescription = "Kernel is not available"
+            return false
+        }
+        do {
+            try await manager.enablePlugin(id: id, kernel: kernel)
+            lastErrorDescription = nil
+            return true
+        } catch {
+            lastErrorDescription = error.localizedDescription
+            return false
+        }
     }
 
     public func disablePlugin(id: String) async -> Bool {
-        await controlling.disablePlugin(id: id)
+        guard let kernel else {
+            lastErrorDescription = "Kernel is not available"
+            return false
+        }
+        do {
+            try await manager.disablePlugin(id: id, kernel: kernel)
+            lastErrorDescription = nil
+            return true
+        } catch {
+            lastErrorDescription = error.localizedDescription
+            return false
+        }
     }
 
     public func isEnabled(id: String) -> Bool {
-        controlling.isEnabled(id: id)
+        guard let plugin = manager.plugin(by: id) else { return false }
+        return manager.isPluginEnabled(plugin)
     }
 }
