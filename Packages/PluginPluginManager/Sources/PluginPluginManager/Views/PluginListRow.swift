@@ -6,6 +6,7 @@ import SwiftUI
 /// 左侧展示插件图标 + 启用状态点，右侧两行文字（名称 + 描述），
 /// 整行可点击以切换选中项。
 struct PluginListRow: View {
+    @LumiTheme private var appTheme
     /// 列表行绑定的目标插件。
     let plugin: any SuperPlugin
 
@@ -31,7 +32,7 @@ struct PluginListRow: View {
         }
         .buttonStyle(.plain)
         .background(
-            isSelected ? Color.accentColor.opacity(0.12) : .clear,
+            isSelected ? appTheme.primary.opacity(0.12) : .clear,
             in: RoundedRectangle(cornerRadius: 6, style: .continuous)
         )
     }
@@ -41,11 +42,11 @@ struct PluginListRow: View {
         VStack(spacing: 6) {
             Image(systemName: type(of: plugin).metadata.iconName)
                 .font(.body)
-                .foregroundStyle(isSelected ? Color.accentColor : Color.secondary)
+                .foregroundStyle(isSelected ? appTheme.primary : appTheme.textSecondary)
                 .frame(width: 22, height: 22)
 
             Circle()
-                .fill(isEnabled ? Color.green : Color.secondary.opacity(0.5))
+                .fill(isEnabled ? appTheme.success : appTheme.textSecondary.opacity(0.5))
                 .frame(width: 6, height: 6)
         }
         .frame(width: 22)
@@ -60,7 +61,7 @@ struct PluginListRow: View {
 
             Text(type(of: plugin).metadata.description.isEmpty ? plugin.id : type(of: plugin).metadata.description)
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(appTheme.textSecondary)
                 .lineLimit(2)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

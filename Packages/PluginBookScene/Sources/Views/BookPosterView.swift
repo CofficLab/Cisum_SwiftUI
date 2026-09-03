@@ -6,6 +6,7 @@ public typealias BookSceneDismissAction = @MainActor () -> Void
 
 /// 有声书海报视图，展示示例书目。
 public struct BookPosterView: View {
+    @LumiTheme private var appTheme
     private let enterScene: BookSceneEnterAction
     private let dismissPoster: BookSceneDismissAction
 
@@ -55,7 +56,7 @@ public struct BookPosterView: View {
                 }
                 .frame(minWidth: 210, maxWidth: 280)
                 .padding(.vertical, 10)
-                .background(.blue, in: RoundedRectangle(cornerRadius: 10))
+                .background(appTheme.primary, in: RoundedRectangle(cornerRadius: 10))
                 .foregroundStyle(.white)
             }
             .frame(minHeight: 44)
@@ -121,7 +122,7 @@ public struct BookPosterView: View {
                     }
                     Spacer()
                 }
-                .background(CisumMagicBackground.deepOceanCurrent)
+                .background(appTheme.elevatedSurface)
                 .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
                 .frame(width: 130)
                 .frame(height: 180)

@@ -306,6 +306,10 @@ public struct WindowMain: View {
                 KernelRootView(kernel: kernel)
             }
         }
+        .appThemedAppearance()
+#if os(macOS)
+        .overlay { ThemeWindowAppearanceBridge() }
+#endif
         .task {
             await initializeKernel()
         }
@@ -330,6 +334,7 @@ public struct WindowMain: View {
 /// 环境可进一步精简。
 struct KernelRootView: View {
     @ObservedObject var kernel: CisumKernel
+    @ObservedObject private var themeRegistry = LumiUIThemeRegistry.shared
     /// 插件贡献版本号：插件启用/禁用变化时 +1，触发根视图重新组装。
     @State private var contributionRevision = 0
     /// 已组装的根视图。组装会更新各个 ObservableObject Provider，不能在 body 求值期间执行。
@@ -337,18 +342,23 @@ struct KernelRootView: View {
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                CisumMagicBackground.sunset.opacity(1)
-                    .ignoresSafeArea()
+            GeometryReader { geometry in
+                ZStack {
+                    themeRegistry.chromeTheme.makeGlobalBackground(proxy: geometry)
+                        .ignoresSafeArea()
 
-                rootContent
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .frame(minWidth: 350, minHeight: 250)
+                    rootContent
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .frame(minWidth: 350, minHeight: 250)
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(CisumMagicBackground.sunset.opacity(1))
+        .appThemedAppearance()
+#if os(macOS)
+        .overlay { ThemeWindowAppearanceBridge() }
+#endif
         .task(id: contributionRevision) {
             assembledContent = FactoryCisum.assembleMainView(kernel: kernel)
         }

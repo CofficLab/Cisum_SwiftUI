@@ -4,6 +4,7 @@ import StoreKit
 import SwiftUI
 
 struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
+    @LumiTheme private var appTheme
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Environment(\.dismiss) private var dismiss
 
@@ -23,27 +24,27 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
                 // Description text.
                 AppCard(style: .subtle, cornerRadius: 8, showShadow: false) {
                     VStack(spacing: 16) {
-                        AppSheetIconHeader(systemImage: "icloud.and.arrow.down.fill", title: localized("Restore Purchase"), tint: .blue)
+                        AppSheetIconHeader(systemImage: "icloud.and.arrow.down.fill", title: localized("Restore Purchase"), tint: appTheme.primary)
                         VStack(alignment: .leading, spacing: 12) {
                             AppInfoRow(
                                 icon: "iphone.and.arrow.forward",
                                 title: localized("Cross-Device Restore"),
                                 description: localized("Restore purchases made on other devices"),
-                                tint: .blue
+                                tint: appTheme.primary
                             )
 
                             AppInfoRow(
                                 icon: "person.circle",
                                 title: localized("Apple ID Verification"),
                                 description: localized("Use the same Apple ID used for purchase"),
-                                tint: .blue
+                                tint: appTheme.primary
                             )
 
                             AppInfoRow(
                                 icon: "checkmark.circle",
                                 title: localized("Feature Restore"),
                                 description: localized("Get all purchased features after successful restore"),
-                                tint: .blue
+                                tint: appTheme.primary
                             )
                         }
                         .padding(.vertical, 8)

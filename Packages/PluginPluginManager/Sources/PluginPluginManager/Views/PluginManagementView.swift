@@ -8,6 +8,7 @@ import SwiftUI
 /// 数据源：`PluginManaging` Provider。列表与详情直接读取 Provider 的状态，
 /// 并监听 `.cisumEnabledPluginsDidChange` 通知在启停后自动刷新。
 struct PluginManagementView: View {
+    @LumiTheme private var appTheme
     let manager: any PluginManaging
 
     @State private var selectedPluginID: String?
@@ -132,7 +133,7 @@ struct PluginManagementView: View {
             }
             .padding(6)
         }
-        .background(.background)
+        .background(appTheme.background)
     }
 
     /// 右侧详情面板。

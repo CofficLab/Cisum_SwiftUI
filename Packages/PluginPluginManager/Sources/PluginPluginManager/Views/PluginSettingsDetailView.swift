@@ -7,6 +7,7 @@ import SwiftUI
 /// 展示选中插件的元信息（图标 / 名称 / id / 描述 / 策略）与启停开关；
 /// 最近一次启停失败的错误信息也会展示。
 struct PluginSettingsDetailView: View {
+    @LumiTheme private var appTheme
     let manager: any PluginManaging
     let plugin: any SuperPlugin
 
@@ -41,9 +42,9 @@ struct PluginSettingsDetailView: View {
         HStack(spacing: 12) {
             Image(systemName: type(of: plugin).metadata.iconName)
                 .font(.title2)
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(appTheme.primary)
                 .frame(width: 36, height: 36)
-                .background(Color.accentColor.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
+                .background(appTheme.primary.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(type(of: plugin).metadata.displayName)

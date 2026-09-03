@@ -128,6 +128,7 @@ struct AudioItemView: View, Equatable, SuperLog {
 
     @EnvironmentObject var playMan: MagicPlayMan
     @Environment(\.audioDBDependencies) private var dependencies
+    @LumiTheme private var appTheme
 
     let url: URL
 
@@ -156,7 +157,7 @@ extension AudioItemView {
                 url.makeAvatarView(verbose: Self.verbose)
                     .magicSize(.init(width: 40, height: 40))
                     .magicAvatarShape(.circle)
-                    .magicBackground(.blue.opacity(0.1))
+                    .magicBackground(appTheme.primary.opacity(0.1))
                     .magicDownloadMonitor(true)
 
                 // 文件信息部分

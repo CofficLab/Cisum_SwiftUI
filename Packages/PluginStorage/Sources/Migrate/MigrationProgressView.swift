@@ -35,6 +35,7 @@ enum MigrationProgressErrorMessagePolicy {
 
 struct MigrationProgressView: View {
     @Environment(\.pluginStorageDependencies) private var dependencies
+    @LumiTheme private var appTheme
     @StateObject private var migrationManager = MigrationManager()
     let sourceLocation: StoragePluginLocation?
     let targetLocation: StoragePluginLocation
@@ -538,12 +539,12 @@ struct MigrationProgressView: View {
                 if migrationCompleted {
                     Text(completionMessage.isEmpty ? Self.completionMessage(shouldMigrate: true) : completionMessage)
                         .font(.subheadline)
-                        .foregroundColor(.green)
+                        .foregroundColor(appTheme.success)
                 } else if migrationCancelled {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Migration Cancelled", bundle: .module)
                             .font(.subheadline)
-                            .foregroundColor(.orange)
+                            .foregroundColor(appTheme.warning)
 
                         Button {
                             prepareForRetry()
@@ -556,11 +557,11 @@ struct MigrationProgressView: View {
                 } else if let errorMessage = errorMessage {
                     Text("Migration failed: \(errorMessage)", bundle: .module)
                         .font(.subheadline)
-                        .foregroundColor(.red)
+                        .foregroundColor(appTheme.error)
                 } else {
                     Text(cancellationRequested ? "Cancelling..." : "Migrating...", bundle: .module)
                         .font(.subheadline)
-                        .foregroundColor(.blue)
+                        .foregroundColor(appTheme.info)
                 }
 
                 if !migrationCancelled {

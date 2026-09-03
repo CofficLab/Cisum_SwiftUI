@@ -4,6 +4,7 @@ import StoreKit
 import SwiftUI
 
 struct PurchaseView: View, SuperLog {
+    @LumiTheme private var appTheme
     nonisolated static let emoji = "🛒"
     nonisolated static let verbose = false
 
@@ -12,7 +13,7 @@ struct PurchaseView: View, SuperLog {
             VStack {
                 AppCard(style: .subtle, cornerRadius: 8, showShadow: false) {
                     VStack(spacing: 16) {
-                        AppSheetIconHeader(systemImage: "giftcard.fill", title: nil as String?, tint: .blue)
+                        AppSheetIconHeader(systemImage: "giftcard.fill", title: nil as String?, tint: appTheme.primary)
                     // 版本对比
                         VersionComparisonView()
 

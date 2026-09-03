@@ -14,6 +14,7 @@ enum RepositoryInfoActionPolicy {
 }
 
 struct RepositoryInfoView: View {
+    @LumiTheme private var appTheme
     @Environment(\.pluginStorageDependencies) private var dependencies
 
     let title: String
@@ -67,7 +68,7 @@ struct RepositoryInfoView: View {
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
-        .background(Color.accentColor.opacity(0.1))
+        .background(appTheme.primary.opacity(0.1))
         .cornerRadius(6)
     }
 }

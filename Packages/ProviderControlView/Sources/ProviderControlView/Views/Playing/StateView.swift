@@ -6,6 +6,7 @@ import SwiftUI
 struct StateView: View {
     @EnvironmentObject private var man: MagicPlayMan
     @Environment(\.demoMode) private var isDemoMode
+    @LumiTheme private var appTheme
     let stateViews: @MainActor () -> [AnyView]
     let stateMessage: @MainActor () -> String
 
@@ -34,13 +35,13 @@ struct StateView: View {
     private func infoView(_ text: String) -> some View {
         HStack {
             Image(systemName: "info.circle.fill")
-                .foregroundStyle(.white)
+                .foregroundStyle(appTheme.textPrimary)
             Text(text)
-                .foregroundStyle(.white)
+                .foregroundStyle(appTheme.textPrimary)
         }
         .font(man.hasAsset ? .callout : .title3)
         .padding(.horizontal, 12)
         .padding(.vertical, 7)
-        .background(.secondary.opacity(0.7), in: Capsule())
+        .background(appTheme.elevatedSurface, in: Capsule())
     }
 }

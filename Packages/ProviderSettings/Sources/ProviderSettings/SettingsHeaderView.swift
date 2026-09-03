@@ -11,6 +11,7 @@ import AppKit
 /// 取不到时回退到主题色 `app.fill` 图标（与 Lumi 未注册 Logo 时的回退一致）。
 /// Cisum 暂无 Lumi 的 `LogoProviding` 体系，故此处直接用系统 App 图标呈现。
 struct SettingsHeaderView: View {
+    @LumiTheme private var appTheme
     private let appInfo = AppBundleInfo()
 
     var body: some View {
@@ -50,6 +51,6 @@ struct SettingsHeaderView: View {
             .resizable()
             .scaledToFit()
             .symbolRenderingMode(.hierarchical)
-            .foregroundStyle(Color.accentColor)
+            .foregroundStyle(appTheme.primary)
     }
 }

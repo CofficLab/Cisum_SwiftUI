@@ -47,6 +47,7 @@ enum CopyStatePresentation {
 }
 
 struct CopyStateView: View, SuperLog, SuperThread {
+    @LumiTheme private var appTheme
     @State private var showCopying = false
     @State private var taskCount: Int = 0
     @State private var pendingCount: Int = 0
@@ -73,10 +74,10 @@ struct CopyStateView: View, SuperLog, SuperThread {
                     .help(CopyStatePresentation.detailsButtonLabel(isShowing: showCopying))
                 }
                 .font(.callout)
-                .foregroundStyle(.white)
+                .foregroundStyle(appTheme.textPrimary)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 6)
-                .background(CisumMagicBackground.deepForest)
+                .background(appTheme.elevatedSurface)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
                 .contentTransition(.numericText(value: Double(taskCount)))
                 .popover(isPresented: $showCopying) {
@@ -98,9 +99,9 @@ extension CopyStateView {
     func makeInfoView(_ i: String) -> some View {
         HStack {
             Image(systemName: "info.circle")
-                .foregroundStyle(.white)
+                .foregroundStyle(appTheme.textPrimary)
             Text(i)
-                .foregroundStyle(.white)
+                .foregroundStyle(appTheme.textPrimary)
         }
         .cisumCard()
         .font(.title3)

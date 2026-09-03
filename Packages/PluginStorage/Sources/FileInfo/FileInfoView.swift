@@ -3,6 +3,7 @@ import CisumUIComponents
 import SwiftUI
 
 struct FileInfoView: View {
+    @LumiTheme private var appTheme
     let itemSize: Int64
     let downloadStatus: FileStatus.DownloadStatus?
     let isProcessing: Bool
@@ -52,7 +53,7 @@ struct FileInfoView: View {
         .padding(.horizontal, 4)
         .background(
             isProcessing ?
-                Color.accentColor.opacity(0.1) :
+                appTheme.primary.opacity(0.1) :
                 Color.clear
         )
         .cornerRadius(4)

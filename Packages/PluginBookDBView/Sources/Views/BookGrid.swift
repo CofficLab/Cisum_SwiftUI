@@ -120,6 +120,7 @@ enum BookDBViewBookStateLookup {
 }
 
 struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
+    @LumiTheme private var appTheme
     nonisolated static let emoji = "📖"
     nonisolated static let verbose = false
 
@@ -218,7 +219,7 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
                                         // Highlight border - animation applied only to the overlay
                                         Rectangle()
                                             .stroke(
-                                                isSelected ? Color.accentColor : Color.clear,
+                                                isSelected ? appTheme.primary : Color.clear,
                                                 lineWidth: isSelected ? 3 : 0
                                             )
                                             .animation(.easeInOut(duration: 0.2), value: isSelected)

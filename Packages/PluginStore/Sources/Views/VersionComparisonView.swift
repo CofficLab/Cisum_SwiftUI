@@ -4,12 +4,14 @@ import SwiftUI
 
 /// 版本对比视图：展示免费版与专业版的区别
 struct VersionComparisonView: View {
+    @LumiTheme private var appTheme
+
     var body: some View {
         VStack(spacing: 0) {
             // 标题
             HStack {
                 Image(systemName: "sparkles")
-                    .foregroundStyle(.yellow)
+                    .foregroundStyle(appTheme.primarySecondary)
                     .accessibilityHidden(true)
                 Text("Unlock the full experience", bundle: .module)
                     .font(.headline)
@@ -23,7 +25,7 @@ struct VersionComparisonView: View {
                 VersionCard(
                     title: String(localized: "Free version", bundle: .module),
                     icon: "person.fill",
-                    color: .gray,
+                    color: appTheme.textTertiary,
                     features: [
                         ("maxAudioCount", String(localized: "Up to \(AudioPluginInfo.maxAudioCount) audio files", bundle: .module), "music.note"),
                     ],
@@ -34,7 +36,7 @@ struct VersionComparisonView: View {
                 VersionCard(
                     title: String(localized: "Pro version", bundle: .module),
                     icon: "crown.fill",
-                    color: .blue,
+                    color: appTheme.primary,
                     features: [
                         ("unlimited", String(localized: "Unlimited audio", bundle: .module), "infinity"),
                         ("future", String(localized: "Early access to future features", bundle: .module), "star.fill"),
@@ -54,7 +56,7 @@ struct VersionComparisonView: View {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(
                     LinearGradient(
-                        colors: [.blue.opacity(0.3), .purple.opacity(0.3)],
+                        colors: [appTheme.primary.opacity(0.3), appTheme.primarySecondary.opacity(0.3)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ),
@@ -80,7 +82,7 @@ private struct VersionCard: View {
                 Image(systemName: icon)
                     .foregroundStyle(
                         isPro
-                            ? LinearGradient(colors: [.yellow, .orange], startPoint: .top, endPoint: .bottom)
+                            ? LinearGradient(colors: [color, color.opacity(0.7)], startPoint: .top, endPoint: .bottom)
                             : LinearGradient(colors: [.gray.opacity(0.6), .gray.opacity(0.4)], startPoint: .top, endPoint: .bottom)
                     )
                     .font(.title3)
@@ -95,7 +97,7 @@ private struct VersionCard: View {
             }
 
             Divider()
-                .background(.gray.opacity(0.2))
+                .background(color.opacity(0.2))
 
             // 功能列表
             VStack(alignment: .leading, spacing: 8) {

@@ -4,6 +4,7 @@ import PluginStore
 import SwiftUI
 
 struct AudioCopyTips: View {
+    @LumiTheme private var appTheme
     enum Variant {
         case drop
         case pro
@@ -22,7 +23,7 @@ struct AudioCopyTips: View {
                 VStack(spacing: 24) {
                     Image(systemName: "arrow.down.doc")
                         .font(.system(size: 48))
-                        .foregroundStyle(.blue.opacity(0.6))
+                        .foregroundStyle(appTheme.primary.opacity(0.7))
 
                     Text("Drag and drop music files here", bundle: .module)
                         .font(.title3)
@@ -39,7 +40,7 @@ struct AudioCopyTips: View {
                         .fill(.ultraThinMaterial)
                         .overlay(
                             RoundedRectangle(cornerRadius: 16)
-                                .strokeBorder(.blue, style: .init(lineWidth: 2, dash: [8, 6]))
+                                .strokeBorder(appTheme.primary, style: .init(lineWidth: 2, dash: [8, 6]))
                         )
                         .padding()
                 )
@@ -48,7 +49,7 @@ struct AudioCopyTips: View {
                 VStack(spacing: 20) {
                     HStack {
                         Image.cisumInfo
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(appTheme.primary)
                         Text("Basic plan supports up to \(AudioPluginInfo.maxAudioCount) files", bundle: .module)
                             .font(.title3)
                     }
@@ -85,8 +86,8 @@ struct AudioCopyTips: View {
                     }
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(.blue.opacity(0.1))
-                    .foregroundStyle(.blue)
+                    .background(appTheme.primary.opacity(0.1))
+                    .foregroundStyle(appTheme.primary)
                     .clipShape(RoundedRectangle(cornerRadius: 6))
                 }
             }

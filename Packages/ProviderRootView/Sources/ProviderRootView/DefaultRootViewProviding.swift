@@ -44,6 +44,7 @@ public final class DefaultRootViewProviding: RootViewProviding, ObservableObject
 /// 「显示/隐藏内容」按钮。各区域优先使用 Provider 注入的视图，否则回退默认实现。
 struct RootLayoutView: View {
     @ObservedObject var provider: DefaultRootViewProviding
+    @ObservedObject private var themeRegistry = LumiUIThemeRegistry.shared
     let kernel: CisumKernel
     @State private var isDetailVisible = false
     @State private var rememberedHeight: CGFloat = 0
@@ -53,17 +54,21 @@ struct RootLayoutView: View {
 
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: 0) {
-                controlArea
-                    .frame(height: isDetailVisible ? 250 : geometry.size.height)
+            ZStack {
+                themeRegistry.chromeTheme.makeGlobalBackground(proxy: geometry)
 
-                if isDetailVisible {
-                    contentArea
+                VStack(spacing: 0) {
+                    controlArea
+                        .frame(height: isDetailVisible ? 250 : geometry.size.height)
+
+                    if isDetailVisible {
+                        contentArea
+                    }
+
+                    statusArea
                 }
-
-                statusArea
+                .frame(width: geometry.size.width, height: geometry.size.height)
             }
-            .frame(width: geometry.size.width, height: geometry.size.height)
             .onAppear { handleOnAppear() }
             .onChange(of: showDB) { _, newValue in
                 handleShowDBChange(newValue, geometry: geometry)
@@ -72,7 +77,7 @@ struct RootLayoutView: View {
                 handleGeometryChange(newHeight)
             }
         }
-        .background(CisumMagicBackground.sunset.opacity(1))
+        .appThemedAppearance()
         .toolbar {
             ToolbarItem(placement: .navigation) {
                 toolbarArea

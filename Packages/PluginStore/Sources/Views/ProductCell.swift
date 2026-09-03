@@ -4,6 +4,7 @@ import StoreKit
 import SwiftUI
 
 struct ProductCell: View, SuperLog {
+    @LumiTheme private var appTheme
     @State var isPurchased: Bool = false
     @State var errorTitle = ""
     @State var isShowingError: Bool = false
@@ -73,7 +74,7 @@ struct ProductCell: View, SuperLog {
                         Text(formatIntroductoryOffer(introOffer))
                             .font(.caption)
                     }
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(appTheme.primary)
                 }
             }
 
@@ -104,7 +105,7 @@ struct ProductCell: View, SuperLog {
     /// Border color.
     private var borderColor: Color {
         if isCurrent || isPurchased {
-            return .green.opacity(0.3)
+            return appTheme.success.opacity(0.3)
         }
         return .clear
     }
@@ -187,7 +188,8 @@ struct ProductCell: View, SuperLog {
         .fontWeight(.semibold)
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
-        .background(.regularMaterial)
+        .background(appTheme.primary.opacity(0.12))
+        .foregroundStyle(appTheme.primary)
         .cisumHoverScale(105)
         .cisumRoundedMedium()
         .cisumShadowSm()

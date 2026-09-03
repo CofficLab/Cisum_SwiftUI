@@ -38,6 +38,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
 
     @EnvironmentObject var repo: BookRepo
     @Environment(\.bookDBViewDependencies) private var dependencies
+    @LumiTheme private var appTheme
 
     @State private var lastPlayedTitle: String? = nil
     @State private var cover: Image? = nil
@@ -63,7 +64,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                     .frame(width: tileSize.width, height: tileSize.height)
                     .clipped()
             } else {
-                CisumMagicBackground.deepForest.opacity(0.2)
+                appTheme.elevatedSurface
             }
 
             HStack {

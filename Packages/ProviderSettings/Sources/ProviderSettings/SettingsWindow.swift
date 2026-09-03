@@ -20,6 +20,7 @@ import SwiftUI
 /// （CisumFactory）从内核解析各 Provider 后注入。
 public struct SettingsWindow: View {
     @State private var selection: String
+    @LumiTheme private var appTheme
 
     /// 插件启停变化版本号：收到 `.cisumEnabledPluginsDidChange` 时 +1，强制重建
     /// 设置项列表（禁用某插件后其贡献的入口会消失）。
@@ -73,6 +74,10 @@ public struct SettingsWindow: View {
             theme: theme,
             storage: storage
         ))
+        .appThemedAppearance()
+#if os(macOS)
+        .overlay { ThemeWindowAppearanceBridge() }
+#endif
     }
 
     #if os(macOS)
@@ -127,7 +132,7 @@ public struct SettingsWindow: View {
                             selection = item.id
                         } label: {
                             Label(item.title, systemImage: item.iconName)
-                                .foregroundStyle(currentSelection == item.id ? Color.accentColor : Color.primary)
+                                .foregroundStyle(currentSelection == item.id ? appTheme.primary : appTheme.textPrimary)
                         }
                     }
                 }
@@ -160,6 +165,7 @@ public struct SettingsWindow: View {
 
 /// 将 Provider 能力投影为插件设置视图依赖的环境值（与主窗口 `KernelRootView` 一致）。
 private struct KernelEnvironmentModifier: ViewModifier {
+    @LumiTheme private var appTheme
     let settings: (any PluginProviding)?
     let appState: (any AppStateProviding)?
     let theme: (any ThemeProviding)?
@@ -177,7 +183,7 @@ private struct KernelEnvironmentModifier: ViewModifier {
             )
             .environment(\.showAudioDBViewAction, { appState?.showDBView() })
             .environment(\.pluginThemes, theme?.allThemeContributions ?? [])
-            .environment(\.currentPluginThemeId, theme?.selectedThemeID ?? "")
+            .environment(\.currentPluginThemeId, appTheme.id)
             .environment(\.selectPluginThemeAction, { themeID in theme?.selectTheme(themeID) })
             .environment(\.resetSettingsAction, {
                 Task { @MainActor in

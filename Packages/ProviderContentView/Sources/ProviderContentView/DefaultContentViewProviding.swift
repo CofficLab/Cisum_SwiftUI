@@ -23,6 +23,7 @@ public final class DefaultContentViewProviding: ContentViewProviding, Observable
 /// 展示已注入的 Tab 视图；尚未注入任何 Tab 时展示占位说明。
 struct ContentAreaView: View {
     @ObservedObject var provider: DefaultContentViewProviding
+    @LumiTheme private var appTheme
     @State private var selectedTab = 0
     @Environment(\.demoMode) private var isDemoMode
 
@@ -37,7 +38,7 @@ struct ContentAreaView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.background)
+        .background(appTheme.background)
         .onChange(of: tabs.count) { _, newCount in
             if selectedTab >= newCount { selectedTab = max(0, newCount - 1) }
         }
@@ -85,9 +86,9 @@ struct ContentAreaView: View {
                             .lineLimit(1)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 8)
-                            .foregroundStyle(selectedTab == index ? Color.accentColor : Color.secondary)
+                            .foregroundStyle(selectedTab == index ? appTheme.primary : appTheme.textSecondary)
                             .background(
-                                selectedTab == index ? Color.accentColor.opacity(0.1) : .clear,
+                                selectedTab == index ? appTheme.primary.opacity(0.1) : .clear,
                                 in: RoundedRectangle(cornerRadius: 8)
                             )
                     }
@@ -96,7 +97,7 @@ struct ContentAreaView: View {
                 Spacer(minLength: 0)
             }
             .padding(.horizontal, 0)
-            .background(.secondary.opacity(0.1))
+            .background(appTheme.textSecondary.opacity(0.1))
 
             if let tab = tabs[safe: selectedTab] {
                 tab.content

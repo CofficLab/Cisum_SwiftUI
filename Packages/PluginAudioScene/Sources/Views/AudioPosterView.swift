@@ -6,6 +6,7 @@ public typealias AudioSceneDismissAction = @MainActor () -> Void
 
 /// 音频海报视图，展示示例曲目列表。
 public struct AudioPosterView: View {
+    @LumiTheme private var appTheme
     private let enterScene: AudioSceneEnterAction
     private let dismissPoster: AudioSceneDismissAction
 
@@ -40,7 +41,7 @@ public struct AudioPosterView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 18, height: 18)
-                                    .foregroundStyle(.blue.opacity(0.8))
+                                    .foregroundStyle(appTheme.primary.opacity(0.8))
                             )
                         Text(item)
                             .font(.headline)
@@ -57,21 +58,11 @@ public struct AudioPosterView: View {
                 }
             }
             .padding(.vertical, 12)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color.blue.opacity(0.12),
-                                Color.cyan.opacity(0.12),
-                                Color.teal.opacity(0.10),
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .shadow(color: .black.opacity(0.05), radius: 6, y: 2)
-            )
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(appTheme.primary.opacity(0.12))
+                        .shadow(color: .black.opacity(0.05), radius: 6, y: 2)
+                )
 
             Spacer()
 
@@ -101,8 +92,8 @@ public struct AudioPosterView: View {
     private var iconGradient: LinearGradient {
         LinearGradient(
             colors: [
-                Color.blue.opacity(0.18),
-                Color.cyan.opacity(0.22),
+                appTheme.primary.opacity(0.18),
+                appTheme.primarySecondary.opacity(0.22),
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
