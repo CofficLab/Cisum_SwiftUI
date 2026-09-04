@@ -62,7 +62,6 @@
       }
     },
     "Audio Repository" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

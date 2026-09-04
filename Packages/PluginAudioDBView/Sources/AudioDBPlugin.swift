@@ -18,6 +18,7 @@ public actor AudioDBPlugin: SuperPlugin {
     )
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
+    nonisolated(unsafe) private weak var kernel: CisumKernel?
     nonisolated(unsafe) private var listViewModel: AudioListViewModel?
     nonisolated(unsafe) private var rootViewModel: AudioDBRootViewModel?
     nonisolated(unsafe) private var dbViewModel: AudioDBViewModel?
@@ -33,6 +34,7 @@ public actor AudioDBPlugin: SuperPlugin {
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
+        self.kernel = kernel
         guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
             throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
         }
@@ -42,6 +44,7 @@ public actor AudioDBPlugin: SuperPlugin {
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
+        self.kernel = kernel
         installState(kernel: kernel)
     }
 
@@ -83,6 +86,26 @@ public actor AudioDBPlugin: SuperPlugin {
                 demoMode: demoMode
             )),
             String(localized: "Music Repository", bundle: .module)
+        )
+    }
+
+    /// 设置窗口入口：展示音频库文件列表。
+    @MainActor
+    public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
+        // 设置页使用独立的 AudioListViewModel，避免与主窗口内容区（AudioList）
+        // 共享同一实例——否则设置页 onAppear 触发 handleOnAppear() 重载时，
+        // 共享状态变化会传播到主窗口 contentview，导致其闪动。
+        let settingList = AudioListViewModel(audioRepo: { await AudioPlugin.getAudioRepoAsync() })
+        return PluginSettingNavigationItem(
+            id: "audiodb",
+            title: String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), bundle: .module),
+            description: Self.metadata.description,
+            iconName: Self.metadata.iconName,
+            order: Self.metadata.order,
+            destination: AnyView(
+                AudioDBSettingView()
+                    .environmentObject(settingList)
+            )
         )
     }
 
