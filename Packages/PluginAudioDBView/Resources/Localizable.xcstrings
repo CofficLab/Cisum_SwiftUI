@@ -399,6 +399,7 @@
       }
     },
     "File deleted" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
