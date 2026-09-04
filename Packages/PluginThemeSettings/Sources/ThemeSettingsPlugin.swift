@@ -27,6 +27,7 @@ public actor ThemeSettingsPlugin: SuperPlugin {
         description: ThemeSettingsPluginInfo.description,
         iconName: ThemeSettingsPluginInfo.iconName,
         order: ThemeSettingsPluginInfo.order,
+        policy: .alwaysOn,
         category: .settings,
     )
 

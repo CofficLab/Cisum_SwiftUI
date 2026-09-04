@@ -10,6 +10,7 @@ public actor ThemeCisumPlugin: SuperPlugin {
         description: CisumTheme().description,
         iconName: CisumTheme().iconName,
         order: 100,
+        policy: .alwaysOn,
         category: .theme,
     )
 

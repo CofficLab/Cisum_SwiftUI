@@ -1,5 +1,5 @@
 import Testing
-@testable import ThemeCisumPlugin
+@testable import PluginThemeCisum
 
 @Test func themeIdentityIsStable() {
     let theme = CisumTheme()
