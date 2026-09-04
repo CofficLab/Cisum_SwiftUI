@@ -10,20 +10,20 @@ struct BookProgressPluginAboutView: View {
             LandingHero(
                 icon: "waveform",
                 accent: theme.primary,
-                tagline: "展示与拖动有声书播放进度，记住上次收听位置。",
-                chips: ["有声书进度"],
+                tagline: String(localized: "Display and scrub audiobook progress, remembering the last listening position", bundle: .module),
+                chips: [String(localized: "Audiobook Progress", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "waveform", tint: theme.primary, title: "进度条", description: "展示当前播放位置。"),
-                .init(icon: "gauge.with.dots.needle.67percent", tint: theme.info, title: "拖动定位", description: "拖动跳转到任意位置。"),
-                .init(icon: "bookmark", tint: theme.success, title: "记忆进度", description: "自动记住上次收听位置。"),
+                .init(icon: "waveform", tint: theme.primary, title: String(localized: "Progress Bar", bundle: .module), description: String(localized: "Shows the current playback position.", bundle: .module)),
+                .init(icon: "gauge.with.dots.needle.67percent", tint: theme.info, title: String(localized: "Seek", bundle: .module), description: String(localized: "Drag to jump to any position.", bundle: .module)),
+                .init(icon: "bookmark", tint: theme.success, title: String(localized: "Remember Position", bundle: .module), description: String(localized: "Automatically remembers where you left off.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

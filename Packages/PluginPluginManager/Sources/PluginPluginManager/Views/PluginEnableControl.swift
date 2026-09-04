@@ -26,7 +26,7 @@ struct PluginEnableControl: View {
                     get: { manager.isEnabled(id: plugin.id) },
                     set: { newValue in toggle(newValue) }
                 )) {
-                    Text("启用")
+                    Text("Enable")
                         .font(.appBody)
                         .foregroundStyle(theme.textPrimary)
                 }
@@ -59,13 +59,13 @@ struct PluginEnableControl: View {
         switch type(of: plugin).metadata.policy {
         case .alwaysOn:
             AppTag(
-                "始终启用",
+                String(localized: "Always Enabled", bundle: .module),
                 systemImage: "lock.fill",
                 style: .accent
             )
         case .disabled:
             AppTag(
-                "已停用",
+                String(localized: "Disabled", bundle: .module),
                 systemImage: "minus.circle",
                 style: .subtle
             )

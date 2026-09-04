@@ -12,7 +12,9 @@ let package = Package(
         .library(name: "ProviderAudioLibrary", targets: ["ProviderAudioLibrary"]),
     ],
     targets: [
-        .target(name: "ProviderAudioLibrary", path: "Sources/ProviderAudioLibrary"),
+        .target(name: "ProviderAudioLibrary", path: ".",
+            sources: ["Sources/ProviderAudioLibrary"],
+            resources: [.process("Resources")]),
     ],
     swiftLanguageModes: [.v5]
 )

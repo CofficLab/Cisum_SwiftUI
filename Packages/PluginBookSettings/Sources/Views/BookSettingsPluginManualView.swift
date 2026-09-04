@@ -5,29 +5,29 @@ import SwiftUI
 struct BookSettingsPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "有声书设置", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Audiobook Settings", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("提供有声书相关的设置项。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Provides audiobook-related settings")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("播放设置：配置有声书播放相关的偏好。"),
-                .init("偏好项：集中管理有声书设置。"),
+                .init(String(localized: "Playback Settings: configures audiobook playback preferences.", bundle: .module)),
+                .init(String(localized: "Preferences: centrally manages audiobook settings.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("在设置窗口中打开有声书设置。"),
-                .init("按需调整播放偏好。"),
+                .init(String(localized: "Opens audiobook settings in the Settings window.", bundle: .module)),
+                .init(String(localized: "Adjusts playback preferences as needed.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("设置即时生效并持久化。"),
+                .init(String(localized: "Settings take effect immediately and persist.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

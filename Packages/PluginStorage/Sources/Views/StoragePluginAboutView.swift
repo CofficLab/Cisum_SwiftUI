@@ -10,20 +10,20 @@ struct StoragePluginAboutView: View {
             LandingHero(
                 icon: "externaldrive",
                 accent: theme.primary,
-                tagline: "管理应用数据存储位置、迁移与文件浏览。",
-                chips: ["存储管理"],
+                tagline: String(localized: "Manage app data storage location, migration, and file browsing", bundle: .module),
+                chips: [String(localized: "Storage Management", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "externaldrive", tint: theme.primary, title: "存储位置", description: "配置数据存储目录。"),
-                .init(icon: "arrow.triangle.2.circlepath", tint: theme.info, title: "迁移", description: "在存储位置之间迁移数据。"),
-                .init(icon: "folder", tint: theme.success, title: "文件浏览", description: "浏览应用数据文件。"),
+                .init(icon: "externaldrive", tint: theme.primary, title: String(localized: "Storage Location", bundle: .module), description: String(localized: "Configures the data storage directory.", bundle: .module)),
+                .init(icon: "arrow.triangle.2.circlepath", tint: theme.info, title: String(localized: "Migrate", bundle: .module), description: String(localized: "Moves data between storage locations.", bundle: .module)),
+                .init(icon: "folder", tint: theme.success, title: String(localized: "File Browser", bundle: .module), description: String(localized: "Browses the app's data files.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

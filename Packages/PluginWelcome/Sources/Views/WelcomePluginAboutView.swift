@@ -10,19 +10,19 @@ struct WelcomePluginAboutView: View {
             LandingHero(
                 icon: "hand.wave",
                 accent: theme.primary,
-                tagline: "首次启动时展示欢迎引导，帮助快速上手。",
-                chips: ["欢迎页"],
+                tagline: String(localized: "Shows a welcome guide on first launch to help you get started", bundle: .module),
+                chips: [String(localized: "Welcome Page", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "hand.wave", tint: theme.primary, title: "欢迎引导", description: "首次启动展示欢迎内容。"),
-                .init(icon: "checkmark.circle", tint: theme.info, title: "快速上手", description: "引导配置存储与基本操作。"),
+                .init(icon: "hand.wave", tint: theme.primary, title: String(localized: "Welcome Guide", bundle: .module), description: String(localized: "Shows welcome content on first launch.", bundle: .module)),
+                .init(icon: "checkmark.circle", tint: theme.info, title: String(localized: "Quick Start", bundle: .module), description: String(localized: "Guides storage setup and basic operations.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

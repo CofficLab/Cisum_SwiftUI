@@ -10,20 +10,20 @@ struct AudioJobPluginAboutView: View {
             LandingHero(
                 icon: "gearshape.2",
                 accent: theme.primary,
-                tagline: "为音频文件提供后台处理任务能力。",
-                chips: ["后台任务"],
+                tagline: String(localized: "Provides background processing tasks for audio files", bundle: .module),
+                chips: [String(localized: "Background Tasks", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "gearshape.2", tint: theme.primary, title: "后台处理", description: "在后台执行音频相关的任务。"),
-                .init(icon: "clock", tint: theme.info, title: "任务调度", description: "按队列调度与执行。"),
-                .init(icon: "checkmark.circle", tint: theme.success, title: "完成通知", description: "任务完成后给出反馈。"),
+                .init(icon: "gearshape.2", tint: theme.primary, title: String(localized: "Background Processing", bundle: .module), description: String(localized: "Runs audio-related tasks in the background.", bundle: .module)),
+                .init(icon: "clock", tint: theme.info, title: String(localized: "Task Scheduling", bundle: .module), description: String(localized: "Schedules and executes by queue.", bundle: .module)),
+                .init(icon: "checkmark.circle", tint: theme.success, title: String(localized: "Completion Notification", bundle: .module), description: String(localized: "Gives feedback when a task finishes.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

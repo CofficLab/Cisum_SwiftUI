@@ -28,7 +28,9 @@ let package = Package(
                 .product(name: "ProviderPluginManaging", package: "ProviderPluginManaging"),
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
-            path: "Sources/PluginPluginManager"
+            path: ".",
+            sources: ["Sources/PluginPluginManager"],
+            resources: [.process("Resources")]
         ),
         .testTarget(
             name: "PluginPluginManagerTests",

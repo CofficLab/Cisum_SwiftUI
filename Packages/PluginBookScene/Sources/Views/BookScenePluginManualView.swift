@@ -5,29 +5,29 @@ import SwiftUI
 struct BookScenePluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "有声书场景", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Audiobook Scene", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("提供「有声书」场景，是有声书功能的主入口。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Provides the Audiobooks scene, the main entry for audiobook features")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("有声书库：有声书场景的主界面。"),
-                .init("场景切换：与其他场景（音乐库）互斥切换。"),
+                .init(String(localized: "Audiobook Library: the main interface of the audiobook scene.", bundle: .module)),
+                .init(String(localized: "Scene Switching: switches exclusively with other scenes (music library).", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("在场景切换器中进入有声书。"),
-                .init("浏览并播放有声书。"),
+                .init(String(localized: "Enter audiobooks from the scene switcher.", bundle: .module)),
+                .init(String(localized: "Browse and play audiobooks.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("场景由应用内置，固定不可扩展。"),
+                .init(String(localized: "Scenes are built into the app and cannot be extended.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

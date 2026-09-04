@@ -20,7 +20,9 @@ let package = Package(
             dependencies: [
                 .product(name: "KernelCore", package: "KernelCore"),
             ],
-            path: "Sources/ProviderPluginManaging"
+            path: ".",
+            sources: ["Sources/ProviderPluginManaging"],
+            resources: [.process("Resources")]
         ),
     ],
     swiftLanguageModes: [.v5]

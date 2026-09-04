@@ -15,8 +15,8 @@ import SwiftUI
 public actor PluginPluginManager: SuperPlugin {
     public static let shared = PluginPluginManager()
     public static let metadata = PluginMetadata(
-        displayName: "插件管理",
-        description: "管理所有已注册插件。",
+        displayName: String(localized: "Plugin Manager", bundle: .module),
+        description: String(localized: "Manages all registered plugins.", bundle: .module),
         iconName: "puzzlepiece.extension",
         order: 90,
         policy: .disabled,
@@ -81,7 +81,7 @@ public actor PluginPluginManager: SuperPlugin {
             ?? PluginManager(manager: kernel.pluginManager, kernel: kernel)
         return PluginSettingNavigationItem(
             id: Self.settingsEntryID,
-            title: "插件管理",
+            title: String(localized: "Plugin Manager", bundle: .module),
             description: Self.metadata.description,
             iconName: Self.metadata.iconName,
             order: Self.metadata.order,

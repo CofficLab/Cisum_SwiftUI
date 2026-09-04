@@ -5,29 +5,29 @@ import SwiftUI
 struct CopyPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "复制", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Copy", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("一键复制当前音乐文件到剪贴板。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Copy current music files to the clipboard with one click")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("复制文件：将当前播放音乐复制到剪贴板。"),
-                .init("完成提示：复制完成后给出状态反馈。"),
+                .init(String(localized: "Copy File: copies the current music to the clipboard.", bundle: .module)),
+                .init(String(localized: "Completion Toast: gives status feedback after copying.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("播放任意音乐后点击复制按钮。"),
-                .init("在目标位置粘贴复制的文件。"),
+                .init(String(localized: "Play any music, then click the copy button.", bundle: .module)),
+                .init(String(localized: "Pastes the copied file at the target location.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("仅在 macOS 上可用。"),
+                .init(String(localized: "Available on macOS only.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

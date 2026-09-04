@@ -5,31 +5,31 @@ import SwiftUI
 struct BookProgressPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "有声书进度", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Audiobook Progress", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("展示与拖动有声书播放进度，记住上次收听位置。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Display and scrub audiobook progress, remembering the last listening position")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("进度条：展示当前播放位置。"),
-                .init("拖动定位：拖动跳转到任意位置。"),
-                .init("记忆进度：自动记住上次收听位置。"),
+                .init(String(localized: "Progress Bar: shows the current playback position.", bundle: .module)),
+                .init(String(localized: "Seek: drag to jump to any position.", bundle: .module)),
+                .init(String(localized: "Remember Position: automatically remembers where you left off.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("在播放页查看当前进度。"),
-                .init("拖动进度条跳转到目标位置。"),
-                .init("再次打开时自动恢复到上次位置。"),
+                .init(String(localized: "View the current progress on the player page.", bundle: .module)),
+                .init(String(localized: "Drag the progress bar to jump to a target position.", bundle: .module)),
+                .init(String(localized: "Reopens to the last position automatically.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("进度条随播放实时更新。"),
+                .init(String(localized: "The progress bar updates in real time while playing.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

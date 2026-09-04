@@ -10,19 +10,19 @@ struct AudioDemoPluginAboutView: View {
             LandingHero(
                 icon: "wand.and.stars",
                 accent: theme.primary,
-                tagline: "提供音乐播放功能的演示数据与体验。",
-                chips: ["音乐演示"],
+                tagline: String(localized: "Provides demo data and experience for music playback", bundle: .module),
+                chips: [String(localized: "Music Demo", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "wand.and.stars", tint: theme.primary, title: "演示数据", description: "一键生成演示音乐内容。"),
-                .init(icon: "play.rectangle", tint: theme.info, title: "快速体验", description: "无需真实文件即可体验播放。"),
+                .init(icon: "wand.and.stars", tint: theme.primary, title: String(localized: "Demo Data", bundle: .module), description: String(localized: "Generates demo music content with one click.", bundle: .module)),
+                .init(icon: "play.rectangle", tint: theme.info, title: String(localized: "Quick Experience", bundle: .module), description: String(localized: "Experience playback without real files.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

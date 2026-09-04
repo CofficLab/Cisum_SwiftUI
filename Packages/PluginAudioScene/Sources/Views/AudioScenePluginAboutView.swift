@@ -10,19 +10,19 @@ struct AudioScenePluginAboutView: View {
             LandingHero(
                 icon: "music.note.list",
                 accent: theme.primary,
-                tagline: "提供「音乐库」场景，是音乐功能的主入口。",
-                chips: ["音乐场景"],
+                tagline: String(localized: "Provides the Music Library scene, the main entry for music features", bundle: .module),
+                chips: [String(localized: "Music Scene", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "music.note.list", tint: theme.primary, title: "音乐库", description: "音乐场景的主界面。"),
-                .init(icon: "rectangle.3.group", tint: theme.info, title: "场景切换", description: "与其他场景（有声书）互斥切换。"),
+                .init(icon: "music.note.list", tint: theme.primary, title: String(localized: "Music Library", bundle: .module), description: String(localized: "The main interface of the music scene.", bundle: .module)),
+                .init(icon: "rectangle.3.group", tint: theme.info, title: String(localized: "Scene Switching", bundle: .module), description: String(localized: "Switches exclusively with other scenes (audiobooks).", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

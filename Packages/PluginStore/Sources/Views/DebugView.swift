@@ -17,24 +17,24 @@ struct DebugView: View, SuperLog {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Button(action: loadProducts) {
-                    Text(isLoading ? "加载中…" : "加载产品")
+                    Text(isLoading ? "Loading…" : "Load Products")
                 }
                 .disabled(isLoading)
 
                 Button(action: updateSubscriptionStatus) {
-                    Text(isLoading ? "加载中…" : "更新订阅状态")
+                    Text(isLoading ? "Loading…" : "Update Subscription Status")
                 }
                 .disabled(isLoading)
 
                 Button(action: testFetchPurchased) {
-                    Text(isLoading ? "加载中…" : "测试已购")
+                    Text(isLoading ? "Loading…" : "Test Purchase")
                 }
                 .disabled(isLoading)
 
                 Button {
                     clear()
                 } label: {
-                    Text("清空")
+                    Text("Clear")
                 }
 
                 Spacer()
@@ -50,7 +50,7 @@ struct DebugView: View, SuperLog {
                         if let groups = self.productGroups {
                             productSection(groups: groups)
                         } else {
-                            Text("尚未加载产品")
+                            Text("Products not loaded yet")
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -63,7 +63,7 @@ struct DebugView: View, SuperLog {
                         if let groups = self.productGroups {
                             subscriptionStatusSection(subscriptions: groups.subscriptions)
                         } else {
-                            Text("尚未加载产品")
+                            Text("Products not loaded yet")
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -105,7 +105,7 @@ extension DebugView {
             }
 
             self.isLoading = false
-            alert_info("检查结束")
+            alert_info(String(localized: "Check Complete", bundle: .module))
         }
     }
 
@@ -141,7 +141,7 @@ extension DebugView {
                 )
 
                 setPurchased(result)
-                alert_info("已更新已购清单")
+                alert_info(String(localized: "Purchase list updated", bundle: .module))
             } catch {
                 alert_error(error)
             }
@@ -196,7 +196,7 @@ extension DebugView {
             Text("\(title) (\(items.count))")
                 .font(.headline)
             if items.isEmpty {
-                Text("空")
+                Text("Empty")
                     .foregroundStyle(.secondary)
             } else {
                 ForEach(items, id: \.id) { p in
@@ -226,7 +226,7 @@ extension DebugView {
             VStack(alignment: .leading, spacing: 4) {
                 Text("Cars (\(purchasedCars.count))").font(.headline)
                 if purchasedCars.isEmpty {
-                    Text("空").foregroundStyle(.secondary)
+                    Text("Empty").foregroundStyle(.secondary)
                 } else {
                     ForEach(purchasedCars, id: \.id) { p in
                         Text(p.displayName)
@@ -238,7 +238,7 @@ extension DebugView {
             VStack(alignment: .leading, spacing: 4) {
                 Text("Subscriptions (\(purchasedSubscriptions.count))").font(.headline)
                 if purchasedSubscriptions.isEmpty {
-                    Text("空").foregroundStyle(.secondary)
+                    Text("Empty").foregroundStyle(.secondary)
                 } else {
                     ForEach(purchasedSubscriptions, id: \.id) { p in
                         Text(p.displayName)
@@ -250,7 +250,7 @@ extension DebugView {
             VStack(alignment: .leading, spacing: 4) {
                 Text("NonRenewables (\(purchasedNonRenewables.count))").font(.headline)
                 if purchasedNonRenewables.isEmpty {
-                    Text("空").foregroundStyle(.secondary)
+                    Text("Empty").foregroundStyle(.secondary)
                 } else {
                     ForEach(purchasedNonRenewables, id: \.id) { p in
                         Text(p.displayName)
@@ -282,7 +282,7 @@ extension DebugView {
                 .font(.headline)
 
             if subscriptionGroups.isEmpty {
-                Text("空")
+                Text("Empty")
                     .foregroundStyle(.secondary)
             } else {
                 ForEach(subscriptionGroups, id: \.id) { group in
@@ -296,7 +296,7 @@ extension DebugView {
                             Text("ID: \(group.id)")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
-                            Text("(\(group.subscriptions.count) 个订阅)")
+                            Text("(\(group.subscriptions.count) subscriptions)")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -342,7 +342,7 @@ extension DebugView {
                         .foregroundStyle(.secondary)
                 }
             } else {
-                Text("Highest Product: 无").foregroundStyle(.secondary)
+                Text("Highest Product: None").foregroundStyle(.secondary)
             }
 
             if let hs = highestSubscriptionStatus {
@@ -353,7 +353,7 @@ extension DebugView {
                         .foregroundStyle(.secondary)
                 }
             } else {
-                Text("Highest Status: 无").foregroundStyle(.secondary)
+                Text("Highest Status: None").foregroundStyle(.secondary)
             }
 
             Divider()
@@ -361,7 +361,7 @@ extension DebugView {
             Text("All Statuses (\(subscriptionStatuses.count))")
                 .font(.headline)
             if subscriptionStatuses.isEmpty {
-                Text("空").foregroundStyle(.secondary)
+                Text("Empty").foregroundStyle(.secondary)
             } else {
                 ForEach(Array(subscriptionStatuses.enumerated()), id: \.offset) { _, s in
                     HStack(alignment: .top) {

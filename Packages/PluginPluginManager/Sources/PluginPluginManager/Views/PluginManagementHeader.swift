@@ -17,10 +17,10 @@ struct PluginManagementHeader: View {
     var body: some View {
         HStack(spacing: 10) {
             Label(
-                "\(totalCount) 个插件",
+                "\(totalCount) plugins",
                 systemImage: "puzzlepiece.extension"
             )
-            Text("\(enabledCount) 个已启用")
+            Text("\(enabledCount) enabled")
             Spacer()
         }
         .font(.appCaption)

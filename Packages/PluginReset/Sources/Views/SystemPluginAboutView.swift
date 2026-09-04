@@ -10,19 +10,19 @@ struct SystemPluginAboutView: View {
             LandingHero(
                 icon: "arrow.counterclockwise",
                 accent: theme.primary,
-                tagline: "重置应用状态或数据，恢复初始状态。",
-                chips: ["重置"],
+                tagline: String(localized: "Reset app state or data to restore the initial state", bundle: .module),
+                chips: [String(localized: "Reset", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "arrow.counterclockwise", tint: theme.primary, title: "重置", description: "将应用恢复至初始状态。"),
-                .init(icon: "exclamationmark.triangle", tint: theme.info, title: "风险提示", description: "重置前给出风险提示。"),
+                .init(icon: "arrow.counterclockwise", tint: theme.primary, title: String(localized: "Reset", bundle: .module), description: String(localized: "Restores the app to its initial state.", bundle: .module)),
+                .init(icon: "exclamationmark.triangle", tint: theme.info, title: String(localized: "Risk Warning", bundle: .module), description: String(localized: "Warns before resetting.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

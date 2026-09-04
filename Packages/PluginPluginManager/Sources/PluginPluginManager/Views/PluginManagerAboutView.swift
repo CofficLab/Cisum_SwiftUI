@@ -21,11 +21,11 @@ struct PluginManagerAboutView: View {
         LandingHero(
             icon: "puzzlepiece.extension",
             accent: theme.primary,
-            tagline: "管理所有已注册插件：查看、搜索、分类筛选并启停。",
-            chips: ["搜索插件", "分类筛选"],
+            tagline: String(localized: "Manage all registered plugins: view, search, filter by category, and enable or disable.", bundle: .module),
+            chips: [String(localized: "Search Plugins", bundle: .module), String(localized: "Category Filter", bundle: .module)],
             metrics: [
-                .init(value: "全部", label: "可配置插件"),
-                .init(value: "始终启用", label: "策略")
+                .init(value: String(localized: "All", bundle: .module), label: String(localized: "Configurable Plugins", bundle: .module)),
+                .init(value: String(localized: "Always Enabled", bundle: .module), label: String(localized: "Strategy", bundle: .module))
             ]
         )
         .landingAppear()
@@ -34,23 +34,23 @@ struct PluginManagerAboutView: View {
     // MARK: - 核心能力
 
     private var capabilitiesSection: some View {
-        LandingSection(title: "核心能力", icon: "square.grid.2x2") {
+        LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "square.grid.2x2") {
             LandingFeatureGrid(items: [
                 .init(icon: "square.grid.2x2", tint: theme.primary,
-                      title: "插件目录",
-                      description: "展示所有用户可配置的插件，按启用状态直观区分。"),
+                      title: String(localized: "Plugin Catalog", bundle: .module),
+                      description: String(localized: "Shows all user-configurable plugins, visually distinguished by enable state.", bundle: .module)),
                 .init(icon: "magnifyingglass", tint: theme.info,
-                      title: "搜索过滤",
-                      description: "按名称、标识符或描述关键字快速定位插件。"),
+                      title: String(localized: "Search & Filter", bundle: .module),
+                      description: String(localized: "Quickly locate plugins by name, identifier, or description keyword.", bundle: .module)),
                 .init(icon: "folder", tint: theme.warning,
-                      title: "分类筛选",
-                      description: "按媒体库 / 播放 / 主题等分类筛选列表。"),
+                      title: String(localized: "Category Filter", bundle: .module),
+                      description: String(localized: "Filter the list by category such as Music Library, Playback, and Theme.", bundle: .module)),
                 .init(icon: "info.circle", tint: theme.info,
-                      title: "插件详情",
-                      description: "展示每个插件的关于页与启用状态控件。"),
+                      title: String(localized: "Plugin Details", bundle: .module),
+                      description: String(localized: "Shows each plugin's About page and enable-state control.", bundle: .module)),
                 .init(icon: "arrow.up.arrow.down", tint: theme.primary,
-                      title: "启停管理",
-                      description: "运行时启停插件并持久化用户覆盖设置。")
+                      title: String(localized: "Enable Management", bundle: .module),
+                      description: String(localized: "Enables or disables plugins at runtime and persists user overrides.", bundle: .module))
             ])
         }
         .landingAppear(delay: 0.05)
@@ -59,12 +59,12 @@ struct PluginManagerAboutView: View {
     // MARK: - 入口
 
     private var entriesSection: some View {
-        LandingSection(title: "入口位置", icon: "cursorarrow.click.2") {
+        LandingSection(title: String(localized: "Where to Find It", bundle: .module), icon: "cursorarrow.click.2") {
             LandingInventory(
                 tint: theme.primary,
                 items: [
-                    .init(icon: "gearshape", title: "设置 → 插件管理", description: "在主设置窗口的「插件管理」导航项中打开。"),
-                    .init(icon: "book", title: "说明书", description: "可在 设置 → 通用 → 说明书 中阅读本页面的使用手册。")
+                    .init(icon: "gearshape", title: String(localized: "Settings → Plugin Manager", bundle: .module), description: String(localized: "Opens in the Plugin Manager navigation item of the main Settings window.", bundle: .module)),
+                    .init(icon: "book", title: String(localized: "Manual", bundle: .module), description: String(localized: "You can read this manual in Settings → General → Manuals.", bundle: .module))
                 ]
             )
         }

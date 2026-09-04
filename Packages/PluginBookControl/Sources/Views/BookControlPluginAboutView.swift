@@ -10,20 +10,20 @@ struct BookControlPluginAboutView: View {
             LandingHero(
                 icon: "playpause",
                 accent: theme.primary,
-                tagline: "控制当前有声书的播放、暂停与上下章节。",
-                chips: ["有声书控制"],
+                tagline: String(localized: "Control play, pause, and chapter navigation for the current audiobook", bundle: .module),
+                chips: [String(localized: "Audiobook Controls", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "playpause", tint: theme.primary, title: "播放 / 暂停", description: "一键切换播放状态。"),
-                .init(icon: "backward.end", tint: theme.info, title: "上一章", description: "切换到上一章节。"),
-                .init(icon: "forward.end", tint: theme.success, title: "下一章", description: "切换到下一章节。"),
+                .init(icon: "playpause", tint: theme.primary, title: String(localized: "Play / Pause", bundle: .module), description: String(localized: "One-click toggle of the playback state.", bundle: .module)),
+                .init(icon: "backward.end", tint: theme.info, title: String(localized: "Previous Chapter", bundle: .module), description: String(localized: "Switches to the previous chapter.", bundle: .module)),
+                .init(icon: "forward.end", tint: theme.success, title: String(localized: "Next Chapter", bundle: .module), description: String(localized: "Switches to the next chapter.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

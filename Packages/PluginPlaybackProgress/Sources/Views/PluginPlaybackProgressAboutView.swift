@@ -10,19 +10,19 @@ struct PlaybackProgressPluginAboutView: View {
             LandingHero(
                 icon: "waveform",
                 accent: theme.primary,
-                tagline: "播放器控制区进度条。",
-                chips: ["播放控制"],
+                tagline: String(localized: "A progress bar for the player control area.", bundle: .module),
+                chips: [String(localized: "Playback Control", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                    .init(icon: "gauge.with.dots.needle.50percent", tint: theme.primary, title: "进度显示", description: "实时展示当前播放位置。"),
-                    .init(icon: "hand.draw", tint: theme.info, title: "拖动控制", description: "拖动进度条调整播放位置。"),
+                    .init(icon: "gauge.with.dots.needle.50percent", tint: theme.primary, title: String(localized: "Progress Display", bundle: .module), description: String(localized: "Shows the current playback position in real time.", bundle: .module)),
+                    .init(icon: "hand.draw", tint: theme.info, title: String(localized: "Drag Control", bundle: .module), description: String(localized: "Drag the progress bar to adjust the position.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

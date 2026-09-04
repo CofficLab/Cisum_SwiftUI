@@ -22,7 +22,9 @@ let package = Package(
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
             ],
-            path: "Sources/ProviderDocsView"
+            path: ".",
+            sources: ["Sources/ProviderDocsView"],
+            resources: [.process("Resources")]
         ),
     ],
     swiftLanguageModes: [.v5]

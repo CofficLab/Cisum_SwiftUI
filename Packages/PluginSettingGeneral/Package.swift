@@ -27,7 +27,9 @@ let package = Package(
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
             ],
-            path: "Sources"
+            path: ".",
+            sources: ["Sources"],
+            resources: [.process("Resources")]
         )
     ]
 )

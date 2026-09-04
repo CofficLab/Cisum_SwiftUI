@@ -20,7 +20,9 @@ let package = Package(
             dependencies: [
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
             ],
-            path: "Sources/ProviderPlayback"
+            path: ".",
+            sources: ["Sources/ProviderPlayback"],
+            resources: [.process("Resources")]
         ),
     ],
     swiftLanguageModes: [.v5]

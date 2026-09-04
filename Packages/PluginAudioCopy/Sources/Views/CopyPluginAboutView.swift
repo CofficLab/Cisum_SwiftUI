@@ -10,19 +10,19 @@ struct CopyPluginAboutView: View {
             LandingHero(
                 icon: "doc.on.doc",
                 accent: theme.primary,
-                tagline: "一键复制当前音乐文件到剪贴板。",
-                chips: ["复制"],
+                tagline: String(localized: "Copy current music files to the clipboard with one click", bundle: .module),
+                chips: [String(localized: "Copy", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "doc.on.doc", tint: theme.primary, title: "复制文件", description: "将当前播放音乐复制到剪贴板。"),
-                .init(icon: "checkmark.circle", tint: theme.info, title: "完成提示", description: "复制完成后给出状态反馈。"),
+                .init(icon: "doc.on.doc", tint: theme.primary, title: String(localized: "Copy File", bundle: .module), description: String(localized: "Copies the current music to the clipboard.", bundle: .module)),
+                .init(icon: "checkmark.circle", tint: theme.info, title: String(localized: "Completion Toast", bundle: .module), description: String(localized: "Gives status feedback after copying.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

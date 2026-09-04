@@ -40,7 +40,9 @@ let package = Package(
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
                 .product(name: "ProviderTheme", package: "ProviderTheme"),
             ],
-            path: "Sources/KernelCore"
+            path: ".",
+            sources: ["Sources/KernelCore"],
+            resources: [.process("Resources")]
         ),
         .testTarget(
             name: "KernelCoreTests",

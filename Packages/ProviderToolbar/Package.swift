@@ -22,7 +22,9 @@ let package = Package(
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderScene", package: "ProviderScene"),
             ],
-            path: "Sources/ProviderToolbar"
+            path: ".",
+            sources: ["Sources/ProviderToolbar"],
+            resources: [.process("Resources")]
         ),
     ],
     swiftLanguageModes: [.v5]

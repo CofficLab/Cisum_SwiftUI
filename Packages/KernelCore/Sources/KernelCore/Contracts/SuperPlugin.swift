@@ -54,15 +54,15 @@ public enum PluginCategory: String, Codable, Sendable, CaseIterable {
     /// 分类展示名。
     public var displayName: String {
         switch self {
-        case .core: "核心"
-        case .library: "媒体库"
-        case .playback: "播放"
-        case .like: "喜欢"
-        case .settings: "设置"
-        case .theme: "主题"
-        case .tool: "工具"
-        case .system: "系统"
-        case .general: "通用"
+        case .core: String(localized: "Core", bundle: .module)
+        case .library: String(localized: "Media Library", bundle: .module)
+        case .playback: String(localized: "Play", bundle: .module)
+        case .like: String(localized: "Favorite", bundle: .module)
+        case .settings: String(localized: "Settings", bundle: .module)
+        case .theme: String(localized: "Theme", bundle: .module)
+        case .tool: String(localized: "Tools", bundle: .module)
+        case .system: String(localized: "System", bundle: .module)
+        case .general: String(localized: "General", bundle: .module)
         }
     }
 
@@ -106,10 +106,10 @@ public enum PluginStage: String, Codable, Sendable {
 
     public var displayName: String {
         switch self {
-        case .experimental: "实验"
-        case .preview: "预览"
-        case .stable: "稳定"
-        case .deprecated: "已弃用"
+        case .experimental: String(localized: "Experimental", bundle: .module)
+        case .preview: String(localized: "Preview", bundle: .module)
+        case .stable: String(localized: "Stable", bundle: .module)
+        case .deprecated: String(localized: "Deprecated", bundle: .module)
         }
     }
 }

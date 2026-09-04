@@ -10,20 +10,20 @@ struct ThemeDaylightSilverPluginAboutView: View {
             LandingHero(
                 icon: "sun.max",
                 accent: theme.primary,
-                tagline: "明亮柔和的银色调主题。",
-                chips: ["日光银"],
+                tagline: String(localized: "A bright, soft silver-toned theme", bundle: .module),
+                chips: [String(localized: "Daylight Silver", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "paintpalette", tint: theme.primary, title: "主题外观", description: "「日光银」主题的整体配色与质感。"),
-                .init(icon: "circle.lefthalf.filled", tint: theme.info, title: "明暗适配", description: "适配系统深浅色模式。"),
-                .init(icon: "arrow.2.squarepath", tint: theme.success, title: "即时切换", description: "切换后立即应用，无需重启。"),
+                .init(icon: "paintpalette", tint: theme.primary, title: String(localized: "Theme Appearance", bundle: .module), description: String(localized: "The overall palette and texture of the Daylight Silver theme.", bundle: .module)),
+                .init(icon: "circle.lefthalf.filled", tint: theme.info, title: String(localized: "Light/Dark Adaptation", bundle: .module), description: String(localized: "Adapts to the system light/dark mode.", bundle: .module)),
+                .init(icon: "arrow.2.squarepath", tint: theme.success, title: String(localized: "Instant Switching", bundle: .module), description: String(localized: "Applies immediately, no relaunch needed.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

@@ -24,7 +24,7 @@ public struct CisumAppCommands: Commands {
     public var body: some Commands {
         // 菜单栏「设置…」入口（⌘,）——对齐 Lumi 的设置窗口入口。
         CommandGroup(replacing: .appSettings) {
-            Button("设置…") {
+            Button("Settings…") {
                 openWindow(id: AppBootstrap.settingsWindowID)
             }
             .keyboardShortcut(",", modifiers: .command)

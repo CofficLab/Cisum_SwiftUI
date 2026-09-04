@@ -5,30 +5,30 @@ import SwiftUI
 struct ThemeSettingsPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "外观设置", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Appearance Settings", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("在设置窗口中提供主题选择与外观设置。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Provides theme selection and appearance settings in the settings window")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("主题选择：从全部主题中选择外观。"),
-                .init("深色模式：切换深浅色外观。"),
+                .init(String(localized: "Theme Selection: choose an appearance from all themes.", bundle: .module)),
+                .init(String(localized: "Dark Mode: toggles between light and dark appearance.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("在设置窗口中打开「外观」。"),
-                .init("选择心仪的主题。"),
-                .init("按需切换深浅色模式。"),
+                .init(String(localized: "Opens Appearance in the Settings window.", bundle: .module)),
+                .init(String(localized: "Pick a theme you like.", bundle: .module)),
+                .init(String(localized: "Switches between light and dark modes as needed.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("主题即时应用并持久化。"),
+                .init(String(localized: "The theme applies immediately and persists.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

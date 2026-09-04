@@ -174,7 +174,7 @@ extension AudioDownloadRootView {
                 ) else {
                     return
                 }
-                os_log(.error, "\(self.t)❌ 音频文件下载失败: \(error.localizedDescription)")
+                os_log(.error, "\(self.t)❌ 音频文件Download failed: \(error.localizedDescription)")
                 alert_error(String(localized: "Download failed: \(error.localizedDescription)", bundle: .module))
             }
         }

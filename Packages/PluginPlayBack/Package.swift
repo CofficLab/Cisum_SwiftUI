@@ -17,6 +17,7 @@ let package = Package(
         .package(name: "MagicPlayMan", path: "../MagicPlayMan"),
         .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
         .package(name: "ProviderPlayback", path: "../ProviderPlayback"),
+        .package(name: "ProviderScene", path: "../ProviderScene"),
         .package(name: "ProviderStorage", path: "../ProviderStorage"),
     ],
     targets: [
@@ -28,9 +29,12 @@ let package = Package(
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
                 "ProviderDocsView",
                 .product(name: "ProviderPlayback", package: "ProviderPlayback"),
+                .product(name: "ProviderScene", package: "ProviderScene"),
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
-            path: "Sources/PluginPlayBack"
+            path: ".",
+            sources: ["Sources/PluginPlayBack"],
+            resources: [.process("Resources")]
         ),
     ],
     swiftLanguageModes: [.v5]

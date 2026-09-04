@@ -7,8 +7,8 @@ import SwiftUI
 public actor PlaybackProgressPlugin: SuperPlugin {
     public static let shared = PlaybackProgressPlugin()
     public static let metadata = PluginMetadata(
-        displayName: "播放进度",
-        description: "提供播放器控制区的播放进度条视图。",
+        displayName: String(localized: "Playback Progress", bundle: .module),
+        description: String(localized: "Provides the progress bar view for the player control area.", bundle: .module),
         iconName: "waveform",
         order: 21,
         policy: .alwaysOn,

@@ -24,7 +24,9 @@ let package = Package(
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
                 .product(name: "ProviderPlayback", package: "ProviderPlayback"),
             ],
-            path: "Sources/ProviderControlView"
+            path: ".",
+            sources: ["Sources/ProviderControlView"],
+            resources: [.process("Resources")]
         ),
     ],
     swiftLanguageModes: [.v5]

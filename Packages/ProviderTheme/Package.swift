@@ -20,7 +20,9 @@ let package = Package(
             dependencies: [
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
             ],
-            path: "Sources/ProviderTheme"
+            path: ".",
+            sources: ["Sources/ProviderTheme"],
+            resources: [.process("Resources")]
         ),
     ],
     swiftLanguageModes: [.v5]

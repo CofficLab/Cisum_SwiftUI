@@ -5,31 +5,31 @@ import SwiftUI
 struct AudioDBPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "音乐数据库", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Music Database", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("以数据库视图浏览与整理音乐文件。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Browse and organize music files in a database view")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("数据库：集中管理音乐文件的数据库记录。"),
-                .init("排序：按多种维度排序浏览。"),
-                .init("清理：清理无效或重复的记录。"),
+                .init(String(localized: "Database: centrally manages the database records of music files.", bundle: .module)),
+                .init(String(localized: "Sorting: browses sorted by multiple dimensions.", bundle: .module)),
+                .init(String(localized: "Clean Up: removes invalid or duplicate records.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("打开音乐数据库视图。"),
-                .init("按需筛选或排序音乐记录。"),
-                .init("清理不再需要的记录。"),
+                .init(String(localized: "Opens the music database view.", bundle: .module)),
+                .init(String(localized: "Filters or sorts music records as needed.", bundle: .module)),
+                .init(String(localized: "Removes records that are no longer needed.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("数据库与媒体库共享存储位置。"),
+                .init(String(localized: "The database shares the storage location with the music library.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

@@ -5,29 +5,29 @@ import SwiftUI
 struct AudioDemoPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "音乐演示", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Music Demo", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("提供音乐播放功能的演示数据与体验。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Provides demo data and experience for music playback")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("演示数据：一键生成演示音乐内容。"),
-                .init("快速体验：无需真实文件即可体验播放。"),
+                .init(String(localized: "Demo Data: generates demo music content with one click.", bundle: .module)),
+                .init(String(localized: "Quick Experience: experience playback without real files.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("在演示插件中生成演示数据。"),
-                .init("切换到音乐库体验演示内容。"),
+                .init(String(localized: "Generates demo data in the demo plugin.", bundle: .module)),
+                .init(String(localized: "Switch to the music library to experience demo content.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("演示数据仅用于体验，不替代真实媒体库。"),
+                .init(String(localized: "Demo data is for experience only and does not replace a real library.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

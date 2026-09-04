@@ -123,13 +123,13 @@ struct PluginManagementView: View {
             VStack(spacing: 10) {
                 AppSearchBar(
                     text: $searchText,
-                    placeholder: "搜索插件"
+                    placeholder: "Search Plugins"
                 )
 
                 // 分类筛选标签栏
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 6) {
-                        categoryChip(title: "全部", isSelected: selectedCategory == nil) {
+                        categoryChip(title: String(localized: "All", bundle: .module), isSelected: selectedCategory == nil) {
                             selectedCategory = nil
                         }
                         ForEach(availableCategories, id: \.self) { category in
@@ -160,7 +160,7 @@ struct PluginManagementView: View {
                     if filteredPlugins.isEmpty {
                         AppEmptyState(
                             icon: "magnifyingglass",
-                            title: "未找到插件"
+                            title: String(localized: "No Plugins Found", bundle: .module)
                         )
                         .padding(.vertical, 32)
                     }
@@ -197,7 +197,7 @@ struct PluginManagementView: View {
         } else {
             AppEmptyState(
                 icon: "puzzlepiece.extension",
-                title: "选择一个插件"
+                title: String(localized: "Select a Plugin", bundle: .module)
             )
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

@@ -80,10 +80,10 @@ struct ThemeSettingsDetailView: View {
 
     private var headerStats: some View {
         HStack(spacing: 10) {
-            Label("\(themes.count) 个主题", systemImage: "paintpalette")
+            Label("\(themes.count) themes", systemImage: "paintpalette")
             if !currentThemeId.isEmpty,
                let active = themes.first(where: { $0.id == currentThemeId }) {
-                Text("当前：\(active.displayName)")
+                Text("Current: \(active.displayName)")
             }
             Spacer()
         }
@@ -94,8 +94,8 @@ struct ThemeSettingsDetailView: View {
     private var themeListPane: some View {
         VStack(spacing: 0) {
             VStack(spacing: 10) {
-                AppSearchBar(text: $searchText, placeholder: "搜索主题")
-                Picker("主题类型", selection: $appearanceFilter) {
+                AppSearchBar(text: $searchText, placeholder: "Search Themes")
+                Picker("Theme Type", selection: $appearanceFilter) {
                     ForEach(ThemeAppearanceFilter.allCases) { filter in
                         Text(filter.title).tag(filter)
                     }
@@ -111,7 +111,7 @@ struct ThemeSettingsDetailView: View {
                 LazyVStack(spacing: 4) {
                     ForEach(filteredThemes) { item in themeListRow(item) }
                     if filteredThemes.isEmpty {
-                        AppEmptyState(icon: "magnifyingglass", title: "没有找到主题")
+                        AppEmptyState(icon: "magnifyingglass", title: "No Themes Found")
                             .padding(.vertical, 32)
                     }
                 }
@@ -163,7 +163,7 @@ struct ThemeSettingsDetailView: View {
                 onApply: { viewModel.selectTheme(selectedTheme.id) }
             )
         } else {
-            AppEmptyState(icon: "paintpalette", title: "选择一个主题")
+            AppEmptyState(icon: "paintpalette", title: "Select a Theme")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
@@ -221,9 +221,9 @@ private struct ThemePreviewPane: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             if isActive {
-                AppTag("当前使用", style: .accent)
+                AppTag(String(localized: "Currently In Use", bundle: .module), style: .accent)
             } else {
-                AppButton("使用此主题", systemImage: "paintbrush.fill", style: .primary, size: .small, action: onApply)
+                AppButton(String(localized: "Use This Theme", bundle: .module), systemImage: "paintbrush.fill", style: .primary, size: .small, action: onApply)
             }
         }
     }
@@ -231,27 +231,27 @@ private struct ThemePreviewPane: View {
     private var appearanceLabel: String {
         switch item.appearanceKind {
         case .dark:
-            return "深色主题"
+            return String(localized: "Dark Theme", bundle: .module)
         case .light:
-            return "浅色主题"
+            return String(localized: "Light Theme", bundle: .module)
         case .system:
-            return "跟随系统外观"
+            return String(localized: "Follow System Appearance", bundle: .module)
         }
     }
 
     private var preview: some View {
-        AppSettingsSection(title: "组件预览", subtitle: "查看常用组件在此主题下的效果", spacing: 12) {
+        AppSettingsSection(title: "Component Preview", subtitle: "Preview how common components look with this theme", spacing: 12) {
             VStack(alignment: .leading, spacing: 16) {
                 HStack(spacing: 8) {
-                    previewButton("主要操作", fill: accent.primary, foreground: .white)
-                    previewButton("次要操作", fill: atmosphere.light, foreground: .primary)
-                    previewButton("辅助操作", fill: accent.secondary.opacity(0.18), foreground: accent.secondary)
+                    previewButton(String(localized: "Primary Action", bundle: .module), fill: accent.primary, foreground: .white)
+                    previewButton(String(localized: "Secondary Action", bundle: .module), fill: atmosphere.light, foreground: .primary)
+                    previewButton(String(localized: "Secondary Actions", bundle: .module), fill: accent.secondary.opacity(0.18), foreground: accent.secondary)
                 }
                 HStack(spacing: 10) {
-                    colorSwatch("主色", accent.primary)
-                    colorSwatch("辅色", accent.secondary)
-                    colorSwatch("背景", atmosphere.medium)
-                    colorSwatch("抬升", atmosphere.light)
+                    colorSwatch(String(localized: "Primary Color", bundle: .module), accent.primary)
+                    colorSwatch(String(localized: "Accent Color", bundle: .module), accent.secondary)
+                    colorSwatch(String(localized: "Background", bundle: .module), atmosphere.medium)
+                    colorSwatch(String(localized: "Elevate", bundle: .module), atmosphere.light)
                 }
             }
             .padding(16)

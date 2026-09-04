@@ -10,20 +10,20 @@ struct BookPlayModePluginAboutView: View {
             LandingHero(
                 icon: "repeat",
                 accent: theme.primary,
-                tagline: "切换单章循环、列表循环、随机等播放模式。",
-                chips: ["有声书播放模式"],
+                tagline: String(localized: "Switch playback modes: single chapter loop, list loop, shuffle, and more", bundle: .module),
+                chips: [String(localized: "Audiobook Play Mode", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "repeat", tint: theme.primary, title: "循环", description: "单章 / 列表循环。"),
-                .init(icon: "shuffle", tint: theme.info, title: "随机", description: "随机播放全部章节。"),
-                .init(icon: "arrow.triangle.2.circlepath", tint: theme.success, title: "顺序", description: "按列表顺序播放。"),
+                .init(icon: "repeat", tint: theme.primary, title: String(localized: "Repeat", bundle: .module), description: String(localized: "Single-chapter / list repeat.", bundle: .module)),
+                .init(icon: "shuffle", tint: theme.info, title: String(localized: "Shuffle", bundle: .module), description: String(localized: "Shuffles all chapters.", bundle: .module)),
+                .init(icon: "arrow.triangle.2.circlepath", tint: theme.success, title: String(localized: "Sequential", bundle: .module), description: String(localized: "Plays in list order.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

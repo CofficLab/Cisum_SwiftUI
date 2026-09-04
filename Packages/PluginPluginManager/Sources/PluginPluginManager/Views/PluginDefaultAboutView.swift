@@ -17,45 +17,45 @@ struct PluginDefaultAboutView: View {
             LandingHero(
                 icon: metadata.category.systemImage,
                 accent: theme.primary,
-                tagline: metadata.description.isEmpty ? "暂无详细说明" : metadata.description,
+                tagline: metadata.description.isEmpty ? "No Description Available" : metadata.description,
                 chips: [metadata.category.displayName, metadata.stage.displayName],
                 metrics: [
-                    .init(value: metadata.version, label: "版本"),
-                    .init(value: policyValue, label: "策略")
+                    .init(value: metadata.version, label: String(localized: "Version", bundle: .module)),
+                    .init(value: policyValue, label: String(localized: "Strategy", bundle: .module))
                 ]
             )
 
-            LandingSection(title: "核心能力", icon: "info.circle") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "info.circle") {
                 LandingFeatureGrid(items: [
                     .init(
                         icon: metadata.category.systemImage,
                         tint: theme.primary,
-                        title: "分类",
+                        title: String(localized: "Category", bundle: .module),
                         description: metadata.category.displayName
                     ),
                     .init(
                         icon: "checkmark.seal",
                         tint: theme.success,
-                        title: "阶段",
+                        title: String(localized: "Stage", bundle: .module),
                         description: metadata.stage.displayName
                     ),
                     .init(
                         icon: "lock.shield",
                         tint: theme.warning,
-                        title: "策略",
+                        title: String(localized: "Strategy", bundle: .module),
                         description: policyValue
                     ),
                     .init(
                         icon: "number.circle",
                         tint: theme.info,
-                        title: "标识符",
-                        description: metadata.id.isEmpty ? "未设置" : metadata.id
+                        title: String(localized: "Identifier", bundle: .module),
+                        description: metadata.id.isEmpty ? "Not Set" : metadata.id
                     )
                 ], minColumnWidth: 180)
             }
 
             if !metadata.permissions.isEmpty {
-                LandingSection(title: "权限", icon: "hand.raised") {
+                LandingSection(title: String(localized: "Permissions", bundle: .module), icon: "hand.raised") {
                     LandingInventory(
                         tint: theme.warning,
                         items: metadata.permissions.map {
@@ -70,11 +70,11 @@ struct PluginDefaultAboutView: View {
     private var policyValue: String {
         switch metadata.policy {
         case .alwaysOn:
-            "始终启用"
+            String(localized: "Always Enabled", bundle: .module)
         case .disabled:
-            "永久停用"
+            String(localized: "Disable Permanently", bundle: .module)
         case .optOut, .optIn:
-            isEnabled ? "已启用" : "已停用"
+            isEnabled ? "Enabled" : "Disabled"
         }
     }
 }

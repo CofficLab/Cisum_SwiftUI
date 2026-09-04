@@ -5,30 +5,30 @@ import SwiftUI
 struct AudioJobPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "后台任务", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Background Tasks", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("为音频文件提供后台处理任务能力。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Provides background processing tasks for audio files")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("后台处理：在后台执行音频相关的任务。"),
-                .init("任务调度：按队列调度与执行。"),
-                .init("完成通知：任务完成后给出反馈。"),
+                .init(String(localized: "Background Processing: runs audio-related tasks in the background.", bundle: .module)),
+                .init(String(localized: "Task Scheduling: schedules and executes by queue.", bundle: .module)),
+                .init(String(localized: "Completion Notification: gives feedback when a task finishes.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("触发音频后台任务。"),
-                .init("在任务队列中查看执行状态。"),
+                .init(String(localized: "Triggers background audio tasks.", bundle: .module)),
+                .init(String(localized: "View execution status in the task queue.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("任务在后台异步执行，不影响前台播放。"),
+                .init(String(localized: "Tasks run asynchronously in the background without affecting foreground playback.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

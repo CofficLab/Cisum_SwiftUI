@@ -5,29 +5,29 @@ import SwiftUI
 struct SystemPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "重置", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Reset", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("重置应用状态或数据，恢复初始状态。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Reset app state or data to restore the initial state")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("重置：将应用恢复至初始状态。"),
-                .init("风险提示：重置前给出风险提示。"),
+                .init(String(localized: "Reset: restores the app to its initial state.", bundle: .module)),
+                .init(String(localized: "Risk Warning: warns before resetting.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("在设置中打开「重置」。"),
-                .init("确认后执行重置操作。"),
+                .init(String(localized: "Opens Reset in Settings.", bundle: .module)),
+                .init(String(localized: "Resets after confirmation.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("重置会清除相关数据，请谨慎操作。"),
+                .init(String(localized: "Resetting clears related data; proceed with caution.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

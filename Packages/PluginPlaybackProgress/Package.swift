@@ -30,7 +30,8 @@ let package = Package(
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
             ],
             path: ".",
-            sources: ["Sources"]
+            sources: ["Sources"],
+            resources: [.process("Resources")]
         ),
     ],
     swiftLanguageModes: [.v5]

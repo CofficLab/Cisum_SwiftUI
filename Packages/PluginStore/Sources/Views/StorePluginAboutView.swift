@@ -10,20 +10,20 @@ struct StorePluginAboutView: View {
             LandingHero(
                 icon: "cart",
                 accent: theme.primary,
-                tagline: "浏览与购买 Cisum 的增值服务与扩展。",
-                chips: ["商店"],
+                tagline: String(localized: "Browse and purchase Cisum's premium services and extensions", bundle: .module),
+                chips: [String(localized: "Store", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "cart", tint: theme.primary, title: "商品浏览", description: "浏览可购买的增值服务。"),
-                .init(icon: "checkmark.seal", tint: theme.info, title: "恢复购买", description: "恢复历史购买记录。"),
-                .init(icon: "creditcard", tint: theme.success, title: "购买", description: "完成应用内购买。"),
+                .init(icon: "cart", tint: theme.primary, title: String(localized: "Product Browsing", bundle: .module), description: String(localized: "Browses purchasable premium services.", bundle: .module)),
+                .init(icon: "checkmark.seal", tint: theme.info, title: String(localized: "Restore Purchases", bundle: .module), description: String(localized: "Restores your past purchases.", bundle: .module)),
+                .init(icon: "creditcard", tint: theme.success, title: String(localized: "Purchase", bundle: .module), description: String(localized: "Completes the in-app purchase.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

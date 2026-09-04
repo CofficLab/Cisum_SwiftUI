@@ -7,7 +7,7 @@ struct ContentPlaceholderView: View {
             Image(systemName: "music.note.list")
                 .font(.largeTitle)
                 .foregroundStyle(.secondary)
-            Text("暂无内容")
+            Text("No Content")
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -10,19 +10,19 @@ struct OpenButtonPluginAboutView: View {
             LandingHero(
                 icon: "folder",
                 accent: theme.primary,
-                tagline: "在工具栏提供「打开当前」入口，快速定位当前播放文件。",
-                chips: ["打开当前"],
+                tagline: String(localized: "Provides an Open Current entry in the toolbar to quickly locate the current file", bundle: .module),
+                chips: [String(localized: "Open Current", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "folder", tint: theme.primary, title: "打开文件", description: "在文件管理器中显示当前文件。"),
-                .init(icon: "arrow.up.forward.square", tint: theme.info, title: "快速跳转", description: "一键定位当前播放内容。"),
+                .init(icon: "folder", tint: theme.primary, title: String(localized: "Open File", bundle: .module), description: String(localized: "Shows the current file in the file manager.", bundle: .module)),
+                .init(icon: "arrow.up.forward.square", tint: theme.info, title: String(localized: "Quick Jump", bundle: .module), description: String(localized: "Locates the current media with one click.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

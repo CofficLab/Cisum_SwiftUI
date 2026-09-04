@@ -10,20 +10,20 @@ struct PluginControlButtonsAboutView: View {
             LandingHero(
                 icon: "playpause.fill",
                 accent: theme.primary,
-                tagline: "播放器底部控制按钮组。",
-                chips: ["播放控制"],
+                tagline: String(localized: "The control button group at the bottom of the player.", bundle: .module),
+                chips: [String(localized: "Playback Control", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                    .init(icon: "backward.end.fill", tint: theme.primary, title: "曲目切换", description: "上一曲与下一曲快速切换。"),
-                    .init(icon: "playpause.fill", tint: theme.info, title: "播放控制", description: "播放与暂停当前曲目。"),
-                    .init(icon: "repeat", tint: theme.success, title: "播放模式", description: "循环切换顺序 / 循环等播放模式。"),
+                    .init(icon: "backward.end.fill", tint: theme.primary, title: String(localized: "Track Switching", bundle: .module), description: String(localized: "Quickly switches between previous and next tracks.", bundle: .module)),
+                    .init(icon: "playpause.fill", tint: theme.info, title: String(localized: "Playback Control", bundle: .module), description: String(localized: "Plays and pauses the current track.", bundle: .module)),
+                    .init(icon: "repeat", tint: theme.success, title: String(localized: "Play Mode", bundle: .module), description: String(localized: "Cycles through sequential, repeat, and other modes.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

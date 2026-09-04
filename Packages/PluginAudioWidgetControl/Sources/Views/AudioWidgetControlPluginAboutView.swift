@@ -10,19 +10,19 @@ struct AudioWidgetControlPluginAboutView: View {
             LandingHero(
                 icon: "rectangle.grid.2x2",
                 accent: theme.primary,
-                tagline: "通过桌面小组件控制音乐播放。",
-                chips: ["小组件控制"],
+                tagline: String(localized: "Control music playback via desktop widgets", bundle: .module),
+                chips: [String(localized: "Widget Control", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "rectangle.grid.2x2", tint: theme.primary, title: "小组件", description: "在桌面小组件中展示播放状态。"),
-                .init(icon: "playpause.fill", tint: theme.info, title: "快捷控制", description: "从小组件直接播放 / 暂停。"),
+                .init(icon: "rectangle.grid.2x2", tint: theme.primary, title: String(localized: "Widget", bundle: .module), description: String(localized: "Shows playback state in the desktop widget.", bundle: .module)),
+                .init(icon: "playpause.fill", tint: theme.info, title: String(localized: "Quick Controls", bundle: .module), description: String(localized: "Plays / pauses directly from the widget.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

@@ -32,7 +32,8 @@ let package = Package(
                 .product(name: "ProviderRootView", package: "ProviderRootView"),
             ],
             path: ".",
-            sources: ["Sources"]
+            sources: ["Sources"],
+            resources: [.process("Resources")]
         ),
     ],
     swiftLanguageModes: [.v5]

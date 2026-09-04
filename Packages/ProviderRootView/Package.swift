@@ -24,7 +24,9 @@ let package = Package(
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "ProviderPlayback", package: "ProviderPlayback"),
             ],
-            path: "Sources/ProviderRootView"
+            path: ".",
+            sources: ["Sources/ProviderRootView"],
+            resources: [.process("Resources")]
         ),
     ],
     swiftLanguageModes: [.v5]

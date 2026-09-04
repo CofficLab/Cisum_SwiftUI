@@ -10,20 +10,20 @@ struct BookPluginAboutView: View {
             LandingHero(
                 icon: "book",
                 accent: theme.primary,
-                tagline: "管理、浏览与播放本地有声书。",
-                chips: ["有声书库"],
+                tagline: String(localized: "Manage, browse, and play local audiobooks", bundle: .module),
+                chips: [String(localized: "Audiobook Library", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "book", tint: theme.primary, title: "有声书库", description: "管理本地有声书文件。"),
-                .init(icon: "magnifyingglass", tint: theme.info, title: "搜索", description: "按名称快速定位有声书。"),
-                .init(icon: "play.circle", tint: theme.success, title: "播放", description: "从书库发起播放。"),
+                .init(icon: "book", tint: theme.primary, title: String(localized: "Audiobook Library", bundle: .module), description: String(localized: "Manages local audiobook files.", bundle: .module)),
+                .init(icon: "magnifyingglass", tint: theme.info, title: String(localized: "Search", bundle: .module), description: String(localized: "Quickly locate audiobooks by name.", bundle: .module)),
+                .init(icon: "play.circle", tint: theme.success, title: String(localized: "Play", bundle: .module), description: String(localized: "Starts playback from the audiobook library.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

@@ -60,9 +60,9 @@ public struct SettingsWindow: View {
                 #endif
             } else {
                 ContentUnavailableView(
-                    "暂无可用设置",
+                    String(localized: "No settings available", bundle: .module),
                     systemImage: "gearshape",
-                    description: Text("插件暂未贡献任何设置项")
+                    description: Text("No plugin has contributed any settings yet")
                 )
             }
         }
@@ -125,7 +125,7 @@ public struct SettingsWindow: View {
     ) -> some View {
         NavigationSplitView {
             List {
-                Section("设置") {
+                Section("Settings") {
                     ForEach(navItems) { item in
                         Button {
                             selection = item.id
@@ -153,9 +153,9 @@ public struct SettingsWindow: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         } else {
             ContentUnavailableView(
-                "选择一个设置项",
+                String(localized: "Select a Setting", bundle: .module),
                 systemImage: "gearshape",
-                description: Text("从左侧选择要查看的设置")
+                description: Text("Select a setting from the left")
             )
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

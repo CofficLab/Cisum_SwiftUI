@@ -9,8 +9,8 @@ import SwiftUI
 public actor ControlButtonsPlugin: SuperPlugin {
     public static let shared = ControlButtonsPlugin()
     public static let metadata = PluginMetadata(
-        displayName: "播放控制按钮",
-        description: "提供播放器底部的上一曲 / 播放 / 下一曲等控制按钮。",
+        displayName: String(localized: "Playback Control Buttons", bundle: .module),
+        description: String(localized: "Provides the previous / play / next control buttons at the bottom of the player.", bundle: .module),
         iconName: "playpause.fill",
         order: 20,
         policy: .alwaysOn,

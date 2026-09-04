@@ -5,31 +5,31 @@ import SwiftUI
 struct StorePluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "商店", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Store", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("浏览与购买 Cisum 的增值服务与扩展。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Browse and purchase Cisum's premium services and extensions")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("商品浏览：浏览可购买的增值服务。"),
-                .init("恢复购买：恢复历史购买记录。"),
-                .init("购买：完成应用内购买。"),
+                .init(String(localized: "Product Browsing: browse purchasable premium services.", bundle: .module)),
+                .init(String(localized: "Restore Purchases: restores your past purchases.", bundle: .module)),
+                .init(String(localized: "Purchase: completes the in-app purchase.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("在商店中浏览商品。"),
-                .init("选择商品并完成购买。"),
-                .init("换机后使用「恢复购买」找回权益。"),
+                .init(String(localized: "Browse products in the store.", bundle: .module)),
+                .init(String(localized: "Select a product and complete the purchase.", bundle: .module)),
+                .init(String(localized: "After switching devices, use Restore Purchases to recover your benefits.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("购买通过 App Store 应用内购买完成。"),
+                .init(String(localized: "Purchases are completed via App Store in-app purchase.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

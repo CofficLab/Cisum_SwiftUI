@@ -5,30 +5,30 @@ import SwiftUI
 struct AudioPlayModePluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "播放模式", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Play Mode", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("切换单曲循环、列表循环、随机等播放模式。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Switch playback modes: single loop, list loop, shuffle, and more")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("循环：单曲 / 列表循环。"),
-                .init("随机：随机播放全部曲目。"),
-                .init("顺序：按列表顺序播放。"),
+                .init(String(localized: "Repeat: single-track / list repeat.", bundle: .module)),
+                .init(String(localized: "Shuffle: shuffles all tracks.", bundle: .module)),
+                .init(String(localized: "Sequential: plays in list order.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("在播放控制区点击播放模式按钮。"),
-                .init("在单曲循环 / 列表循环 / 随机之间切换。"),
+                .init(String(localized: "Click the play-mode button in the player control area.", bundle: .module)),
+                .init(String(localized: "Switches between single-track repeat, list repeat, and shuffle.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("播放模式作用于当前播放列表。"),
+                .init(String(localized: "The play mode applies to the current playlist.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

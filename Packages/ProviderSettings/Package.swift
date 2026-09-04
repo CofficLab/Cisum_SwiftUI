@@ -31,7 +31,9 @@ let package = Package(
                 .product(name: "ProviderScene", package: "ProviderScene"),
                 .product(name: "ProviderTheme", package: "ProviderTheme"),
             ],
-            path: "Sources/ProviderSettings"
+            path: ".",
+            sources: ["Sources/ProviderSettings"],
+            resources: [.process("Resources")]
         ),
     ],
     swiftLanguageModes: [.v5]

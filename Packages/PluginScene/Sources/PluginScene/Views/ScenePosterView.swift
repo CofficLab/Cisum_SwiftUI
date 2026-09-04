@@ -57,7 +57,6 @@ struct ScenePosterView: View {
                         .minimumScaleFactor(0.8)
                 }
                 .frame(minWidth: 210, maxWidth: 280, minHeight: 44)
-                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
             }
         }
         .padding()

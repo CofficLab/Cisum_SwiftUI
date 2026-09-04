@@ -5,31 +5,31 @@ import SwiftUI
 struct BookPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "有声书库", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Audiobook Library", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("管理、浏览与播放本地有声书。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Manage, browse, and play local audiobooks")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("有声书库：管理本地有声书文件。"),
-                .init("搜索：按名称快速定位有声书。"),
-                .init("播放：从书库发起播放。"),
+                .init(String(localized: "Audiobook Library: manages local audiobook files.", bundle: .module)),
+                .init(String(localized: "Search: quickly find audiobooks by name.", bundle: .module)),
+                .init(String(localized: "Play: starts playback from the audiobook library.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("打开有声书场景，浏览全部有声书。"),
-                .init("使用搜索框按名称过滤有声书。"),
-                .init("点击任意有声书开始播放。"),
+                .init(String(localized: "Opens the audiobook scene to browse all audiobooks.", bundle: .module)),
+                .init(String(localized: "Use the search field to filter audiobooks by name.", bundle: .module)),
+                .init(String(localized: "Click any audiobook to start playing.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("有声书库依赖本地存储位置。"),
+                .init(String(localized: "The audiobook library depends on a local storage location.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

@@ -10,20 +10,20 @@ struct BookDBPluginAboutView: View {
             LandingHero(
                 icon: "externaldrive",
                 accent: theme.primary,
-                tagline: "以数据库视图浏览与整理有声书文件。",
-                chips: ["有声书数据库"],
+                tagline: String(localized: "Browse and organize audiobook files in a database view", bundle: .module),
+                chips: [String(localized: "Audiobook Database", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "externaldrive", tint: theme.primary, title: "数据库", description: "集中管理有声书文件的数据库记录。"),
-                .init(icon: "arrow.up.arrow.down", tint: theme.info, title: "排序", description: "按多种维度排序浏览。"),
-                .init(icon: "trash", tint: theme.success, title: "清理", description: "清理无效或重复的记录。"),
+                .init(icon: "externaldrive", tint: theme.primary, title: String(localized: "Database", bundle: .module), description: String(localized: "Centrally manages the database records of audiobook files.", bundle: .module)),
+                .init(icon: "arrow.up.arrow.down", tint: theme.info, title: String(localized: "Sorting", bundle: .module), description: String(localized: "Browses sorted by multiple dimensions.", bundle: .module)),
+                .init(icon: "trash", tint: theme.success, title: String(localized: "Clean Up", bundle: .module), description: String(localized: "Removes invalid or duplicate records.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

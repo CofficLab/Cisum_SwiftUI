@@ -5,30 +5,30 @@ import SwiftUI
 struct BookControlPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "有声书控制", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Audiobook Controls", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("控制当前有声书的播放、暂停与上下章节。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Control play, pause, and chapter navigation for the current audiobook")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("播放 / 暂停：一键切换播放状态。"),
-                .init("上一章：切换到上一章节。"),
-                .init("下一章：切换到下一章节。"),
+                .init(String(localized: "Play / Pause: one-click toggle of the playback state.", bundle: .module)),
+                .init(String(localized: "Previous Chapter: switches to the previous chapter.", bundle: .module)),
+                .init(String(localized: "Next Chapter: switches to the next chapter.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("在播放区域点击播放 / 暂停按钮。"),
-                .init("点击上一章 / 下一章切换章节。"),
+                .init(String(localized: "Click the play / pause button in the player area.", bundle: .module)),
+                .init(String(localized: "Click Previous Chapter / Next Chapter to switch chapters.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("需先有正在播放的有声书。"),
+                .init(String(localized: "Requires an audiobook that is currently playing.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

@@ -12,7 +12,9 @@ let package = Package(
         .library(name: "ProviderStorage", targets: ["ProviderStorage"]),
     ],
     targets: [
-        .target(name: "ProviderStorage", path: "Sources/ProviderStorage"),
+        .target(name: "ProviderStorage", path: ".",
+            sources: ["Sources/ProviderStorage"],
+            resources: [.process("Resources")]),
     ],
     swiftLanguageModes: [.v5]
 )

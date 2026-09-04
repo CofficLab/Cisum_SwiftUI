@@ -10,20 +10,20 @@ struct PluginPlayBackAboutView: View {
             LandingHero(
                 icon: "play.circle",
                 accent: theme.primary,
-                tagline: "统一播放引擎与播放状态管理。",
-                chips: ["播放引擎"],
+                tagline: String(localized: "A unified playback engine with playback-state management.", bundle: .module),
+                chips: [String(localized: "Playback Engine", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "play.circle", tint: theme.primary, title: "播放引擎", description: "驱动音频解码与播放控制。"),
-                .init(icon: "arrow.clockwise", tint: theme.info, title: "启动恢复", description: "重启后恢复上次播放的文件。"),
-                .init(icon: "internaldrive", tint: theme.success, title: "状态持久化", description: "记录当前播放文件到磁盘。"),
+                .init(icon: "play.circle", tint: theme.primary, title: String(localized: "Playback Engine", bundle: .module), description: String(localized: "Drives audio decoding and playback control.", bundle: .module)),
+                .init(icon: "arrow.clockwise", tint: theme.info, title: String(localized: "Relaunch Resume", bundle: .module), description: String(localized: "Restores the last played file after relaunch.", bundle: .module)),
+                .init(icon: "internaldrive", tint: theme.success, title: String(localized: "State Persistence", bundle: .module), description: String(localized: "Records the current playing file to disk.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

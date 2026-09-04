@@ -31,7 +31,7 @@ struct PlaybackHeroView: View {
             }
         }
         #if DEBUG
-        .debugBadge(PlaybackHeroPlugin.shared.id)
+        .debugBadge(PlaybackHeroPlugin.shared.id, alignment: .topLeading)
         #endif
     }
 }

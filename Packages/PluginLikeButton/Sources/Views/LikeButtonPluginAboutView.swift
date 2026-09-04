@@ -10,19 +10,19 @@ struct LikeButtonPluginAboutView: View {
             LandingHero(
                 icon: "heart",
                 accent: theme.primary,
-                tagline: "在工具栏提供统一的「喜欢」按钮。",
-                chips: ["喜欢按钮"],
+                tagline: String(localized: "Provides a unified Favorite button in the toolbar", bundle: .module),
+                chips: [String(localized: "Like Button", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "heart", tint: theme.primary, title: "工具栏按钮", description: "在工具栏快捷标记喜欢。"),
-                .init(icon: "heart.fill", tint: theme.info, title: "状态同步", description: "与各媒体喜欢状态联动。"),
+                .init(icon: "heart", tint: theme.primary, title: String(localized: "Toolbar Button", bundle: .module), description: String(localized: "Quickly likes from the toolbar.", bundle: .module)),
+                .init(icon: "heart.fill", tint: theme.info, title: String(localized: "State Sync", bundle: .module), description: String(localized: "Stays in sync with each media's like state.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

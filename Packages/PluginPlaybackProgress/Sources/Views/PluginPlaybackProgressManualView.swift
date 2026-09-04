@@ -5,30 +5,30 @@ import SwiftUI
 struct PlaybackProgressPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "播放进度", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Playback Progress", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("提供播放器控制区的进度条视图，实时显示当前播放进度，并支持拖动控制播放位置。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Provides the progress bar view for the player control area, showing the current progress in real time and supporting drag to control the position.")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("进度显示：实时展示当前播放位置与总时长。"),
-                .init("拖动控制：拖动进度条调整播放位置。"),
+                .init(String(localized: "Progress Display: shows the current position and total duration in real time.", bundle: .module)),
+                .init(String(localized: "Drag Control: drag the progress bar to adjust the position.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("播放时进度条自动前进，展示当前进度。"),
-                .init("点击或拖动进度条跳转到目标播放位置。"),
+                .init(String(localized: "The progress bar advances automatically while playing, showing the current progress.", bundle: .module)),
+                .init(String(localized: "Click or drag the progress bar to jump to a target position.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("本插件为系统级能力，始终启用，不可停用。"),
-                .init("进度条通过 ControlViewProviding 注入播放控制区。"),
+                .init(String(localized: "This plugin is a system-level capability that is always enabled and cannot be disabled.", bundle: .module)),
+                .init(String(localized: "The progress bar is injected into the player control area via ControlViewProviding.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

@@ -10,19 +10,19 @@ struct ThemeSettingsPluginAboutView: View {
             LandingHero(
                 icon: "paintpalette",
                 accent: theme.primary,
-                tagline: "在设置窗口中提供主题选择与外观设置。",
-                chips: ["外观设置"],
+                tagline: String(localized: "Provides theme selection and appearance settings in the settings window", bundle: .module),
+                chips: [String(localized: "Appearance Settings", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "paintpalette", tint: theme.primary, title: "主题选择", description: "从全部主题中选择外观。"),
-                .init(icon: "moon", tint: theme.info, title: "深色模式", description: "切换深浅色外观。"),
+                .init(icon: "paintpalette", tint: theme.primary, title: String(localized: "Theme Selection", bundle: .module), description: String(localized: "Chooses an appearance from all themes.", bundle: .module)),
+                .init(icon: "moon", tint: theme.info, title: String(localized: "Dark Mode", bundle: .module), description: String(localized: "Toggles between light and dark appearance.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

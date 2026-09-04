@@ -5,31 +5,31 @@ import SwiftUI
 struct PluginPlayBackManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "播放引擎", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Playback Engine", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("提供统一的播放引擎，负责音频文件的播放控制，并在重启后恢复上次播放的文件。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Provides a unified playback engine that controls audio playback and restores the last played file after relaunch.")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("播放引擎：驱动音频解码与播放控制。"),
-                .init("状态记录：将当前播放文件写入磁盘。"),
-                .init("启动恢复：重启后恢复上次播放的文件。"),
+                .init(String(localized: "Playback Engine: drives audio decoding and playback control.", bundle: .module)),
+                .init(String(localized: "State record: writes the current playing file to disk.", bundle: .module)),
+                .init(String(localized: "Relaunch Resume: restores the last played file after relaunch.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("播放任意音乐或有声书内容时，自动使用本引擎。"),
-                .init("应用重启后，自动恢复上次播放的文件（仅加载，不自动播放）。"),
-                .init("切换播放文件时，引擎自动记录最新文件用于下次恢复。"),
+                .init(String(localized: "Automatically used whenever music or audiobook content is played.", bundle: .module)),
+                .init(String(localized: "After relaunch, automatically restores the last played file (loaded but not auto-played).", bundle: .module)),
+                .init(String(localized: "When the playing file changes, the engine records the latest file for the next resume.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("本插件为系统级能力，始终启用，不可停用。"),
+                .init(String(localized: "This plugin is a system-level capability that is always enabled and cannot be disabled.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

@@ -5,30 +5,30 @@ import SwiftUI
 struct SettingGeneralPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "通用设置", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "General Settings", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("在设置窗口中提供应用信息与说明书等通用设置项。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Provides general settings such as app info and manuals in the Settings window.")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("应用信息：展示名称、版本等基本信息。"),
-                .init("说明书：浏览各插件的使用说明书。"),
+                .init(String(localized: "App Info: shows basic info such as name and version.", bundle: .module)),
+                .init(String(localized: "Manual: browse the manuals contributed by each plugin.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("在设置窗口中打开「通用」标签。"),
-                .init("查看应用信息。"),
-                .init("点击「说明书」浏览各插件手册。"),
+                .init(String(localized: "Opens the General tab in the Settings window.", bundle: .module)),
+                .init(String(localized: "View the app info.", bundle: .module)),
+                .init(String(localized: "Click Manual to browse each plugin's manual.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("说明书内容由各插件贡献。"),
+                .init(String(localized: "Manual content is contributed by each plugin.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

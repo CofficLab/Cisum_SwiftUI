@@ -5,31 +5,31 @@ import SwiftUI
 struct PlaybackHeroPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "播放封面", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Playback Cover", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("提供播放器控制区的封面与标题展示视图，根据当前播放资源自动适配封面或视频画面。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Provides the cover and title view for the player control area, automatically showing a cover or video frame based on the current media.")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("封面展示：音频资源显示封面图，视频资源显示播放画面。"),
-                .init("标题显示：展示当前播放曲目的标题。"),
-                .init("自适应布局：右侧封面栏可见或高度不足时仅显示标题。"),
+                .init(String(localized: "Cover Display: shows the cover for audio and the video frame for video.", bundle: .module)),
+                .init(String(localized: "Title Display: shows the title of the current track.", bundle: .module)),
+                .init(String(localized: "Adaptive layout: shows only the title when the right cover column is hidden or space is tight.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("选择音频资源后，封面区显示对应封面与标题。"),
-                .init("选择视频资源后，封面区显示视频播放画面。"),
+                .init(String(localized: "For audio, the cover area shows the matching cover and title.", bundle: .module)),
+                .init(String(localized: "For video, the cover area shows the video playback frame.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("本插件为系统级能力，始终启用，不可停用。"),
-                .init("封面区通过 ControlViewProviding 注入播放控制区。"),
+                .init(String(localized: "This plugin is a system-level capability that is always enabled and cannot be disabled.", bundle: .module)),
+                .init(String(localized: "The cover area is injected into the player control area via ControlViewProviding.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

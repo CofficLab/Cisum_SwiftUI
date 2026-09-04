@@ -7,8 +7,8 @@ import SwiftUI
 public actor PlaybackHeroPlugin: SuperPlugin {
     public static let shared = PlaybackHeroPlugin()
     public static let metadata = PluginMetadata(
-        displayName: "播放封面",
-        description: "提供播放器控制区的封面与标题展示视图。",
+        displayName: String(localized: "Playback Cover", bundle: .module),
+        description: String(localized: "Provides the cover and title view for the player control area.", bundle: .module),
         iconName: "photo",
         order: 19,
         policy: .alwaysOn,

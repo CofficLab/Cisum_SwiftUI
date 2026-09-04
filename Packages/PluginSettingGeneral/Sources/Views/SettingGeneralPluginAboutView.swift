@@ -10,19 +10,19 @@ struct SettingGeneralPluginAboutView: View {
             LandingHero(
                 icon: "gearshape",
                 accent: theme.primary,
-                tagline: "在设置窗口中提供应用信息与说明书等通用设置项。",
-                chips: ["通用设置"],
+                tagline: String(localized: "Provides general settings such as app info and manuals in the Settings window.", bundle: .module),
+                chips: [String(localized: "General Settings", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "app", tint: theme.primary, title: "应用信息", description: "展示名称、版本等基本信息。"),
-                .init(icon: "book", tint: theme.info, title: "说明书", description: "浏览各插件的使用说明书。"),
+                .init(icon: "app", tint: theme.primary, title: String(localized: "App Info", bundle: .module), description: String(localized: "Shows basic info such as name and version.", bundle: .module)),
+                .init(icon: "book", tint: theme.info, title: String(localized: "Manual", bundle: .module), description: String(localized: "Browse the manuals contributed by each plugin.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

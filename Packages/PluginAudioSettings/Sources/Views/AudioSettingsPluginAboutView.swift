@@ -10,19 +10,19 @@ struct AudioSettingsPluginAboutView: View {
             LandingHero(
                 icon: "gearshape",
                 accent: theme.primary,
-                tagline: "提供音乐相关的设置项。",
-                chips: ["音乐设置"],
+                tagline: String(localized: "Provides music-related settings", bundle: .module),
+                chips: [String(localized: "Music Settings", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "gearshape", tint: theme.primary, title: "播放设置", description: "配置播放相关的偏好。"),
-                .init(icon: "slider.horizontal.3", tint: theme.info, title: "偏好项", description: "集中管理音乐设置。"),
+                .init(icon: "gearshape", tint: theme.primary, title: String(localized: "Playback Settings", bundle: .module), description: String(localized: "Configures playback preferences.", bundle: .module)),
+                .init(icon: "slider.horizontal.3", tint: theme.info, title: String(localized: "Preferences", bundle: .module), description: String(localized: "Centrally manages music settings.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

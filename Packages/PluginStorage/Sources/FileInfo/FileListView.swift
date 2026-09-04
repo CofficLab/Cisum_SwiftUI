@@ -282,7 +282,7 @@ struct FileListView: View, SuperLog {
     }
 }
 
-#Preview("文件列表") {
+#Preview(String(localized: "File List", bundle: .module)) {
     let url = URL(filePath: "/Users/user/Music")
 
     return FileListView(url: url, expandByDefault: true)

@@ -42,28 +42,28 @@ struct GeneralSettingsDetailView: View {
     // MARK: - 应用信息
 
     private var appInfoSection: some View {
-        settingSection(title: "应用信息") {
-            settingRow(icon: "app", title: "名称", value: MagicApp.getAppName())
+        settingSection(title: String(localized: "App Info", bundle: .module)) {
+            settingRow(icon: "app", title: String(localized: "Name", bundle: .module), value: MagicApp.getAppName())
             Divider()
             settingRow(icon: "number", title: "Bundle ID", value: MagicApp.getBundleIdentifier())
             Divider()
-            settingRow(icon: "info.circle", title: "版本", value: MagicApp.getVersion())
+            settingRow(icon: "info.circle", title: String(localized: "Version", bundle: .module), value: MagicApp.getVersion())
             Divider()
-            settingRow(icon: "hammer", title: "构建", value: MagicApp.getBuildNumber())
+            settingRow(icon: "hammer", title: String(localized: "Build", bundle: .module), value: MagicApp.getBuildNumber())
         }
     }
 
     // MARK: - 说明书
 
     private var manualsSection: some View {
-        settingSection(title: "说明书") {
+        settingSection(title: String(localized: "Manual", bundle: .module)) {
             HStack(spacing: 12) {
                 Image(systemName: "book")
                     .frame(width: 22)
                     .foregroundStyle(.secondary)
-                Text("浏览各插件贡献的说明书")
+                Text("Browse the manuals contributed by plugins")
                 Spacer()
-                Button("打开") {
+                Button("Open") {
                     isShowingManuals = true
                 }
             }
@@ -76,14 +76,14 @@ struct GeneralSettingsDetailView: View {
 
     #if DEBUG
     private var debugSection: some View {
-        settingSection(title: "调试") {
+        settingSection(title: "Debug") {
             HStack(spacing: 12) {
                 Image(systemName: "folder")
                     .frame(width: 22)
                     .foregroundStyle(.secondary)
-                Text("打开数据目录")
+                Text("Open Data Directory")
                 Spacer()
-                Button("打开") {
+                Button("Open") {
                     openDataDirectory()
                 }
             }

@@ -25,7 +25,9 @@ let package = Package(
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "LumiUI", package: "LumiUI"),
             ],
-            path: "Sources",
+            path: ".",
+            sources: ["Sources"],
+            resources: [.process("Resources")],
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency=minimal"),
             ]

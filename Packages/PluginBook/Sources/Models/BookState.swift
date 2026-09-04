@@ -31,7 +31,7 @@ public class BookState {
     public var updateAt: Date?
     
     public var currentTitle: String {
-        currentURL?.lastPathComponent ?? "无"
+        currentURL?.lastPathComponent ?? "None"
     }
     
     public init(url: URL, currentURL: URL? = nil, time: TimeInterval = 0) {

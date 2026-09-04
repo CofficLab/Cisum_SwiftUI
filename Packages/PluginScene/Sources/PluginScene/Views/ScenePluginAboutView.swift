@@ -10,19 +10,19 @@ struct ScenePluginAboutView: View {
             LandingHero(
                 icon: "rectangle.3.group",
                 accent: theme.primary,
-                tagline: "管理应用场景（音乐库 / 有声书）的切换与状态。",
-                chips: ["场景管理"],
+                tagline: String(localized: "Manages app scene switching and state (Music Library / Audiobooks)", bundle: .module),
+                chips: [String(localized: "Scene Management", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "rectangle.3.group", tint: theme.primary, title: "场景切换", description: "在音乐库与有声书之间切换。"),
-                .init(icon: "arrow.left.arrow.right", tint: theme.info, title: "状态管理", description: "维护当前场景状态。"),
+                .init(icon: "rectangle.3.group", tint: theme.primary, title: String(localized: "Scene Switching", bundle: .module), description: String(localized: "Switches between the music library and audiobooks.", bundle: .module)),
+                .init(icon: "arrow.left.arrow.right", tint: theme.info, title: String(localized: "State Management", bundle: .module), description: String(localized: "Maintains the current scene state.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

@@ -10,20 +10,20 @@ struct FileLogPluginAboutView: View {
             LandingHero(
                 icon: "doc.text",
                 accent: theme.primary,
-                tagline: "记录应用运行与文件操作日志，便于排查问题。",
-                chips: ["文件日志"],
+                tagline: String(localized: "Logs app runtime and file operations to help troubleshoot issues", bundle: .module),
+                chips: [String(localized: "File Log", bundle: .module)],
                 metrics: [
-                    .init(value: "1.0.0", label: "版本"),
-                    .init(value: "插件", label: "类型")
+                    .init(value: "1.0.0", label: String(localized: "Version", bundle: .module)),
+                    .init(value: String(localized: "Plugin", bundle: .module), label: String(localized: "Type", bundle: .module))
                 ]
             )
             .landingAppear()
 
-            LandingSection(title: "核心能力", icon: "sparkles") {
+            LandingSection(title: String(localized: "Core Capabilities", bundle: .module), icon: "sparkles") {
                 LandingFeatureGrid(items: [
-                .init(icon: "doc.text", tint: theme.primary, title: "日志记录", description: "记录关键运行事件。"),
-                .init(icon: "magnifyingglass", tint: theme.info, title: "检索", description: "按关键字检索日志。"),
-                .init(icon: "trash", tint: theme.success, title: "清理", description: "清理历史日志。"),
+                .init(icon: "doc.text", tint: theme.primary, title: String(localized: "Logging", bundle: .module), description: String(localized: "Records key runtime events.", bundle: .module)),
+                .init(icon: "magnifyingglass", tint: theme.info, title: String(localized: "Search Logs", bundle: .module), description: String(localized: "Searches logs by keyword.", bundle: .module)),
+                .init(icon: "trash", tint: theme.success, title: String(localized: "Clean Up", bundle: .module), description: String(localized: "Clears historical logs.", bundle: .module)),
                 ], minColumnWidth: 180)
             }
             .landingAppear(delay: 0.05)

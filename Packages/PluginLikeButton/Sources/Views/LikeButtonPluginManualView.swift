@@ -5,29 +5,29 @@ import SwiftUI
 struct LikeButtonPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "喜欢按钮", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Like Button", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("在工具栏提供统一的「喜欢」按钮。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Provides a unified Favorite button in the toolbar")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("工具栏按钮：在工具栏快捷标记喜欢。"),
-                .init("状态同步：与各媒体喜欢状态联动。"),
+                .init(String(localized: "Toolbar Button: quickly likes from the toolbar.", bundle: .module)),
+                .init(String(localized: "State Sync: stays in sync with each media's like state.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("在工具栏点击心形按钮。"),
-                .init("标记当前播放内容的喜欢状态。"),
+                .init(String(localized: "Click the heart button in the toolbar.", bundle: .module)),
+                .init(String(localized: "Toggles the like state of the current media.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("当前为停用状态，可在插件管理中开启。"),
+                .init(String(localized: "Currently disabled; you can enable it in the Plugin Manager.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)

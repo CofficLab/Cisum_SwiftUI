@@ -11,16 +11,16 @@ extension AvatarView {
         public var errorDescription: String? {
             switch self {
             case .invalidURL:
-                return "无效的URL"
+                return String(localized: "Invalid URL", bundle: .module)
             case .fileNotFound:
-                return "文件不存在"
+                return String(localized: "File Not Found", bundle: .module)
             case .thumbnailGenerationFailed(let error):
-                return "无法生成缩略图: \(error.localizedDescription)"
+                return "Could not generate thumbnail: \(error.localizedDescription)"
             case .downloadFailed(let error):
                 if let error = error {
-                    return "下载失败: \(error.localizedDescription)"
+                    return "Download failed: \(error.localizedDescription)"
                 } else {
-                    return "下载失败"
+                    return String(localized: "Download Failed", bundle: .module)
                 }
             }
         }

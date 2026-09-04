@@ -5,31 +5,31 @@ import SwiftUI
 struct AudioPluginManualView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ManualHeader(title: "音乐库", subtitle: "User Manual")
+            ManualHeader(title: String(localized: "Music Library", bundle: .module), subtitle: "User Manual")
 
-            ManualSectionHeader(number: 1, title: "概述")
-            Text("管理、浏览与播放本地音乐文件。")
+            ManualSectionHeader(number: 1, title: String(localized: "Overview", bundle: .module))
+            Text("Manage, browse, and play local music files")
                 .font(.appBody)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ManualSectionHeader(number: 2, title: "核心能力")
+            ManualSectionHeader(number: 2, title: String(localized: "Core Capabilities", bundle: .module))
             ManualBulletList(items: [
-                .init("媒体库：管理本地音乐文件并分类浏览。"),
-                .init("搜索：按名称快速定位音乐。"),
-                .init("播放：从媒体库发起播放。"),
+                .init(String(localized: "Media Library: manages local music files and browses by category.", bundle: .module)),
+                .init(String(localized: "Search: quickly find music by name.", bundle: .module)),
+                .init(String(localized: "Play: starts playback from the music library.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 3, title: "基本操作")
+            ManualSectionHeader(number: 3, title: String(localized: "Basic Operations", bundle: .module))
             ManualStepList(items: [
-                .init("打开音乐库场景，浏览全部音乐。"),
-                .init("使用搜索框按名称过滤音乐。"),
-                .init("点击任意音乐开始播放。"),
+                .init(String(localized: "Opens the music library scene to browse all music.", bundle: .module)),
+                .init(String(localized: "Use the search field to filter music by name.", bundle: .module)),
+                .init(String(localized: "Click any music to start playing.", bundle: .module)),
             ])
 
-            ManualSectionHeader(number: 4, title: "说明")
+            ManualSectionHeader(number: 4, title: String(localized: "Notes", bundle: .module))
             ManualBulletList(items: [
-                .init("音乐库依赖本地存储位置，需先在设置中配置存储。"),
+                .init(String(localized: "The music library depends on a local storage location; configure it in Settings first.", bundle: .module)),
             ])
         }
         .frame(maxWidth: 620, alignment: .leading)
