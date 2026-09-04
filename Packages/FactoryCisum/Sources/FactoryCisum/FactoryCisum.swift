@@ -171,7 +171,7 @@ public enum CisumBuilder: SuperLog {
                 toggleDBView: { kernel.appState?.toggleDBView() }
             )
         )
-        kernel.registerProvider((any ContentViewProviding).self, DefaultContentViewProviding())
+        kernel.registerProvider((any ContentViewProviding).self, DefaultContentViewProvider())
         kernel.registerProvider((any ToolbarProviding).self, DefaultToolbarProviding(kernel: kernel))
     }
 
