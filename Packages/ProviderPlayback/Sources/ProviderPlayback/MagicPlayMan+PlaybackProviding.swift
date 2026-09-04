@@ -6,11 +6,14 @@ import MagicPlayMan
 ///
 /// 此一致性声明在 `FactoryCisum` 中（而非 `MagicPlayMan` 包内），以避免
 /// `MagicPlayMan → CisumKernel → MagicPlayMan` 的循环依赖。`MagicPlayMan`
-/// 已经是 `@MainActor ObservableObject`，其 `@Published` 状态（`state`、
+/// 自身是 `@MainActor ObservableObject`，其 `@Published` 状态（`state`、
 /// `currentURL`、`currentTime`、`duration`、`progress`、`playMode`、`likedAssets`）
 /// 与 `hasAsset`、`next()`、`previous()`、`togglePlayMode()` 直接满足协议要求；
 /// 这里只补齐少数签名不同的传输控制方法，内部调用 `MagicPlayMan` 真实 API
 /// （`reason` 日志标签使用本桥接的固定标识）。
+///
+/// 协议对外的唯一通知方式是 `addObserver`（`PlaybackProvidingEvent`）；
+/// `ObservableObject` 仅是 `MagicPlayMan` 的内部实现细节，协议不依赖它。
 extension MagicPlayMan: PlaybackProviding {
     public var isPlaying: Bool { playing }
 

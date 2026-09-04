@@ -23,6 +23,9 @@ public protocol PlaybackProvidingObserverHandle: AnyObject {
 /// 注册时提供；插件视图中仍可通过 `@EnvironmentObject MagicPlayMan` 直接
 /// 访问完整引擎 API，而新布局视图通过此协议消费。
 ///
+/// 状态变更的唯一对外通知方式是 `addObserver`（`PlaybackProvidingEvent`），
+/// 协议本身不依赖 `ObservableObject`。
+///
 /// ## 使用示例
 ///
 /// ```swift
@@ -31,7 +34,7 @@ public protocol PlaybackProvidingObserverHandle: AnyObject {
 /// kernel.playback?.setPlayMode(.shuffle)
 /// ```
 @MainActor
-public protocol PlaybackProviding: AnyObject, ObservableObject {
+public protocol PlaybackProviding: AnyObject {
     /// 底层播放状态（idle/loading/playing/paused/...）。
     var state: PlaybackState { get }
 
