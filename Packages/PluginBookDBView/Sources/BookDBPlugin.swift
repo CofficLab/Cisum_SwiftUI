@@ -5,6 +5,7 @@ import OSLog
 import PluginBook
 import ProviderPlayback
 import ProviderScene
+import ProviderStorage
 import SwiftUI
 
 public actor BookDBPlugin: SuperPlugin {
@@ -62,19 +63,15 @@ public actor BookDBPlugin: SuperPlugin {
     public func addTabView(reason: String, demoMode: Bool = false) -> (view: AnyView, label: String)? {
         guard sceneBox.scene?.currentScene == .audiobooks else { return nil }
         let label = String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), bundle: .module)
-        let dbRoot: URL
-
-        do {
-            dbRoot = try BookPluginHost.getDBRootDir()
-        } catch {
-            os_log(.error, "BookDBPlugin failed to get database root: \(error.localizedDescription)")
-            let view = BookDBUnavailableView(errorDescription: error.localizedDescription)
+        guard let storage = kernel?.storage else {
+            os_log(.error, "BookDBPlugin failed to resolve storage service")
+            let view = BookDBUnavailableView(errorDescription: String(localized: "Storage service is unavailable", bundle: .module))
             return (AnyView(view), label)
         }
 
         let dependencies = BookDBViewDependencies(
-            dbRoot: dbRoot,
-            bookDisk: BookPlugin.getBookDisk(),
+            dbRoot: storage.databaseRoot,
+            bookDisk: bookDiskProvider(),
             isDesktop: ConfigShim.isDesktop,
             isNotDesktop: ConfigShim.isNotDesktop
         )
@@ -91,7 +88,7 @@ public actor BookDBPlugin: SuperPlugin {
         // 设置页使用独立的 BookListViewModel，避免与主窗口内容区（BookGrid）
         // 共享同一实例——否则设置页 onAppear 触发重载时，共享状态变化会传播
         // 到主窗口内容区，导致其闪动。
-        let settingList = BookListViewModel(bookRepo: { await BookPlugin.getBookRepoAsync() })
+        let settingList = BookListViewModel(bookRepo: bookRepoProvider)
         return PluginSettingNavigationItem(
             id: "bookdb",
             title: String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), bundle: .module),
@@ -101,7 +98,17 @@ public actor BookDBPlugin: SuperPlugin {
             destination: AnyView(
                 BookDBSettingView()
                     .environmentObject(settingList)
+                    .environment(\.bookDBDependencies, settingDependencies)
             )
+        )
+    }
+
+    /// 设置页依赖：仓库路径 / 仓库均由本插件自持（不依赖 `BookPlugin`）。
+    @MainActor
+    private var settingDependencies: BookDBDependencies {
+        BookDBDependencies(
+            bookRepo: bookRepoProvider,
+            bookDisk: bookDiskProvider
         )
     }
 
@@ -113,6 +120,53 @@ public actor BookDBPlugin: SuperPlugin {
     private var playbackProvider: @MainActor () -> (any PlaybackProviding)? {
         { @MainActor [weak self] in
             self?.kernel?.playback
+        }
+    }
+
+    // MARK: - 仓库路径自持（不依赖 BookPlugin actor）
+
+    /// 有声书仓库磁盘目录：`storageRoot` + `BookPluginInfo.dirName`。
+    ///
+    /// 由本插件直接从内核存储服务解析，不再经由 `BookPlugin` 的静态入口，
+    /// 因此 `BookPlugin` 的启用状态不影响仓库可用性。
+    @MainActor
+    private static func makeBookDisk(from storage: any StorageProviding) -> URL? {
+        guard let root = storage.storageRoot else { return nil }
+        return try? root
+            .appendingPathComponent(BookPluginInfo.dirName, isDirectory: true)
+            .ensureDirectory()
+    }
+
+    /// 构建有声书仓库：磁盘目录 + SwiftData 容器 + `BookRepo`。
+    ///
+    /// dbRoot（`storage.databaseRoot`）与磁盘目录在 MainActor 上解析，
+    /// SwiftData 容器创建放到 utility 任务，避免阻塞 UI（对齐 `BookPlugin` 既有策略）。
+    @MainActor
+    private static func makeBookRepo(from storage: any StorageProviding) async -> BookRepo? {
+        guard let disk = Self.makeBookDisk(from: storage) else { return nil }
+        let dbRoot = storage.databaseRoot
+        let container = await Task.detached(priority: .utility) {
+            try? BookConfig.getContainer(dbRootURL: dbRoot)
+        }.value
+        guard let container else { return nil }
+        return try? BookRepo(disk: disk, db: BookDB(container, reason: "BookDBPlugin"))
+    }
+
+    /// 有声书仓库磁盘目录解析器。
+    @MainActor
+    private var bookDiskProvider: @MainActor @Sendable () -> URL? {
+        { @MainActor [weak self] in
+            guard let storage = self?.kernel?.storage else { return nil }
+            return Self.makeBookDisk(from: storage)
+        }
+    }
+
+    /// 有声书仓库解析器。
+    @MainActor
+    private var bookRepoProvider: @MainActor @Sendable () async -> BookRepo? {
+        { @MainActor [weak self] in
+            guard let storage = self?.kernel?.storage else { return nil }
+            return await Self.makeBookRepo(from: storage)
         }
     }
 

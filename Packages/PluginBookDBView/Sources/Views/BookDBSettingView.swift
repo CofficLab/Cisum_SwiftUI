@@ -12,6 +12,7 @@ import SwiftUI
 /// `AppSettingSection` / `AppSettingRow` / `AppButton` / `AppEmptyState`）。
 struct BookDBSettingView: View {
     @EnvironmentObject var viewModel: BookListViewModel
+    @Environment(\.bookDBDependencies) private var deps
     @LumiTheme private var theme
 
     var body: some View {
@@ -52,10 +53,10 @@ struct BookDBSettingView: View {
     // MARK: - 仓库路径（LumiUI 设置卡片）
 
     /// 以 LumiUI 设置卡片展示有声书仓库根目录路径（与「打开仓库根目录」按钮共用
-    /// `BookPlugin.getBookDisk()`），路径可选中复制；仓库不可用时显示占位文案。
+    /// 注入的 `bookDisk`），路径可选中复制；仓库不可用时显示占位文案。
     @MainActor
     private var repositoryPathSection: some View {
-        let disk = BookPlugin.getBookDisk()
+        let disk = deps.bookDisk()
         return AppSettingSection(title: String(localized: "Repository Path", bundle: .module)) {
             AppSettingRow(
                 title: String(localized: "Repository path", bundle: .module),
@@ -85,7 +86,7 @@ struct BookDBSettingView: View {
     /// 打开有声书仓库根目录（Finder 中显示该文件夹）；仓库目录不可用时按钮置灰。
     @MainActor
     private var openDirectoryButton: some View {
-        let disk = BookPlugin.getBookDisk()
+        let disk = deps.bookDisk()
         return AppButton(
             String(localized: "Open repository folder", bundle: .module),
             systemImage: "folder",

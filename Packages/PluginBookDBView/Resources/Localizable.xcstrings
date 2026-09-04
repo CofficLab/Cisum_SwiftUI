@@ -789,6 +789,34 @@
         }
       }
     },
+    "Storage service is unavailable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Storage service is unavailable"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "存储服务不可用"
+          }
+        },
+        "zh-Hant-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "儲存服務不可用"
+          }
+        },
+        "zh-Hant-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "儲存服務不可用"
+          }
+        }
+      }
+    },
     "Storage location is unavailable": {
       "localizations": {
         "en": {

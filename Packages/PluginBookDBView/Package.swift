@@ -26,6 +26,7 @@ let package = Package(
         .package(path: "../MagicPlayMan"),
         .package(name: "ProviderPlayback", path: "../ProviderPlayback"),
         .package(path: "../ProviderScene"),
+        .package(path: "../ProviderStorage"),
     ],
     targets: [
         .target(
@@ -41,6 +42,7 @@ let package = Package(
                 "MagicPlayMan",
                 .product(name: "ProviderPlayback", package: "ProviderPlayback"),
                 "ProviderScene",
+                "ProviderStorage",
             ],
             path: ".",
             sources: ["Sources"],
