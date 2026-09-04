@@ -21,6 +21,7 @@ import PluginBookPlayMode
 import PluginBookProgress
 import PluginBookScene
 import PluginBookSettings
+import PluginControlButtons
 import PluginFileLog
 import PluginLikeButton
 import PluginOpenButton
@@ -107,6 +108,7 @@ public struct DefaultPluginFactory: PluginFactory {
             StorePlugin.shared,
             SystemPlugin.shared,
             SettingGeneralPlugin.shared,
+            ControlButtonsPlugin.shared,
             ThemeAuroraPlugin.shared,
             ThemeCisumPlugin.shared,
             ThemeDaylightSilverPlugin.shared,

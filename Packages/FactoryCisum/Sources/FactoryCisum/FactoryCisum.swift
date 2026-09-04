@@ -165,10 +165,9 @@ public enum CisumBuilder: SuperLog {
         kernel.registerProvider((any RootViewProviding).self, DefaultRootViewProviding(kernel: kernel))
         kernel.registerProvider(
             (any ControlViewProviding).self,
-            DefaultControlViewProviding(
+            DefaultControlViewProvider(
                 stateViews: { kernel.plugin?.getStateViews() ?? [] },
-                stateMessage: { kernel.appState?.stateMessage ?? "" },
-                toggleDBView: { kernel.appState?.toggleDBView() }
+                stateMessage: { kernel.appState?.stateMessage ?? "" }
             )
         )
         kernel.registerProvider((any ContentViewProviding).self, DefaultContentViewProvider())
@@ -188,6 +187,9 @@ public enum CisumBuilder: SuperLog {
         }
 
         if let control = kernel.resolveProvider((any ControlViewProviding).self) {
+            if let buttonsView = kernel.plugin?.getControlButtonsView() {
+                control.setControlButtonsView(buttonsView)
+            }
             root.setControlView(control.makeControlView())
         }
         if let content = kernel.resolveProvider((any ContentViewProviding).self) {

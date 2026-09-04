@@ -65,6 +65,11 @@ public protocol PluginProviding: AnyObject, ObservableObject {
     /// 获取所有插件贡献的主题（已重写 sortKey 并去重）。
     func getThemeContributions() -> [LumiUIThemeContribution]
 
+    /// 获取首个插件提供的播放控制按钮视图。
+    ///
+    /// 播放控制区只保留一份按钮组（单槽位），取第一个启用插件提供的贡献。
+    func getControlButtonsView() -> AnyView?
+
     /// 失效所有缓存的聚合结果。
     func invalidateCaches()
 

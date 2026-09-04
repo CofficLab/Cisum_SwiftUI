@@ -2,8 +2,8 @@ import CisumUIComponents
 import MagicPlayMan
 import SwiftUI
 
-/// 播放操作按钮。
-struct ControlBtns: View {
+/// 播放器底部控制按钮组：更多 / 上一曲 / 播放暂停 / 下一曲 / 播放模式。
+struct ControlButtonsView: View {
     @EnvironmentObject private var man: MagicPlayMan
     let toggleDBView: @MainActor () -> Void
 
@@ -25,7 +25,7 @@ struct ControlBtns: View {
                 systemImage: man.isPlaying ? "pause.fill" : "play.fill",
                 accessibilityLabel: man.isPlaying ? "Pause" : "Play",
                 isActive: man.isPlaying,
-                action: { man.toggle(reason: "ControlBtns") }
+                action: { man.toggle(reason: "ControlButtons") }
             )
             AppCircularIconButton(
                 systemImage: "forward.end.fill",
