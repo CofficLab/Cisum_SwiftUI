@@ -6,6 +6,7 @@ public enum RootViewProvidingEvent {
     case contentViewChanged
     case statusViewChanged
     case toolbarContentChanged
+    case contentViewVisibilityChanged
 }
 
 @MainActor
@@ -46,6 +47,21 @@ public protocol RootViewProviding: AnyObject {
     /// 宿主通常把 `ToolbarProviding.makeToolbarView()` 的结果注入进来。
     func setToolbarContent(_ view: AnyView?)
 
+    /// 内容视图当前是否可见。
+    var isContentViewVisible: Bool { get }
+
+    /// 设置内容视图可见性。
+    func setContentViewVisible(_ visible: Bool)
+
+    /// 显示内容视图。
+    func showContentView()
+
+    /// 隐藏内容视图。
+    func hideContentView()
+
+    /// 切换内容视图可见性。
+    func toggleContentView()
+
     /// 返回根布局视图（控制区 + 内容区 + 状态区 + 工具栏）。
     func makeRootView() -> AnyView
 
@@ -58,6 +74,11 @@ public extension RootViewProviding {
     func setContentView(_ view: AnyView?) {}
     func setStatusView(_ view: AnyView?) {}
     func setToolbarContent(_ view: AnyView?) {}
+    var isContentViewVisible: Bool { true }
+    func setContentViewVisible(_ visible: Bool) {}
+    func showContentView() { setContentViewVisible(true) }
+    func hideContentView() { setContentViewVisible(false) }
+    func toggleContentView() { setContentViewVisible(!isContentViewVisible) }
     @discardableResult
     func addObserver(_ callback: @escaping (RootViewProvidingEvent) -> Void) -> any RootViewProvidingObserverHandle {
         NoopRootViewProvidingObserverHandle()

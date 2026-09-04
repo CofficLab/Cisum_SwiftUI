@@ -12,6 +12,7 @@ public final class DefaultRootViewProviding: RootViewProviding {
     public private(set) var contentView: AnyView?
     public private(set) var statusView: AnyView?
     public private(set) var toolbarContent: AnyView?
+    public private(set) var isContentViewVisible = true
     private let eventObservers = KernelEventObserverStore<RootViewProvidingEvent>()
 
     private let kernel: CisumKernel
@@ -38,6 +39,12 @@ public final class DefaultRootViewProviding: RootViewProviding {
     public func setToolbarContent(_ view: AnyView?) {
         toolbarContent = view
         eventObservers.send(.toolbarContentChanged)
+    }
+
+    public func setContentViewVisible(_ visible: Bool) {
+        guard isContentViewVisible != visible else { return }
+        isContentViewVisible = visible
+        eventObservers.send(.contentViewVisibilityChanged)
     }
 
     @discardableResult

@@ -9,6 +9,7 @@ import SwiftUI
 struct RootLayoutView: View {
     @ObservedObject private var viewModel: RootLayoutViewModel
     @ObservedObject private var themeRegistry = LumiUIThemeRegistry.shared
+    let provider: DefaultRootViewProviding
     let kernel: CisumKernel
     @State private var isDetailVisible = false
     @State private var rememberedHeight: CGFloat = 0
@@ -16,10 +17,11 @@ struct RootLayoutView: View {
 
     init(provider: DefaultRootViewProviding, kernel: CisumKernel) {
         _viewModel = ObservedObject(wrappedValue: RootLayoutViewModel(provider: provider))
+        self.provider = provider
         self.kernel = kernel
     }
 
-    private var showDB: Bool { kernel.appState?.isDBViewVisible ?? false }
+    private var isContentVisible: Bool { viewModel.isContentViewVisible }
 
     var body: some View {
         GeometryReader { geometry in
@@ -39,8 +41,8 @@ struct RootLayoutView: View {
                 .frame(width: geometry.size.width, height: geometry.size.height)
             }
             .onAppear { handleOnAppear() }
-            .onChange(of: showDB) { _, newValue in
-                handleShowDBChange(newValue, geometry: geometry)
+            .onChange(of: viewModel.isContentViewVisible) { _, newValue in
+                handleContentViewVisibilityChange(newValue, geometry: geometry)
             }
             .onChange(of: geometry.size.height) { _, newHeight in
                 handleGeometryChange(newHeight)
@@ -109,10 +111,10 @@ struct RootLayoutView: View {
 
     private func handleOnAppear() {
         rememberedHeight = windowHeight()
-        isDetailVisible = showDB
+        isDetailVisible = isContentVisible
     }
 
-    private func handleShowDBChange(_ newValue: Bool, geometry: GeometryProxy) {
+    private func handleContentViewVisibilityChange(_ newValue: Bool, geometry: GeometryProxy) {
         withAnimation {
             isDetailVisible = newValue
         }
@@ -133,7 +135,7 @@ struct RootLayoutView: View {
         autoResizing = false
 
         if newHeight <= 270 {
-            kernel.appState?.closeDBView()
+            provider.hideContentView()
         }
     }
 

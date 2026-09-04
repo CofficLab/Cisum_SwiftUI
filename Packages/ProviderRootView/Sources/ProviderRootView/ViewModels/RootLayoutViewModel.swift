@@ -12,6 +12,7 @@ final class RootLayoutViewModel: ObservableObject {
     @Published private(set) var contentView: AnyView?
     @Published private(set) var statusView: AnyView?
     @Published private(set) var toolbarContent: AnyView?
+    @Published private(set) var isContentViewVisible: Bool
 
     private var handle: (any RootViewProvidingObserverHandle)?
 
@@ -20,6 +21,7 @@ final class RootLayoutViewModel: ObservableObject {
         contentView = provider.contentView
         statusView = provider.statusView
         toolbarContent = provider.toolbarContent
+        isContentViewVisible = provider.isContentViewVisible
 
         handle = provider.addObserver { [weak self] event in
             switch event {
@@ -27,6 +29,7 @@ final class RootLayoutViewModel: ObservableObject {
             case .contentViewChanged: self?.contentView = provider.contentView
             case .statusViewChanged: self?.statusView = provider.statusView
             case .toolbarContentChanged: self?.toolbarContent = provider.toolbarContent
+            case .contentViewVisibilityChanged: self?.isContentViewVisible = provider.isContentViewVisible
             }
         }
     }
