@@ -68,6 +68,12 @@ struct RootLayoutView: View {
     private var controlArea: some View {
         if let controlView = viewModel.controlView {
             controlView
+            #if DEBUG
+                .overlay(alignment: .topTrailing) {
+                    DebugViewBadge(text: "ControlView")
+                        .padding(8)
+                }
+            #endif
         } else {
             ContentPlaceholderView()
         }
