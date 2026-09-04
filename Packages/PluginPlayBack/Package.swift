@@ -15,6 +15,7 @@ let package = Package(
         .package(name: "KernelCore", path: "../KernelCore"),
         .package(name: "MagicPlayMan", path: "../MagicPlayMan"),
         .package(name: "ProviderPlayback", path: "../ProviderPlayback"),
+        .package(name: "ProviderStorage", path: "../ProviderStorage"),
     ],
     targets: [
         .target(
@@ -23,6 +24,7 @@ let package = Package(
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
                 .product(name: "ProviderPlayback", package: "ProviderPlayback"),
+                .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
             path: "Sources/PluginPlayBack"
         ),
