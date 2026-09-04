@@ -69,10 +69,7 @@ struct RootLayoutView: View {
         if let controlView = viewModel.controlView {
             controlView
             #if DEBUG
-                .overlay(alignment: .topTrailing) {
-                    DebugViewBadge(text: "ControlView")
-                        .padding(8)
-                }
+                .debugBadge("ControlView")
             #endif
         } else {
             ContentPlaceholderView()
@@ -84,10 +81,7 @@ struct RootLayoutView: View {
         if let contentView = viewModel.contentView {
             contentView
             #if DEBUG
-                .overlay(alignment: .topTrailing) {
-                    DebugViewBadge(text: "ContentView")
-                        .padding(8)
-                }
+                .debugBadge("ContentView")
             #endif
         } else {
             ContentPlaceholderView()
@@ -165,23 +159,3 @@ struct RootLayoutView: View {
         #endif
     }
 }
-
-/// 调试徽章 —— 仅 DEBUG 构建下由根视图叠加在内容区右上角，
-/// 用于快速识别当前渲染的内容视图。
-#if DEBUG
-private struct DebugViewBadge: View {
-    let text: String
-
-    var body: some View {
-        Text(text)
-            .font(.caption2.weight(.semibold))
-            .padding(.horizontal, 8)
-            .padding(.vertical, 3)
-            .foregroundStyle(.white)
-            .background(.red.opacity(0.85), in: Capsule())
-            .overlay(Capsule().strokeBorder(.white.opacity(0.5), lineWidth: 0.5))
-            .shadow(color: .black.opacity(0.25), radius: 3, y: 1)
-            .allowsHitTesting(false)
-    }
-}
-#endif
