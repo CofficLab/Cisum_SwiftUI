@@ -9,7 +9,6 @@ import ProviderControlView
 import ProviderDocsView
 import ProviderRootView
 import ProviderSettings
-import ProviderToolbar
 import SwiftUI
 
 /// Cisum 应用组装工厂（Composition Root）。
@@ -171,15 +170,15 @@ public enum CisumBuilder: SuperLog {
             )
         )
         kernel.registerProvider((any ContentViewProviding).self, DefaultContentViewProvider())
-        kernel.registerProvider((any ToolbarProviding).self, DefaultToolbarProviding(kernel: kernel))
     }
 
     /// 组装主视图（对齐 Lumi `DefaultViewFactory.makeMainView(kernel:)`）。
     ///
     /// 视图组装逻辑集中在此：解析 `RootViewProviding` → 注入各区域视图
-    /// （播放控制区来自 `ControlViewProviding`、内容区来自 `ContentViewProviding`、
-    /// 工具栏来自 `ToolbarProviding`）→
-    /// 返回 `makeRootView()`。宿主只需要一个视图，无需关心各 Provider 如何组合。
+    /// （播放控制区来自 `ControlViewProviding`、内容区来自 `ContentViewProviding`）→
+    /// 返回 `makeRootView()`。工具栏按钮由插件通过 `addToolBarButtons()` 贡献，
+    /// 不再经由 `ToolbarProviding` 注入。
+    /// 宿主只需要一个视图，无需关心各 Provider 如何组合。
     @MainActor
     public static func assembleMainView(kernel: CisumKernel) -> AnyView {
         guard let root = kernel.resolveProvider((any RootViewProviding).self) else {
@@ -201,9 +200,6 @@ public enum CisumBuilder: SuperLog {
         if let content = kernel.resolveProvider((any ContentViewProviding).self) {
             refreshContentTabs(content, kernel: kernel)
             root.setContentView(content.makeContentView())
-        }
-        if let toolbar = kernel.resolveProvider((any ToolbarProviding).self) {
-            root.setToolbarContent(toolbar.makeToolbarView())
         }
         return root.makeRootView()
     }

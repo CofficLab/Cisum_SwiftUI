@@ -5,6 +5,9 @@ import SwiftUI
 
 /// 场景切换器：工具栏入口，列出全部可用场景（如「音乐库」「有声书」），
 /// 选择后切换 `currentScene`，从而改变内容区展示的 Tab。
+///
+/// 由 `ScenePlugin` 通过 `addToolBarButtons()` 贡献到工具栏（迁移自
+/// `ProviderToolbar` 的 `DefaultToolbarProviding`）。
 struct SceneSwitcher: View {
     @ObservedObject var kernel: CisumKernel
 
@@ -18,13 +21,10 @@ struct SceneSwitcher: View {
                 isPresented.toggle()
             } label: {
                 Image(systemName: current.iconName)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 6))
             }
-            .buttonStyle(.plain)
             .popover(isPresented: $isPresented) {
-                PostersView(isPresented: $isPresented, kernel: kernel)
+                PostersView(kernel: kernel)
+                    .environment(\.posterDismissAction, { isPresented = false })
                     .frame(minWidth: 350)
             }
         }
@@ -41,7 +41,6 @@ private struct PostersView: View {
         let view: AnyView
     }
 
-    @Binding var isPresented: Bool
     let kernel: CisumKernel
     @State private var selectedID = ""
     @State private var items: [Item] = []
@@ -58,33 +57,51 @@ private struct PostersView: View {
             .padding()
 
             if let item = items.first(where: { $0.id == selectedID }) {
-                VStack {
-                    if !item.description.isEmpty {
-                        Text(item.description)
-                    }
-
-                    GroupBox {
-                        item.view
-                            .environment(\.posterDismissAction, { isPresented = false })
-                    }
-                    .padding()
+                GroupBox {
+                    item.view
                 }
+                .padding()
                 Spacer()
             }
         }
         .onAppear { loadItems() }
     }
 
+    /// 场景海报由 PluginScene 自实现：按内置 `AppScene` 枚举逐一渲染，
+    /// 不再从其他插件的 `addPosterView()` 贡献中聚合。
     private func loadItems() {
-        items = (kernel.plugin?.allPlugins ?? []).compactMap { plugin in
-            guard let view = plugin.addPosterView() else { return nil }
+        guard let provider = kernel.scene else { return }
+        items = provider.scenes.map { scene in
+            let title = Self.sceneTitle(scene)
+            let description = Self.sceneDescription(scene)
             return Item(
-                id: plugin.label,
-                title: plugin.title,
-                description: plugin.description,
-                view: view
+                id: scene.id,
+                title: title,
+                description: description,
+                view: AnyView(
+                    ScenePosterView(
+                        iconName: scene.iconName,
+                        title: title,
+                        description: description,
+                        enterTitle: String(localized: "Enter Scene", bundle: .module),
+                        enterAction: { provider.setCurrentScene(scene) }
+                    )
+                )
             )
         }
         selectedID = items.first?.id ?? ""
+    }
+
+    private static func sceneTitle(_ scene: AppScene) -> String {
+        String(localized: String.LocalizationValue(scene.displayName), bundle: .module)
+    }
+
+    private static func sceneDescription(_ scene: AppScene) -> String {
+        switch scene {
+        case .music:
+            String(localized: "Browse and play the music library", bundle: .module)
+        case .audiobooks:
+            String(localized: "Browse and play the audiobooks", bundle: .module)
+        }
     }
 }

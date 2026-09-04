@@ -13,8 +13,9 @@ public protocol ToolbarProvidingObserverHandle: AnyObject {
 
 /// 工具栏视图提供能力协议（对齐 Lumi `ProviderToolbar/ToolbarProviding`）。
 ///
-/// 定义「内核 → 窗口工具栏」这一段的最小契约：宿主在启动时解析
-/// `ToolbarProviding`，把工具栏视图注入 `RootViewProviding`（场景切换器等）。
+/// 定义「内核 → 窗口工具栏」这一段的最小契约：宿主可选择把整个工具栏视图注入
+/// `RootViewProviding`。默认场景切换器已迁移到 `PluginScene`，由插件通过
+/// `SuperPlugin.addToolBarButtons()` 贡献；本协议作为可选整体注入契约保留。
 ///
 /// 使用 `AnyView` 而非 `associatedtype`：协议可无泛型约束地作为存在类型
 /// （`any ToolbarProviding`）注册进 `CisumKernel` 的 Provider 注册表。

@@ -4,8 +4,9 @@ import SwiftUI
 
 /// 根布局视图（迁移自 FactoryCisum `AppLayoutView`）。
 ///
-/// 结构：顶部播放控制区 + 中间内容区 + 底部状态区；工具栏含场景切换器与
-/// 「显示/隐藏内容」按钮。各区域优先使用 Provider 注入的视图，否则回退默认实现。
+/// 结构：顶部播放控制区 + 中间内容区 + 底部状态区；工具栏含「显示/隐藏内容」
+/// 按钮与插件贡献的工具栏按钮（含场景切换器）。各区域优先使用 Provider 注入
+/// 的视图，否则回退默认实现。
 struct RootLayoutView: View {
     @ObservedObject private var viewModel: RootLayoutViewModel
     @ObservedObject private var themeRegistry = LumiUIThemeRegistry.shared

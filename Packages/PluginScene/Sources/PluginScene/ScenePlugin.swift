@@ -12,8 +12,10 @@ enum ScenePluginEvent {
 
 /// 场景 Provider 插件。
 ///
-/// 场景为内置固定枚举（`AppScene.allCases`），本插件仅负责把 `SceneService`
+/// 场景为内置固定枚举（`AppScene.allCases`），本插件负责把 `SceneService`
 /// 注册进内核并恢复上次场景；不再从已启用插件的 `addSceneItem()` 贡献中收集。
+/// 同时通过 `addToolBarButtons()` 把场景切换器贡献到工具栏（迁移自
+/// `ProviderToolbar` 的 `DefaultToolbarProviding`）。
 ///
 /// 入口在 `onReady` 创建并持有长期存在的 `SceneSettingsViewModel` 与
 /// `SceneProvidingObserver`，设置导航项注入同一个 ViewModel；View 不自行创建
@@ -28,10 +30,11 @@ public actor ScenePlugin: SuperPlugin {
         // SceneProviding is a prerequisite for plugins that consume scene-scoped
         // views. Keep it ahead of every regular plugin during onBoot.
         order: -1000,
-        policy: .disabled,
+        policy: .alwaysOn,
         category: .core,
     )
 
+    nonisolated(unsafe) private weak var kernel: CisumKernel?
     nonisolated(unsafe) private var settingsViewModel: SceneSettingsViewModel?
     nonisolated(unsafe) private var settingsObserver: SceneProvidingObserver?
 
@@ -39,6 +42,7 @@ public actor ScenePlugin: SuperPlugin {
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
+        self.kernel = kernel
         if let docs = kernel.docs {
             docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { ScenePluginAboutView() })
             docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { ScenePluginManualView() })
@@ -83,6 +87,12 @@ public actor ScenePlugin: SuperPlugin {
             order: Self.metadata.order,
             destination: AnyView(SceneSettingsView(model: viewModel))
         )
+    }
+
+    @MainActor
+    public func addToolBarButtons() -> [(id: String, view: AnyView)] {
+        guard let kernel else { return [] }
+        return [(id: "scene-switcher", view: AnyView(SceneSwitcher(kernel: kernel)))]
     }
 
     @MainActor
