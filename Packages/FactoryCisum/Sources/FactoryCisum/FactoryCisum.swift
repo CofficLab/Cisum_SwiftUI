@@ -80,8 +80,7 @@ public enum CisumBuilder: SuperLog {
         let pluginService = PluginContributionService(manager: kernel.pluginManager)
         kernel.registerPluginService(pluginService)
 
-        let playMan = MagicPlayMan()
-        kernel.registerPlayback(playMan)
+        // 播放引擎由 PluginPlayBack 插件在 onBoot 阶段创建并注册为 PlaybackProviding。
 
         let themeService = ThemeService(contributionsProvider: { [weak kernel] in
             kernel?.plugin?.getThemeContributions() ?? []

@@ -24,6 +24,7 @@ import PluginBookSettings
 import PluginFileLog
 import PluginLikeButton
 import PluginOpenButton
+import PluginPlayBack
 import PluginPluginManager
 import PluginReset
 import PluginScene
@@ -97,6 +98,7 @@ public struct DefaultPluginFactory: PluginFactory {
         #endif
 
         plugins.append(contentsOf: [
+            PluginPlayBack.shared,
             ScenePlugin.shared,
             LikeButtonPlugin.shared,
             OpenButtonPlugin.shared,
