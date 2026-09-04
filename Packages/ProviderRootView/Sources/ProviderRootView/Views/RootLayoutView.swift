@@ -69,9 +69,6 @@ struct RootLayoutView: View {
     private var controlArea: some View {
         if let controlView = viewModel.controlView {
             controlView
-            #if DEBUG
-                .debugBadge("ControlView")
-            #endif
         } else {
             ContentPlaceholderView()
         }
@@ -81,9 +78,6 @@ struct RootLayoutView: View {
     private var contentArea: some View {
         if let contentView = viewModel.contentView {
             contentView
-            #if DEBUG
-                .debugBadge("ContentView")
-            #endif
         } else {
             ContentPlaceholderView()
         }

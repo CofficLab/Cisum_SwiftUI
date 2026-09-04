@@ -8,8 +8,6 @@ struct PlaybackProgressView: View {
 
     var body: some View {
         man.makeProgressView()
-        #if DEBUG
-        .debugBadge(PlaybackProgressPlugin.shared.id)
-        #endif
+
     }
 }

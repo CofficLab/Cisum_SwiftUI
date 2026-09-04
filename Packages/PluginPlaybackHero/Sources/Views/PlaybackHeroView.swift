@@ -30,8 +30,6 @@ struct PlaybackHeroView: View {
                     .frame(height: 60)
             }
         }
-        #if DEBUG
-        .debugBadge(PlaybackHeroPlugin.shared.id, alignment: .topLeading)
-        #endif
+
     }
 }

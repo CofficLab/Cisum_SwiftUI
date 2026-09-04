@@ -43,8 +43,6 @@ struct ControlButtonsView: View {
         }
         .buttonStyle(.plain)
         .padding(.bottom, 20)
-        #if DEBUG
-        .debugBadge(ControlButtonsPlugin.shared.id)
-        #endif
+
     }
 }
