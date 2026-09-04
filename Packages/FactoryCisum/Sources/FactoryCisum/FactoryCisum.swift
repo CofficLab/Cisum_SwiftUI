@@ -190,6 +190,9 @@ public enum CisumBuilder: SuperLog {
             if let buttonsView = kernel.plugin?.getControlButtonsView() {
                 control.setControlButtonsView(buttonsView)
             }
+            if let progressView = kernel.plugin?.getProgressView() {
+                control.setProgressView(progressView)
+            }
             root.setControlView(control.makeControlView())
         }
         if let content = kernel.resolveProvider((any ContentViewProviding).self) {

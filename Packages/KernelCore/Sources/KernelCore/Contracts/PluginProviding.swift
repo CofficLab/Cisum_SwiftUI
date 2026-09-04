@@ -70,6 +70,11 @@ public protocol PluginProviding: AnyObject, ObservableObject {
     /// 播放控制区只保留一份按钮组（单槽位），取第一个启用插件提供的贡献。
     func getControlButtonsView() -> AnyView?
 
+    /// 获取首个插件提供的播放进度视图。
+    ///
+    /// 播放控制区只保留一份进度条（单槽位），取第一个启用插件提供的贡献。
+    func getProgressView() -> AnyView?
+
     /// 失效所有缓存的聚合结果。
     func invalidateCaches()
 

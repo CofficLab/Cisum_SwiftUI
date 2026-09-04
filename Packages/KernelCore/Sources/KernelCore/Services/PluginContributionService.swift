@@ -137,6 +137,14 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
         return nil
     }
 
+    /// 播放控制区进度条为单槽位贡献，取首个启用插件提供的视图。
+    public func getProgressView() -> AnyView? {
+        for plugin in manager.enabledPlugins {
+            if let view = plugin.addProgressView() { return view }
+        }
+        return nil
+    }
+
     public func invalidateCaches() {
         cachedStatusViews = nil
         cachedPosterViews = nil

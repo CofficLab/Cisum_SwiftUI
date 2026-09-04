@@ -219,6 +219,7 @@ public protocol SuperPlugin: Actor {
     @MainActor func addToolBarButtons() -> [(id: String, view: AnyView)]
     @MainActor func addThemeContributions() -> [LumiUIThemeContribution]
     @MainActor func addControlButtonsView() -> AnyView?
+    @MainActor func addProgressView() -> AnyView?
 
     /// 注册阶段：插件可向 Kernel 注册 Provider 或共享目录贡献。
     @MainActor func onRegister(kernel: CisumKernelContainer) async throws
@@ -271,6 +272,7 @@ public extension SuperPlugin {
     nonisolated func addToolBarButtons() -> [(id: String, view: AnyView)] { [] }
     @MainActor func addThemeContributions() -> [LumiUIThemeContribution] { [] }
     @MainActor func addControlButtonsView() -> AnyView? { nil }
+    @MainActor func addProgressView() -> AnyView? { nil }
 
     @MainActor func onRegister(kernel: CisumKernelContainer) async throws {}
     @MainActor func onBoot(kernel: CisumKernelContainer) async throws {}

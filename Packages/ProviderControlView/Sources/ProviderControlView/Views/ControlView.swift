@@ -5,8 +5,8 @@ import SwiftUI
 ///
 /// 通过 `@EnvironmentObject` 读取内核注册的真实 `MagicPlayMan`。
 /// 各区块（封面 / 状态 / 进度 / 操作按钮 / 右侧封面）可分别注入自定义视图，
-/// 未注入时回退到内置默认实现。操作按钮组由插件注入（`setControlButtonsView`），
-/// 未注入时不渲染该区块。
+/// 未注入时回退到内置默认实现。进度条与操作按钮组由插件注入
+/// （`setProgressView` / `setControlButtonsView`），未注入时不渲染该区块。
 struct ControlView: View {
     @EnvironmentObject private var man: MagicPlayMan
     let stateViews: @MainActor () -> [AnyView]
@@ -28,8 +28,10 @@ struct ControlView: View {
                         .frame(height: stateHeight(for: geometry))
                         .frame(maxWidth: .infinity)
 
-                    progressArea
-                        .padding()
+                    if progressView != nil {
+                        progressArea
+                            .padding()
+                    }
 
                     if controlButtonsView != nil {
                         buttonsArea
@@ -76,8 +78,6 @@ struct ControlView: View {
     private var progressArea: some View {
         if let progressView {
             progressView
-        } else {
-            man.makeProgressView()
         }
     }
 

@@ -27,6 +27,7 @@ import PluginLikeButton
 import PluginOpenButton
 import PluginPlayBack
 import PluginPluginManager
+import PluginPlaybackProgress
 import PluginReset
 import PluginScene
 import PluginSettingGeneral
@@ -109,6 +110,7 @@ public struct DefaultPluginFactory: PluginFactory {
             SystemPlugin.shared,
             SettingGeneralPlugin.shared,
             ControlButtonsPlugin.shared,
+            PlaybackProgressPlugin.shared,
             ThemeAuroraPlugin.shared,
             ThemeCisumPlugin.shared,
             ThemeDaylightSilverPlugin.shared,
