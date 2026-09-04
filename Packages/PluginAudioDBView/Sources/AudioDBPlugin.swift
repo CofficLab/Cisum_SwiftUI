@@ -13,6 +13,7 @@ public actor AudioDBPlugin: SuperPlugin {
         description: String(localized: String.LocalizationValue(AudioDBPluginInfo.descriptionKey), bundle: .module),
         iconName: "externaldrive",
         order: 1,
+        policy: .alwaysOn,
         category: .library,
     )
 
