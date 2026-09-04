@@ -7,14 +7,19 @@ import SwiftUI
 /// 复用 `BookListViewModel` 作为数据源，以列表形式展示有声书仓库内容
 /// （书籍标题 + 子章节数 + 总数统计），供用户在设置窗口中查看。
 /// 右上角提供「打开仓库根目录」按钮，在 Finder 中打开有声书仓库目录。
+///
+/// 布局统一使用 LumiUI 组件（`AppSettingsContentScaffold` /
+/// `AppSettingSection` / `AppSettingRow` / `AppButton` / `AppEmptyState`）。
 struct BookDBSettingView: View {
     @EnvironmentObject var viewModel: BookListViewModel
     @LumiTheme private var theme
 
     var body: some View {
         AppSettingsContentScaffold(scrollsContent: false, maxContentWidth: nil) {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 16) {
                 header
+
+                repositoryPathSection
 
                 list
                     .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -44,26 +49,52 @@ struct BookDBSettingView: View {
         }
     }
 
+    // MARK: - 仓库路径（LumiUI 设置卡片）
+
+    /// 以 LumiUI 设置卡片展示有声书仓库根目录路径（与「打开仓库根目录」按钮共用
+    /// `BookPlugin.getBookDisk()`），路径可选中复制；仓库不可用时显示占位文案。
+    @MainActor
+    private var repositoryPathSection: some View {
+        let disk = BookPlugin.getBookDisk()
+        return AppSettingSection(title: String(localized: "Repository Path", bundle: .module)) {
+            AppSettingRow(
+                title: String(localized: "Repository path", bundle: .module),
+                description: String(localized: "The root directory that stores all audiobook files", bundle: .module),
+                icon: "folder"
+            ) {
+                if let disk {
+                    Text(disk.path(percentEncoded: false))
+                        .font(.appCaption)
+                        .foregroundStyle(theme.primary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                        .textSelection(.enabled)
+                        .help(Text(disk.path(percentEncoded: false)))
+                } else {
+                    Text("Unavailable", bundle: .module)
+                        .font(.appCaption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+
+    // MARK: - 打开仓库根目录
+
     #if os(macOS)
     /// 打开有声书仓库根目录（Finder 中显示该文件夹）；仓库目录不可用时按钮置灰。
     @MainActor
     private var openDirectoryButton: some View {
         let disk = BookPlugin.getBookDisk()
-        return Button {
+        return AppButton(
+            String(localized: "Open repository folder", bundle: .module),
+            systemImage: "folder",
+            style: .secondary,
+            size: .small
+        ) {
             disk?.openFolder()
-        } label: {
-            Label {
-                Text("Open repository folder", bundle: .module)
-            } icon: {
-                Image(systemName: "folder")
-            }
-            .font(.appCaption)
-            .foregroundStyle(theme.primary)
-            .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
         .disabled(disk == nil)
-        .opacity(disk == nil ? 0.5 : 1)
         .help(Text("Open repository folder", bundle: .module))
     }
     #endif
@@ -79,12 +110,11 @@ struct BookDBSettingView: View {
                 }
                 .listRowBackground(Color.clear)
             } else if viewModel.books.isEmpty {
-                Text("Audiobook repository is empty", bundle: .module)
-                    .font(.appBody)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, 40)
-                    .listRowBackground(Color.clear)
+                AppEmptyState(
+                    icon: "book.closed",
+                    title: String(localized: "Audiobook repository is empty", bundle: .module)
+                )
+                .listRowBackground(Color.clear)
             } else {
                 ForEach(viewModel.books) { book in
                     row(book: book)

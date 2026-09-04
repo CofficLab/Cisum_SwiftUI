@@ -5,6 +5,7 @@ import MagicPlayMan
 import OSLog
 import PluginAudio
 import PluginBook
+import ProviderPlayback
 import SwiftData
 import SwiftUI
 
@@ -28,6 +29,9 @@ final class BookGridViewModel: ObservableObject {
     @Published var lastStateUpdatedURL: URL?
 
     private weak var playMan: MagicPlayMan?
+    /// 内核播放服务解析器：书籍/章节点击经 `kernel.playback`（`PlaybackProviding`）播放，
+    /// 将其设置为当前文件，而不是直接调用播放引擎。
+    private let playbackProvider: @MainActor () -> (any PlaybackProviding)?
     private weak var repo: BookRepo?
     private var dbRoot: URL?
     private var bookDisk: URL?
@@ -36,6 +40,12 @@ final class BookGridViewModel: ObservableObject {
     private var updateBooksDebounceTask: Task<Void, Never>?
 
     private static let verbose = false
+
+    init(
+        playbackProvider: @escaping @MainActor () -> (any PlaybackProviding)? = { nil }
+    ) {
+        self.playbackProvider = playbackProvider
+    }
 
     func bind(playMan: MagicPlayMan?, repo: BookRepo?, dbRoot: URL?, bookDisk: URL?) {
         self.playMan = playMan
@@ -203,6 +213,8 @@ final class BookGridViewModel: ObservableObject {
             return
         }
 
+        // 续播路径需要 `startTime`（从上次进度继续），`PlaybackProviding` 未暴露该参数，
+        // 因此仍经播放引擎（MagicPlayMan）发起，保留续播能力。
         await playMan?.play(url, autoPlay: false, startTime: time, reason: reason)
     }
 
@@ -245,7 +257,8 @@ final class BookGridViewModel: ObservableObject {
             ) else {
                 return
             }
-            await playMan?.play(first, reason: reason)
+            // 经内核播放服务（PlaybackProviding）播放第一章。
+            await playbackProvider()?.play(first)
         } else {
             guard BookGridPlaybackRequestPolicy.shouldReportNoPlayableChapters(
                 currentGeneration: playBookGeneration,
@@ -263,7 +276,8 @@ final class BookGridViewModel: ObservableObject {
                 return
             }
 
-            await playMan?.play(book.url, reason: reason)
+            // 经内核播放服务（PlaybackProviding）播放单文件书籍。
+            await playbackProvider()?.play(book.url)
         }
     }
 

@@ -37,19 +37,19 @@ struct BookDBTips: View {
                 .frame(minHeight: 160)
 
                 #if os(macOS)
-                    Text("Or", bundle: .module)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Button(
-                        action: {
-                            if let disk = dependencies.bookDisk {
-                                disk.openFolder()
-                            }
-                        },
-                        label: {
-                            Label { Text("Open repository folder and add files", bundle: .module) } icon: { Image(systemName: "doc.viewfinder.fill") }
+                    if let disk = dependencies.bookDisk {
+                        Text("Or", bundle: .module)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        AppButton(
+                            String(localized: "Open repository folder and add files", bundle: .module),
+                            systemImage: "doc.viewfinder.fill",
+                            style: .secondary,
+                            size: .small
+                        ) {
+                            disk.openFolder()
                         }
-                    )
+                    }
                 #endif
 
                 if dependencies.isNotDesktop {

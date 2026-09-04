@@ -3,6 +3,7 @@ import ProviderDocsView
 import CisumUIComponents
 import OSLog
 import PluginBook
+import ProviderPlayback
 import ProviderScene
 import SwiftUI
 
@@ -18,6 +19,7 @@ public actor BookDBPlugin: SuperPlugin {
     )
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
+    nonisolated(unsafe) private weak var kernel: CisumKernel?
     nonisolated(unsafe) private var gridViewModel: BookGridViewModel?
     nonisolated(unsafe) private var databaseObserver: BookDatabaseObserver?
 
@@ -31,6 +33,7 @@ public actor BookDBPlugin: SuperPlugin {
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
+        self.kernel = kernel
         guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
             throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
         }
@@ -40,6 +43,7 @@ public actor BookDBPlugin: SuperPlugin {
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
+        self.kernel = kernel
         installState()
     }
 
@@ -103,10 +107,19 @@ public actor BookDBPlugin: SuperPlugin {
 
     // MARK: - State assembly
 
+    /// 内核播放服务解析器：书籍/章节点击经 `kernel.playback`（`PlaybackProviding`）播放，
+    /// 将其设置为当前文件，而不是直接调用播放引擎。
+    @MainActor
+    private var playbackProvider: @MainActor () -> (any PlaybackProviding)? {
+        { @MainActor [weak self] in
+            self?.kernel?.playback
+        }
+    }
+
     @MainActor
     private func installState() {
         guard gridViewModel == nil else { return }
-        let viewModel = BookGridViewModel()
+        let viewModel = BookGridViewModel(playbackProvider: playbackProvider)
         let observer = BookDatabaseObserver(viewModel: viewModel)
         gridViewModel = viewModel
         databaseObserver = observer
@@ -124,7 +137,7 @@ public actor BookDBPlugin: SuperPlugin {
         if let gridViewModel {
             return gridViewModel
         }
-        let viewModel = BookGridViewModel()
+        let viewModel = BookGridViewModel(playbackProvider: playbackProvider)
         gridViewModel = viewModel
         return viewModel
     }
