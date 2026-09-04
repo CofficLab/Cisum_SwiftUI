@@ -150,7 +150,7 @@ public struct SettingsWindow: View {
     ) -> some View {
         if let selected = navItems.first(where: { $0.id == currentSelection }) {
             selected.destination
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         } else {
             ContentUnavailableView(
                 "选择一个设置项",
