@@ -1,6 +1,6 @@
 import Foundation
 import SwiftUI
-import CisumUI
+import CisumUIComponents
 
 /// 本地化字符串管理
 public struct Localization {

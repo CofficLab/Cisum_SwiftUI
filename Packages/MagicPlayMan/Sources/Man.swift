@@ -1,7 +1,7 @@
 import AVFoundation
 import Combine
 import Foundation
-import CisumUI
+import CisumUIComponents
 import MediaPlayer
 import OSLog
 import SwiftUI

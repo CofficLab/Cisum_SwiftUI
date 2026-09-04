@@ -188,7 +188,7 @@ import SwiftUI
                 try process.run()
                 process.waitUntilExit()
             } catch {
-                return ("执行失败: \(error.localizedDescription)", -1)
+                return ("Execution failed: \(error.localizedDescription)", -1)
             }
 
             // 等待数据读取完成，最多等待1秒
@@ -206,7 +206,7 @@ import SwiftUI
             }
 
             guard let output = String(data: collector.data, encoding: .utf8) else {
-                return ("字符串转换失败: 无法将输出数据转换为UTF-8字符串，数据大小: \(collector.data.count) 字节", -2)
+                return ("String conversion failed: could not convert output data to UTF-8 string, data size: \(collector.data.count) bytes", -2)
             }
 
             if verbose {

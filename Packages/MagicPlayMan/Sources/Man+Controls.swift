@@ -1,6 +1,6 @@
 import AVFoundation
 import Foundation
-import CisumUI
+import CisumUIComponents
 import OSLog
 import SwiftUI
 
@@ -132,7 +132,7 @@ public extension MagicPlayMan {
     ///   - startTime: 加载完成后定位到的起始时间，默认为 nil
     ///   - reason: 更新原因
     @MainActor
-    func play(_ url: URL, autoPlay: Bool = true, startTime: TimeInterval? = nil, reason: String) async {
+    public func play(_ url: URL, autoPlay: Bool = true, startTime: TimeInterval? = nil, reason: String) async {
         if self.verbose {
             os_log("\(self.t)🚀 (\(reason)) Play: \(url.title), AutoPlay: \(autoPlay)")
         }

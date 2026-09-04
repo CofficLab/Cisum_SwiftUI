@@ -119,9 +119,6 @@ protocol SuperPlugin: Actor {
     var description: String { get }
     var iconName: String { get }
 
-    // Scene Provision
-    @MainActor func addSceneItem() -> String?
-
     // View Injection
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView?
     @MainActor func addSheetView(storage: StorageLocation?) -> AnyView?
@@ -191,7 +188,7 @@ protocol SuperPlugin: Actor {
    ↓
 3. Register plugins (if shouldRegister = true)
    ↓
-4. Collect scenes from addSceneItem()
+4. Register built-in fixed scenes (AppScene.allCases, no plugin registration)
    ↓
 5. Compose views via addRootView() wrapping
    ↓
@@ -275,14 +272,15 @@ ContentView (Root)
 
 ### Scene Management
 
-**Dynamic Scenes**:
-- Plugins provide scenes via `addSceneItem()`
+**Fixed Built-in Scenes**:
+- Scenes are fixed in the scene provider as `AppScene` enum (`ProviderScene` package)
+- Plugins no longer register scenes via `addSceneItem()`
 - Last active scene persisted and restored
 - Seamless scene switching
 
 **Available Scenes**:
-- 音乐库 (Music Library)
-- 书籍库 (Book Library)
+- 音乐库 (Music Library, `AppScene.music`)
+- 有声书 (Audiobooks, `AppScene.audiobooks`)
 
 ### Environment Values
 
@@ -463,9 +461,7 @@ Release
 
 ### Adding New Scenes
 
-1. Implement `addSceneItem()` in plugin
-2. Return unique scene name
-3. Scene automatically registered
+Scenes are fixed built-in `AppScene` enum cases in the `ProviderScene` package; plugins do not register scenes. To add a scene, add a new case to `AppScene` and update scene-conditional plugin logic.
 
 ---
 

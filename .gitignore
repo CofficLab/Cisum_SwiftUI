@@ -35,5 +35,6 @@ Package.resolved
 # Generated / Temporary
 # ========================
 .reports/
+.zcode/
 temp/
 *.log

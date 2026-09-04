@@ -18,7 +18,9 @@ let package = Package(
     targets: [
         .target(
             name: "CisumDeviceData",
-            path: "Sources"
+            path: ".",
+            sources: ["Sources"],
+            resources: [.process("Resources")]
         ),
         .testTarget(
             name: "CisumDeviceDataTests",

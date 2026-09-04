@@ -1,5 +1,5 @@
 import SwiftUI
-import CisumUI
+import CisumUIComponents
 
 struct LoadingOverlay: View {
     let state: PlaybackState.LoadingState

@@ -30,7 +30,7 @@ extension AvatarView {
                 }
                 .popover(isPresented: $showError) {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("错误详情")
+                        Text("Error Details")
                             .font(.headline)
 
                         Divider()
@@ -43,7 +43,7 @@ extension AvatarView {
 
                         Divider()
 
-                        Text("文件 URL")
+                        Text("File URL")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
 
@@ -67,7 +67,7 @@ extension AvatarView {
                             }) {
                                 HStack {
                                     Image(systemName: errorCopied ? .iconCheckmark : .iconCopy)
-                                    Text(errorCopied ? "已复制" : "复制错误")
+                                    Text(errorCopied ? "Copied" : "Copy Error")
                                 }
                                 .foregroundStyle(errorCopied ? .green : .accentColor)
                             }
@@ -84,7 +84,7 @@ extension AvatarView {
                             }) {
                                 HStack {
                                     Image(systemName: urlCopied ? .iconCheckmark : .iconCopy)
-                                    Text(urlCopied ? "已复制" : "复制 URL")
+                                    Text(urlCopied ? "Copied" : "Copy URL")
                                 }
                                 .foregroundStyle(urlCopied ? .green : .accentColor)
                             }

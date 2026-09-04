@@ -1,6 +1,6 @@
 import Foundation
 import SwiftUI
-import CisumUI
+import CisumUIComponents
 
 public struct MagicAsset: Identifiable, Equatable {
     public let id = UUID()

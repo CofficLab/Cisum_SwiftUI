@@ -1,10 +1,9 @@
 import Foundation
-import PluginRegistry
 import OSLog
 import SwiftUI
 import WidgetKit
 
-struct WidgetData: Codable, SuperLog {
+struct WidgetData: Codable {
     static let suiteName = "group.com.yueyi.cisum"
     static let emoji = "🐶"
     static let verbose = false
@@ -29,11 +28,11 @@ struct WidgetData: Codable, SuperLog {
         if let encoded = try? JSONEncoder().encode(data) {
             sharedDefaults?.set(encoded, forKey: Keys.data)
             if Self.verbose {
-                os_log("\(Self.t)💾 Saved widget data to \(suiteName): \(title) - \(artist) (playing: \(isPlaying))")
+                os_log("[CisumWidget] 💾 Saved widget data to \(suiteName): \(title) - \(artist) (playing: \(isPlaying))")
             }
             WidgetCenter.shared.reloadAllTimelines()
         } else {
-            os_log(.error, "\(Self.t)Failed to encode widget data")
+            os_log(.error, "[CisumWidget] Failed to encode widget data")
         }
     }
 
@@ -41,12 +40,12 @@ struct WidgetData: Codable, SuperLog {
         guard let data = sharedDefaults?.data(forKey: Keys.data),
               let decoded = try? JSONDecoder().decode(WidgetData.self, from: data) else {
             if Self.verbose {
-                os_log("\(Self.t)Failed to load widget data from \(suiteName); returning empty data")
+                os_log("[CisumWidget] Failed to load widget data from \(suiteName); returning empty data")
             }
             return .empty
         }
         if Self.verbose {
-            os_log("\(Self.t)Loaded widget data: \(decoded.title) - \(decoded.artist)")
+            os_log("[CisumWidget] Loaded widget data: \(decoded.title) - \(decoded.artist)")
         }
         return decoded
     }

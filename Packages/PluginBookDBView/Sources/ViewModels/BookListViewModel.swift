@@ -1,0 +1,58 @@
+import Combine
+import Foundation
+import PluginBook
+import SwiftUI
+
+/// 书籍库列表的轻量加载容器（设置页专用）。
+///
+/// 与主窗口内容区（`BookGrid` / `BookGridViewModel`）相互独立：设置页
+/// onAppear 触发的重载不会传播到主窗口内容区，避免其闪动。仅负责加载
+/// 书籍列表与总数，不处理播放/选中态。
+@MainActor
+final class BookListViewModel: ObservableObject {
+    @Published private(set) var books: [BookDTO] = []
+    @Published private(set) var isLoading = false
+    @Published private(set) var totalCount = 0
+
+    private let bookRepoProvider: @MainActor () async -> BookRepo?
+    private let reasonTag: String
+    private var loadGeneration = 0
+
+    init(
+        bookRepo: @escaping @MainActor () async -> BookRepo?,
+        reasonTag: String = "BookListViewModel"
+    ) {
+        self.bookRepoProvider = bookRepo
+        self.reasonTag = reasonTag
+    }
+
+    // MARK: - View lifecycle
+
+    /// 视图出现：加载书籍列表。
+    func handleOnAppear() {
+        load()
+    }
+
+    // MARK: - Loading
+
+    private func load() {
+        guard !isLoading else { return }
+
+        loadGeneration += 1
+        let generation = loadGeneration
+        isLoading = true
+
+        Task { @MainActor in
+            guard let repo = await bookRepoProvider() else {
+                isLoading = false
+                return
+            }
+
+            let books = await repo.getAll(reason: reasonTag)
+            guard generation == loadGeneration else { return }
+            self.books = books
+            self.totalCount = books.count
+            self.isLoading = false
+        }
+    }
+}
