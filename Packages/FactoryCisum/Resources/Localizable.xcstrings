@@ -1,6 +1,28 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Unable to start Cisum" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法启动 Cisum"
+          }
+        },
+        "zh-Hant-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法啟動 Cisum"
+          }
+        },
+        "zh-Hant-TW" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法啟動 Cisum"
+          }
+        }
+      }
+    },
     "App Support directory does not exist" : {
       "localizations" : {
         "zh-Hans" : {

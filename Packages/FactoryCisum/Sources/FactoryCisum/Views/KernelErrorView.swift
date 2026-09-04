@@ -9,7 +9,7 @@ struct KernelErrorView: View {
             Image(systemName: "exclamationmark.triangle")
                 .font(.largeTitle)
                 .foregroundStyle(.orange)
-            Text("Unable to start Cisum")
+            Text("Unable to start Cisum", bundle: .module)
                 .font(.title2)
             Text(error.localizedDescription)
                 .foregroundStyle(.secondary)
