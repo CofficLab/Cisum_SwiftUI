@@ -10,6 +10,7 @@ public actor ThemeMidnightPlugin: SuperPlugin {
         description: MidnightTheme().description,
         iconName: MidnightTheme().iconName,
         order: 160,
+        policy: .alwaysOn,
         category: .theme,
     )
 

@@ -10,6 +10,7 @@ public actor ThemeGraphiteBlackPlugin: SuperPlugin {
         description: GraphiteBlackTheme().description,
         iconName: GraphiteBlackTheme().iconName,
         order: 155,
+        policy: .alwaysOn,
         category: .theme,
     )
 

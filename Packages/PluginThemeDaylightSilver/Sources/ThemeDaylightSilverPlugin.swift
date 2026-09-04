@@ -10,6 +10,7 @@ public actor ThemeDaylightSilverPlugin: SuperPlugin {
         description: DaylightSilverTheme().description,
         iconName: DaylightSilverTheme().iconName,
         order: 110,
+        policy: .alwaysOn,
         category: .theme,
     )
 

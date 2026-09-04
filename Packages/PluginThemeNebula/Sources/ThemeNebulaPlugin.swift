@@ -10,6 +10,7 @@ public actor ThemeNebulaPlugin: SuperPlugin {
         description: NebulaTheme().description,
         iconName: NebulaTheme().iconName,
         order: 180,
+        policy: .alwaysOn,
         category: .theme,
     )
 

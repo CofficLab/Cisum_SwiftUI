@@ -10,6 +10,7 @@ public actor ThemeStudioBluePlugin: SuperPlugin {
         description: StudioBlueTheme().description,
         iconName: StudioBlueTheme().iconName,
         order: 130,
+        policy: .alwaysOn,
         category: .theme,
     )
 

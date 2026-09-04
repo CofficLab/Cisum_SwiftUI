@@ -10,6 +10,7 @@ public actor ThemeMonoPlugin: SuperPlugin {
         description: MonoTheme().description,
         iconName: MonoTheme().iconName,
         order: 170,
+        policy: .alwaysOn,
         category: .theme,
     )
 

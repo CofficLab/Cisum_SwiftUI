@@ -10,6 +10,7 @@ public actor ThemeForestPlugin: SuperPlugin {
         description: ForestTheme().description,
         iconName: ForestTheme().iconName,
         order: 150,
+        policy: .alwaysOn,
         category: .theme,
     )
 

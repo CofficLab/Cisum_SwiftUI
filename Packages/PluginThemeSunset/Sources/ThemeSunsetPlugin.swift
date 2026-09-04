@@ -10,6 +10,7 @@ public actor ThemeSunsetPlugin: SuperPlugin {
         description: SunsetTheme().description,
         iconName: SunsetTheme().iconName,
         order: 140,
+        policy: .alwaysOn,
         category: .theme,
     )
 

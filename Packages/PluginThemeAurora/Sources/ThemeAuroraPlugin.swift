@@ -10,6 +10,7 @@ public actor ThemeAuroraPlugin: SuperPlugin {
         description: AuroraTheme().description,
         iconName: AuroraTheme().iconName,
         order: 120,
+        policy: .alwaysOn,
         category: .theme,
     )
 

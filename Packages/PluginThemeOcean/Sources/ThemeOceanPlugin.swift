@@ -10,6 +10,7 @@ public actor ThemeOceanPlugin: SuperPlugin {
         description: OceanTheme().description,
         iconName: OceanTheme().iconName,
         order: 190,
+        policy: .alwaysOn,
         category: .theme,
     )
 

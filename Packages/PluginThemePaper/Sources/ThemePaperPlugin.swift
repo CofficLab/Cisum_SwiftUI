@@ -10,6 +10,7 @@ public actor ThemePaperPlugin: SuperPlugin {
         description: PaperTheme().description,
         iconName: PaperTheme().iconName,
         order: 200,
+        policy: .alwaysOn,
         category: .theme,
     )
 
