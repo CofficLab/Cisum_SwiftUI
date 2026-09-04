@@ -102,7 +102,11 @@ public final class BuiltinPluginManager: ObservableObject {
             for key in orderedPluginKeys {
                 guard let plugin = pluginRegistry[key] else { continue }
                 if Self.verbose { os_log("\(Self.t)📋 onRegister for: \(plugin.id)") }
-                try await plugin.onRegister(kernel: kernel)
+                do {
+                    try await plugin.onRegister(kernel: kernel)
+                } catch {
+                    try rethrow(error, from: plugin)
+                }
             }
 
             // 核心插件先启动
@@ -133,7 +137,21 @@ public final class BuiltinPluginManager: ObservableObject {
     /// 启动单个插件。
     private func bootPlugin(_ plugin: any SuperPlugin, kernel: CisumKernelContainer) async throws {
         if Self.verbose { os_log("\(Self.t)🔌 onBoot for plugin: \(plugin.id)") }
-        try await plugin.onBoot(kernel: kernel)
+        do {
+            try await plugin.onBoot(kernel: kernel)
+        } catch {
+            try rethrow(error, from: plugin)
+        }
+    }
+
+    /// 将插件抛出的错误包装为携带插件 ID 的 `pluginFailed`，便于报错视图定位来源。
+    ///
+    /// 已包装为 `pluginFailed` 的错误原样透传，避免重复包装。
+    private func rethrow(_ error: Error, from plugin: any SuperPlugin) throws {
+        if let kernelError = error as? CisumKernelError, case .pluginFailed = kernelError {
+            throw error
+        }
+        throw CisumKernelError.pluginFailed(pluginID: plugin.id, message: error.localizedDescription)
     }
 
     /// 阶段 2: OnReady —— 依赖服务的异步初始化。
@@ -150,7 +168,11 @@ public final class BuiltinPluginManager: ObservableObject {
                 guard isPluginEnabled(plugin) else { continue }
 
                 if Self.verbose { os_log("\(Self.t)🚀 onReady for: \(plugin.id)") }
-                try await plugin.onReady(kernel: kernel)
+                do {
+                    try await plugin.onReady(kernel: kernel)
+                } catch {
+                    try rethrow(error, from: plugin)
+                }
             }
         } catch {
             await teardownAll(kernel: kernel)

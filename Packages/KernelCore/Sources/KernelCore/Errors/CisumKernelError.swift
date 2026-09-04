@@ -19,6 +19,13 @@ public enum CisumKernelError: Error, LocalizedError {
     /// - Parameter service: 服务名称。
     case serviceNotAvailable(service: String)
 
+    /// 插件启动/注册/就绪失败（由插件抛出的错误包装而来）。
+    ///
+    /// - Parameters:
+    ///   - pluginID: 抛出错误的插件 ID，用于报错视图定位问题来源。
+    ///   - message: 底层错误描述。
+    case pluginFailed(pluginID: String, message: String)
+
     /// 场景未找到。
     ///
     /// - Parameter sceneName: 场景名称。
@@ -57,6 +64,8 @@ public enum CisumKernelError: Error, LocalizedError {
             "Missing required services: \(services.joined(separator: ", "))"
         case .serviceNotAvailable(let service):
             "\(service) service is not available"
+        case .pluginFailed(let pluginID, let message):
+            "\(message) (plugin: \(pluginID))"
         case .sceneNotFound(let sceneName):
             "Scene '\(sceneName)' not found"
         case .pluginIDIsEmpty:

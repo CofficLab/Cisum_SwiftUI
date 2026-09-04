@@ -37,7 +37,7 @@ actor LifecycleProbePlugin: SuperPlugin {
         recorder: CallRecorder(), name: "", order: 0
     )
     nonisolated static var metadata: PluginMetadata {
-        PluginMetadata(displayName: "", description: "")
+        PluginMetadata(displayName: "", description: "", policy: .alwaysOn)
     }
 
     @MainActor
@@ -105,8 +105,18 @@ struct PluginLifecycleTests {
 
         kernel.pluginManager.initializePlugins([probeA, probeFail])
 
-        await #expect(throws: LifecycleTestError.bootFailed) {
+        // 插件错误会被包装为携带插件 ID 的 pluginFailed。
+        do {
             try await kernel.pluginManager.onBoot(kernel: kernel)
+            Issue.record("Expected onBoot to throw")
+        } catch let error as CisumKernelError {
+            guard case .pluginFailed(let pluginID, _) = error else {
+                Issue.record("Unexpected error: \(error)")
+                return
+            }
+            #expect(pluginID == "fail")
+        } catch {
+            Issue.record("Unexpected error: \(error)")
         }
 
         // a 已 boot → 逆序 shutdown；fail 与 a 统一 unregister。
@@ -132,8 +142,18 @@ struct PluginLifecycleTests {
         kernel.pluginManager.initializePlugins([probeA, probeFail])
         try await kernel.pluginManager.onBoot(kernel: kernel)
 
-        await #expect(throws: LifecycleTestError.readyFailed) {
+        // 插件错误会被包装为携带插件 ID 的 pluginFailed。
+        do {
             try await kernel.pluginManager.onReady(kernel: kernel)
+            Issue.record("Expected onReady to throw")
+        } catch let error as CisumKernelError {
+            guard case .pluginFailed(let pluginID, _) = error else {
+                Issue.record("Unexpected error: \(error)")
+                return
+            }
+            #expect(pluginID == "fail")
+        } catch {
+            Issue.record("Unexpected error: \(error)")
         }
 
         // 两个插件均已 boot → 逆序 shutdown + unregister。
