@@ -80,13 +80,15 @@ public struct SettingsWindow: View {
     }
 
     #if os(macOS)
-    /// macOS：双栏，侧边栏对齐 Lumi `AppSettingsSidebarContainer` 结构
-    /// （顶部 app 信息 Header + 分隔线 + 入口列表，手动管理选中态）。
+    /// macOS：双栏，对齐 Lumi `AppSettingsSidebarShell`（HStack）结构
+    /// （左侧 `AppSettingsSidebarContainer` 顶部 Header + 分隔线 + 入口列表，
+    /// 右侧 `AppSettingsDetailPane` 铺满整窗），不再使用 `NavigationSplitView`
+    /// 以避免 detail 列默认的顶部系统 inset 空白。
     private func macOSSplitView(
         navItems: [PluginSettingNavigationItem],
         currentSelection: String
     ) -> some View {
-        NavigationSplitView {
+        AppSettingsSidebarShell {
             AppSettingsSidebarContainer(width: 220) {
                 VStack(alignment: .leading, spacing: 10) {
                     SettingsHeaderView()
@@ -112,10 +114,13 @@ public struct SettingsWindow: View {
                     Spacer()
                 }
             }
-            .navigationSplitViewColumnWidth(min: 200, ideal: 230)
         } detail: {
-            detailContent(navItems: navItems, currentSelection: currentSelection)
+            AppSettingsDetailPane {
+                detailContent(navItems: navItems, currentSelection: currentSelection)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
         }
+        .ignoresSafeArea()
     }
     #else
     /// iOS：各插件一级入口同样可交互选择，右侧展示选中入口内容。
