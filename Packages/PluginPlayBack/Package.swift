@@ -12,8 +12,10 @@ let package = Package(
         .library(name: "PluginPlayBack", targets: ["PluginPlayBack"]),
     ],
     dependencies: [
+        .package(path: "../CisumUIComponents"),
         .package(name: "KernelCore", path: "../KernelCore"),
         .package(name: "MagicPlayMan", path: "../MagicPlayMan"),
+        .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
         .package(name: "ProviderPlayback", path: "../ProviderPlayback"),
         .package(name: "ProviderStorage", path: "../ProviderStorage"),
     ],
@@ -21,8 +23,10 @@ let package = Package(
         .target(
             name: "PluginPlayBack",
             dependencies: [
+                "CisumUIComponents",
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
+                "ProviderDocsView",
                 .product(name: "ProviderPlayback", package: "ProviderPlayback"),
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],

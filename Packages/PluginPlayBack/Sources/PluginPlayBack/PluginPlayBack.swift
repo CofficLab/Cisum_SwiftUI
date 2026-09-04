@@ -1,7 +1,10 @@
+import CisumUIComponents
 import KernelCore
 import MagicPlayMan
+import ProviderDocsView
 import ProviderPlayback
 import ProviderStorage
+import SwiftUI
 
 /// 播放插件：负责创建并持有 `MagicPlayMan` 播放引擎，将其作为
 /// `PlaybackProviding` 注入内核，并维护当前播放文件的磁盘持久化与恢复。
@@ -37,6 +40,14 @@ public actor PluginPlayBack: SuperPlugin {
     nonisolated(unsafe) private var observerHandle: (any PlaybackProvidingObserverHandle)?
 
     public init() {}
+
+    @MainActor
+    public func onRegister(kernel: CisumKernel) async throws {
+        if let docs = kernel.docs {
+            docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { PluginPlayBackAboutView() })
+            docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { PluginPlayBackManualView() })
+        }
+    }
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
