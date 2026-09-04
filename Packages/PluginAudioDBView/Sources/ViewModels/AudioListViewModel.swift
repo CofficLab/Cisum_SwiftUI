@@ -4,6 +4,7 @@ import MagicAlert
 import MagicPlayMan
 import OSLog
 import PluginAudio
+import ProviderPlayback
 import SwiftUI
 
 /// 音频库列表的加载状态容器（迁移 Phase 2）。
@@ -32,16 +33,21 @@ final class AudioListViewModel: ObservableObject {
     private var selectionGeneration = 0
 
     private let audioRepoProvider: @MainActor () async -> AudioRepo?
+    /// 内核播放服务解析器：文件点击经 `kernel.playback`（`PlaybackProviding`）播放，
+    /// 将其设置为当前文件，而不是直接调用播放引擎。
+    private let playbackProvider: @MainActor () -> (any PlaybackProviding)?
     private weak var playMan: MagicPlayMan?
     private let reasonTag: String
     private let isDesktop: Bool
 
     init(
         audioRepo: @escaping @MainActor () async -> AudioRepo?,
+        playbackProvider: @escaping @MainActor () -> (any PlaybackProviding)? = { nil },
         reasonTag: String = "AudioListViewModel",
         isDesktop: Bool? = nil
     ) {
         self.audioRepoProvider = audioRepo
+        self.playbackProvider = playbackProvider
         self.reasonTag = reasonTag
         self.isDesktop = isDesktop ?? Self.defaultIsDesktop
     }
@@ -95,7 +101,8 @@ final class AudioListViewModel: ObservableObject {
             ) else {
                 return
             }
-            await self.playMan?.play(url, reason: self.reasonTag + ".selectionChanged")
+            // 经内核播放服务（PlaybackProviding）播放，将该文件设置为当前文件。
+            await self.playbackProvider()?.play(url)
         }
     }
 

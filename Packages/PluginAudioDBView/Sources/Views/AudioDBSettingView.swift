@@ -12,6 +12,10 @@ import SwiftUI
 /// 复用 `AudioListViewModel` 作为数据源，以列表形式展示音频库内容
 /// （分页加载 + 总数统计），供用户在设置窗口中查看。
 /// 右上角提供「打开仓库根目录」按钮，在 Finder 中打开音频仓库目录。
+///
+/// 布局统一使用 LumiUI 组件（`AppSettingsContentScaffold` /
+/// `AppSettingSection` / `AppSettingRow` / `AppButton` / `AppEmptyState` /
+/// `AppErrorBanner`）；仓库路径不可用时直接展示错误视图与完整诊断链路。
 struct AudioDBSettingView: View {
     @EnvironmentObject var viewModel: AudioListViewModel
     @Environment(\.audioDBDependencies) private var deps
@@ -23,10 +27,10 @@ struct AudioDBSettingView: View {
                 // 仓库路径拿不到：一切音频功能的基础缺失，直接展示错误视图。
                 repositoryUnavailableView
             } else {
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 16) {
                     header
 
-                    pathRow
+                    repositoryPathSection
 
                     list
                         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -43,6 +47,8 @@ struct AudioDBSettingView: View {
         }
     }
 
+    // MARK: - Header
+
     private var header: some View {
         HStack(alignment: .firstTextBaseline) {
             Text("Audio Repository", bundle: .module)
@@ -57,48 +63,50 @@ struct AudioDBSettingView: View {
         }
     }
 
-    /// 展示音频仓库根目录路径（与「打开仓库根目录」按钮共用注入的 `audioDisk`），
-    /// 路径可选中复制；仓库不可用时显示占位文案。
+    // MARK: - 仓库路径（LumiUI 设置卡片）
+
+    /// 以 LumiUI 设置卡片展示音频仓库根目录路径（与「打开仓库根目录」按钮共用
+    /// 注入的 `audioDisk`），路径可选中复制；仓库不可用时显示占位文案。
     @MainActor
-    private var pathRow: some View {
+    private var repositoryPathSection: some View {
         let disk = deps.audioDisk()
-        return HStack(alignment: .firstTextBaseline, spacing: 8) {
-            Image(systemName: "folder")
-                .font(.appCaption)
-                .foregroundStyle(theme.primary)
-                .frame(width: 18)
-            Text("Repository path", bundle: .module)
-                .font(.appCaption)
-                .foregroundStyle(.secondary)
-            if let disk {
-                Text(disk.path(percentEncoded: false))
-                    .font(.appCaption)
-                    .foregroundStyle(theme.primary)
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-                    .textSelection(.enabled)
-                    .help(Text(disk.path(percentEncoded: false)))
-            } else {
-                Text("Unavailable", bundle: .module)
-                    .font(.appCaption)
-                    .foregroundStyle(.secondary)
+        return AppSettingSection(title: String(localized: "Repository Path", bundle: .module)) {
+            AppSettingRow(
+                title: String(localized: "Repository path", bundle: .module),
+                description: String(localized: "The root directory that stores all audio files", bundle: .module),
+                icon: "folder"
+            ) {
+                if let disk {
+                    Text(disk.path(percentEncoded: false))
+                        .font(.appCaption)
+                        .foregroundStyle(theme.primary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                        .textSelection(.enabled)
+                        .help(Text(disk.path(percentEncoded: false)))
+                } else {
+                    Text("Unavailable", bundle: .module)
+                        .font(.appCaption)
+                        .foregroundStyle(.secondary)
+                }
             }
-            Spacer()
         }
     }
+
+    // MARK: - 错误视图（仓库路径不可用）
 
     /// 仓库路径无法解析时的错误视图。
     ///
     /// 仓库路径是一切音频功能的基础，拿不到时不再展示空列表，而是直接给出
-    /// 错误说明 + 完整诊断链路，方便开发者/用户定位根因。
+    /// 错误说明 + 完整诊断链路（LumiUI 组件），方便开发者/用户定位根因。
     @MainActor
     private var repositoryUnavailableView: some View {
         let diagnostics = deps.audioDiagnostics()
         return ScrollView {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
                 HStack(spacing: 10) {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(theme.error)
                     Text("Audio repository is unavailable", bundle: .module)
                         .font(.appTitle)
                 }
@@ -112,81 +120,70 @@ struct AudioDBSettingView: View {
                 .fixedSize(horizontal: false, vertical: true)
 
                 if let reason = diagnostics.failureReason {
-                    Text(reason)
-                        .font(.appCaption)
-                        .foregroundStyle(theme.primary)
-                        .padding(10)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(theme.primary.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                        .textSelection(.enabled)
+                    AppErrorBanner(message: LocalizedStringKey(reason))
                 }
 
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("Diagnostics", bundle: .module)
-                            .font(.appCaption)
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        Button {
-                            copyToPasteboard(diagnostics.summary)
-                        } label: {
-                            Label {
-                                Text("Copy diagnostics", bundle: .module)
-                            } icon: {
-                                Image(systemName: "doc.on.doc")
+                AppSettingSection(title: String(localized: "Diagnostics", bundle: .module)) {
+                    VStack(spacing: 0) {
+                        diagnosticRow(
+                            label: String(localized: "Storage location", bundle: .module),
+                            value: diagnostics.storageLocationRaw ?? "nil"
+                        )
+                        Divider()
+                        diagnosticRow(
+                            label: String(localized: "Usable storage location", bundle: .module),
+                            value: String(diagnostics.hasUsableStorageLocation)
+                        )
+                        Divider()
+                        diagnosticRow(
+                            label: String(localized: "iCloud available", bundle: .module),
+                            value: String(diagnostics.isICloudAvailable)
+                        )
+                        Divider()
+                        diagnosticRow(
+                            label: String(localized: "iCloud container", bundle: .module),
+                            value: diagnostics.cloudContainer ?? "nil"
+                        )
+                        Divider()
+                        diagnosticRow(
+                            label: String(localized: "iCloud Documents", bundle: .module),
+                            value: diagnostics.cloudDocuments ?? "nil"
+                        )
+                        Divider()
+                        diagnosticRow(
+                            label: String(localized: "Local Documents", bundle: .module),
+                            value: diagnostics.localDocuments ?? "nil"
+                        )
+                        Divider()
+                        diagnosticRow(
+                            label: String(localized: "Storage root", bundle: .module),
+                            value: diagnostics.storageRoot ?? "nil"
+                        )
+                        Divider()
+                        diagnosticRow(
+                            label: String(localized: "Audio repository path", bundle: .module),
+                            value: diagnostics.audioDisk ?? "nil"
+                        )
+                        Divider()
+                        diagnosticRow(
+                            label: String(localized: "Repository directory name", bundle: .module),
+                            value: diagnostics.dbDirName
+                        )
+
+                        HStack {
+                            Spacer()
+                            AppButton(
+                                String(localized: "Copy diagnostics", bundle: .module),
+                                systemImage: "doc.on.doc",
+                                style: .secondary,
+                                size: .small
+                            ) {
+                                copyToPasteboard(diagnostics.summary)
                             }
-                            .font(.appCaption)
+                            .help(Text("Copy diagnostics", bundle: .module))
                         }
-                        .buttonStyle(.plain)
-                        .foregroundStyle(theme.primary)
-                        .contentShape(Rectangle())
-                        .help(Text("Copy diagnostics", bundle: .module))
+                        .padding(.top, 8)
                     }
-
-                    diagnosticRow(
-                        label: String(localized: "Storage location", bundle: .module),
-                        value: diagnostics.storageLocationRaw ?? "nil"
-                    )
-                    diagnosticRow(
-                        label: String(localized: "Usable storage location", bundle: .module),
-                        value: String(diagnostics.hasUsableStorageLocation)
-                    )
-                    diagnosticRow(
-                        label: String(localized: "iCloud available", bundle: .module),
-                        value: String(diagnostics.isICloudAvailable)
-                    )
-                    diagnosticRow(
-                        label: String(localized: "iCloud container", bundle: .module),
-                        value: diagnostics.cloudContainer ?? "nil"
-                    )
-                    diagnosticRow(
-                        label: String(localized: "iCloud Documents", bundle: .module),
-                        value: diagnostics.cloudDocuments ?? "nil"
-                    )
-                    diagnosticRow(
-                        label: String(localized: "Local Documents", bundle: .module),
-                        value: diagnostics.localDocuments ?? "nil"
-                    )
-                    diagnosticRow(
-                        label: String(localized: "Storage root", bundle: .module),
-                        value: diagnostics.storageRoot ?? "nil"
-                    )
-                    diagnosticRow(
-                        label: String(localized: "Audio repository path", bundle: .module),
-                        value: diagnostics.audioDisk ?? "nil"
-                    )
-                    diagnosticRow(
-                        label: String(localized: "Repository directory name", bundle: .module),
-                        value: diagnostics.dbDirName
-                    )
-                }
-                .padding(12)
-                .background(theme.background.opacity(0.6))
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .strokeBorder(theme.divider, lineWidth: 1)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -194,12 +191,9 @@ struct AudioDBSettingView: View {
         }
     }
 
+    /// 诊断面板行：左侧标签，右侧等宽可选中值。
     private func diagnosticRow(label: String, value: String) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: 8) {
-            Text(label)
-                .font(.appCaption)
-                .foregroundStyle(.secondary)
-            Spacer()
+        AppSettingRow(title: label) {
             Text(value)
                 .font(.appCaption)
                 .fontDesign(.monospaced)
@@ -218,29 +212,27 @@ struct AudioDBSettingView: View {
         #endif
     }
 
+    // MARK: - 打开仓库根目录
+
     #if os(macOS)
     /// 打开音频仓库根目录（Finder 中显示该文件夹）；仓库目录不可用时按钮置灰。
     @MainActor
     private var openDirectoryButton: some View {
         let disk = deps.audioDisk()
-        return Button {
+        return AppButton(
+            String(localized: "Open repository folder", bundle: .module),
+            systemImage: "folder",
+            style: .secondary,
+            size: .small
+        ) {
             disk?.openFolder()
-        } label: {
-            Label {
-                Text("Open repository folder", bundle: .module)
-            } icon: {
-                Image(systemName: "folder")
-            }
-            .font(.appCaption)
-            .foregroundStyle(theme.primary)
-            .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
         .disabled(disk == nil)
-        .opacity(disk == nil ? 0.5 : 1)
         .help(Text("Open repository folder", bundle: .module))
     }
     #endif
+
+    // MARK: - 仓库内容列表
 
     private var list: some View {
         List {
@@ -253,12 +245,11 @@ struct AudioDBSettingView: View {
                 }
                 .listRowBackground(Color.clear)
             } else if viewModel.urls.isEmpty && !viewModel.isLoading {
-                Text("Music repository is empty", bundle: .module)
-                    .font(.appBody)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, 40)
-                    .listRowBackground(Color.clear)
+                AppEmptyState(
+                    icon: "music.note",
+                    title: String(localized: "Music repository is empty", bundle: .module)
+                )
+                .listRowBackground(Color.clear)
             } else {
                 ForEach(Array(viewModel.urls.enumerated()), id: \.element) { index, url in
                     row(url: url)

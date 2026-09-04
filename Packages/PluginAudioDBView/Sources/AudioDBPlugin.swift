@@ -3,6 +3,7 @@ import ProviderDocsView
 import CisumUIComponents
 import MagicPlayMan
 import PluginAudio
+import ProviderPlayback
 import ProviderScene
 import ProviderStorage
 import SwiftUI
@@ -105,7 +106,10 @@ public actor AudioDBPlugin: SuperPlugin {
         // 设置页使用独立的 AudioListViewModel，避免与主窗口内容区（AudioList）
         // 共享同一实例——否则设置页 onAppear 触发 handleOnAppear() 重载时，
         // 共享状态变化会传播到主窗口 contentview，导致其闪动。
-        let settingList = AudioListViewModel(audioRepo: audioRepoProvider)
+        let settingList = AudioListViewModel(
+            audioRepo: audioRepoProvider,
+            playbackProvider: playbackProvider
+        )
         return PluginSettingNavigationItem(
             id: "audiodb",
             title: String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), bundle: .module),
@@ -151,7 +155,8 @@ public actor AudioDBPlugin: SuperPlugin {
         guard listViewModel == nil else { return }
 
         let list = AudioListViewModel(
-            audioRepo: audioRepoProvider
+            audioRepo: audioRepoProvider,
+            playbackProvider: playbackProvider
         )
         let root = AudioDBRootViewModel(
             audioRepo: audioRepoProvider,
@@ -203,6 +208,14 @@ public actor AudioDBPlugin: SuperPlugin {
         return try? AudioRepo(container: container, disk: disk, reason: "AudioDBPlugin")
     }
 
+    /// 内核播放服务解析器：文件点击经 `kernel.playback`（`PlaybackProviding`）播放。
+    @MainActor
+    private var playbackProvider: @MainActor () -> (any PlaybackProviding)? {
+        { @MainActor [weak self] in
+            self?.kernel?.playback
+        }
+    }
+
     /// 仓库路径解析诊断（错误视图展示）。
     @MainActor
     private var audioDiagnosticsProvider: @MainActor @Sendable () -> AudioStorageDiagnostics {
@@ -234,7 +247,10 @@ public actor AudioDBPlugin: SuperPlugin {
         if let listViewModel, let rootViewModel, let dbViewModel {
             return (listViewModel, rootViewModel, dbViewModel)
         }
-        let list = AudioListViewModel(audioRepo: audioRepoProvider)
+        let list = AudioListViewModel(
+            audioRepo: audioRepoProvider,
+            playbackProvider: playbackProvider
+        )
         let root = AudioDBRootViewModel(audioRepo: audioRepoProvider, showDBView: {})
         let db = AudioDBViewModel()
         listViewModel = list

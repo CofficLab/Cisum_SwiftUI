@@ -37,13 +37,14 @@ struct AudioDBTips: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
 
-                        Label { Text("Open repository folder and add files", bundle: .module) } icon: { Image(systemName: "doc.viewfinder.fill") }
-                            .cisumCard(.regularMaterial)
-                            .cisumShadowSm()
-                            .cisumHoverScale(105)
-                            .cisumButton {
-                                disk.openFolder()
-                            }
+                        AppButton(
+                            String(localized: "Open repository folder and add files", bundle: .module),
+                            systemImage: "doc.viewfinder.fill",
+                            style: .secondary,
+                            size: .small
+                        ) {
+                            disk.openFolder()
+                        }
                     }
                 #endif
 
