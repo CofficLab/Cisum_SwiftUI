@@ -23,7 +23,7 @@ public actor PluginPlayBack: SuperPlugin {
         description: "播放引擎与播放状态管理。",
         iconName: "play.circle",
         order: 12,
-        policy: .disabled,
+        policy: .alwaysOn,
         category: .system
     )
 
