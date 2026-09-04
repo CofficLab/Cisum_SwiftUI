@@ -13,6 +13,7 @@ public actor BookDBPlugin: SuperPlugin {
         description: String(localized: String.LocalizationValue(BookDBPluginInfo.descriptionKey), bundle: .module),
         iconName: BookDBPluginInfo.iconName,
         order: 12,
+        policy: .alwaysOn,
         category: .library,
     )
 
@@ -78,6 +79,26 @@ public actor BookDBPlugin: SuperPlugin {
             .environmentObject(viewModel)
             .bookDBViewDependencies(dependencies)
         return (AnyView(view), label)
+    }
+
+    /// 设置窗口入口：展示有声书仓库书籍列表。
+    @MainActor
+    public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
+        // 设置页使用独立的 BookListViewModel，避免与主窗口内容区（BookGrid）
+        // 共享同一实例——否则设置页 onAppear 触发重载时，共享状态变化会传播
+        // 到主窗口内容区，导致其闪动。
+        let settingList = BookListViewModel(bookRepo: { await BookPlugin.getBookRepoAsync() })
+        return PluginSettingNavigationItem(
+            id: "bookdb",
+            title: String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), bundle: .module),
+            description: Self.metadata.description,
+            iconName: Self.metadata.iconName,
+            order: Self.metadata.order,
+            destination: AnyView(
+                BookDBSettingView()
+                    .environmentObject(settingList)
+            )
+        )
     }
 
     // MARK: - State assembly

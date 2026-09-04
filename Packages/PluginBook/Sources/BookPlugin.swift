@@ -77,6 +77,24 @@ public actor BookPlugin: SuperPlugin {
         return try? disk.ensureDirectory()
     }
 
+    /// 后台构造书籍仓库。dbRoot 与 disk 的解析仍在主线程完成，
+    /// SwiftData 容器创建及仓库初始化放到 utility 任务，避免阻塞 UI。
+    public static func getBookRepoAsync() async -> BookRepo? {
+        let dbRoot = await MainActor.run { try? BookPluginHost.getDBRootDir() }
+        guard let dbRoot else { return nil }
+        let disk = await MainActor.run { Self.getBookDisk() }
+        guard let disk else { return nil }
+
+        let container = await Task.detached(priority: .utility) {
+            try? BookConfig.getContainer(dbRootURL: dbRoot)
+        }.value
+        guard let container else { return nil }
+
+        return await MainActor.run {
+            try? BookRepo(disk: disk, db: BookDB(container, reason: "BookPlugin.background"))
+        }
+    }
+
     // MARK: - State assembly
 
     @MainActor

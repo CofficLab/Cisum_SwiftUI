@@ -28,11 +28,8 @@ public actor AudioPlugin: SuperPlugin {
     public static let maxAudioCount = AudioPluginInfo.maxAudioCount
     public static let supportedExtensions = AudioPluginInfo.supportedExtensions
 
-    #if DEBUG
-        public static let dbDirName = AudioPluginInfo.debugDBDirName
-    #else
-        public static let dbDirName = AudioPluginInfo.dbDirName
-    #endif
+    /// 当前构建生效的仓库子目录名（Release `audios` / DEBUG `audios_debug`）。
+    public static let dbDirName = AudioPluginInfo.effectiveDBDirName
 
     nonisolated(unsafe) private var rootViewModel: AudioRootViewModel?
     nonisolated(unsafe) private var rootObserver: AudioStorageObserver?
@@ -111,6 +108,39 @@ public actor AudioPlugin: SuperPlugin {
 
         let disk = storageRoot.appendingPathComponent(Self.dbDirName, isDirectory: true)
         return try? disk.ensureDirectory()
+    }
+
+    /// 诊断音频仓库路径解析链路，供设置页在仓库不可用时展示完整错误信息。
+    ///
+    /// 返回从「存储位置配置」到「音频仓库目录」各环节的实际结果，便于快速
+    /// 定位仓库路径拿不到的原因（存储位置未设置 / iCloud 未登录或容器解析
+    /// 失败 / 本地目录解析失败 / 目录创建失败等）。
+    @MainActor
+    public static func audioStorageDiagnostics() -> AudioStorageDiagnostics {
+        let storageLocationRaw = UserDefaults.standard.string(forKey: "StorageLocation")
+        let isICloudAvailable = FileManager.default.ubiquityIdentityToken != nil
+        let cloudContainer = FileManager.default.url(forUbiquityContainerIdentifier: nil)
+        let cloudDocuments = cloudContainer?.appendingPathComponent("Documents")
+        let localDocuments = try? FileManager.default.url(
+            for: .documentDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        )
+        let storageRoot = AudioPluginHost.getStorageRoot()
+        let disk = getAudioDisk()
+
+        return AudioStorageDiagnostics(
+            storageLocationRaw: storageLocationRaw,
+            isICloudAvailable: isICloudAvailable,
+            hasUsableStorageLocation: AudioPluginHost.hasStorageLocation(),
+            cloudContainer: cloudContainer?.path,
+            cloudDocuments: cloudDocuments?.path,
+            localDocuments: localDocuments?.path,
+            storageRoot: storageRoot?.path,
+            audioDisk: disk?.path,
+            dbDirName: Self.dbDirName
+        )
     }
 
     @MainActor

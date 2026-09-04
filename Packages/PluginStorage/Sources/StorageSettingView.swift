@@ -58,6 +58,20 @@ public struct StorageSettingView: View, SuperLog {
                         }
                     }
                     .opacity(viewModel.isLocalStorageAvailable ? 1 : 0.5)
+
+                    Divider()
+
+                    AppSettingRow(
+                        title: String(localized: "Open Current Repository", bundle: .module),
+                        description: viewModel.storageRoot?.path
+                            ?? String(localized: "No storage location set", bundle: .module),
+                        icon: .cisumIconFolder,
+                        action: viewModel.storageRoot.map { _ in openCurrentRepository }
+                    ) {
+                        Image(systemName: "arrow.up.forward.square")
+                            .foregroundColor(.accentColor)
+                    }
+                    .opacity(viewModel.storageRoot == nil ? 0.5 : 1)
                 }
             }
         }
@@ -104,6 +118,11 @@ public struct StorageSettingView: View, SuperLog {
 
         targetLocation = newLocation
         showMigrationProgress = true
+    }
+
+    /// 在 Finder 中打开当前媒体仓库（当前存储位置的根目录）。
+    private func openCurrentRepository() {
+        viewModel.storageRoot?.openFolder()
     }
 
     nonisolated static func targetLocationAfterStorageUpdate(

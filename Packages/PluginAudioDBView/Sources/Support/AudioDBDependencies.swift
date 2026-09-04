@@ -4,6 +4,7 @@ import SwiftUI
 public struct AudioDBDependencies: @unchecked Sendable {
     public var audioRepo: @MainActor @Sendable () async -> AudioRepo?
     public var audioDisk: @MainActor @Sendable () -> URL?
+    public var audioDiagnostics: @MainActor @Sendable () -> AudioStorageDiagnostics
     public var supportedExtensions: [String]
     public var isDesktop: Bool
     public var isNotDesktop: Bool
@@ -13,6 +14,7 @@ public struct AudioDBDependencies: @unchecked Sendable {
     public init(
         audioRepo: @escaping @MainActor @Sendable () async -> AudioRepo?,
         audioDisk: @escaping @MainActor @Sendable () -> URL?,
+        audioDiagnostics: @escaping @MainActor @Sendable () -> AudioStorageDiagnostics,
         supportedExtensions: [String],
         isDesktop: Bool,
         isNotDesktop: Bool,
@@ -21,6 +23,7 @@ public struct AudioDBDependencies: @unchecked Sendable {
     ) {
         self.audioRepo = audioRepo
         self.audioDisk = audioDisk
+        self.audioDiagnostics = audioDiagnostics
         self.supportedExtensions = supportedExtensions
         self.isDesktop = isDesktop
         self.isNotDesktop = isNotDesktop
@@ -31,6 +34,7 @@ public struct AudioDBDependencies: @unchecked Sendable {
     public static let empty = AudioDBDependencies(
         audioRepo: { nil },
         audioDisk: { nil },
+        audioDiagnostics: { AudioStorageDiagnostics.make(storage: nil) },
         supportedExtensions: [],
         isDesktop: true,
         isNotDesktop: false,

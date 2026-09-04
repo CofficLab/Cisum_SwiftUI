@@ -15,4 +15,14 @@ public enum AudioPluginInfo {
         "opus",
         "alac",
     ]
+
+    /// 当前构建生效的仓库子目录名（Release 为 `audios`，DEBUG 为 `audios_debug`）。
+    /// 仓库路径的知情者（AudioPlugin / 音频仓库插件）统一引用此值，避免各包各自判断。
+    public static var effectiveDBDirName: String {
+        #if DEBUG
+            debugDBDirName
+        #else
+            dbDirName
+        #endif
+    }
 }

@@ -3,7 +3,7 @@ import SwiftUI
 #if DEBUG
 /// 调试徽章 + 虚线边框 —— 仅 DEBUG 构建下叠加在目标视图上。
 ///
-/// 用于快速识别当前渲染的视图及其边界：右上角显示视图标识（badge），
+/// 用于快速识别当前渲染的视图及其边界：角部显示视图标识（badge），
 /// 四周绘制一圈虚线边框。Release 构建下不编译任何代码。
 ///
 /// 颜色默认根据视图标识（`text`）确定性派生——不同视图得到不同颜色，
@@ -11,10 +11,12 @@ import SwiftUI
 public struct DebugBadgeModifier: ViewModifier {
     public let text: String
     public let color: Color
+    public let alignment: Alignment
 
-    public init(text: String, color: Color? = nil) {
+    public init(text: String, color: Color? = nil, alignment: Alignment = .topTrailing) {
         self.text = text
         self.color = color ?? Self.randomColor(for: text)
+        self.alignment = alignment
     }
 
     public func body(content: Content) -> some View {
@@ -24,7 +26,7 @@ public struct DebugBadgeModifier: ViewModifier {
                     .strokeBorder(color.opacity(0.55), style: StrokeStyle(lineWidth: 1.5, dash: [6, 4]))
                     .allowsHitTesting(false)
             }
-            .overlay(alignment: .topTrailing) {
+            .overlay(alignment: alignment) {
                 Text(text)
                     .font(.caption2.weight(.semibold))
                     .padding(.horizontal, 8)
@@ -54,8 +56,9 @@ public extension View {
     /// - Parameters:
     ///   - text: 徽章文本（通常为视图或插件 id）。
     ///   - color: 徽章与边框主色；默认根据 `text` 确定性派生随机色。
-    func debugBadge(_ text: String, color: Color? = nil) -> some View {
-        modifier(DebugBadgeModifier(text: text, color: color))
+    ///   - alignment: 徽章在视图中的对齐位置；默认右上角（`.topTrailing`）。
+    func debugBadge(_ text: String, color: Color? = nil, alignment: Alignment = .topTrailing) -> some View {
+        modifier(DebugBadgeModifier(text: text, color: color, alignment: alignment))
     }
 }
 #endif

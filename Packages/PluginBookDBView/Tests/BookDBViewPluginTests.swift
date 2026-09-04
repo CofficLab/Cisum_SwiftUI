@@ -769,3 +769,15 @@ import UniformTypeIdentifiers
 @Test func bookGridSelectionUsesReadableAccessibilityLabel() {
     #expect(BookGridSelectionPolicy.selectionLabel(bookTitle: "Novel") == "Select Novel")
 }
+
+@MainActor
+@Test func bookDBPluginProvidesSettingsNavigationItem() {
+    let item = BookDBPlugin.shared.addSettingNavigationItem()
+
+    #expect(item != nil)
+    #expect(item?.id == "bookdb")
+    #expect(item?.title == BookDBPluginInfo.titleKey)
+    #expect(item?.description == BookDBPlugin.metadata.description)
+    #expect(item?.iconName == BookDBPluginInfo.iconName)
+    #expect(item?.order == BookDBPlugin.metadata.order)
+}

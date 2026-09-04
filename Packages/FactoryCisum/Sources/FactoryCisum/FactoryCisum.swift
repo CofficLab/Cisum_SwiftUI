@@ -8,6 +8,7 @@ import ProviderContentView
 import ProviderControlView
 import ProviderDocsView
 import ProviderRootView
+import ProviderScene
 import ProviderSettings
 import SwiftUI
 
@@ -99,6 +100,9 @@ public enum CisumBuilder: SuperLog {
 
         // 4. 订阅插件变更
         subscribeToPluginChanges(kernel: kernel)
+
+        // 5. 订阅场景变更：切换场景后重建内容 Tab
+        subscribeToSceneChanges(kernel: kernel)
 
         kernels.append(kernel)
         logger.info("\(Self.t)Kernel created and started successfully")
@@ -240,6 +244,28 @@ public enum CisumBuilder: SuperLog {
             }
         }
     }
+
+    /// 场景切换后重建内容 Tab。
+    ///
+    /// 内容 Tab 由各插件按当前场景守卫贡献（`addTabView` 检查
+    /// `sceneBox.scene?.currentScene`），启动装配时只组装一次；场景切换不会
+    /// 触发重建，导致内容区停留在启动场景的 Tab。此处订阅
+    /// `SceneProviding.selectionChanged`，切换后重新聚合注入，使内容区跟随场景。
+    private static func subscribeToSceneChanges(kernel: CisumKernel) {
+        let handle = kernel.scene?.addObserver { [weak kernel] event in
+            guard case .selectionChanged = event else { return }
+            Task { @MainActor in
+                guard let kernel else { return }
+                if let content = kernel.resolveProvider((any ContentViewProviding).self) {
+                    refreshContentTabs(content, kernel: kernel)
+                }
+            }
+        }
+        sceneObserverHandle = handle
+    }
+
+    /// 场景监听句柄（跨方法存活，避免 `SceneService` 弱引用提前释放监听器）。
+    private nonisolated(unsafe) static var sceneObserverHandle: (any SceneProvidingObserverHandle)?
 }
 
 /// 兼容别名。

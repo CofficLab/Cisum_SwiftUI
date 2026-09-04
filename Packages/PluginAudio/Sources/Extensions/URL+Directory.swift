@@ -1,6 +1,6 @@
 import Foundation
 
-extension URL {
+public extension URL {
     func ensureDirectory() throws -> URL {
         var isDirectory: ObjCBool = false
         if FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory), !isDirectory.boolValue {

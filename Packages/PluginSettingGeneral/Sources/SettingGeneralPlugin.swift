@@ -11,10 +11,11 @@ import SwiftUI
 public actor SettingGeneralPlugin: SuperPlugin {
     public static let shared = SettingGeneralPlugin()
     public static let metadata = PluginMetadata(
-        displayName: "通用设置",
-        description: "在设置窗口中提供应用信息与说明书等通用设置项。",
+        displayName: String(localized: "General Settings", bundle: .module),
+        description: String(localized: "Provides general settings such as app info and manuals in the Settings window.", bundle: .module),
         iconName: "gearshape",
         order: 1,
+        policy: .alwaysOn,
         category: .core,
     )
 
@@ -43,7 +44,7 @@ public actor SettingGeneralPlugin: SuperPlugin {
     public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
         PluginSettingNavigationItem(
             id: "general",
-            title: "通用",
+            title: String(localized: "General", bundle: .module),
             description: Self.metadata.description,
             iconName: Self.metadata.iconName,
             order: Self.metadata.order,

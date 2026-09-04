@@ -10,6 +10,7 @@ public actor StorePlugin: SuperPlugin {
         description: String(localized: String.LocalizationValue(StorePluginInfo.descriptionKey), bundle: .module),
         iconName: StorePluginInfo.iconName,
         order: 80,
+        policy: .alwaysOn,
         category: .settings,
     )
 
