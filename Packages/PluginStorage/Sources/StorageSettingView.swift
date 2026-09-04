@@ -16,47 +16,49 @@ public struct StorageSettingView: View, SuperLog {
     }
 
     public var body: some View {
-        AppSettingSection(title: String(localized: "Media Storage Location", bundle: .module)) {
-            VStack(spacing: 0) {
-                AppSettingRow(
-                    title: String(localized: "iCloud Drive", bundle: .module),
-                    description: viewModel.isICloudAvailable
-                        ? String(localized: "Store media files in iCloud Drive", bundle: .module)
-                        : String(localized: "iCloud Drive is unavailable", bundle: .module),
-                    icon: .cisumIconCloud,
-                    action: viewModel.isICloudAvailable ? {
-                        beginMigration(to: .icloud)
-                    } : nil
-                ) {
-                    if viewModel.location == .icloud {
-                        Image(systemName: .cisumIconCheckmarkSimple)
-                            .foregroundColor(.accentColor)
-                    } else if !viewModel.isICloudAvailable {
-                        Text("Unavailable", bundle: .module)
-                            .font(.footnote)
+        AppSettingsContentScaffold {
+            AppSettingSection(title: String(localized: "Media Storage Location", bundle: .module)) {
+                VStack(spacing: 0) {
+                    AppSettingRow(
+                        title: String(localized: "iCloud Drive", bundle: .module),
+                        description: viewModel.isICloudAvailable
+                            ? String(localized: "Store media files in iCloud Drive", bundle: .module)
+                            : String(localized: "iCloud Drive is unavailable", bundle: .module),
+                        icon: .cisumIconCloud,
+                        action: viewModel.isICloudAvailable ? {
+                            beginMigration(to: .icloud)
+                        } : nil
+                    ) {
+                        if viewModel.location == .icloud {
+                            Image(systemName: .cisumIconCheckmarkSimple)
+                                .foregroundColor(.accentColor)
+                        } else if !viewModel.isICloudAvailable {
+                            Text("Unavailable", bundle: .module)
+                                .font(.footnote)
+                        }
                     }
-                }
-                .opacity(viewModel.isICloudAvailable ? 1 : 0.5)
+                    .opacity(viewModel.isICloudAvailable ? 1 : 0.5)
 
-                AppSettingRow(
-                    title: String(localized: "Local", bundle: .module),
-                    description: viewModel.isLocalStorageAvailable
-                        ? String(localized: "Store within app, data will be lost if app is deleted", bundle: .module)
-                        : String(localized: "Local storage is unavailable", bundle: .module),
-                    icon: .cisumIconFolder,
-                    action: viewModel.isLocalStorageAvailable ? {
-                        beginMigration(to: .local)
-                    } : nil
-                ) {
-                    if viewModel.location == .local {
-                        Image(systemName: .cisumIconCheckmarkSimple)
-                            .foregroundColor(.accentColor)
-                    } else if !viewModel.isLocalStorageAvailable {
-                        Text("Unavailable", bundle: .module)
-                            .font(.footnote)
+                    AppSettingRow(
+                        title: String(localized: "Local", bundle: .module),
+                        description: viewModel.isLocalStorageAvailable
+                            ? String(localized: "Store within app, data will be lost if app is deleted", bundle: .module)
+                            : String(localized: "Local storage is unavailable", bundle: .module),
+                        icon: .cisumIconFolder,
+                        action: viewModel.isLocalStorageAvailable ? {
+                            beginMigration(to: .local)
+                        } : nil
+                    ) {
+                        if viewModel.location == .local {
+                            Image(systemName: .cisumIconCheckmarkSimple)
+                                .foregroundColor(.accentColor)
+                        } else if !viewModel.isLocalStorageAvailable {
+                            Text("Unavailable", bundle: .module)
+                                .font(.footnote)
+                        }
                     }
+                    .opacity(viewModel.isLocalStorageAvailable ? 1 : 0.5)
                 }
-                .opacity(viewModel.isLocalStorageAvailable ? 1 : 0.5)
             }
         }
         .sheet(isPresented: $showMigrationProgress) {

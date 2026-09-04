@@ -5,13 +5,16 @@ import SwiftUI
 ///
 /// 用于快速识别当前渲染的视图及其边界：右上角显示视图标识（badge），
 /// 四周绘制一圈虚线边框。Release 构建下不编译任何代码。
+///
+/// 颜色默认根据视图标识（`text`）确定性派生——不同视图得到不同颜色，
+/// 同一视图颜色稳定，便于在多视图叠加时一眼区分来源。
 public struct DebugBadgeModifier: ViewModifier {
     public let text: String
     public let color: Color
 
-    public init(text: String, color: Color = .red) {
+    public init(text: String, color: Color? = nil) {
         self.text = text
-        self.color = color
+        self.color = color ?? Self.randomColor(for: text)
     }
 
     public func body(content: Content) -> some View {
@@ -34,14 +37,24 @@ public struct DebugBadgeModifier: ViewModifier {
                     .padding(8)
             }
     }
+
+    /// 依据标识生成稳定的随机色相（不同标识 → 不同颜色）。
+    static func randomColor(for text: String) -> Color {
+        var hash: UInt64 = 5381
+        for byte in text.utf8 {
+            hash = ((hash << 5) &+ hash) &+ UInt64(byte)
+        }
+        let hue = Double(hash % 360) / 360.0
+        return Color(hue: hue, saturation: 0.62, brightness: 0.78)
+    }
 }
 
 public extension View {
     /// 叠加调试徽章与虚线边框（仅 DEBUG 构建生效）。
     /// - Parameters:
     ///   - text: 徽章文本（通常为视图或插件 id）。
-    ///   - color: 徽章与边框主色，默认红色。
-    func debugBadge(_ text: String, color: Color = .red) -> some View {
+    ///   - color: 徽章与边框主色；默认根据 `text` 确定性派生随机色。
+    func debugBadge(_ text: String, color: Color? = nil) -> some View {
         modifier(DebugBadgeModifier(text: text, color: color))
     }
 }
