@@ -123,7 +123,6 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
 
     @Environment(\.bookDBViewDependencies) private var dependencies
     @EnvironmentObject var man: MagicPlayMan
-    @EnvironmentObject var repo: BookRepo
     @EnvironmentObject var viewModel: BookGridViewModel
 
     /// Total book count.
@@ -195,8 +194,11 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
             }
         }
         .onAppear {
-            viewModel.bind(playMan: man, repo: repo, dbRoot: dependencies.dbRoot, bookDisk: dependencies.bookDisk)
-            viewModel.handleOnAppear()
+            Task { @MainActor in
+                let repo = await dependencies.bookRepo()
+                viewModel.bind(playMan: man, repo: repo, dbRoot: dependencies.dbRoot, bookDisk: dependencies.bookDisk)
+                viewModel.handleOnAppear()
+            }
         }
         .onPlayManAssetChanged { url in
             viewModel.handleAssetChanged(url)

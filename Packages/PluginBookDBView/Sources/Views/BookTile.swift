@@ -36,7 +36,6 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
         lhs.url == rhs.url
     }
 
-    @EnvironmentObject var repo: BookRepo
     @EnvironmentObject var viewModel: BookGridViewModel
     @Environment(\.bookDBViewDependencies) private var dependencies
     @LumiTheme private var appTheme
@@ -129,10 +128,11 @@ extension BookTile {
         cover = nil
         lastPlayedTitle = nil
 
+        guard let repo = await dependencies.bookRepo() else { return }
+
         let bookURL = url
         let bookTitle = title
         let thumbnailSize = tileSize
-        let repo = repo
         let dbRoot = dependencies.dbRoot
         let logPrefix = t
 

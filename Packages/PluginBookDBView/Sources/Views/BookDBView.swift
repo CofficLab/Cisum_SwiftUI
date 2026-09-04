@@ -14,7 +14,6 @@ public struct BookDBView: View, SuperLog, SuperThread {
     public nonisolated static let verbose = false
     
     @Environment(\.bookDBViewDependencies) private var dependencies
-    @EnvironmentObject private var repo: BookRepo
     @State private var isFileImporterPresented = false
     @State private var isImportingFiles = false
     @State private var isDropping = false
@@ -101,6 +100,11 @@ extension BookDBView {
                 }.value
                 guard !copiedItems.isEmpty else {
                     alert_error(String(localized: "No files were added", bundle: .module))
+                    return
+                }
+
+                guard let repo = await dependencies.bookRepo() else {
+                    alert_error(String(localized: "Book repository is unavailable", bundle: .module))
                     return
                 }
 

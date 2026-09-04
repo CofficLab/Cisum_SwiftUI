@@ -23,6 +23,8 @@ public actor BookDBPlugin: SuperPlugin {
     nonisolated(unsafe) private weak var kernel: CisumKernel?
     nonisolated(unsafe) private var gridViewModel: BookGridViewModel?
     nonisolated(unsafe) private var databaseObserver: BookDatabaseObserver?
+    /// 缓存的有声书仓库单例，供主内容区与导入流程复用，避免反复构建 SwiftData 容器。
+    nonisolated(unsafe) private var cachedBookRepo: BookRepo?
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
@@ -73,7 +75,8 @@ public actor BookDBPlugin: SuperPlugin {
             dbRoot: storage.databaseRoot,
             bookDisk: bookDiskProvider(),
             isDesktop: ConfigShim.isDesktop,
-            isNotDesktop: ConfigShim.isNotDesktop
+            isNotDesktop: ConfigShim.isNotDesktop,
+            bookRepo: bookRepoProvider
         )
         let viewModel = resolveViewModel()
         let view = BookDBView()
@@ -161,12 +164,20 @@ public actor BookDBPlugin: SuperPlugin {
         }
     }
 
-    /// 有声书仓库解析器。
+    /// 有声书仓库解析器：首次解析成功后缓存单例，后续直接复用。
     @MainActor
     private var bookRepoProvider: @MainActor @Sendable () async -> BookRepo? {
         { @MainActor [weak self] in
-            guard let storage = self?.kernel?.storage else { return nil }
-            return await Self.makeBookRepo(from: storage)
+            guard let self else { return nil }
+            if let cached = self.cachedBookRepo {
+                return cached
+            }
+            guard let storage = self.kernel?.storage else { return nil }
+            let repo = await Self.makeBookRepo(from: storage)
+            if let repo {
+                self.cachedBookRepo = repo
+            }
+            return repo
         }
     }
 
@@ -184,6 +195,7 @@ public actor BookDBPlugin: SuperPlugin {
         databaseObserver?.cancel()
         databaseObserver = nil
         gridViewModel = nil
+        cachedBookRepo = nil
     }
 
     @MainActor
