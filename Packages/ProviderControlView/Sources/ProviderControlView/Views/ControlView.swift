@@ -5,8 +5,9 @@ import SwiftUI
 ///
 /// 通过 `@EnvironmentObject` 读取内核注册的真实 `MagicPlayMan`。
 /// 各区块（封面 / 状态 / 进度 / 操作按钮 / 右侧封面）可分别注入自定义视图，
-/// 未注入时回退到内置默认实现。进度条与操作按钮组由插件注入
-/// （`setProgressView` / `setControlButtonsView`），未注入时不渲染该区块。
+/// 未注入时回退到内置默认实现。封面区、进度条与操作按钮组由插件注入
+/// （`setHeroView` / `setProgressView` / `setControlButtonsView`），
+/// 未注入时不渲染该区块。
 struct ControlView: View {
     @EnvironmentObject private var man: MagicPlayMan
     let stateViews: @MainActor () -> [AnyView]
@@ -21,8 +22,10 @@ struct ControlView: View {
         GeometryReader { geometry in
             HStack(spacing: 0) {
                 VStack(spacing: 0) {
-                    heroArea(showRightAlbum: shouldShowRightAlbum(geometry))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    if heroView != nil {
+                        heroArea
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
 
                     stateArea
                         .frame(height: stateHeight(for: geometry))
@@ -57,11 +60,9 @@ struct ControlView: View {
     }
 
     @ViewBuilder
-    private func heroArea(showRightAlbum: Bool) -> some View {
+    private var heroArea: some View {
         if let heroView {
             heroView
-        } else {
-            HeroView(rightAlbumVisible: showRightAlbum)
         }
     }
 

@@ -129,6 +129,14 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
         return value
     }
 
+    /// 播放控制区封面区为单槽位贡献，取首个启用插件提供的视图。
+    public func getHeroView() -> AnyView? {
+        for plugin in manager.enabledPlugins {
+            if let view = plugin.addHeroView() { return view }
+        }
+        return nil
+    }
+
     /// 播放控制区按钮组为单槽位贡献，取首个启用插件提供的视图。
     public func getControlButtonsView() -> AnyView? {
         for plugin in manager.enabledPlugins {

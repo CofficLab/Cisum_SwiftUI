@@ -187,6 +187,9 @@ public enum CisumBuilder: SuperLog {
         }
 
         if let control = kernel.resolveProvider((any ControlViewProviding).self) {
+            if let heroView = kernel.plugin?.getHeroView() {
+                control.setHeroView(heroView)
+            }
             if let buttonsView = kernel.plugin?.getControlButtonsView() {
                 control.setControlButtonsView(buttonsView)
             }
