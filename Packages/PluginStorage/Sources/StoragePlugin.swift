@@ -19,6 +19,7 @@ public actor StoragePlugin: SuperPlugin, SuperLog {
         description: String(localized: String.LocalizationValue(StoragePluginInfo.descriptionKey), bundle: .module),
         iconName: StoragePluginInfo.iconName,
         order: 10,
+        policy: .alwaysOn,
         category: .library,
     )
 
