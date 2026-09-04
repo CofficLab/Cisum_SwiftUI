@@ -12,7 +12,7 @@ public actor AudioLikePlugin: SuperPlugin {
         description: AudioLikePluginInfo.description,
         iconName: AudioLikePluginInfo.iconName,
         order: AudioLikePluginInfo.order,
-        policy: .optIn,
+        policy: .disabled,
         category: .like,
     )
 

@@ -28,7 +28,7 @@ public actor ScenePlugin: SuperPlugin {
         // SceneProviding is a prerequisite for plugins that consume scene-scoped
         // views. Keep it ahead of every regular plugin during onBoot.
         order: -1000,
-        policy: .alwaysOn,
+        policy: .disabled,
         category: .core,
     )
 

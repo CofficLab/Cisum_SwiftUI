@@ -19,7 +19,7 @@ public actor PluginPluginManager: SuperPlugin {
         description: "管理所有已注册插件。",
         iconName: "puzzlepiece.extension",
         order: 90,
-        policy: .alwaysOn,
+        policy: .disabled,
         category: .system
     )
 

@@ -12,7 +12,7 @@ public actor BookLikePlugin: SuperPlugin {
         description: BookLikePluginInfo.description,
         iconName: BookLikePluginInfo.iconName,
         order: BookLikePluginInfo.order,
-        policy: .optIn,
+        policy: .disabled,
         category: .like,
     )
 

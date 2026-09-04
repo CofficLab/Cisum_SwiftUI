@@ -150,7 +150,7 @@ public struct PluginMetadata: Equatable, Sendable {
         description: String,
         iconName: String = "puzzlepiece.extension",
         order: Int = 9999,
-        policy: PluginPolicy = .alwaysOn,
+        policy: PluginPolicy = .disabled,
         category: PluginCategory = .general,
         stage: PluginStage = .stable,
         version: String = "1.0.0",
