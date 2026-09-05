@@ -1,4 +1,5 @@
 import CisumUIComponents
+import KernelCore
 import SwiftUI
 
 /// 展示并控制单个插件的启用状态（对齐 Lumi `PluginPluginManager.PluginEnableControl`）。
