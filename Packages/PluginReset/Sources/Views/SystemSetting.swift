@@ -25,32 +25,36 @@ public struct SystemSetting: View, SuperLog {
     }
 
     public var body: some View {
-        AppSettingSection(title: String(localized: "App Information", bundle: .module)) {
-            AppSettingRow(
-                title: String(localized: "Current Version", bundle: .module),
-                description: String(localized: "App version", bundle: .module),
-                icon: "info.circle",
-                content: {
-                    Text(appVersion)
-                        .font(.footnote)
-                }
-            )
+        AppSettingsContentScaffold {
+            VStack(alignment: .leading, spacing: 16) {
+                AppSettingSection(title: String(localized: "App Information", bundle: .module)) {
+                    AppSettingRow(
+                        title: String(localized: "Current Version", bundle: .module),
+                        description: String(localized: "App version", bundle: .module),
+                        icon: "info.circle",
+                        content: {
+                            Text(appVersion)
+                                .font(.footnote)
+                        }
+                    )
 
-            AppSettingRow(
-                title: String(localized: "Reset Storage Location", bundle: .module),
-                description: String(localized: "Clear the media storage selection", bundle: .module),
-                icon: .cisumIconReset
-            ) {
-                Image.cisumReset
-                    .frame(width: 28, height: 28)
-                    .background(.regularMaterial, in: Circle())
-                    .cisumShadowSm()
-                    .cisumHoverScale(105)
-                    .cisumButton {
-                        showConfirmSheet = true
+                    AppSettingRow(
+                        title: String(localized: "Reset Storage Location", bundle: .module),
+                        description: String(localized: "Clear the media storage selection", bundle: .module),
+                        icon: .cisumIconReset
+                    ) {
+                        Image.cisumReset
+                            .frame(width: 28, height: 28)
+                            .background(.regularMaterial, in: Circle())
+                            .cisumShadowSm()
+                            .cisumHoverScale(105)
+                            .cisumButton {
+                                showConfirmSheet = true
+                            }
+                            .accessibilityLabel(Self.resetStorageLocationActionLabel)
+                            .help(Self.resetStorageLocationActionLabel)
                     }
-                    .accessibilityLabel(Self.resetStorageLocationActionLabel)
-                    .help(Self.resetStorageLocationActionLabel)
+                }
             }
         }
         .sheet(isPresented: $showConfirmSheet) {

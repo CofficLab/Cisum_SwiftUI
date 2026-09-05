@@ -47,64 +47,66 @@ public struct AudioSettingsView: View, SuperLog {
     }
 
     public var body: some View {
-        Group {
-            if let disk = disk {
-                AppSettingSection(title: String(localized: "Music Library", bundle: .module)) {
-                    AppSettingRow(
-                        title: String(localized: "Library Size", bundle: .module),
-                        description: description,
-                        icon: .cisumIconMusicLibrary
-                    ) {
-                        if let diskSize = diskSize {
-                            Text(diskSize)
-                                .font(.footnote)
-                        }
-                    }
-
-                    #if os(macOS)
-                        if Self.shouldShowOpenLibraryAction(for: disk) {
-                            AppSettingRow(
-                                title: String(localized: "Open Library", bundle: .module),
-                                description: String(localized: "View in Finder", bundle: .module),
-                                icon: .cisumIconShowInFinder
-                            ) {
-                                Image(systemName: .cisumIconShowInFinder)
-                                    .frame(width: 28, height: 28)
-                                    .background(.regularMaterial, in: Circle())
-                                    .cisumShadowSm()
-                                    .cisumHoverScale(105)
-                                    .cisumButton {
-                                        disk.openInFinder()
-                                    }
-                                    .accessibilityLabel(Self.openLibraryActionLabel)
-                                    .help(Self.openLibraryActionLabel)
+        AppSettingsContentScaffold {
+            VStack(alignment: .leading, spacing: 16) {
+                if let disk = disk {
+                    AppSettingSection(title: String(localized: "Music Library", bundle: .module)) {
+                        AppSettingRow(
+                            title: String(localized: "Library Size", bundle: .module),
+                            description: description,
+                            icon: .cisumIconMusicLibrary
+                        ) {
+                            if let diskSize = diskSize {
+                                Text(diskSize)
+                                    .font(.footnote)
                             }
                         }
-                    #endif
 
-                    AppSettingRow(
-                        title: String(localized: "File Count", bundle: .module),
-                        description: String(localized: "Total files in library", bundle: .module),
-                        icon: .cisumIconDocument
-                    ) {
-                        if Self.shouldUseSingularFileCount(fileCount) {
-                            Text("\(fileCount) file", bundle: .module)
-                                .font(.footnote)
-                        } else {
-                            Text("\(fileCount) files", bundle: .module)
-                                .font(.footnote)
+                        #if os(macOS)
+                            if Self.shouldShowOpenLibraryAction(for: disk) {
+                                AppSettingRow(
+                                    title: String(localized: "Open Library", bundle: .module),
+                                    description: String(localized: "View in Finder", bundle: .module),
+                                    icon: .cisumIconShowInFinder
+                                ) {
+                                    Image(systemName: .cisumIconShowInFinder)
+                                        .frame(width: 28, height: 28)
+                                        .background(.regularMaterial, in: Circle())
+                                        .cisumShadowSm()
+                                        .cisumHoverScale(105)
+                                        .cisumButton {
+                                            disk.openInFinder()
+                                        }
+                                        .accessibilityLabel(Self.openLibraryActionLabel)
+                                        .help(Self.openLibraryActionLabel)
+                                }
+                            }
+                        #endif
+
+                        AppSettingRow(
+                            title: String(localized: "File Count", bundle: .module),
+                            description: String(localized: "Total files in library", bundle: .module),
+                            icon: .cisumIconDocument
+                        ) {
+                            if Self.shouldUseSingularFileCount(fileCount) {
+                                Text("\(fileCount) file", bundle: .module)
+                                    .font(.footnote)
+                            } else {
+                                Text("\(fileCount) files", bundle: .module)
+                                    .font(.footnote)
+                            }
                         }
                     }
-                }
-            } else {
-                AppSettingSection(title: String(localized: "Music Library", bundle: .module)) {
-                    AppSettingRow(
-                        title: String(localized: "Error", bundle: .module),
-                        description: description,
-                        icon: .cisumIconMusicLibrary
-                    ) {
-                        Text("Cannot get music library information", bundle: .module)
-                            .font(.footnote)
+                } else {
+                    AppSettingSection(title: String(localized: "Music Library", bundle: .module)) {
+                        AppSettingRow(
+                            title: String(localized: "Error", bundle: .module),
+                            description: description,
+                            icon: .cisumIconMusicLibrary
+                        ) {
+                            Text("Cannot get music library information", bundle: .module)
+                                .font(.footnote)
+                        }
                     }
                 }
             }

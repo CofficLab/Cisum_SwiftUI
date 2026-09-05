@@ -12,48 +12,65 @@ public struct BookLikeSettingsView: View, SuperLog {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Liked Books", bundle: .module)
-                .font(.headline)
+        AppSettingsContentScaffold(scrollsContent: false, maxContentWidth: nil) {
+            VStack(alignment: .leading, spacing: 16) {
+                header
 
-            if viewModel.isLoading {
-                ProgressView {
-                    Text(Self.loadingText)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else if viewModel.likedBooks.isEmpty {
-                VStack(spacing: 12) {
-                    Image(systemName: "heart.slash")
-                        .font(.largeTitle)
-                        .foregroundColor(.secondary)
-                    Text("No liked books yet", bundle: .module)
-                        .foregroundColor(.secondary)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else {
-                List(viewModel.likedBooks) { book in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(book.title)
-                                .font(.body)
-                            Text(book.url.lastPathComponent)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        Spacer()
-                        Image(systemName: "heart.fill")
-                            .foregroundColor(.red)
+                if viewModel.isLoading {
+                    ProgressView {
+                        Text(Self.loadingText)
                     }
-                    .padding(.vertical, 4)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if viewModel.likedBooks.isEmpty {
+                    emptyState
+                } else {
+                    List(viewModel.likedBooks) { book in
+                        row(book)
+                            .listRowBackground(Color.clear)
+                    }
+                    .listStyle(.plain)
                 }
-                .listStyle(.plain)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
-        .padding()
-        .frame(minWidth: 300, minHeight: 400)
         .onAppear {
             viewModel.handleAppear()
         }
+    }
+
+    private var header: some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text("Liked Books", bundle: .module)
+                .font(.appTitle)
+            Spacer()
+        }
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "heart.slash")
+                .font(.largeTitle)
+                .foregroundColor(.secondary)
+            Text("No liked books yet", bundle: .module)
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func row(_ book: BookLikeItem) -> some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text(book.title)
+                    .font(.body)
+                Text(book.url.lastPathComponent)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            Spacer()
+            Image(systemName: "heart.fill")
+                .foregroundColor(.red)
+        }
+        .padding(.vertical, 4)
     }
 }
 

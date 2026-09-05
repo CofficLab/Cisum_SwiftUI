@@ -22,17 +22,14 @@ struct GeneralSettingsDetailView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+        AppSettingsContentScaffold {
+            VStack(alignment: .leading, spacing: 16) {
                 appInfoSection
                 manualsSection
                 #if DEBUG
                 debugSection
                 #endif
             }
-            .frame(maxWidth: 640, alignment: .leading)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(24)
         }
         .sheet(isPresented: $isShowingManuals) {
             ManualsBrowserView(manuals: docsProvider?.manualEntries ?? [])
@@ -42,13 +39,10 @@ struct GeneralSettingsDetailView: View {
     // MARK: - 应用信息
 
     private var appInfoSection: some View {
-        settingSection(title: String(localized: "App Info", bundle: .module)) {
+        AppSettingSection(title: String(localized: "App Info", bundle: .module)) {
             settingRow(icon: "app", title: String(localized: "Name", bundle: .module), value: MagicApp.getAppName())
-            Divider()
             settingRow(icon: "number", title: "Bundle ID", value: MagicApp.getBundleIdentifier())
-            Divider()
             settingRow(icon: "info.circle", title: String(localized: "Version", bundle: .module), value: MagicApp.getVersion())
-            Divider()
             settingRow(icon: "hammer", title: String(localized: "Build", bundle: .module), value: MagicApp.getBuildNumber())
         }
     }
@@ -56,19 +50,16 @@ struct GeneralSettingsDetailView: View {
     // MARK: - 说明书
 
     private var manualsSection: some View {
-        settingSection(title: String(localized: "Manual", bundle: .module)) {
-            HStack(spacing: 12) {
-                Image(systemName: "book")
-                    .frame(width: 22)
-                    .foregroundStyle(.secondary)
-                Text("Browse the manuals contributed by plugins")
-                Spacer()
-                Button("Open") {
-                    isShowingManuals = true
-                }
+        AppSettingSection(title: String(localized: "Manual", bundle: .module)) {
+            AppSettingRow(
+                title: "Browse the manuals contributed by plugins",
+                icon: "book",
+                action: { isShowingManuals = true }
+            ) {
+                Image(systemName: "chevron.right")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
             }
-            .padding(.vertical, 10)
-            .padding(.horizontal, 14)
         }
     }
 
@@ -76,19 +67,16 @@ struct GeneralSettingsDetailView: View {
 
     #if DEBUG
     private var debugSection: some View {
-        settingSection(title: "Debug") {
-            HStack(spacing: 12) {
-                Image(systemName: "folder")
-                    .frame(width: 22)
-                    .foregroundStyle(.secondary)
-                Text("Open Data Directory")
-                Spacer()
-                Button("Open") {
-                    openDataDirectory()
-                }
+        AppSettingSection(title: "Debug") {
+            AppSettingRow(
+                title: "Open Data Directory",
+                icon: "folder",
+                action: { openDataDirectory() }
+            ) {
+                Image(systemName: "chevron.right")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
             }
-            .padding(.vertical, 10)
-            .padding(.horizontal, 14)
         }
     }
 
@@ -106,35 +94,13 @@ struct GeneralSettingsDetailView: View {
 
     // MARK: - 通用组件
 
-    /// 分组卡片：标题 + 圆角分组容器。
-    private func settingSection<Content: View>(
-        title: String,
-        @ViewBuilder content: () -> Content
-    ) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.headline)
-            GroupBox {
-                content()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-        }
-    }
-
-    /// 只读信息行：图标 + 标题 + 右侧值。
+    /// 只读信息行：图标 + 标题 + 右侧值（复用 `AppSettingRow`，与其余设置页一致）。
     private func settingRow(icon: String, title: String, value: String) -> some View {
-        HStack(spacing: 12) {
-            Image(systemName: icon)
-                .frame(width: 22)
-                .foregroundStyle(.secondary)
-            Text(title)
-            Spacer()
+        AppSettingRow(title: title, icon: icon) {
             Text(value)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
                 .truncationMode(.middle)
         }
-        .padding(.vertical, 10)
-        .padding(.horizontal, 14)
     }
 }
