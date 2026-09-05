@@ -9,7 +9,6 @@ final class BookPlayModeObserver {
 
     init(scene: any SceneProviding, playback: any PlaybackProviding, viewModel: BookPlayModeViewModel) {
         self.viewModel = viewModel
-        viewModel.bind(playback: playback)
         viewModel.handleSceneChange(scene.currentScene)
         sceneHandle = scene.addObserver { [weak self] event in
             guard case .selectionChanged(let scene) = event else { return }

@@ -16,6 +16,10 @@ public actor BookPlayModePlugin: SuperPlugin {
         category: .playback,
     )
 
+    nonisolated(unsafe) private let sceneBox = SceneBox()
+    nonisolated(unsafe) private weak var kernel: CisumKernel?
+    nonisolated(unsafe) private var viewModel: BookPlayModeViewModel?
+    nonisolated(unsafe) private var observer: BookPlayModeObserver?
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
@@ -25,28 +29,34 @@ public actor BookPlayModePlugin: SuperPlugin {
         }
     }
 
-    nonisolated(unsafe) private let sceneBox = SceneBox()
-    nonisolated(unsafe) private var viewModel: BookPlayModeViewModel?
-    nonisolated(unsafe) private var observer: BookPlayModeObserver?
-
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
-        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
-        }
-        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
-        }
-        sceneBox.scene = scene
-        installState(scene: scene, playback: playback)
+        self.kernel = kernel
+        // 跨插件 Provider（Scene / Playback）在 onReady 中解析，
+        // 不假设其他插件已完成 Provider 注册。
+    }
+
+    /// 所有 Provider 插件完成 onBoot 后再组装依赖它们的 ViewModel 与 Observer。
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
+        installState(kernel: kernel)
+    }
+
+    @MainActor
+    public func onEnable(kernel: CisumKernel) async throws {
+        self.kernel = kernel
+        installState(kernel: kernel)
+    }
+
+    @MainActor
+    public func onDisable(kernel: CisumKernel) async throws {
+        teardownState()
     }
 
     @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
         sceneBox.scene = nil
-        observer?.cancel()
-        observer = nil
-        viewModel = nil
+        teardownState()
     }
 
     @MainActor
@@ -54,14 +64,57 @@ public actor BookPlayModePlugin: SuperPlugin {
         return AnyView(BookPlayModePluginRootView(content: content))
     }
 
+    // MARK: - State assembly
+
+    /// 创建并持有播放模式 ViewModel 与观察者（幂等）。
     @MainActor
-    private func installState(scene: any SceneProviding, playback: any PlaybackProviding) {
+    private func installState(kernel: CisumKernel) {
         guard viewModel == nil else { return }
-        let viewModel = BookPlayModeViewModel()
+
+        guard let scene = kernel.resolveProvider((any SceneProviding).self),
+              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
+        sceneBox.scene = scene
+
+        let viewModel = BookPlayModeViewModel(
+            playbackCapability: makePlaybackCapability(from: playback),
+            loadPlayMode: makeLoadPlayMode(),
+            storePlayMode: makeStorePlayMode()
+        )
         self.viewModel = viewModel
         observer = BookPlayModeObserver(scene: scene, playback: playback, viewModel: viewModel)
     }
 
+    @MainActor
+    private func teardownState() {
+        observer?.cancel()
+        observer = nil
+        viewModel = nil
+    }
+
+    /// 将内核能力收窄后注入 ViewModel；ViewModel 不持有 Kernel。
+    @MainActor
+    private func makePlaybackCapability(
+        from playback: (any PlaybackProviding)?
+    ) -> (any BookPlayModePlaybackCapability)? {
+        guard let playback else { return nil }
+        return BookPlayModePlaybackCapabilityAdapter(playback: playback)
+    }
+
+    /// 播放模式持久化的读取入口（由插件入口组装，不暴露单例给 ViewModel）。
+    @MainActor
+    private func makeLoadPlayMode() -> BookPlayModeLoadAction {
+        { @MainActor in
+            await BookPlayModeStore.shared.getPlayMode()
+        }
+    }
+
+    /// 播放模式持久化的保存入口（由插件入口组装，不暴露单例给 ViewModel）。
+    @MainActor
+    private func makeStorePlayMode() -> BookPlayModeStoreAction {
+        { @MainActor mode in
+            await BookPlayModeStore.shared.storePlayMode(mode)
+        }
+    }
 
     private final class SceneBox {
         weak var scene: (any SceneProviding)?

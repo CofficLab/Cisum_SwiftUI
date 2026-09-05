@@ -5,16 +5,30 @@ import MagicPlayMan
 import ProviderPlayback
 import ProviderScene
 
+typealias BookPlayModeLoadAction = @MainActor () async -> MagicPlayMode
+typealias BookPlayModeStoreAction = @MainActor (_ mode: MagicPlayMode) async -> Void
+
 @MainActor
 final class BookPlayModeViewModel: ObservableObject {
-    private weak var playback: (any PlaybackProviding)?
+    private let playbackCapability: (any BookPlayModePlaybackCapability)?
     private let targetScene: AppScene
+    private let loadPlayMode: BookPlayModeLoadAction
+    private let storePlayMode: BookPlayModeStoreAction
     private var currentScene: AppScene?
     private var generation = 0
     private var isActive = false
 
-    init(targetScene: AppScene = .audiobooks) { self.targetScene = targetScene }
-    func bind(playback: any PlaybackProviding) { self.playback = playback }
+    init(
+        targetScene: AppScene = .audiobooks,
+        playbackCapability: (any BookPlayModePlaybackCapability)?,
+        loadPlayMode: @escaping BookPlayModeLoadAction,
+        storePlayMode: @escaping BookPlayModeStoreAction
+    ) {
+        self.targetScene = targetScene
+        self.playbackCapability = playbackCapability
+        self.loadPlayMode = loadPlayMode
+        self.storePlayMode = storePlayMode
+    }
 
     func handleSceneChange(_ scene: AppScene?) {
         currentScene = scene
@@ -28,7 +42,7 @@ final class BookPlayModeViewModel: ObservableObject {
         let requestGeneration = generation
         Task { @MainActor [weak self] in
             guard let self, self.isActive, self.generation == requestGeneration else { return }
-            await BookPlayModeStore.shared.storePlayMode(mode)
+            await storePlayMode(mode)
             switch mode {
             case .loop: alert_info(String(localized: "Repeat One", bundle: .module))
             case .sequence, .repeatAll: alert_info(String(localized: "Sequential Play", bundle: .module))
@@ -38,12 +52,12 @@ final class BookPlayModeViewModel: ObservableObject {
     }
 
     private func activate() {
-        guard !isActive, currentScene == targetScene, let playback else { return }
+        guard !isActive, currentScene == targetScene, let playbackCapability else { return }
         isActive = true
         let requestGeneration = generation
-        Task { @MainActor [weak self, weak playback] in
-            guard let self, let playback else { return }
-            let storedMode = await BookPlayModeStore.shared.getPlayMode()
+        Task { @MainActor [weak self] in
+            guard let self, let playback = playbackCapability else { return }
+            let storedMode = await loadPlayMode()
             guard self.isActive, self.generation == requestGeneration, storedMode != playback.playMode else { return }
             playback.setPlayMode(storedMode)
         }
