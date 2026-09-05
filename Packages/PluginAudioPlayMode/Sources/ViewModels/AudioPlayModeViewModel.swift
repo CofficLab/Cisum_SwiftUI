@@ -3,30 +3,41 @@ import Combine
 import MagicAlert
 import MagicPlayMan
 import OSLog
-import ProviderPlayback
 import ProviderScene
 
 typealias AudioPlayModeSortAction = @MainActor (_ currentURL: URL?) async throws -> Void
 typealias AudioPlayModeShuffleAction = @MainActor (_ currentURL: URL?) async throws -> Void
+typealias AudioPlayModeLoadAction = @MainActor () async -> MagicPlayMode
+typealias AudioPlayModeStoreAction = @MainActor (_ rawValue: String, _ shortName: String) async -> Void
 
 @MainActor
 final class AudioPlayModeViewModel: ObservableObject {
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "AudioPlayMode")
-    private weak var playback: (any PlaybackProviding)?
+    private let playbackCapability: (any AudioPlayModePlaybackCapability)?
     private let targetScene: AppScene
     private let sort: AudioPlayModeSortAction
     private let shuffle: AudioPlayModeShuffleAction
+    private let loadPlayMode: AudioPlayModeLoadAction
+    private let storePlayMode: AudioPlayModeStoreAction
     private var currentScene: AppScene?
     private var generation = 0
     private var isActive = false
 
-    init(targetScene: AppScene = .music, sort: @escaping AudioPlayModeSortAction, shuffle: @escaping AudioPlayModeShuffleAction) {
+    init(
+        targetScene: AppScene = .music,
+        playbackCapability: (any AudioPlayModePlaybackCapability)?,
+        sort: @escaping AudioPlayModeSortAction,
+        shuffle: @escaping AudioPlayModeShuffleAction,
+        loadPlayMode: @escaping AudioPlayModeLoadAction,
+        storePlayMode: @escaping AudioPlayModeStoreAction
+    ) {
         self.targetScene = targetScene
+        self.playbackCapability = playbackCapability
         self.sort = sort
         self.shuffle = shuffle
+        self.loadPlayMode = loadPlayMode
+        self.storePlayMode = storePlayMode
     }
-
-    func bind(playback: any PlaybackProviding) { self.playback = playback }
 
     func handleSceneChange(_ scene: AppScene?) {
         currentScene = scene
@@ -40,30 +51,30 @@ final class AudioPlayModeViewModel: ObservableObject {
     }
 
     private func activate() {
-        guard !isActive, currentScene == targetScene, let playback else { return }
+        guard !isActive, currentScene == targetScene, let playbackCapability else { return }
         isActive = true
         let requestGeneration = generation
-        Task { @MainActor [weak self, weak playback] in
-            guard let self, let playback else { return }
-            let storedMode = await AudioPlayModeStore.shared.getPlayMode()
+        Task { @MainActor [weak self] in
+            guard let self, let playback = playbackCapability else { return }
+            let storedMode = await loadPlayMode()
             guard self.isActive, self.generation == requestGeneration, storedMode != playback.playMode else { return }
             playback.setPlayMode(storedMode)
         }
     }
 
     private func handlePlayModeChanged(_ mode: MagicPlayMode) {
-        guard isActive, let playback else { return }
+        guard isActive, let playbackCapability else { return }
         generation += 1
         let requestGeneration = generation
-        let currentURL = playback.currentURL
+        let currentURL = playbackCapability.currentURL
         let modeRawValue = mode.rawValue
 
         Task { @MainActor [weak self] in
             guard let self, self.isActive, self.generation == requestGeneration else { return }
-            await AudioPlayModeStore.shared.storePlayModeRawValue(modeRawValue, shortName: mode.shortName)
+            await storePlayMode(modeRawValue, mode.shortName)
         }
-        Task { @MainActor [weak self, weak playback] in
-            guard let self, let playback, self.isActive, self.generation == requestGeneration,
+        Task { @MainActor [weak self] in
+            guard let self, let playback = playbackCapability, self.isActive, self.generation == requestGeneration,
                   playback.playMode.rawValue == modeRawValue else { return }
             do {
                 switch mode {
