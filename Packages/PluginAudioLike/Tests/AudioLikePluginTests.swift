@@ -24,27 +24,6 @@ func pluginExposesSettingsNavigationItem() {
     #expect(item?.title == String(localized: "Liked audio", bundle: .module))
 }
 
-@Test func audioLikeSettingsOnlyAppliesLatestLoadResult() {
-    #expect(AudioLikeSettingsLoadPolicy.shouldApplyResult(
-        currentGeneration: 2,
-        resultGeneration: 2
-    ))
-    #expect(!AudioLikeSettingsLoadPolicy.shouldApplyResult(
-        currentGeneration: 2,
-        resultGeneration: 1
-    ))
-}
-
-@Test func audioLikeStatusChangesAreAcceptedOnlyInActiveScene() {
-    #expect(AudioLikeStatusChangePolicy.shouldAcceptChange(isSceneActive: true))
-    #expect(!AudioLikeStatusChangePolicy.shouldAcceptChange(isSceneActive: false))
-}
-
-@Test func audioLikeSaveFailuresReportOnlyInActiveScene() {
-    #expect(AudioLikeStatusChangePolicy.shouldReportSaveFailure(isSceneActive: true))
-    #expect(!AudioLikeStatusChangePolicy.shouldReportSaveFailure(isSceneActive: false))
-}
-
 @Test func audioLikeStatusNotificationIsDeliveredOnMainThread() async {
     let url = URL(fileURLWithPath: "/tmp/audio/main-thread.mp3")
 

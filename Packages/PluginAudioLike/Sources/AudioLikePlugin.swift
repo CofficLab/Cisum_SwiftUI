@@ -18,6 +18,7 @@ public actor AudioLikePlugin: SuperPlugin {
     )
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
+    nonisolated(unsafe) private weak var kernel: CisumKernel?
     nonisolated(unsafe) private var viewModel: AudioLikeViewModel?
     nonisolated(unsafe) private var observer: AudioLikeObserver?
 
@@ -31,22 +32,21 @@ public actor AudioLikePlugin: SuperPlugin {
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
-        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
-        }
-        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
-        }
-        sceneBox.scene = scene
-        installState(scene: scene, playback: playback)
+        self.kernel = kernel
+        // 跨插件 Provider（Scene / Playback）在 onReady 中解析，
+        // 不假设其他插件已完成 Provider 注册。
+    }
+
+    /// 所有 Provider 插件完成 onBoot 后再组装依赖它们的 ViewModel 与 Observer。
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
+        installState(kernel: kernel)
     }
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
-        guard let scene = kernel.resolveProvider((any SceneProviding).self),
-              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
-        sceneBox.scene = scene
-        installState(scene: scene, playback: playback)
+        self.kernel = kernel
+        installState(kernel: kernel)
     }
 
     @MainActor
@@ -86,10 +86,20 @@ public actor AudioLikePlugin: SuperPlugin {
 
     // MARK: - State assembly
 
+    /// 创建并持有喜欢状态 ViewModel 与观察者（幂等）。
     @MainActor
-    private func installState(scene: any SceneProviding, playback: any PlaybackProviding) {
+    private func installState(kernel: CisumKernel) {
         guard viewModel == nil else { return }
-        let viewModel = AudioLikeViewModel()
+
+        guard let scene = kernel.resolveProvider((any SceneProviding).self),
+              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
+        sceneBox.scene = scene
+
+        let viewModel = AudioLikeViewModel(
+            playbackCapability: makePlaybackCapability(from: playback),
+            loadLikedAudios: makeLoadLikedAudios(),
+            saveLikeStatus: makeSaveLikeStatus()
+        )
         let observer = AudioLikeObserver(scene: scene, playback: playback, viewModel: viewModel)
         self.viewModel = viewModel
         self.observer = observer
@@ -102,14 +112,50 @@ public actor AudioLikePlugin: SuperPlugin {
         viewModel = nil
     }
 
+    /// 返回当前持有的 ViewModel；若尚未安装（启动前或插件被禁用），
+    /// 提供临时实例保证 View 贡献可用。
     @MainActor
     private func resolveViewModel() -> AudioLikeViewModel {
         if let viewModel {
             return viewModel
         }
-        let viewModel = AudioLikeViewModel()
+        let viewModel = AudioLikeViewModel(
+            playbackCapability: makePlaybackCapability(from: kernel?.playback),
+            loadLikedAudios: makeLoadLikedAudios(),
+            saveLikeStatus: makeSaveLikeStatus()
+        )
         self.viewModel = viewModel
         return viewModel
+    }
+
+    /// 将内核能力收窄后注入 ViewModel；ViewModel 不持有 Kernel。
+    @MainActor
+    private func makePlaybackCapability(
+        from playback: (any PlaybackProviding)?
+    ) -> (any AudioLikePlaybackCapability)? {
+        guard let playback else { return nil }
+        return AudioLikePlaybackCapabilityAdapter(playback: playback)
+    }
+
+    /// 本地喜欢仓库的加载入口（由插件入口组装，不暴露单例给 ViewModel）。
+    @MainActor
+    private func makeLoadLikedAudios() -> AudioLikeLoadProvider {
+        { @MainActor in
+            await AudioLikeRepo.shared.getAllLiked()
+        }
+    }
+
+    /// 本地喜欢仓库的保存入口（由插件入口组装，不暴露单例给 ViewModel）。
+    @MainActor
+    private func makeSaveLikeStatus() -> AudioLikeSaveProvider {
+        { @MainActor audioId, liked, url, title in
+            try await AudioLikeRepo.shared.updateLikeStatus(
+                audioId: audioId,
+                liked: liked,
+                url: url,
+                title: title
+            )
+        }
     }
 
     private final class SceneBox {

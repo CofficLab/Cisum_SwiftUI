@@ -1,5 +1,4 @@
 import Foundation
-import MagicPlayMan
 import ProviderPlayback
 import ProviderScene
 
@@ -16,7 +15,6 @@ final class AudioLikeObserver {
 
     init(scene: any SceneProviding, playback: any PlaybackProviding, viewModel: AudioLikeViewModel) {
         self.viewModel = viewModel
-        viewModel.bind(playMan: playback as? MagicPlayMan)
         viewModel.handleSceneChange(scene.currentScene, targetScene: .music)
         sceneHandle = scene.addObserver { [weak self] event in
             guard case .selectionChanged(let scene) = event else { return }

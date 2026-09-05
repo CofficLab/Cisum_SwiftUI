@@ -1,9 +1,14 @@
 import Combine
 import Foundation
 import MagicAlert
-import MagicPlayMan
 import OSLog
 import ProviderScene
+
+/// 喜欢列表加载闭包（由插件入口组装本地仓库）。
+typealias AudioLikeLoadProvider = @MainActor () async -> [AudioLikeModel]
+
+/// 喜欢状态保存闭包（由插件入口组装本地仓库）。
+typealias AudioLikeSaveProvider = @MainActor (_ audioId: String, _ liked: Bool, _ url: URL?, _ title: String?) async throws -> Void
 
 /// 音频喜欢的集中状态容器（迁移 Phase 2）。
 ///
@@ -12,17 +17,27 @@ import ProviderScene
 /// - 喜欢列表的加载与刷新（原 `AudioLikeSettingsView` 逻辑）。
 ///
 /// 由插件入口持有并注入 `AudioLikeObserver`；View 只展示与转发意图。
+/// ViewModel 不直接持有 Kernel 或具体 Provider：播放服务可用性通过
+/// `AudioLikePlaybackCapability` 表达，本地喜欢仓库由插件入口组装为闭包注入。
 @MainActor
 final class AudioLikeViewModel: ObservableObject {
     @Published private(set) var likedAudios: [AudioLikeModel] = []
     @Published private(set) var isLoading = true
 
-    private weak var playMan: MagicPlayMan?
+    private let playbackCapability: (any AudioLikePlaybackCapability)?
+    private let loadLikedAudios: AudioLikeLoadProvider
+    private let saveLikeStatus: AudioLikeSaveProvider
     private var loadGeneration = 0
     private var isActive = false
 
-    func bind(playMan: MagicPlayMan?) {
-        self.playMan = playMan
+    init(
+        playbackCapability: (any AudioLikePlaybackCapability)?,
+        loadLikedAudios: @escaping AudioLikeLoadProvider,
+        saveLikeStatus: @escaping AudioLikeSaveProvider
+    ) {
+        self.playbackCapability = playbackCapability
+        self.loadLikedAudios = loadLikedAudios
+        self.saveLikeStatus = saveLikeStatus
     }
 
     /// 场景变化：目标场景激活喜欢保存，离开目标场景停用。
@@ -40,7 +55,7 @@ final class AudioLikeViewModel: ObservableObject {
         let generation = loadGeneration
 
         Task { @MainActor in
-            let audios = await AudioLikeRepo.shared.getAllLiked()
+            let audios = await loadLikedAudios()
             guard generation == self.loadGeneration else { return }
             self.likedAudios = audios
             self.isLoading = false
@@ -51,7 +66,7 @@ final class AudioLikeViewModel: ObservableObject {
 
     private func activateLike() {
         guard !isActive else { return }
-        guard playMan != nil else { return }
+        guard playbackCapability?.isAvailable == true else { return }
 
         isActive = true
         // Playback events are adapted by AudioLikeObserver.
@@ -68,11 +83,11 @@ final class AudioLikeViewModel: ObservableObject {
             let audioId = url.absoluteString
 
             do {
-                try await AudioLikeRepo.shared.updateLikeStatus(
-                    audioId: audioId,
-                    liked: liked,
-                    url: url,
-                    title: url.lastPathComponent
+                try await saveLikeStatus(
+                    audioId,
+                    liked,
+                    url,
+                    url.lastPathComponent
                 )
 
                 NotificationCenter.postAudioLikeStatusChanged(audioId: audioId, url: url, liked: liked)
