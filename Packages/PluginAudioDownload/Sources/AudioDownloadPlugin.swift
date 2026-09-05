@@ -24,28 +24,39 @@ public actor AudioDownloadPlugin: SuperPlugin {
         }
     }
 
+    nonisolated(unsafe) private weak var kernel: CisumKernel?
     nonisolated(unsafe) private let sceneBox = SceneBox()
     nonisolated(unsafe) private var viewModel: AudioDownloadViewModel?
     nonisolated(unsafe) private var observer: AudioDownloadObserver?
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
-        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
-        }
-        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
-        }
-        sceneBox.scene = scene
-        installState(scene: scene, playback: playback)
+        self.kernel = kernel
+        // 跨插件 Provider（Scene / Playback）在 onReady 中解析，
+        // 不假设其他插件已完成 Provider 注册。
+    }
+
+    /// 所有 Provider 插件完成 onBoot 后再组装依赖它们的 ViewModel 与 Observer。
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
+        installState(kernel: kernel)
+    }
+
+    @MainActor
+    public func onEnable(kernel: CisumKernel) async throws {
+        self.kernel = kernel
+        installState(kernel: kernel)
+    }
+
+    @MainActor
+    public func onDisable(kernel: CisumKernel) async throws {
+        teardownState()
     }
 
     @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
         sceneBox.scene = nil
-        observer?.cancel()
-        observer = nil
-        viewModel = nil
+        teardownState()
     }
 
     @MainActor
@@ -53,12 +64,26 @@ public actor AudioDownloadPlugin: SuperPlugin {
         return AnyView(AudioDownloadPluginRootView(content: content))
     }
 
+    // MARK: - State assembly
+
     @MainActor
-    private func installState(scene: any SceneProviding, playback: any PlaybackProviding) {
+    private func installState(kernel: CisumKernel) {
         guard viewModel == nil else { return }
+
+        guard let scene = kernel.resolveProvider((any SceneProviding).self),
+              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
+        sceneBox.scene = scene
+
         let viewModel = AudioDownloadViewModel()
         self.viewModel = viewModel
         observer = AudioDownloadObserver(scene: scene, playback: playback, viewModel: viewModel)
+    }
+
+    @MainActor
+    private func teardownState() {
+        observer?.cancel()
+        observer = nil
+        viewModel = nil
     }
 
 
