@@ -1,7 +1,6 @@
 import CoreFoundation
 import Foundation
 import OSLog
-import ProviderPlayback
 
 /// Widget 控制命令的集中状态容器（迁移 Phase 4）。
 ///
@@ -13,7 +12,7 @@ final class AudioWidgetControlViewModel: ObservableObject {
     private static let verbose = false
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "AudioWidgetControl")
 
-    private var playback: (any PlaybackProviding)?
+    private let playbackCapability: (any AudioWidgetPlaybackCapability)?
     private var navigationTask: Task<Void, Never>?
 
     private let nextAsset: AudioWidgetAdjacentAssetProvider
@@ -22,13 +21,13 @@ final class AudioWidgetControlViewModel: ObservableObject {
     private let lastAsset: AudioWidgetLastAssetProvider
 
     init(
-        playback: (any PlaybackProviding)?,
+        playbackCapability: (any AudioWidgetPlaybackCapability)?,
         nextAsset: @escaping AudioWidgetAdjacentAssetProvider,
         previousAsset: @escaping AudioWidgetAdjacentAssetProvider,
         firstAsset: @escaping AudioWidgetFirstAssetProvider,
         lastAsset: @escaping AudioWidgetLastAssetProvider
     ) {
-        self.playback = playback
+        self.playbackCapability = playbackCapability
         self.nextAsset = nextAsset
         self.previousAsset = previousAsset
         self.firstAsset = firstAsset
@@ -73,7 +72,7 @@ final class AudioWidgetControlViewModel: ObservableObject {
     }
 
     private func handlePlayPause(count: Int) {
-        guard let playback else { return }
+        guard let playback = playbackCapability else { return }
         switch AudioWidgetPlaybackRequestPolicy.playPauseAction(
             currentState: playback.state,
             commandCount: count
@@ -88,7 +87,7 @@ final class AudioWidgetControlViewModel: ObservableObject {
     }
 
     private func handleNext(count: Int) {
-        guard let playback else { return }
+        guard let playback = playbackCapability else { return }
         enqueueNavigationTask { [weak self] in
             guard let self else { return }
             for _ in 0..<count {
@@ -121,7 +120,7 @@ final class AudioWidgetControlViewModel: ObservableObject {
     }
 
     private func handlePrevious(count: Int) {
-        guard let playback else { return }
+        guard let playback = playbackCapability else { return }
         enqueueNavigationTask { [weak self] in
             guard let self else { return }
             for _ in 0..<count {

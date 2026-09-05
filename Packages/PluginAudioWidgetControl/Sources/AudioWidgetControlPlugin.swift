@@ -15,6 +15,7 @@ public actor AudioWidgetControlPlugin: SuperPlugin {
         category: .tool,
     )
 
+    nonisolated(unsafe) private weak var kernel: CisumKernel?
     nonisolated(unsafe) private var widgetViewModel: AudioWidgetControlViewModel?
     nonisolated(unsafe) private var widgetObserver: AudioWidgetCommandObserver?
 
@@ -28,12 +29,29 @@ public actor AudioWidgetControlPlugin: SuperPlugin {
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
+        self.kernel = kernel
+    }
+
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
         installState(kernel: kernel)
+    }
+
+    @MainActor
+    public func onEnable(kernel: CisumKernel) async throws {
+        self.kernel = kernel
+        installState(kernel: kernel)
+    }
+
+    @MainActor
+    public func onDisable(kernel: CisumKernel) async throws {
+        teardownState()
     }
 
     @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
         teardownState()
+        self.kernel = nil
     }
 
     public nonisolated var label: String { "widgetControl" }
@@ -52,11 +70,10 @@ public actor AudioWidgetControlPlugin: SuperPlugin {
     // MARK: - State assembly
 
     @MainActor
-    private func installState(kernel: CisumKernel? = nil) {
+    private func installState(kernel: CisumKernel?) {
         guard widgetViewModel == nil else { return }
-        let playback = kernel?.playback
         let viewModel = AudioWidgetControlViewModel(
-            playback: playback,
+            playbackCapability: makePlaybackCapability(from: kernel?.playback),
             nextAsset: { current, verbose in
                 guard let repo = await AudioPlugin.getAudioRepoAsync() else {
                     throw AudioPluginError.hostNotConfigured
@@ -99,7 +116,16 @@ public actor AudioWidgetControlPlugin: SuperPlugin {
         if let widgetViewModel {
             return widgetViewModel
         }
-        installState()
+        installState(kernel: kernel)
         return widgetViewModel!
+    }
+
+    /// 将内核播放 Provider 收窄后注入 ViewModel。
+    @MainActor
+    private func makePlaybackCapability(
+        from playback: (any PlaybackProviding)?
+    ) -> (any AudioWidgetPlaybackCapability)? {
+        guard let playback else { return nil }
+        return AudioWidgetPlaybackCapabilityAdapter(playback: playback)
     }
 }
