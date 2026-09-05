@@ -9,7 +9,16 @@ final class LikeButtonObserver {
     init(playback: any PlaybackProviding, viewModel: LikeButtonViewModel) {
         self.viewModel = viewModel
         handle = playback.addObserver { [weak self] event in
-            self?.viewModel?.handlePlaybackEvent(event)
+            switch event {
+            case .assetChanged(let url):
+                self?.viewModel?.handleAssetChanged(url)
+            case .likeStatusChanged(_, let liked):
+                self?.viewModel?.handleLikeStatusChanged(liked)
+            case .likedAssetsChanged(let assets):
+                self?.viewModel?.handleLikedAssetsChanged(Array(assets))
+            default:
+                break
+            }
         }
     }
 

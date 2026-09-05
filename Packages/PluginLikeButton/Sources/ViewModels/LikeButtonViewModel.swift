@@ -1,6 +1,5 @@
 import Combine
 import Foundation
-import ProviderPlayback
 
 @MainActor
 final class LikeButtonViewModel: ObservableObject {
@@ -14,17 +13,17 @@ final class LikeButtonViewModel: ObservableObject {
         isLiked = playbackCapability?.currentURL.map { playbackCapability?.likedAssets.contains($0) ?? false } ?? false
     }
 
-    func handlePlaybackEvent(_ event: PlaybackProvidingEvent) {
-        switch event {
-        case .stateChanged: break
-        case .assetChanged(let url):
-            hasAsset = url != nil
-            isLiked = url.map { playbackCapability?.likedAssets.contains($0) ?? false } ?? false
-        case .likeStatusChanged(_, let liked): isLiked = liked
-        case .likedAssetsChanged(let assets):
-            isLiked = playbackCapability?.currentURL.map { assets.contains($0) } ?? false
-        default: break
-        }
+    func handleAssetChanged(_ url: URL?) {
+        hasAsset = url != nil
+        isLiked = url.map { playbackCapability?.likedAssets.contains($0) ?? false } ?? false
+    }
+
+    func handleLikeStatusChanged(_ liked: Bool) {
+        isLiked = liked
+    }
+
+    func handleLikedAssetsChanged(_ assets: [URL]) {
+        isLiked = playbackCapability?.currentURL.map { assets.contains($0) } ?? false
     }
 
     func toggleLike() { playbackCapability?.toggleCurrentLike() }
