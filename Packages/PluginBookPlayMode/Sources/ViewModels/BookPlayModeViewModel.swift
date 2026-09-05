@@ -56,10 +56,10 @@ final class BookPlayModeViewModel: ObservableObject {
         isActive = true
         let requestGeneration = generation
         Task { @MainActor [weak self] in
-            guard let self, let playback = playbackCapability else { return }
+            guard let self else { return }
             let storedMode = await loadPlayMode()
-            guard self.isActive, self.generation == requestGeneration, storedMode != playback.playMode else { return }
-            playback.setPlayMode(storedMode)
+            guard self.isActive, self.generation == requestGeneration, storedMode != playbackCapability.playMode else { return }
+            playbackCapability.setPlayMode(storedMode)
         }
     }
 }
