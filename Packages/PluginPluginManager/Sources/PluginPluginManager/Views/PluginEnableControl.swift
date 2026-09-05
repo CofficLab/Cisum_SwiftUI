@@ -1,6 +1,4 @@
 import CisumUIComponents
-import KernelCore
-import ProviderPluginManaging
 import SwiftUI
 
 /// 展示并控制单个插件的启用状态（对齐 Lumi `PluginPluginManager.PluginEnableControl`）。
@@ -13,7 +11,7 @@ import SwiftUI
 struct PluginEnableControl: View {
     @LumiTheme private var theme
 
-    let manager: any PluginManaging
+    @ObservedObject var viewModel: PluginManagementViewModel
     let plugin: any SuperPlugin
 
     /// 切换进行中标记：避免快速连点触发并发启停的竞态。
@@ -23,7 +21,7 @@ struct PluginEnableControl: View {
         Group {
             if type(of: plugin).metadata.policy.allowUserToggle {
                 Toggle(isOn: Binding(
-                    get: { manager.isEnabled(id: plugin.id) },
+                    get: { viewModel.isEnabled(id: plugin.id) },
                     set: { newValue in toggle(newValue) }
                 )) {
                     Text("Enable")
@@ -47,9 +45,9 @@ struct PluginEnableControl: View {
         Task { @MainActor in
             defer { isUpdating = false }
             if newValue {
-                _ = await manager.enablePlugin(id: id)
+                _ = await viewModel.setEnabled(true, for: id)
             } else {
-                _ = await manager.disablePlugin(id: id)
+                _ = await viewModel.setEnabled(false, for: id)
             }
         }
     }

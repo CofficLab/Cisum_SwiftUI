@@ -76,16 +76,15 @@ public actor PluginPluginManager: SuperPlugin {
     @MainActor
     public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
         guard let kernel else { return nil }
+        installState(kernel: kernel)
         let viewModel = resolveViewModel()
-        let manager: any PluginManaging = managementManager
-            ?? PluginManager(manager: kernel.pluginManager, kernel: kernel)
         return PluginSettingNavigationItem(
             id: Self.settingsEntryID,
             title: String(localized: "Plugin Manager", bundle: .module),
             description: Self.metadata.description,
             iconName: Self.metadata.iconName,
             order: Self.metadata.order,
-            destination: AnyView(PluginManagementView(manager: manager, docsProvider: kernel.docs, viewModel: viewModel))
+            destination: AnyView(PluginManagementView(docsProvider: kernel.docs, viewModel: viewModel))
         )
     }
 
@@ -95,7 +94,8 @@ public actor PluginPluginManager: SuperPlugin {
     private func installState(kernel: CisumKernel) {
         guard managementViewModel == nil else { return }
         let manager = PluginManager(manager: kernel.pluginManager, kernel: kernel)
-        let viewModel = PluginManagementViewModel()
+        let capability = PluginManagementCapabilityAdapter(manager: manager)
+        let viewModel = PluginManagementViewModel(capability: capability)
         let observer = PluginManagerObserver(manager: manager, viewModel: viewModel)
         managementManager = manager
         managementViewModel = viewModel

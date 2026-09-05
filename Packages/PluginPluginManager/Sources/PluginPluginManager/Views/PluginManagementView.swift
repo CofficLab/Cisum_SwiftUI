@@ -1,7 +1,6 @@
 import CisumUIComponents
 import KernelCore
 import ProviderDocsView
-import ProviderPluginManaging
 import SwiftUI
 
 /// 插件管理设置页（对齐 Lumi `PluginPluginManager.PluginManagementView`）。
@@ -17,8 +16,6 @@ import SwiftUI
 /// - `PluginSettingsDetailView`：右侧详情面板
 struct PluginManagementView: View {
     @LumiTheme private var theme
-    let manager: any PluginManaging
-
     /// 文档视图提供器：详情面板按插件 id 匹配 about 条目并展示。
     /// 为 nil 时（宿主未提供 DocsViewProviding）详情面板回退到元信息展示。
     let docsProvider: (any DocsViewProviding)?
@@ -29,8 +26,7 @@ struct PluginManagementView: View {
     @State private var searchText = ""
     @State private var selectedCategory: PluginCategory?
 
-    init(manager: any PluginManaging, docsProvider: (any DocsViewProviding)? = nil, viewModel: PluginManagementViewModel) {
-        self.manager = manager
+    init(docsProvider: (any DocsViewProviding)? = nil, viewModel: PluginManagementViewModel) {
         self.docsProvider = docsProvider
         self.viewModel = viewModel
     }
@@ -78,7 +74,7 @@ struct PluginManagementView: View {
     /// `alwaysOn` / `disabled` 不可配置，展示在列表中没有可操作控件，故过滤掉，
     /// 只保留 `optOut` / `optIn`（`allowUserToggle == true`）。
     private var plugins: [any SuperPlugin] {
-        manager.configurablePlugins
+        viewModel.plugins
     }
 
     /// 列表上出现的分类（按 `sortOrder` 排序），用于筛选标签栏。
@@ -113,7 +109,7 @@ struct PluginManagementView: View {
 
     /// 当前列表中处于有效启用状态的可配置插件数。
     private var enabledCount: Int {
-        plugins.filter { manager.isEnabled(id: $0.id) }.count
+        plugins.filter { viewModel.isEnabled(id: $0.id) }.count
     }
 
     // MARK: - List Pane
@@ -150,7 +146,7 @@ struct PluginManagementView: View {
                         PluginListRow(
                             plugin: plugin,
                             isSelected: selectedPluginID == plugin.id,
-                            isEnabled: manager.isEnabled(id: plugin.id)
+                            isEnabled: viewModel.isEnabled(id: plugin.id)
                         ) {
                             selectedPluginID = plugin.id
                         }
@@ -192,7 +188,7 @@ struct PluginManagementView: View {
     @ViewBuilder
     private var pluginDetailPane: some View {
         if let selectedPlugin {
-            PluginSettingsDetailView(manager: manager, plugin: selectedPlugin, docsProvider: docsProvider)
+            PluginSettingsDetailView(viewModel: viewModel, plugin: selectedPlugin, docsProvider: docsProvider)
                 .id(viewModel.revision)
         } else {
             AppEmptyState(

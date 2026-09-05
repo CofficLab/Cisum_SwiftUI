@@ -1,5 +1,6 @@
 import Combine
 import Foundation
+import KernelCore
 
 /// 插件管理视图的状态容器（迁移 Phase 4）。
 ///
@@ -9,6 +10,27 @@ import Foundation
 final class PluginManagementViewModel: ObservableObject {
     /// 插件启停变化版本号：递增时强制列表重建。
     @Published private(set) var revision = 0
+
+    private let capability: (any PluginManagementCapability)?
+
+    init(capability: (any PluginManagementCapability)? = nil) {
+        self.capability = capability
+    }
+
+    var plugins: [any SuperPlugin] {
+        capability?.configurablePlugins ?? []
+    }
+
+    func isEnabled(id: String) -> Bool {
+        capability?.isEnabled(id: id) ?? false
+    }
+
+    func setEnabled(_ enabled: Bool, for pluginID: String) async -> Bool {
+        if enabled {
+            return await capability?.enablePlugin(id: pluginID) ?? false
+        }
+        return await capability?.disablePlugin(id: pluginID) ?? false
+    }
 
     func incrementRevision() {
         revision += 1

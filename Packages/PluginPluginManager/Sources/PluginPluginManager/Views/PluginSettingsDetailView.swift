@@ -1,7 +1,6 @@
 import CisumUIComponents
 import KernelCore
 import ProviderDocsView
-import ProviderPluginManaging
 import SwiftUI
 
 /// 插件管理页右侧的详情面板（对齐 Lumi `PluginPluginManager.PluginSettingsDetailView`）。
@@ -13,18 +12,18 @@ import SwiftUI
 struct PluginSettingsDetailView: View {
     @LumiTheme private var theme
 
-    let manager: any PluginManaging
+    @ObservedObject var viewModel: PluginManagementViewModel
     let plugin: any SuperPlugin
 
     /// 文档视图提供器：按插件 id 匹配 about 条目。
     let docsProvider: (any DocsViewProviding)?
 
     init(
-        manager: any PluginManaging,
+        viewModel: PluginManagementViewModel,
         plugin: any SuperPlugin,
         docsProvider: (any DocsViewProviding)? = nil
     ) {
-        self.manager = manager
+        self.viewModel = viewModel
         self.plugin = plugin
         self.docsProvider = docsProvider
     }
@@ -73,7 +72,7 @@ struct PluginSettingsDetailView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             // 启用状态控件置于右上角（可交互：运行时启停 + 持久化）
-            PluginEnableControl(manager: manager, plugin: plugin)
+            PluginEnableControl(viewModel: viewModel, plugin: plugin)
                 .id(plugin.id)
                 .fixedSize()
         }
@@ -114,7 +113,7 @@ struct PluginSettingsDetailView: View {
     private var defaultAboutView: some View {
         PluginDefaultAboutView(
             metadata: type(of: plugin).metadata,
-            isEnabled: manager.isEnabled(id: plugin.id)
+            isEnabled: viewModel.isEnabled(id: plugin.id)
         )
     }
 }
