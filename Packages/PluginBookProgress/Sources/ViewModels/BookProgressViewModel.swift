@@ -3,7 +3,6 @@ import MagicAlert
 import MagicPlayMan
 import OSLog
 import PluginBook
-import ProviderPlayback
 import ProviderScene
 import SwiftUI
 
@@ -229,17 +228,6 @@ final class BookProgressViewModel: ObservableObject {
         guard shouldActivateProgress, let playback = playbackCapability, playback.state == .paused else { return }
 
         persistCurrentProgress(reason: "handlePlayManStateChanged")
-    }
-
-    func handlePlaybackEvent(_ event: PlaybackProvidingEvent) {
-        switch event {
-        case .stateChanged(let state):
-            handlePlayManStateChanged(state == .playing)
-        case .assetChanged(let url):
-            handleCurrentURLChanged(url)
-        default:
-            break
-        }
     }
 
     func handleBookDBDeleted(deletedURLs: [URL]) {

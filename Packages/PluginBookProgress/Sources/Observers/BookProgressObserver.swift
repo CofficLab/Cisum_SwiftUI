@@ -24,7 +24,15 @@ final class BookProgressObserver {
             self?.viewModel?.handleSceneChange(scene)
         }
         playbackHandle = playback.addObserver { [weak self] event in
-            self?.viewModel?.handlePlaybackEvent(event)
+            guard let self else { return }
+            switch event {
+            case .stateChanged(let state):
+                self.viewModel?.handlePlayManStateChanged(state == .playing)
+            case .assetChanged(let url):
+                self.viewModel?.handleCurrentURLChanged(url)
+            default:
+                break
+            }
         }
         token = NotificationCenter.default.addObserver(forName: .bookDBDeleted, object: nil, queue: .main) { [weak self] notification in
             let urls = notification.userInfo?["urls"] as? [URL] ?? []
