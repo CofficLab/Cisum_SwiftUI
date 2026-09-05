@@ -32,14 +32,28 @@ public actor PlaybackProgressPlugin: SuperPlugin {
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
         self.kernel = kernel
+        // 跨插件 Provider 在 onReady 阶段解析。
+    }
+
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
         installState(kernel: kernel)
     }
 
     @MainActor
+    public func onEnable(kernel: CisumKernel) async throws {
+        self.kernel = kernel
+        installState(kernel: kernel)
+    }
+
+    @MainActor
+    public func onDisable(kernel: CisumKernel) async throws {
+        teardownState()
+    }
+
+    @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
-        observer?.cancel()
-        observer = nil
-        viewModel = nil
+        teardownState()
         self.kernel = nil
     }
 
@@ -54,8 +68,24 @@ public actor PlaybackProgressPlugin: SuperPlugin {
     @MainActor
     private func installState(kernel: CisumKernel?) {
         guard viewModel == nil else { return }
-        let viewModel = PlaybackProgressViewModel(playback: kernel?.playback)
+        let capability = makePlaybackCapability(from: kernel?.playback)
+        let viewModel = PlaybackProgressViewModel(playbackCapability: capability)
         self.viewModel = viewModel
         observer = PlaybackProgressObserver(playback: kernel?.playback, viewModel: viewModel)
+    }
+
+    @MainActor
+    private func teardownState() {
+        observer?.cancel()
+        observer = nil
+        viewModel = nil
+    }
+
+    @MainActor
+    private func makePlaybackCapability(
+        from playback: (any PlaybackProviding)?
+    ) -> (any PlaybackProgressCapability)? {
+        guard let playback else { return nil }
+        return PlaybackProgressCapabilityAdapter(playback: playback)
     }
 }
