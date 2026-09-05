@@ -1,3 +1,4 @@
+import Foundation
 import ProviderPlayback
 
 @MainActor
@@ -7,7 +8,6 @@ final class LikeButtonObserver {
 
     init(playback: any PlaybackProviding, viewModel: LikeButtonViewModel) {
         self.viewModel = viewModel
-        viewModel.bind(playback: playback)
         handle = playback.addObserver { [weak self] event in
             self?.viewModel?.handlePlaybackEvent(event)
         }
