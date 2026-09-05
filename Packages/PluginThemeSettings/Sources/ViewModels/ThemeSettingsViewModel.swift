@@ -1,5 +1,6 @@
 import Combine
 import Foundation
+import LumiUI
 
 @MainActor
 final class ThemeSettingsViewModel: ObservableObject {

@@ -1,4 +1,5 @@
 import CisumUIComponents
+import LumiUI
 import SwiftUI
 
 /// 外观设置详情页（对齐 Lumi `ThemeSettingsDetailView` 双栏版式）。

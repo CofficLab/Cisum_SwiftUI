@@ -1,4 +1,5 @@
 import CisumUIComponents
+import LumiUI
 import ProviderTheme
 
 /// 主题设置页面需要的最小主题能力。
