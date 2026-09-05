@@ -1,6 +1,5 @@
 import Foundation
 import MagicPlayMan
-import ProviderPlayback
 import ProviderScene
 
 /// 播放设置页的场景化 ViewModel：维护当前场景与各场景最近播放文件。
@@ -23,29 +22,34 @@ final class PluginPlayBackSettingsViewModel: ObservableObject {
 
     private let store: PlaybackStateStore
 
-    init(store: PlaybackStateStore, playback: (any PlaybackProviding)? = nil) {
+    init(store: PlaybackStateStore, playbackCapability: (any PlaybackSettingsCapability)? = nil) {
         self.store = store
-        currentURL = playback?.currentURL
-        isPlaying = playback?.isPlaying ?? false
-        state = playback?.state ?? .idle
-        currentTime = playback?.currentTime ?? 0
-        duration = playback?.duration ?? 0
+        currentURL = playbackCapability?.currentURL
+        isPlaying = playbackCapability?.isPlaying ?? false
+        state = playbackCapability?.state ?? .idle
+        currentTime = playbackCapability?.currentTime ?? 0
+        duration = playbackCapability?.duration ?? 0
     }
 
     func handleSceneChanged(_ scene: AppScene?) {
         currentScene = scene
     }
 
-    func handlePlaybackEvent(_ event: PlaybackProvidingEvent) {
-        switch event {
-        case .assetChanged(let url): currentURL = url
-        case .stateChanged(let state):
-            self.state = state
-            isPlaying = state == .playing
-        case .timeChanged(let currentTime, _): self.currentTime = currentTime
-        case .durationChanged(let duration): self.duration = duration
-        default: break
-        }
+    func handleAssetChanged(_ url: URL?) {
+        currentURL = url
+    }
+
+    func handleStateChanged(_ state: PlaybackState) {
+        self.state = state
+        isPlaying = state == .playing
+    }
+
+    func handleTimeChanged(_ currentTime: TimeInterval) {
+        self.currentTime = currentTime
+    }
+
+    func handleDurationChanged(_ duration: TimeInterval) {
+        self.duration = duration
     }
 
     /// 指定场景最近播放的文件；无记录时返回 `nil`。

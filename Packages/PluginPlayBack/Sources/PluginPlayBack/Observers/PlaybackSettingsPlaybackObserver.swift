@@ -9,7 +9,18 @@ final class PlaybackSettingsPlaybackObserver {
     init(playback: (any PlaybackProviding)?, viewModel: PluginPlayBackSettingsViewModel) {
         self.viewModel = viewModel
         handle = playback?.addObserver { [weak self] event in
-            self?.viewModel?.handlePlaybackEvent(event)
+            switch event {
+            case .assetChanged(let url):
+                self?.viewModel?.handleAssetChanged(url)
+            case .stateChanged(let state):
+                self?.viewModel?.handleStateChanged(state)
+            case .timeChanged(let currentTime, _):
+                self?.viewModel?.handleTimeChanged(currentTime)
+            case .durationChanged(let duration):
+                self?.viewModel?.handleDurationChanged(duration)
+            default:
+                break
+            }
         }
     }
 

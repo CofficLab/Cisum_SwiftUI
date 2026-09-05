@@ -121,9 +121,20 @@ public actor PluginPlayBack: SuperPlugin {
     @MainActor
     private func makeSettingsViewModel() -> PluginPlayBackSettingsViewModel? {
         guard let store = stateStore else { return nil }
-        let viewModel = PluginPlayBackSettingsViewModel(store: store, playback: magicPlayMan)
+        let viewModel = PluginPlayBackSettingsViewModel(
+            store: store,
+            playbackCapability: makePlaybackSettingsCapability(from: magicPlayMan)
+        )
         settingsViewModel = viewModel
         return viewModel
+    }
+
+    @MainActor
+    private func makePlaybackSettingsCapability(
+        from playback: (any PlaybackProviding)?
+    ) -> (any PlaybackSettingsCapability)? {
+        guard let playback else { return nil }
+        return PlaybackSettingsCapabilityAdapter(playback: playback)
     }
 
     /// 设置窗口入口：按场景展示各场景最近播放文件与当前播放详情。
