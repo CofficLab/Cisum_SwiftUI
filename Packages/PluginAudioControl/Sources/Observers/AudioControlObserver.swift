@@ -1,5 +1,4 @@
 import Foundation
-import MagicPlayMan
 import ProviderPlayback
 import ProviderScene
 
@@ -21,7 +20,6 @@ final class AudioControlObserver {
         viewModel: AudioControlViewModel
     ) {
         self.viewModel = viewModel
-        viewModel.bind(playMan: playback as? MagicPlayMan)
         viewModel.handleSceneChange(scene.currentScene)
 
         sceneHandle = scene.addObserver { [weak self] event in

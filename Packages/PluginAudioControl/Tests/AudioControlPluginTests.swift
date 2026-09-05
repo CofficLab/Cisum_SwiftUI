@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import AudioControlPlugin
+@testable import PluginAudioControl
 
 @Test func pluginMetadataIsStable() {
     #expect(AudioControlPluginInfo.iconName == "playpause")

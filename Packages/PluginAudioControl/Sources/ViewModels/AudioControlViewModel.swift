@@ -11,13 +11,17 @@ import ProviderScene
 /// 持有播放控制订阅、代际保护与场景激活状态，统一处理上一首/下一首、
 /// 删除恢复、存储位置重置；取代原 `AudioControlRootView` 内的全部
 /// `@State` 与事件 handler。由 `AudioControlPlugin` 入口持有。
+///
+/// ViewModel 不直接持有 Kernel 或具体 Provider：外部播放状态由
+/// `AudioControlObserver` 通过 `apply...` 方法回写，外部播放操作通过
+/// `AudioControlPlaybackCapability` 执行。
 @MainActor
 final class AudioControlViewModel: ObservableObject {
     private static let verbose = true
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "AudioControl")
     private static let author = "AudioControlViewModel"
 
-    private weak var playMan: MagicPlayMan?
+    private let playbackCapability: (any AudioControlPlaybackCapability)?
     private var controlGeneration = 0
     private var currentScene: AppScene?
     private let targetScene: AppScene
@@ -29,20 +33,18 @@ final class AudioControlViewModel: ObservableObject {
 
     init(
         targetScene: AppScene,
+        playbackCapability: (any AudioControlPlaybackCapability)?,
         nextAsset: @escaping AudioControlAdjacentAssetProvider,
         previousAsset: @escaping AudioControlAdjacentAssetProvider,
         firstAsset: @escaping AudioControlFirstAssetProvider,
         lastAsset: @escaping AudioControlLastAssetProvider
     ) {
         self.targetScene = targetScene
+        self.playbackCapability = playbackCapability
         self.nextAsset = nextAsset
         self.previousAsset = previousAsset
         self.firstAsset = firstAsset
         self.lastAsset = lastAsset
-    }
-
-    func bind(playMan: MagicPlayMan?) {
-        self.playMan = playMan
     }
 
     var shouldActivateControl: Bool {
@@ -68,13 +70,11 @@ final class AudioControlViewModel: ObservableObject {
             return
         }
 
-        guard playMan != nil else { return }
+        guard playbackCapability != nil else { return }
     }
 
     private func deactivateControl() {
         controlGeneration = AudioControlPlaybackRequestPolicy.generationAfterDeactivation(controlGeneration)
-
-        _ = playMan
     }
 
     func handlePlaybackEvent(_ event: PlaybackProvidingEvent) {
@@ -92,7 +92,7 @@ final class AudioControlViewModel: ObservableObject {
 
     func handlePreviousRequested(_ asset: URL, ignoreSceneCheck: Bool = false) {
         guard shouldActivateControl || ignoreSceneCheck else { return }
-        guard let playMan else { return }
+        guard let playback = playbackCapability else { return }
 
         let generation = controlGeneration
         Task { @MainActor in
@@ -100,39 +100,39 @@ final class AudioControlViewModel: ObservableObject {
                 if let previous = try await previousAsset(asset, false) {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
-                        currentAsset: playMan.currentAsset,
+                        currentAsset: playback.currentURL,
                         isSceneActive: shouldActivateControl || ignoreSceneCheck,
                         currentGeneration: controlGeneration,
                         requestGeneration: generation
                     ) else { return }
-                    await playMan.play(previous, autoPlay: true, reason: "AudioControlViewModel")
+                    await playback.play(previous)
                     return
                 }
 
-                if playMan.playMode == .repeatAll, let last = try await lastAsset() {
+                if playback.playMode == .repeatAll, let last = try await lastAsset() {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
-                        currentAsset: playMan.currentAsset,
+                        currentAsset: playback.currentURL,
                         isSceneActive: shouldActivateControl || ignoreSceneCheck,
                         currentGeneration: controlGeneration,
                         requestGeneration: generation
                     ) else { return }
-                    await playMan.play(last, autoPlay: true, reason: "AudioControlViewModel.repeatAllPrevious")
-                } else if playMan.playMode == .repeatAll {
+                    await playback.play(last)
+                } else if playback.playMode == .repeatAll {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
-                        currentAsset: playMan.currentAsset,
+                        currentAsset: playback.currentURL,
                         isSceneActive: shouldActivateControl || ignoreSceneCheck,
                         currentGeneration: controlGeneration,
                         requestGeneration: generation
                     ) else { return }
-                    await playMan.reset(reason: "AudioControlViewModel.emptyLibrary")
+                    await playback.reset()
                     alert_info(String(localized: "No files in library", bundle: .module))
                 }
             } catch {
                 guard AudioControlPlaybackRequestPolicy.shouldReportNavigationFailure(
                     requestedAsset: asset,
-                    currentAsset: playMan.currentAsset,
+                    currentAsset: playback.currentURL,
                     isSceneActive: shouldActivateControl || ignoreSceneCheck,
                     currentGeneration: controlGeneration,
                     requestGeneration: generation
@@ -147,7 +147,7 @@ final class AudioControlViewModel: ObservableObject {
 
     func handleNextRequested(_ asset: URL, ignoreSceneCheck: Bool = false) {
         guard shouldActivateControl || ignoreSceneCheck else { return }
-        guard let playMan else { return }
+        guard let playback = playbackCapability else { return }
 
         let generation = controlGeneration
         Task { @MainActor in
@@ -155,42 +155,42 @@ final class AudioControlViewModel: ObservableObject {
                 if let next = try await nextAsset(asset, Self.verbose) {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
-                        currentAsset: playMan.currentAsset,
+                        currentAsset: playback.currentURL,
                         isSceneActive: shouldActivateControl || ignoreSceneCheck,
                         currentGeneration: controlGeneration,
                         requestGeneration: generation
                     ) else { return }
-                    await playMan.play(next, autoPlay: true, reason: "AudioControlViewModel.handleNextRequested")
+                    await playback.play(next)
                     return
                 }
 
-                guard playMan.playMode == .repeatAll else { return }
+                guard playback.playMode == .repeatAll else { return }
 
                 if let first = try await firstAsset() {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
-                        currentAsset: playMan.currentAsset,
+                        currentAsset: playback.currentURL,
                         isSceneActive: shouldActivateControl || ignoreSceneCheck,
                         currentGeneration: controlGeneration,
                         requestGeneration: generation
                     ) else { return }
                     alert_info(String(localized: "Reached the last track, playing the first", bundle: .module))
-                    await playMan.play(first, autoPlay: true, reason: "AudioControlViewModel.loop")
+                    await playback.play(first)
                 } else {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
-                        currentAsset: playMan.currentAsset,
+                        currentAsset: playback.currentURL,
                         isSceneActive: shouldActivateControl || ignoreSceneCheck,
                         currentGeneration: controlGeneration,
                         requestGeneration: generation
                     ) else { return }
-                    await playMan.reset(reason: "AudioControlViewModel.emptyLibrary")
+                    await playback.reset()
                     alert_info(String(localized: "No files in library", bundle: .module))
                 }
             } catch {
                 guard AudioControlPlaybackRequestPolicy.shouldReportNavigationFailure(
                     requestedAsset: asset,
-                    currentAsset: playMan.currentAsset,
+                    currentAsset: playback.currentURL,
                     isSceneActive: shouldActivateControl || ignoreSceneCheck,
                     currentGeneration: controlGeneration,
                     requestGeneration: generation
@@ -209,7 +209,7 @@ final class AudioControlViewModel: ObservableObject {
         guard AudioControlPlaybackRequestPolicy.shouldResetForStorageLocationChange(isSceneActive: shouldActivateControl) else {
             return
         }
-        guard let playMan else { return }
+        guard let playback = playbackCapability else { return }
 
         let generation = controlGeneration
         Task { @MainActor in
@@ -219,63 +219,63 @@ final class AudioControlViewModel: ObservableObject {
                 isSceneActive: shouldActivateControl
             ) else { return }
 
-            await playMan.reset(reason: "AudioControlViewModel.storageLocationDidReset")
+            await playback.reset()
         }
     }
 
     func handleDBDeleted(urlsToDelete: [URL]) {
-        guard let playMan else { return }
+        guard let playback = playbackCapability else { return }
         guard AudioControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
-            currentAsset: playMan.asset,
+            currentAsset: playback.currentURL,
             deletedURLs: urlsToDelete
         ) else { return }
 
         let generation = controlGeneration
         Task { @MainActor in
             guard AudioControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
-                currentAsset: playMan.asset,
+                currentAsset: playback.currentURL,
                 deletedURLs: urlsToDelete
             ) else { return }
 
             guard shouldActivateControl else {
                 guard AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
-                    currentAsset: playMan.asset,
+                    currentAsset: playback.currentURL,
                     deletedURLs: urlsToDelete,
                     currentGeneration: controlGeneration,
                     requestGeneration: generation
                 ) else { return }
-                await playMan.reset(reason: "AudioControlViewModel.deletedCurrentAsset")
+                await playback.reset()
                 return
             }
 
             do {
                 if let first = try await firstAsset() {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
-                        currentAsset: playMan.asset,
+                        currentAsset: playback.currentURL,
                         deletedURLs: urlsToDelete,
                         currentGeneration: controlGeneration,
                         requestGeneration: generation
                     ) else { return }
                     alert_warning(String(localized: "Current file was deleted, playing the first", bundle: .module))
-                    await playMan.play(first, autoPlay: true, reason: "AudioControlViewModel")
+                    await playback.play(first)
                 } else {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
-                        currentAsset: playMan.asset,
+                        currentAsset: playback.currentURL,
                         deletedURLs: urlsToDelete,
                         currentGeneration: controlGeneration,
                         requestGeneration: generation
                     ) else { return }
-                    await playMan.reset(reason: "AudioControlViewModel.emptyLibrary")
+                    await playback.reset()
                     alert_info(String(localized: "No files in library", bundle: .module))
                 }
             } catch {
                 guard AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
-                    currentAsset: playMan.asset,
+                    currentAsset: playback.currentURL,
                     deletedURLs: urlsToDelete,
                     currentGeneration: controlGeneration,
                     requestGeneration: generation
                 ) else { return }
-                await playMan.reset(reason: "AudioControlViewModel.getFirstFailed")
+                await playback.reset()
                 alert_error(String(localized: "Cannot play next: \(error.localizedDescription)", bundle: .module))
             }
         }
