@@ -53,6 +53,7 @@ public actor OpenButtonPlugin: SuperPlugin {
     @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
         teardownState()
+        self.kernel = nil
     }
 
     #if os(macOS)

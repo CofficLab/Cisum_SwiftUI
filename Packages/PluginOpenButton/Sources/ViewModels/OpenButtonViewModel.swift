@@ -1,6 +1,5 @@
 import Combine
 import Foundation
-import ProviderPlayback
 
 @MainActor
 final class OpenButtonViewModel: ObservableObject {
@@ -12,7 +11,7 @@ final class OpenButtonViewModel: ObservableObject {
         url = playbackCapability?.currentURL
     }
 
-    func handlePlaybackEvent(_ event: PlaybackProvidingEvent) {
-        if case .assetChanged(let url) = event { self.url = url }
+    func handleAssetChanged(_ url: URL?) {
+        self.url = url
     }
 }

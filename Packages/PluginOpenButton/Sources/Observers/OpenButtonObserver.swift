@@ -9,7 +9,8 @@ final class OpenButtonObserver {
     init(playback: any PlaybackProviding, viewModel: OpenButtonViewModel) {
         self.viewModel = viewModel
         handle = playback.addObserver { [weak self] event in
-            self?.viewModel?.handlePlaybackEvent(event)
+            guard case .assetChanged(let url) = event else { return }
+            self?.viewModel?.handleAssetChanged(url)
         }
     }
 
