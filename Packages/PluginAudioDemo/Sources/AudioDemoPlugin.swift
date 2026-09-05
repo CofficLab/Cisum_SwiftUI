@@ -23,14 +23,31 @@ public actor AudioDemoPlugin: SuperPlugin {
         }
     }
 
+    nonisolated(unsafe) private weak var kernel: CisumKernel?
     nonisolated(unsafe) private let sceneBox = SceneBox()
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
-        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
-        }
-        sceneBox.scene = scene
+        self.kernel = kernel
+        // 跨插件 Provider（Scene）在 onReady 中解析，
+        // 不假设其他插件已完成 Provider 注册。
+    }
+
+    /// 所有 Provider 插件完成 onBoot 后再解析 Scene Provider。
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
+        installScene(kernel: kernel)
+    }
+
+    @MainActor
+    public func onEnable(kernel: CisumKernel) async throws {
+        self.kernel = kernel
+        installScene(kernel: kernel)
+    }
+
+    @MainActor
+    public func onDisable(kernel: CisumKernel) async throws {
+        sceneBox.scene = nil
     }
 
     @MainActor
@@ -61,6 +78,14 @@ public actor AudioDemoPlugin: SuperPlugin {
         #else
             true
         #endif
+    }
+
+    // MARK: - State assembly
+
+    @MainActor
+    private func installScene(kernel: CisumKernel) {
+        guard let scene = kernel.resolveProvider((any SceneProviding).self) else { return }
+        sceneBox.scene = scene
     }
 
 
