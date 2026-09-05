@@ -172,7 +172,7 @@ final class BookControlViewModel: ObservableObject {
             )
         }
 
-        let chapters = await Task.detached(priority: .userInitized) {
+        let chapters = await Task.detached(priority: .userInitiated) {
             BookControlChapterLoader.playableChapters(in: root)
         }.value
         BookControlChapterCache.store(chapters, in: root)

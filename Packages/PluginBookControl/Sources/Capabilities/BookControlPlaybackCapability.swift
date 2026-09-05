@@ -36,10 +36,10 @@ final class BookControlPlaybackCapabilityAdapter: BookControlPlaybackCapability 
     var playMode: MagicPlayMode { playback.playMode }
 
     func play(_ url: URL, reason: String) async {
-        await playback.play(url, reason: reason)
+        await playback.play(url)
     }
 
     func reset(reason: String) async {
-        await playback.reset(reason: reason)
+        await playback.reset()
     }
 }
