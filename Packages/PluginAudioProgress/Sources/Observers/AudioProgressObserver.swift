@@ -1,5 +1,4 @@
 import Foundation
-import MagicPlayMan
 import ProviderPlayback
 import ProviderScene
 
@@ -18,7 +17,6 @@ final class AudioProgressObserver {
 
     init(scene: any SceneProviding, playback: any PlaybackProviding, viewModel: AudioProgressViewModel, storageResetNotifications: [Notification.Name]) {
         self.viewModel = viewModel
-        viewModel.bind(playMan: playback as? MagicPlayMan)
         currentScene = scene.currentScene
         viewModel.handleSceneChange(from: nil, to: scene.currentScene)
         sceneHandle = scene.addObserver { [weak self] event in

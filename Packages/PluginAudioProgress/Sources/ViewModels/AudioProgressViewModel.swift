@@ -16,13 +16,17 @@ import WidgetKit
 /// 暂停保存、删除清理、Widget 同步与存储重置；取代原
 /// `AudioProgressRootView` 内的全部 `@State` 与事件 handler。
 /// 由 `AudioProgressPlugin` 入口持有。
+///
+/// ViewModel 不直接持有 Kernel 或具体 Provider：外部播放状态由
+/// `AudioProgressObserver` 通过事件回写，外部播放操作通过
+/// `AudioProgressPlaybackCapability` 执行。
 @MainActor
 final class AudioProgressViewModel: ObservableObject {
     private static let verbose = false
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "AudioProgress")
     private static let tag = "💾"
 
-    private weak var playMan: MagicPlayMan?
+    private let playbackCapability: (any AudioProgressPlaybackCapability)?
     private var restoreGeneration = 0
     private var currentScene: AppScene?
     private let audioScene: AppScene
@@ -31,16 +35,14 @@ final class AudioProgressViewModel: ObservableObject {
 
     init(
         audioScene: AppScene,
+        playbackCapability: (any AudioProgressPlaybackCapability)?,
         audioRepo: @escaping @MainActor () async -> AudioRepo?,
         saveWidgetData: @escaping @Sendable (String, String, Bool, Data?) -> Void
     ) {
         self.audioScene = audioScene
+        self.playbackCapability = playbackCapability
         self.audioRepo = audioRepo
         self.saveWidgetData = saveWidgetData
-    }
-
-    func bind(playMan: MagicPlayMan?) {
-        self.playMan = playMan
     }
 
     var shouldActivateProgress: Bool {
@@ -96,11 +98,11 @@ final class AudioProgressViewModel: ObservableObject {
     // MARK: - Restore
 
     private func restorePlaying() {
-        guard let playMan else { return }
+        guard let playback = playbackCapability else { return }
         var assetTarget: URL?
         var timeTarget: TimeInterval = 0
         var liked = false
-        let startingAsset = playMan.currentAsset
+        let startingAsset = playback.currentAsset
         restoreGeneration += 1
         let generation = restoreGeneration
 
@@ -158,19 +160,19 @@ final class AudioProgressViewModel: ObservableObject {
             if let asset = assetTarget {
                 guard AudioProgressPersistencePolicy.shouldApplyRestoreResult(
                     startingAsset: startingAsset,
-                    currentAsset: playMan.currentAsset
+                    currentAsset: playback.currentAsset
                 ) else { return }
 
                 let reason = "AudioProgressViewModel.restorePlaybackData"
                 if AudioProgressPersistencePolicy.shouldPlayRestoredAsset(
                     restoredAsset: asset,
-                    currentAsset: playMan.currentAsset
+                    currentAsset: playback.currentAsset
                 ) {
                     guard isCurrentRestoreRequest(generation) else { return }
-                    await playMan.play(asset, autoPlay: false, startTime: timeTarget, reason: reason)
+                    await playback.play(asset, autoPlay: false, startTime: timeTarget, reason: reason)
                 }
                 guard isCurrentRestoreRequest(generation) else { return }
-                playMan.setLike(liked, reason: reason)
+                playback.setLike(liked, reason: reason)
             } else {
                 if Self.verbose {
                     Self.log.debug("\(Self.tag)⚠️ No playback data to restore")
@@ -201,25 +203,25 @@ final class AudioProgressViewModel: ObservableObject {
     // MARK: - Playback events
 
     func handlePlayManStateChanged(_ isPlaying: Bool) {
-        guard shouldActivateProgress, let playMan else { return }
+        guard shouldActivateProgress, let playback = playbackCapability else { return }
 
-        syncToWidget(url: playMan.currentAsset, isPlaying: isPlaying)
+        syncToWidget(url: playback.currentAsset, isPlaying: isPlaying)
 
-        if playMan.state == .paused {
+        if playback.state == .paused {
             persistCurrentTime(reason: "handlePlayManStateChanged")
         }
     }
 
     func handlePlayManAssetChanged(_ url: URL?) {
-        guard shouldActivateProgress, let playMan else { return }
+        guard shouldActivateProgress, let playback = playbackCapability else { return }
 
-        syncToWidget(url: url, isPlaying: playMan.state == .playing)
+        syncToWidget(url: url, isPlaying: playback.state == .playing)
         let generation = restoreGeneration
 
         Task {
             guard AudioProgressPersistencePolicy.shouldApplyCurrentURLChange(
                 requestedURL: url,
-                currentAsset: playMan.currentAsset,
+                currentAsset: playback.currentAsset,
                 currentGeneration: restoreGeneration,
                 requestGeneration: generation,
                 isSceneActive: shouldActivateProgress
@@ -261,9 +263,9 @@ final class AudioProgressViewModel: ObservableObject {
     // MARK: - Widget & persistence
 
     private func syncToWidget(url: URL?, isPlaying: Bool) {
-        guard let playMan else { return }
+        guard let playback = playbackCapability else { return }
         guard let url = url else {
-            guard AudioProgressPersistencePolicy.shouldApplyWidgetClearResult(currentAsset: playMan.currentAsset) else {
+            guard AudioProgressPersistencePolicy.shouldApplyWidgetClearResult(currentAsset: playback.currentAsset) else {
                 return
             }
 
@@ -291,19 +293,19 @@ final class AudioProgressViewModel: ObservableObject {
 
             guard AudioProgressPersistencePolicy.shouldApplyWidgetMetadataResult(
                 requestedAsset: url,
-                currentAsset: playMan.currentAsset
+                currentAsset: playback.currentAsset
             ) else { return }
 
-            saveWidgetData(title, artist, playMan.state == .playing, coverArt)
+            saveWidgetData(title, artist, playback.state == .playing, coverArt)
         }
     }
 
     private func persistCurrentTime(reason: String) {
-        guard let playMan else { return }
-        AudioStateRepo.storeCurrentTime(playMan.currentTime)
+        guard let playback = playbackCapability else { return }
+        AudioStateRepo.storeCurrentTime(playback.currentTime)
 
         if Self.verbose {
-            Self.log.debug("\(Self.tag)💾 (\(reason)) Saved playback progress: \(playMan.currentTime)s")
+            Self.log.debug("\(Self.tag)💾 (\(reason)) Saved playback progress: \(playback.currentTime)s")
         }
     }
 }
