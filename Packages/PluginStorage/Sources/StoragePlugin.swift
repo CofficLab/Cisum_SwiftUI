@@ -5,11 +5,6 @@ import OSLog
 import ProviderStorage
 import SwiftUI
 
-@MainActor
-enum StoragePluginEvent {
-    case providerChanged(StorageProvidingEvent)
-}
-
 public actor StoragePlugin: SuperPlugin, SuperLog {
     public static let shared = StoragePlugin()
     public nonisolated static let emoji = "💾"
@@ -70,7 +65,9 @@ public actor StoragePlugin: SuperPlugin, SuperLog {
         // View 贡献可能在插件启动前被请求：保证返回一个稳定、长期存在的
         // ViewModel，而不是每次请求都重新创建。
         let viewModel = settingsViewModel ?? {
-            let viewModel = StorageSettingsViewModel(storage: StorageService.current)
+            let viewModel = StorageSettingsViewModel(
+                capability: makeStorageCapability(from: StorageService.current)
+            )
             settingsViewModel = viewModel
             return viewModel
         }()
@@ -93,7 +90,9 @@ public actor StoragePlugin: SuperPlugin, SuperLog {
     private func installSettingsState(kernel: CisumKernel) {
         guard settingsViewModel == nil else { return }
         guard let storage = kernel.storage else { return }
-        let viewModel = StorageSettingsViewModel(storage: storage)
+        let viewModel = StorageSettingsViewModel(
+            capability: makeStorageCapability(from: storage)
+        )
         let observer = StorageProvidingObserver(provider: storage, viewModel: viewModel)
         settingsViewModel = viewModel
         settingsObserver = observer
@@ -104,5 +103,13 @@ public actor StoragePlugin: SuperPlugin, SuperLog {
         settingsObserver?.cancel()
         settingsObserver = nil
         settingsViewModel = nil
+    }
+
+    @MainActor
+    private func makeStorageCapability(
+        from storage: (any StorageProviding)?
+    ) -> (any StorageSettingsCapability)? {
+        guard let storage else { return nil }
+        return StorageSettingsCapabilityAdapter(storage: storage)
     }
 }
