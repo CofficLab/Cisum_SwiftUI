@@ -18,6 +18,7 @@ public actor BookLikePlugin: SuperPlugin {
     )
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
+    nonisolated(unsafe) private weak var kernel: CisumKernel?
     nonisolated(unsafe) private var likeViewModel: BookLikeViewModel?
     nonisolated(unsafe) private var likeObserver: BookLikeObserver?
 
@@ -31,22 +32,21 @@ public actor BookLikePlugin: SuperPlugin {
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
-        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
-        }
-        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
-        }
-        sceneBox.scene = scene
-        installState(scene: scene, playback: playback)
+        self.kernel = kernel
+        // 跨插件 Provider（Scene / Playback）在 onReady 中解析，
+        // 不假设其他插件已完成 Provider 注册。
+    }
+
+    /// 所有 Provider 插件完成 onBoot 后再组装依赖它们的 ViewModel 与 Observer。
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
+        installState(kernel: kernel)
     }
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
-        guard let scene = kernel.resolveProvider((any SceneProviding).self),
-              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
-        sceneBox.scene = scene
-        installState(scene: scene, playback: playback)
+        self.kernel = kernel
+        installState(kernel: kernel)
     }
 
     @MainActor
@@ -86,10 +86,20 @@ public actor BookLikePlugin: SuperPlugin {
 
     // MARK: - State assembly
 
+    /// 创建并持有喜欢状态 ViewModel 与观察者（幂等）。
     @MainActor
-    private func installState(scene: any SceneProviding, playback: any PlaybackProviding) {
+    private func installState(kernel: CisumKernel) {
         guard likeViewModel == nil else { return }
-        let viewModel = BookLikeViewModel()
+
+        guard let scene = kernel.resolveProvider((any SceneProviding).self),
+              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
+        sceneBox.scene = scene
+
+        let viewModel = BookLikeViewModel(
+            playbackCapability: makePlaybackCapability(from: playback),
+            loadLikedBooks: makeLoadLikedBooks(),
+            saveLikeStatus: makeSaveLikeStatus()
+        )
         let observer = BookLikeObserver(scene: scene, playback: playback, viewModel: viewModel)
         likeViewModel = viewModel
         likeObserver = observer
@@ -102,14 +112,45 @@ public actor BookLikePlugin: SuperPlugin {
         likeViewModel = nil
     }
 
+    /// 返回当前持有的 ViewModel；若尚未安装（启动前或插件被禁用），
+    /// 提供临时实例保证 View 贡献可用。
     @MainActor
     private func resolveViewModel() -> BookLikeViewModel {
         if let likeViewModel {
             return likeViewModel
         }
-        let viewModel = BookLikeViewModel()
+        let viewModel = BookLikeViewModel(
+            playbackCapability: makePlaybackCapability(from: kernel?.playback),
+            loadLikedBooks: makeLoadLikedBooks(),
+            saveLikeStatus: makeSaveLikeStatus()
+        )
         likeViewModel = viewModel
         return viewModel
+    }
+
+    /// 将内核能力收窄后注入 ViewModel；ViewModel 不持有 Kernel。
+    @MainActor
+    private func makePlaybackCapability(
+        from playback: (any PlaybackProviding)?
+    ) -> (any BookLikePlaybackCapability)? {
+        guard let playback else { return nil }
+        return BookLikePlaybackCapabilityAdapter(playback: playback)
+    }
+
+    /// 喜欢列表的加载入口（由插件入口组装，不暴露单例给 ViewModel）。
+    @MainActor
+    private func makeLoadLikedBooks() -> BookLikeLoadProvider {
+        { @MainActor in
+            BookLikeStore.likedBooks()
+        }
+    }
+
+    /// 喜欢状态的保存入口（由插件入口组装，不暴露单例给 ViewModel）。
+    @MainActor
+    private func makeSaveLikeStatus() -> BookLikeSaveProvider {
+        { @MainActor liked, url in
+            BookLikeStore.setLiked(liked, url: url)
+        }
     }
 
     private final class SceneBox {

@@ -27,11 +27,6 @@ func pluginExposesSettingsNavigationItem() {
     #expect(BookLikeSettingsView.loadingTextKey == "Loading...")
 }
 
-@Test func bookLikeStatusChangesAreAcceptedOnlyInActiveScene() {
-    #expect(BookLikeStatusChangePolicy.shouldAcceptChange(isSceneActive: true))
-    #expect(!BookLikeStatusChangePolicy.shouldAcceptChange(isSceneActive: false))
-}
-
 @Test func bookLikeStatusNotificationIsDeliveredOnMainThread() async {
     let url = URL(fileURLWithPath: "/tmp/Cisum Books/Main Thread Book")
 

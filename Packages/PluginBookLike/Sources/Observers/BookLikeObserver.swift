@@ -1,5 +1,4 @@
 import Foundation
-import MagicPlayMan
 import ProviderPlayback
 import ProviderScene
 
@@ -16,7 +15,6 @@ final class BookLikeObserver {
 
     init(scene: any SceneProviding, playback: any PlaybackProviding, viewModel: BookLikeViewModel) {
         self.viewModel = viewModel
-        viewModel.bind(playMan: playback as? MagicPlayMan)
         viewModel.handleSceneChange(scene.currentScene)
         sceneHandle = scene.addObserver { [weak self] event in
             guard case .selectionChanged(let scene) = event else { return }
@@ -27,7 +25,7 @@ final class BookLikeObserver {
             self?.viewModel?.handleLikeStatusChanged(asset: asset, liked: isLiked)
         }
         token = NotificationCenter.default.addObserver(forName: .BookLikeStatusChanged, object: nil, queue: .main) { [weak self] _ in
-            Task { @MainActor in self?.viewModel?.handleLikeStatusChanged() }
+            Task { @MainActor in self?.viewModel?.reloadLikedBooks() }
         }
     }
 
