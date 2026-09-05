@@ -74,9 +74,14 @@ public actor AudioDownloadPlugin: SuperPlugin {
               let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
         sceneBox.scene = scene
 
-        let viewModel = AudioDownloadViewModel()
+        let capability = AudioDownloadPlaybackCapabilityAdapter(playback: playback)
+        let viewModel = AudioDownloadViewModel(playbackCapability: capability)
         self.viewModel = viewModel
-        observer = AudioDownloadObserver(scene: scene, playback: playback, viewModel: viewModel)
+        observer = AudioDownloadObserver(
+            scene: scene,
+            playback: playback,
+            viewModel: viewModel
+        )
     }
 
     @MainActor
