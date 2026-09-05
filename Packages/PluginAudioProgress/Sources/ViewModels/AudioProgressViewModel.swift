@@ -4,7 +4,6 @@ import MagicPlayMan
 import OSLog
 import PluginAudio
 import PluginAudioLike
-import ProviderPlayback
 import ProviderScene
 import SwiftUI
 import UniformTypeIdentifiers
@@ -77,17 +76,6 @@ final class AudioProgressViewModel: ObservableObject {
         restoreGeneration += 1
         guard shouldActivateProgress else { return }
         persistCurrentTime(reason: "handleOnDisappear")
-    }
-
-    func handlePlaybackEvent(_ event: PlaybackProvidingEvent) {
-        switch event {
-        case .stateChanged(let state):
-            handlePlayManStateChanged(state == .playing)
-        case .assetChanged(let url):
-            handlePlayManAssetChanged(url)
-        default:
-            break
-        }
     }
 
     private func restorePlayingIfNeeded(for sceneValue: AppScene?) {

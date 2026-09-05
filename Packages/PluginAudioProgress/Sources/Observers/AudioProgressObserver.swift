@@ -26,7 +26,15 @@ final class AudioProgressObserver {
             self?.viewModel?.handleSceneChange(from: previousScene, to: scene)
         }
         playbackHandle = playback.addObserver { [weak self] event in
-            self?.viewModel?.handlePlaybackEvent(event)
+            guard let self else { return }
+            switch event {
+            case .stateChanged(let state):
+                self.viewModel?.handlePlayManStateChanged(state == .playing)
+            case .assetChanged(let url):
+                self.viewModel?.handlePlayManAssetChanged(url)
+            default:
+                break
+            }
         }
         let center = NotificationCenter.default
 
