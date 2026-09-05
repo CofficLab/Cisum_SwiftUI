@@ -14,17 +14,16 @@ final class PlaybackProgressViewModel: ObservableObject {
         sync()
     }
 
-    func handlePlaybackEvent(_ event: PlaybackProvidingEvent) {
-        switch event {
-        case .timeChanged(let currentTime, _):
-            self.currentTime = currentTime
-        case .durationChanged(let duration):
-            self.duration = duration
-        case .assetChanged:
-            sync()
-        default:
-            break
-        }
+    func handleTimeChanged(_ currentTime: TimeInterval) {
+        self.currentTime = currentTime
+    }
+
+    func handleDurationChanged(_ duration: TimeInterval) {
+        self.duration = duration
+    }
+
+    func handleAssetChanged() {
+        sync()
     }
 
     func seek(to time: TimeInterval) {

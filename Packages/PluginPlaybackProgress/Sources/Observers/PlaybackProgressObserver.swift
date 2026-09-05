@@ -9,7 +9,16 @@ final class PlaybackProgressObserver {
     init(playback: (any PlaybackProviding)?, viewModel: PlaybackProgressViewModel) {
         self.viewModel = viewModel
         handle = playback?.addObserver { [weak self] event in
-            self?.viewModel?.handlePlaybackEvent(event)
+            switch event {
+            case .timeChanged(let currentTime, _):
+                self?.viewModel?.handleTimeChanged(currentTime)
+            case .durationChanged(let duration):
+                self?.viewModel?.handleDurationChanged(duration)
+            case .assetChanged:
+                self?.viewModel?.handleAssetChanged()
+            default:
+                break
+            }
         }
     }
 
