@@ -23,16 +23,31 @@ public actor BookScenePlugin: SuperPlugin {
         }
     }
 
+    nonisolated(unsafe) private weak var kernel: CisumKernel?
     nonisolated(unsafe) private var setSceneAction: (@MainActor (AppScene) -> Void)?
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
-        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
-        }
-        self.setSceneAction = { @MainActor sceneValue in
-            scene.setCurrentScene(sceneValue)
-        }
+        self.kernel = kernel
+        // 跨插件 Provider（Scene）在 onReady 中解析，
+        // 不假设其他插件已完成 Provider 注册。
+    }
+
+    /// 所有 Provider 插件完成 onBoot 后再解析 Scene Provider。
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
+        installSceneAction(kernel: kernel)
+    }
+
+    @MainActor
+    public func onEnable(kernel: CisumKernel) async throws {
+        self.kernel = kernel
+        installSceneAction(kernel: kernel)
+    }
+
+    @MainActor
+    public func onDisable(kernel: CisumKernel) async throws {
+        setSceneAction = nil
     }
 
     @MainActor
@@ -43,5 +58,15 @@ public actor BookScenePlugin: SuperPlugin {
     @MainActor
     public func addPosterView() -> AnyView? {
         AnyView(BookScenePluginPosterView(setCurrentScene: setSceneAction ?? { _ in }))
+    }
+
+    // MARK: - State assembly
+
+    @MainActor
+    private func installSceneAction(kernel: CisumKernel) {
+        guard let scene = kernel.resolveProvider((any SceneProviding).self) else { return }
+        self.setSceneAction = { @MainActor sceneValue in
+            scene.setCurrentScene(sceneValue)
+        }
     }
 }
