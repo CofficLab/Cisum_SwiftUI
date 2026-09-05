@@ -5,11 +5,6 @@ import Foundation
 import ProviderScene
 import SwiftUI
 
-@MainActor
-enum ScenePluginEvent {
-    case providerChanged(SceneProvidingEvent)
-}
-
 /// 场景 Provider 插件。
 ///
 /// 场景为内置固定枚举（`AppScene.allCases`），本插件负责把 `SceneService`
@@ -51,6 +46,7 @@ public actor ScenePlugin: SuperPlugin {
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
+        self.kernel = kernel
         kernel.registerSceneService(SceneService())
     }
 
@@ -75,7 +71,7 @@ public actor ScenePlugin: SuperPlugin {
         // View 贡献可能在插件启动前被请求：保证返回一个稳定、长期存在的
         // ViewModel，而不是每次请求都重新创建。
         let viewModel = settingsViewModel ?? {
-            let viewModel = SceneSettingsViewModel(scene: nil)
+            let viewModel = SceneSettingsViewModel(capability: makeSceneCapability(from: kernel?.scene))
             settingsViewModel = viewModel
             return viewModel
         }()
@@ -92,7 +88,12 @@ public actor ScenePlugin: SuperPlugin {
     @MainActor
     public func addToolBarButtons() -> [(id: String, view: AnyView)] {
         guard let kernel else { return [] }
-        return [(id: "scene-switcher", view: AnyView(SceneSwitcher(kernel: kernel)))]
+        let viewModel = settingsViewModel ?? {
+            let viewModel = SceneSettingsViewModel(capability: makeSceneCapability(from: kernel.scene))
+            settingsViewModel = viewModel
+            return viewModel
+        }()
+        return [(id: "scene-switcher", view: AnyView(SceneSwitcher(viewModel: viewModel)))]
     }
 
     @MainActor
@@ -107,7 +108,9 @@ public actor ScenePlugin: SuperPlugin {
     private func installSettingsState(kernel: CisumKernel) {
         guard settingsViewModel == nil else { return }
         guard let scene = kernel.scene else { return }
-        let viewModel = SceneSettingsViewModel(scene: scene)
+        let viewModel = SceneSettingsViewModel(
+            capability: makeSceneCapability(from: scene)
+        )
         let observer = SceneProvidingObserver(provider: scene, viewModel: viewModel)
         settingsViewModel = viewModel
         settingsObserver = observer
@@ -118,5 +121,13 @@ public actor ScenePlugin: SuperPlugin {
         settingsObserver?.cancel()
         settingsObserver = nil
         settingsViewModel = nil
+    }
+
+    @MainActor
+    private func makeSceneCapability(
+        from scene: (any SceneProviding)?
+    ) -> (any SceneSettingsCapability)? {
+        guard let scene else { return nil }
+        return SceneSettingsCapabilityAdapter(scene: scene)
     }
 }

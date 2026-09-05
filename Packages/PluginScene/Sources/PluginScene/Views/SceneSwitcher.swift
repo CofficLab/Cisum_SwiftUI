@@ -1,4 +1,3 @@
-import KernelCore
 import CisumUIComponents
 import ProviderScene
 import SwiftUI
@@ -9,11 +8,10 @@ import SwiftUI
 /// 由 `ScenePlugin` 通过 `addToolBarButtons()` 贡献到工具栏（迁移自
 /// `ProviderToolbar` 的 `DefaultToolbarProviding`）。
 struct SceneSwitcher: View {
-    @ObservedObject var kernel: CisumKernel
+    @ObservedObject var viewModel: SceneSettingsViewModel
 
-    private var scene: (any SceneProviding)? { kernel.scene }
-    private var scenes: [AppScene] { scene?.scenes ?? [] }
-    private var current: AppScene? { scene?.currentScene }
+    private var scenes: [AppScene] { viewModel.scenes }
+    private var current: AppScene? { viewModel.currentScene }
 
     var body: some View {
         if scenes.count > 1, let current {
@@ -23,7 +21,7 @@ struct SceneSwitcher: View {
                 Image(systemName: current.iconName)
             }
             .popover(isPresented: $isPresented) {
-                PostersView(kernel: kernel)
+                PostersView(viewModel: viewModel)
                     .environment(\.posterDismissAction, { isPresented = false })
                     .frame(minWidth: 350)
             }
@@ -41,7 +39,7 @@ private struct PostersView: View {
         let view: AnyView
     }
 
-    let kernel: CisumKernel
+    @ObservedObject var viewModel: SceneSettingsViewModel
     @State private var selectedID = ""
     @State private var items: [Item] = []
 
@@ -70,8 +68,7 @@ private struct PostersView: View {
     /// 场景海报由 PluginScene 自实现：按内置 `AppScene` 枚举逐一渲染，
     /// 不再从其他插件的 `addPosterView()` 贡献中聚合。
     private func loadItems() {
-        guard let provider = kernel.scene else { return }
-        items = provider.scenes.map { scene in
+        items = viewModel.scenes.map { scene in
             let title = Self.sceneTitle(scene)
             let description = Self.sceneDescription(scene)
             return Item(
@@ -84,7 +81,7 @@ private struct PostersView: View {
                         title: title,
                         description: description,
                         enterTitle: String(localized: "Enter Scene", bundle: .module),
-                        enterAction: { provider.setCurrentScene(scene) }
+                        enterAction: { viewModel.select(scene) }
                     )
                 )
             )

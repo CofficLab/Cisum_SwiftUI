@@ -7,10 +7,10 @@ final class SceneSettingsViewModel: ObservableObject {
     @Published private(set) var scenes: [AppScene] = []
     @Published private(set) var currentScene: AppScene?
 
-    private weak var scene: (any SceneProviding)?
+    private let capability: (any SceneSettingsCapability)?
 
-    init(scene: (any SceneProviding)?) {
-        self.scene = scene
+    init(capability: (any SceneSettingsCapability)?) {
+        self.capability = capability
         refresh()
     }
 
@@ -19,20 +19,16 @@ final class SceneSettingsViewModel: ObservableObject {
     }
 
     func select(_ target: AppScene) {
-        guard let scene else { return }
-        scene.setCurrentScene(target)
+        capability?.setCurrentScene(target)
         refresh()
     }
 
-    func handle(_ event: ScenePluginEvent) {
-        switch event {
-        case .providerChanged:
-            refresh()
-        }
+    func handleProviderChanged() {
+        refresh()
     }
 
     private func refresh() {
-        scenes = scene?.scenes ?? []
-        currentScene = scene?.currentScene
+        scenes = capability?.scenes ?? []
+        currentScene = capability?.currentScene
     }
 }

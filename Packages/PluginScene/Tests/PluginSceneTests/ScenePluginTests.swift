@@ -157,7 +157,9 @@ struct ScenePluginTests {
         service.restoreCurrentScene()
         service.setCurrentScene(.audiobooks)
 
-        let viewModel = SceneSettingsViewModel(scene: service)
+        let viewModel = SceneSettingsViewModel(
+            capability: SceneSettingsCapabilityAdapter(scene: service)
+        )
         let observer = SceneProvidingObserver(provider: service, viewModel: viewModel)
         defer { observer.cancel() }
 
@@ -177,7 +179,9 @@ struct ScenePluginTests {
         let service = SceneService(persistenceURL: persistenceURL)
         service.restoreCurrentScene()
 
-        let viewModel = SceneSettingsViewModel(scene: service)
+        let viewModel = SceneSettingsViewModel(
+            capability: SceneSettingsCapabilityAdapter(scene: service)
+        )
         let observer = SceneProvidingObserver(provider: service, viewModel: viewModel)
         defer { observer.cancel() }
 
@@ -196,7 +200,9 @@ struct ScenePluginTests {
         let service = SceneService(persistenceURL: persistenceURL)
         service.restoreCurrentScene()
 
-        let viewModel = SceneSettingsViewModel(scene: service)
+        let viewModel = SceneSettingsViewModel(
+            capability: SceneSettingsCapabilityAdapter(scene: service)
+        )
         let observer = SceneProvidingObserver(provider: service, viewModel: viewModel)
 
         service.setCurrentScene(.audiobooks)
