@@ -9,7 +9,6 @@ import SwiftUI
 /// （`setHeroView` / `setProgressView` / `setControlButtonsView`），
 /// 未注入时不渲染该区块。
 struct ControlView: View {
-    @EnvironmentObject private var man: MagicPlayMan
     let stateViews: @MainActor () -> [AnyView]
     let stateMessage: @MainActor () -> String
     var heroView: AnyView? = nil
@@ -94,7 +93,7 @@ struct ControlView: View {
         if let rightAlbumView {
             rightAlbumView
         } else {
-            man.makeHeroView()
+            DefaultRightAlbumView()
         }
     }
 
@@ -110,5 +109,16 @@ struct ControlView: View {
 
     private func shouldShowRightAlbum(_ geometry: GeometryProxy) -> Bool {
         geometry.size.width > 768
+    }
+}
+
+/// Keeps the fallback album's playback observation local to the right column.
+/// The parent control layout should not be invalidated by every playback-time
+/// tick when it only needs to react to geometry changes.
+private struct DefaultRightAlbumView: View {
+    @EnvironmentObject private var man: MagicPlayMan
+
+    var body: some View {
+        man.makeHeroView()
     }
 }

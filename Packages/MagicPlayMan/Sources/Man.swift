@@ -160,7 +160,13 @@ extension MagicPlayMan {
     /// - Parameter value: 播放进度（0-1）
     @MainActor
     func setProgress(_ value: Double) {
-        progress = MagicPlayManPlaybackTimePolicy.normalizedUnitProgress(value)
+        let normalizedValue = MagicPlayManPlaybackTimePolicy.normalizedUnitProgress(value)
+
+        // The periodic time observer runs twice per second. Avoid publishing a
+        // second change when rounding/normalization leaves progress unchanged;
+        // this prevents every observer from invalidating its view for no reason.
+        guard abs(progress - normalizedValue) > 0.0001 else { return }
+        progress = normalizedValue
     }
 
     /// 设置已喜欢的资源集合

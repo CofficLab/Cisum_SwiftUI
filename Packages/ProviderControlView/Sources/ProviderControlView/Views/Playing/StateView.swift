@@ -11,21 +11,26 @@ struct StateView: View {
     let stateMessage: @MainActor () -> String
 
     var body: some View {
-        if !isDemoMode, man.hasAsset || man.currentError != nil || !stateMessage().isEmpty || !stateViews().isEmpty {
+        let message = stateMessage()
+        let contributedViews = stateViews()
+        let hasAsset = man.hasAsset
+        let currentError = man.currentError
+
+        if !isDemoMode, hasAsset || currentError != nil || !message.isEmpty || !contributedViews.isEmpty {
             VStack(spacing: 10) {
-                if !stateMessage().isEmpty {
-                    infoView(stateMessage())
+                if !message.isEmpty {
+                    infoView(message)
                 }
 
                 if man.isLoading {
                     infoView(man.state.localizedStateText(localization: man.localization))
                 }
 
-                if let error = man.currentError {
+                if let error = currentError {
                     infoView(error.localizedDescription)
                 }
 
-                ForEach(Array(stateViews().enumerated()), id: \.offset) { _, view in
+                ForEach(Array(contributedViews.enumerated()), id: \.offset) { _, view in
                     view
                 }
             }

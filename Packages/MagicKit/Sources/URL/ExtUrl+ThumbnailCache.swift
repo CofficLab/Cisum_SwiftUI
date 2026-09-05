@@ -9,7 +9,7 @@ import UIKit
 #endif
 
 /// 缩略图缓存管理器
-public class ThumbnailCache: SuperLog {
+public final class ThumbnailCache: SuperLog, @unchecked Sendable {
     public static let emoji = "🍽️"
     
     /// 是否输出详细日志
@@ -23,6 +23,12 @@ public class ThumbnailCache: SuperLog {
     
     /// 磁盘缓存目录
     private let diskCacheURL: URL
+    /// 缓存维护专用队列，避免目录扫描占用 UI RunLoop。
+    private let maintenanceQueue = DispatchQueue(
+        label: "com.coffic.cisum.thumbnail-cache-maintenance",
+        qos: .utility
+    )
+    private var cleanupTimer: DispatchSourceTimer?
     
     /// 缓存配置
     private struct Config {
@@ -47,19 +53,29 @@ public class ThumbnailCache: SuperLog {
     
     /// 启动定期清理计时器
     private func startCacheCleanupTimer() {
-        Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { [weak self] _ in
-            Task {
-                await self?.cleanupCacheIfNeeded()
-            }
+        let timer = DispatchSource.makeTimerSource(queue: maintenanceQueue)
+        timer.schedule(
+            deadline: .now() + .seconds(300),
+            repeating: .seconds(300),
+            leeway: .seconds(30)
+        )
+        timer.setEventHandler { [weak self] in
+            self?.cleanupCacheIfNeeded()
         }
+        timer.resume()
+        cleanupTimer = timer
+    }
+
+    deinit {
+        cleanupTimer?.cancel()
     }
     
     /// 根据需要清理缓存
-    private func cleanupCacheIfNeeded() async {
+    private func cleanupCacheIfNeeded() {
         do {
             let currentSize = try getCacheSize()
             if currentSize > Int64(Double(Config.maxDiskSize) * Config.cleanupThreshold) {
-                try await cleanupOldCache()
+                try cleanupOldCache()
             }
         } catch {
             os_log(.error, "检查缓存大小失败: \(error.localizedDescription)")
@@ -67,7 +83,7 @@ public class ThumbnailCache: SuperLog {
     }
     
     /// 清理旧缓存
-    private func cleanupOldCache() async throws {
+    private func cleanupOldCache() throws {
         if verbose { os_log("\(self.t) Starting cache cleanup") }
         let fileManager = FileManager.default
         let resourceKeys: Set<URLResourceKey> = [.contentModificationDateKey, .totalFileAllocatedSizeKey]
@@ -195,4 +211,3 @@ public class ThumbnailCache: SuperLog {
         return diskCacheURL
     }
 } 
-

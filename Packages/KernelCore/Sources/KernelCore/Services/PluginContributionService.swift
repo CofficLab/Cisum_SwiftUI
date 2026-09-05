@@ -19,6 +19,7 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
     // MARK: - Caches
 
     private var cachedStatusViews: [AnyView]?
+    private var cachedStateViews: [AnyView]?
     private var cachedPosterViews: [AnyView]?
     private var cachedSettingViews: [AnyView]?
     private var cachedSettingNavItems: [PluginSettingNavigationItem]?
@@ -42,7 +43,10 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
     }
 
     public func getStateViews() -> [AnyView] {
-        manager.enabledPlugins.compactMap { $0.addStateView() }
+        if let cachedStateViews { return cachedStateViews }
+        let value = manager.enabledPlugins.compactMap { $0.addStateView() }
+        cachedStateViews = value
+        return value
     }
 
     public func getPosterViews() -> [AnyView] {
@@ -155,6 +159,7 @@ public final class PluginContributionService: ObservableObject, PluginProviding 
 
     public func invalidateCaches() {
         cachedStatusViews = nil
+        cachedStateViews = nil
         cachedPosterViews = nil
         cachedSettingViews = nil
         cachedSettingNavItems = nil

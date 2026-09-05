@@ -119,7 +119,7 @@ extension BookRepo {
     ///   - url: 书籍URL
     ///   - thumbnailSize: 缩略图尺寸
     /// - Returns: 封面图，如果未找到则返回nil
-    public func getCover(for url: URL, thumbnailSize: CGSize) async -> Image? {
+    public nonisolated func getCover(for url: URL, thumbnailSize: CGSize) async -> Image? {
         return await coverRepo.getCover(for: url, thumbnailSize: thumbnailSize)
     }
     
@@ -135,9 +135,14 @@ extension BookRepo {
             // 获取所有书籍的数据传输对象，只保留顶层书籍，包含文件夹书和单文件书。
             let allBooks = try await db.allBookDTOs()
             let libraryRoot = disk
-            let books = allBooks
-                .filter { Self.isDisplayableLibraryItem($0, libraryRoot: libraryRoot) }
-                .sorted { $0.order < $1.order }
+            // DTO filtering performs symlink/path resolution for every item.
+            // Keep that filesystem work off the main actor; only the final
+            // value crosses back to the UI-facing repository.
+            let books = await Task.detached(priority: .utility) {
+                allBooks
+                    .filter { Self.isDisplayableLibraryItem($0, libraryRoot: libraryRoot) }
+                    .sorted { $0.order < $1.order }
+            }.value
             
             if Self.verbose {
                 os_log("\(self.t)✅ 获取到 \(books.count) 本书籍")
