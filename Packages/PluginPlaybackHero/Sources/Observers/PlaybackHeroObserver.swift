@@ -9,7 +9,14 @@ final class PlaybackHeroObserver {
     init(playback: (any PlaybackProviding)?, viewModel: PlaybackHeroViewModel) {
         self.viewModel = viewModel
         handle = playback?.addObserver { [weak self] event in
-            self?.viewModel?.handlePlaybackEvent(event)
+            guard let self else { return }
+            switch event {
+            case .assetChanged(let url):
+                self.viewModel?.applyAssetChanged(url)
+            case .stateChanged(let state):
+                self.viewModel?.applyStateChanged(state)
+            default: break
+            }
         }
     }
 

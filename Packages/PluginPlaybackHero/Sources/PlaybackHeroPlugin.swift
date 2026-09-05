@@ -1,6 +1,5 @@
 import CisumUIComponents
 import KernelCore
-import MagicPlayMan
 import ProviderDocsView
 import ProviderPlayback
 import SwiftUI
@@ -33,6 +32,10 @@ public actor PlaybackHeroPlugin: SuperPlugin {
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
         self.kernel = kernel
+    }
+
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
         installState(kernel: kernel)
     }
 
@@ -55,20 +58,9 @@ public actor PlaybackHeroPlugin: SuperPlugin {
     @MainActor
     private func installState(kernel: CisumKernel?) {
         guard viewModel == nil else { return }
-        let playback = kernel?.playback
-        let mediaViewBuilder: @MainActor () -> AnyView = {
-            guard let player = playback as? MagicPlayMan else { return AnyView(EmptyView()) }
-            return AnyView(player.makeHeroView(verbose: false, avatarShape: .roundedRectangle(cornerRadius: 8)))
-        }
-        let stateText: @MainActor (PlaybackState) -> String = { state in
-            guard let player = playback as? MagicPlayMan else { return String(describing: state) }
-            return state.localizedStateText(localization: player.localization)
-        }
-        let viewModel = PlaybackHeroViewModel(
-            playback: playback,
-            mediaViewBuilder: mediaViewBuilder,
-            stateText: stateText
-        )
+        guard let playback = kernel?.playback else { return }
+        let capability = PlaybackHeroPlaybackCapabilityAdapter(playback: playback)
+        let viewModel = PlaybackHeroViewModel(playbackCapability: capability)
         self.viewModel = viewModel
         observer = PlaybackHeroObserver(playback: playback, viewModel: viewModel)
     }
