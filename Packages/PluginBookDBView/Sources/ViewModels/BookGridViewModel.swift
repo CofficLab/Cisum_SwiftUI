@@ -4,7 +4,6 @@ import MagicAlert
 import OSLog
 import PluginAudio
 import PluginBook
-import ProviderPlayback
 import SwiftData
 import SwiftUI
 
@@ -28,9 +27,8 @@ final class BookGridViewModel: ObservableObject {
     @Published var lastStateUpdatedURL: URL?
 
     private var currentAsset: URL?
-    /// 内核播放服务解析器：书籍/章节点击经 `kernel.playback`（`PlaybackProviding`）播放，
-    /// 将其设置为当前文件，而不是直接调用播放引擎。
-    private let playbackProvider: @MainActor () -> (any PlaybackProviding)?
+    /// 书籍/章节点击所需的最小播放能力。
+    private let playbackCapability: (any BookDBPlaybackCapability)?
     private weak var repo: BookRepo?
     private var dbRoot: URL?
     private var bookDisk: URL?
@@ -40,10 +38,8 @@ final class BookGridViewModel: ObservableObject {
 
     private static let verbose = false
 
-    init(
-        playbackProvider: @escaping @MainActor () -> (any PlaybackProviding)? = { nil }
-    ) {
-        self.playbackProvider = playbackProvider
+    init(playbackCapability: (any BookDBPlaybackCapability)? = nil) {
+        self.playbackCapability = playbackCapability
     }
 
     func bind(repo: BookRepo?, dbRoot: URL?, bookDisk: URL?) {
@@ -212,7 +208,7 @@ final class BookGridViewModel: ObservableObject {
             return
         }
 
-        await playbackProvider()?.play(url, startTime: time)
+        await playbackCapability?.play(url, startTime: time)
     }
 
     private func playBook(_ book: BookDTO, generation: Int) async {
@@ -254,8 +250,7 @@ final class BookGridViewModel: ObservableObject {
             ) else {
                 return
             }
-            // 经内核播放服务（PlaybackProviding）播放第一章。
-            await playbackProvider()?.play(first)
+            await playbackCapability?.play(first, startTime: nil)
         } else {
             guard BookGridPlaybackRequestPolicy.shouldReportNoPlayableChapters(
                 currentGeneration: playBookGeneration,
@@ -273,8 +268,7 @@ final class BookGridViewModel: ObservableObject {
                 return
             }
 
-            // 经内核播放服务（PlaybackProviding）播放单文件书籍。
-            await playbackProvider()?.play(book.url)
+            await playbackCapability?.play(book.url, startTime: nil)
         }
     }
 

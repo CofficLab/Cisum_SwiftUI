@@ -121,15 +121,6 @@ public actor BookDBPlugin: SuperPlugin {
 
     // MARK: - State assembly
 
-    /// 内核播放服务解析器：书籍/章节点击经 `kernel.playback`（`PlaybackProviding`）播放，
-    /// 将其设置为当前文件，而不是直接调用播放引擎。
-    @MainActor
-    private var playbackProvider: @MainActor () -> (any PlaybackProviding)? {
-        { @MainActor [weak self] in
-            self?.kernel?.playback
-        }
-    }
-
     // MARK: - 仓库路径自持（不依赖 BookPlugin actor）
 
     /// 有声书仓库磁盘目录：`storageRoot` + `BookPluginInfo.dirName`。
@@ -192,7 +183,9 @@ public actor BookDBPlugin: SuperPlugin {
         guard let scene = kernel.resolveProvider((any SceneProviding).self) else { return }
         sceneBox.scene = scene
 
-        let viewModel = BookGridViewModel(playbackProvider: playbackProvider)
+        let viewModel = BookGridViewModel(
+            playbackCapability: makePlaybackCapability(from: kernel.playback)
+        )
         let observer = BookDatabaseObserver(viewModel: viewModel)
         let playbackObserver = BookDBPlaybackObserver(playback: kernel.playback, viewModel: viewModel)
         gridViewModel = viewModel
@@ -215,9 +208,20 @@ public actor BookDBPlugin: SuperPlugin {
         if let gridViewModel {
             return gridViewModel
         }
-        let viewModel = BookGridViewModel(playbackProvider: playbackProvider)
+        let viewModel = BookGridViewModel(
+            playbackCapability: makePlaybackCapability(from: kernel?.playback)
+        )
         gridViewModel = viewModel
         return viewModel
+    }
+
+    /// 将内核播放 Provider 收窄后注入 ViewModel。
+    @MainActor
+    private func makePlaybackCapability(
+        from playback: (any PlaybackProviding)?
+    ) -> (any BookDBPlaybackCapability)? {
+        guard let playback else { return nil }
+        return BookDBPlaybackCapabilityAdapter(playback: playback)
     }
 
     private final class SceneBox {
