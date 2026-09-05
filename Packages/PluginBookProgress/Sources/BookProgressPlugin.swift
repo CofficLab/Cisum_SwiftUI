@@ -4,6 +4,7 @@ import ProviderDocsView
 import CisumUIComponents
 import PluginBook
 import PluginBookScene
+import ProviderPlayback
 import ProviderScene
 import SwiftData
 import SwiftUI
@@ -35,13 +36,19 @@ public actor BookProgressPlugin: SuperPlugin {
         guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
             throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
         }
+        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
+        }
         sceneBox.scene = scene
-        installState()
+        installState(scene: scene, playback: playback)
     }
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
-        installState()
+        guard let scene = kernel.resolveProvider((any SceneProviding).self),
+              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
+        sceneBox.scene = scene
+        installState(scene: scene, playback: playback)
     }
 
     @MainActor
@@ -57,15 +64,14 @@ public actor BookProgressPlugin: SuperPlugin {
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
-        let scene = sceneBox.scene
         let viewModel = resolveViewModel()
-        return AnyView(BookProgressPluginRootView(scene: scene, viewModel: viewModel, content: content))
+        return AnyView(BookProgressPluginRootView(viewModel: viewModel, content: content))
     }
 
     // MARK: - State assembly
 
     @MainActor
-    private func installState() {
+    private func installState(scene: any SceneProviding, playback: any PlaybackProviding) {
         guard progressViewModel == nil else { return }
         let viewModel = BookProgressViewModel(
             targetScene: .audiobooks,
@@ -92,7 +98,7 @@ public actor BookProgressPlugin: SuperPlugin {
                 }
             }
         )
-        let observer = BookProgressObserver(viewModel: viewModel)
+        let observer = BookProgressObserver(scene: scene, playback: playback, viewModel: viewModel)
         progressViewModel = viewModel
         progressObserver = observer
     }
@@ -109,8 +115,16 @@ public actor BookProgressPlugin: SuperPlugin {
         if let progressViewModel {
             return progressViewModel
         }
-        installState()
-        return progressViewModel!
+        let viewModel = BookProgressViewModel(
+            targetScene: .audiobooks,
+            currentBookURL: { BookSettingRepo.getCurrent() },
+            currentBookTime: { BookSettingRepo.getCurrentTime() },
+            storeCurrentBookURL: { BookSettingRepo.storeCurrent($0) },
+            storeCurrentBookTime: { BookSettingRepo.storeCurrentTime($0) },
+            saveBookState: { _, _, _ in }
+        )
+        progressViewModel = viewModel
+        return viewModel
     }
 
     private final class SceneBox {

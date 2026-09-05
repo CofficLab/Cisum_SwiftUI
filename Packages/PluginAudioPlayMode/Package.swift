@@ -21,7 +21,8 @@ let package = Package(
         .package(path: "../MagicPlayMan"),
         .package(path: "../KernelCore"),
         .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
-        .package(path: "../ProviderScene")
+        .package(path: "../ProviderScene"),
+        .package(path: "../ProviderPlayback")
     ],
     targets: [
         .target(
@@ -33,7 +34,8 @@ let package = Package(
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
-                .product(name: "ProviderScene", package: "ProviderScene")
+                .product(name: "ProviderScene", package: "ProviderScene"),
+                .product(name: "ProviderPlayback", package: "ProviderPlayback")
             ],
             path: ".",
             sources: ["Sources"],

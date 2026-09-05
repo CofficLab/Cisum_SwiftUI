@@ -1,6 +1,7 @@
 import CisumUIComponents
 import KernelCore
 import ProviderDocsView
+import ProviderPlayback
 import ProviderRootView
 import SwiftUI
 
@@ -19,6 +20,8 @@ public actor ControlButtonsPlugin: SuperPlugin {
     )
 
     nonisolated(unsafe) private weak var kernel: CisumKernel?
+    nonisolated(unsafe) private var viewModel: ControlButtonsViewModel?
+    nonisolated(unsafe) private var observer: ControlButtonsObserver?
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
@@ -29,11 +32,28 @@ public actor ControlButtonsPlugin: SuperPlugin {
         }
     }
 
+    @MainActor
+    public func onBoot(kernel: CisumKernel) async throws {
+        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
+        }
+        let viewModel = ControlButtonsViewModel()
+        self.viewModel = viewModel
+        observer = ControlButtonsObserver(playback: playback, viewModel: viewModel)
+    }
+
+    @MainActor
+    public func onShutdown(kernel: CisumKernel) async throws {
+        observer?.cancel()
+        observer = nil
+        viewModel = nil
+    }
+
     /// 向 `ControlViewProviding` 注入播放控制按钮组。
     @MainActor
     public func addControlButtonsView() -> AnyView? {
         AnyView(
-            ControlButtonsView { [weak self] in
+            ControlButtonsView(viewModel: viewModel ?? ControlButtonsViewModel()) { [weak self] in
                 guard let kernel = self?.kernel else { return }
                 kernel.resolveProvider((any RootViewProviding).self)?.toggleContentView()
             }

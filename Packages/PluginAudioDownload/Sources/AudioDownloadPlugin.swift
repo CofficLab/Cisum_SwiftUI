@@ -1,6 +1,7 @@
 import KernelCore
 import ProviderDocsView
 import CisumUIComponents
+import ProviderPlayback
 import ProviderScene
 import SwiftUI
 
@@ -24,24 +25,40 @@ public actor AudioDownloadPlugin: SuperPlugin {
     }
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
+    nonisolated(unsafe) private var viewModel: AudioDownloadViewModel?
+    nonisolated(unsafe) private var observer: AudioDownloadObserver?
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
         guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
             throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
         }
+        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
+        }
         sceneBox.scene = scene
+        installState(scene: scene, playback: playback)
     }
 
     @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
         sceneBox.scene = nil
+        observer?.cancel()
+        observer = nil
+        viewModel = nil
     }
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
-        let scene = sceneBox.scene
-        return AnyView(AudioDownloadPluginRootView(scene: scene) { content() })
+        return AnyView(AudioDownloadPluginRootView(content: content))
+    }
+
+    @MainActor
+    private func installState(scene: any SceneProviding, playback: any PlaybackProviding) {
+        guard viewModel == nil else { return }
+        let viewModel = AudioDownloadViewModel()
+        self.viewModel = viewModel
+        observer = AudioDownloadObserver(scene: scene, playback: playback, viewModel: viewModel)
     }
 
 

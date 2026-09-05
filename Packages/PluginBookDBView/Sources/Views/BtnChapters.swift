@@ -1,16 +1,13 @@
 import OSLog
-import MagicPlayMan
 import SwiftData
 import SwiftUI
 import PluginDevice
 
 struct BtnChapters: View {
-    @EnvironmentObject var playMan: MagicPlayMan
-
     @State var isPresented = false
     @State var selection: URL?
 
-    var asset: URL? { playMan.asset }
+    var asset: URL? { nil }
     var parent: URL? { asset?.getParent() }
     var items: [URL] {
         guard let bookURL = parent else {
@@ -51,7 +48,6 @@ extension BtnChapters {
 
     func onSelectionChange() {
         if let s = selection, s != asset {
-//            playMan.play(s.toPlayAsset(), reason: "BtnChapters的Selection变了", verbose: true)
         }
     }
 }

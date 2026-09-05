@@ -18,7 +18,6 @@ final class AudioLikeViewModel: ObservableObject {
     @Published private(set) var isLoading = true
 
     private weak var playMan: MagicPlayMan?
-    private var playbackSubscriptionID: UUID?
     private var loadGeneration = 0
     private var isActive = false
 
@@ -52,26 +51,17 @@ final class AudioLikeViewModel: ObservableObject {
 
     private func activateLike() {
         guard !isActive else { return }
-        guard let playMan else { return }
+        guard playMan != nil else { return }
 
         isActive = true
-        playbackSubscriptionID = playMan.subscribe(
-            name: "AudioLikePlugin",
-            onLikeStatusChanged: { [weak self] url, liked in
-                self?.handleLikeStatusChanged(url: url, liked: liked)
-            }
-        )
+        // Playback events are adapted by AudioLikeObserver.
     }
 
     private func deactivateLike() {
-        guard let playbackSubscriptionID else { return }
-
-        playMan?.unsubscribe(playbackSubscriptionID)
-        self.playbackSubscriptionID = nil
         isActive = false
     }
 
-    private func handleLikeStatusChanged(url: URL, liked: Bool) {
+    func handleLikeStatusChanged(asset url: URL, liked: Bool) {
         guard isActive else { return }
 
         Task { @MainActor in

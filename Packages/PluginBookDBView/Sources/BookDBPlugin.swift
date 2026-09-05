@@ -23,6 +23,7 @@ public actor BookDBPlugin: SuperPlugin {
     nonisolated(unsafe) private weak var kernel: CisumKernel?
     nonisolated(unsafe) private var gridViewModel: BookGridViewModel?
     nonisolated(unsafe) private var databaseObserver: BookDatabaseObserver?
+    nonisolated(unsafe) private var playbackObserver: BookDBPlaybackObserver?
     /// 缓存的有声书仓库单例，供主内容区与导入流程复用，避免反复构建 SwiftData 容器。
     nonisolated(unsafe) private var cachedBookRepo: BookRepo?
 
@@ -186,14 +187,18 @@ public actor BookDBPlugin: SuperPlugin {
         guard gridViewModel == nil else { return }
         let viewModel = BookGridViewModel(playbackProvider: playbackProvider)
         let observer = BookDatabaseObserver(viewModel: viewModel)
+        let playbackObserver = BookDBPlaybackObserver(playback: kernel?.playback, viewModel: viewModel)
         gridViewModel = viewModel
         databaseObserver = observer
+        self.playbackObserver = playbackObserver
     }
 
     @MainActor
     private func teardownState() {
         databaseObserver?.cancel()
         databaseObserver = nil
+        playbackObserver?.cancel()
+        playbackObserver = nil
         gridViewModel = nil
         cachedBookRepo = nil
     }

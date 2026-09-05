@@ -1,4 +1,7 @@
 import Foundation
+import MagicPlayMan
+import ProviderPlayback
+import ProviderScene
 
 /// 音频控制的数据库删除与存储重置观察者（迁移 Phase 5）。
 ///
@@ -9,9 +12,25 @@ import Foundation
 final class AudioControlObserver {
     private weak var viewModel: AudioControlViewModel?
     private var tokens: [NSObjectProtocol] = []
+    private var sceneHandle: (any SceneProvidingObserverHandle)?
+    private var playbackHandle: (any PlaybackProvidingObserverHandle)?
 
-    init(viewModel: AudioControlViewModel) {
+    init(
+        scene: any SceneProviding,
+        playback: any PlaybackProviding,
+        viewModel: AudioControlViewModel
+    ) {
         self.viewModel = viewModel
+        viewModel.bind(playMan: playback as? MagicPlayMan)
+        viewModel.handleSceneChange(scene.currentScene)
+
+        sceneHandle = scene.addObserver { [weak self] event in
+            guard case .selectionChanged(let scene) = event else { return }
+            self?.viewModel?.handleSceneChange(scene)
+        }
+        playbackHandle = playback.addObserver { [weak self] event in
+            self?.viewModel?.handlePlaybackEvent(event)
+        }
 
         let center = NotificationCenter.default
         tokens.append(center.addObserver(forName: Notification.Name("dbDeleted"), object: nil, queue: .main) { [weak self] notification in
@@ -24,6 +43,10 @@ final class AudioControlObserver {
     }
 
     func cancel() {
+        sceneHandle?.cancel()
+        sceneHandle = nil
+        playbackHandle?.cancel()
+        playbackHandle = nil
         tokens.forEach { NotificationCenter.default.removeObserver($0) }
         tokens.removeAll()
     }

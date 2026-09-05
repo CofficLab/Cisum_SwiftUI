@@ -3,6 +3,7 @@ import Foundation
 import MagicAlert
 import MagicPlayMan
 import OSLog
+import ProviderPlayback
 import ProviderScene
 
 /// 音频播放控制的集中状态容器（迁移 Phase 5）。
@@ -17,7 +18,6 @@ final class AudioControlViewModel: ObservableObject {
     private static let author = "AudioControlViewModel"
 
     private weak var playMan: MagicPlayMan?
-    private var playbackSubscriptionID: UUID?
     private var controlGeneration = 0
     private var currentScene: AppScene?
     private let targetScene: AppScene
@@ -68,26 +68,24 @@ final class AudioControlViewModel: ObservableObject {
             return
         }
 
-        guard playbackSubscriptionID == nil, let playMan else { return }
-
-        playbackSubscriptionID = playMan.subscribe(
-            name: Self.author,
-            onPreviousRequested: { [weak self] asset in
-                self?.handlePreviousRequested(asset)
-            },
-            onNextRequested: { [weak self] asset in
-                self?.handleNextRequested(asset)
-            }
-        )
+        guard playMan != nil else { return }
     }
 
     private func deactivateControl() {
         controlGeneration = AudioControlPlaybackRequestPolicy.generationAfterDeactivation(controlGeneration)
 
-        guard let playbackSubscriptionID, let playMan else { return }
+        _ = playMan
+    }
 
-        playMan.unsubscribe(playbackSubscriptionID)
-        self.playbackSubscriptionID = nil
+    func handlePlaybackEvent(_ event: PlaybackProvidingEvent) {
+        switch event {
+        case .previousRequested(let asset):
+            handlePreviousRequested(asset)
+        case .nextRequested(let asset):
+            handleNextRequested(asset)
+        default:
+            break
+        }
     }
 
     // MARK: - Navigation

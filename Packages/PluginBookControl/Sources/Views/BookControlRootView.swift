@@ -3,7 +3,6 @@ import CisumUIComponents
 import MagicPlayMan
 import OSLog
 import PluginBook
-import ProviderScene
 import SwiftUI
 
 enum BookControlBookRootResolver {
@@ -317,36 +316,19 @@ enum BookControlChapterCache {
 }
 
 public struct BookControlRootView<Content>: View where Content: View {
-    @EnvironmentObject private var man: MagicPlayMan
     @ObservedObject private var viewModel: BookControlViewModel
 
     private let content: Content
-    private let targetScene: AppScene
-    private let scene: (any SceneProviding)?
 
     init(
-        targetScene: AppScene,
-        scene: (any SceneProviding)?,
         viewModel: BookControlViewModel,
         @ViewBuilder content: () -> Content
     ) {
-        self.targetScene = targetScene
-        self.scene = scene
         self.viewModel = viewModel
         self.content = content()
     }
 
     public var body: some View {
         content
-            .onAppear {
-                viewModel.bind(playMan: man)
-                viewModel.handleSceneChange(scene?.currentScene)
-            }
-            .onDisappear {
-                viewModel.handleSceneChange(nil)
-            }
-            .onChange(of: scene?.currentScene) { _, newScene in
-                viewModel.handleSceneChange(newScene)
-            }
     }
 }

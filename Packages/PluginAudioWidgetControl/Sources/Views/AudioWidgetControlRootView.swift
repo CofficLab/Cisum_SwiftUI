@@ -97,7 +97,6 @@ enum AudioWidgetCommandStore {
 }
 
 public struct AudioWidgetControlRootView: View {
-    @EnvironmentObject private var man: MagicPlayMan
     @ObservedObject private var viewModel: AudioWidgetControlViewModel
 
     init(viewModel: AudioWidgetControlViewModel) {
@@ -107,7 +106,6 @@ public struct AudioWidgetControlRootView: View {
     public var body: some View {
         EmptyView()
             .onAppear {
-                viewModel.bind(playMan: man)
                 viewModel.handleWidgetCommands()
             }
     }

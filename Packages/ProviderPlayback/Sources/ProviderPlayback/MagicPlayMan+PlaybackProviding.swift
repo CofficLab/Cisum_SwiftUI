@@ -21,6 +21,10 @@ extension MagicPlayMan: PlaybackProviding {
         await play(url, reason: "PlaybackProviding")
     }
 
+    public func play(_ url: URL, startTime: TimeInterval?) async {
+        await play(url, autoPlay: false, startTime: startTime, reason: "PlaybackProviding")
+    }
+
     public func pause() {
         pause(reason: "PlaybackProviding")
     }
@@ -43,6 +47,14 @@ extension MagicPlayMan: PlaybackProviding {
         changePlayMode(mode)
     }
 
+    public func toggleCurrentLike() {
+        toggleLike()
+    }
+
+    public func reset() async {
+        await reset(reason: "PlaybackProviding")
+    }
+
     @discardableResult
     public func addObserver(
         _ callback: @escaping (PlaybackProvidingEvent) -> Void
@@ -59,16 +71,40 @@ private final class PlaybackObserver: PlaybackProvidingObserverHandle {
     init(player: MagicPlayMan, callback: @escaping (PlaybackProvidingEvent) -> Void) {
         let center = NotificationCenter.default
 
-        center.publisher(for: .playManStateChanged, object: player)
-            .sink { [weak player] _ in
-                guard let player else { return }
-                callback(.stateChanged(player.state))
+        player.events.onStateChanged
+            .sink { state in
+                callback(.stateChanged(state))
             }
             .store(in: &cancellables)
 
-        center.publisher(for: .playManAssetChanged, object: player)
-            .sink { notification in
-                callback(.assetChanged(notification.userInfo?["asset"] as? URL))
+        player.events.onCurrentURLChanged
+            .sink { url in
+                callback(.assetChanged(url))
+            }
+            .store(in: &cancellables)
+
+        player.events.onPlayModeChanged
+            .sink { mode in
+                callback(.playModeChanged(mode))
+            }
+            .store(in: &cancellables)
+
+        player.events.onLikeStatusChanged
+            .sink { event in
+                callback(.likeStatusChanged(asset: event.asset, isLiked: event.isLiked))
+                callback(.likedAssetsChanged(player.likedAssets))
+            }
+            .store(in: &cancellables)
+
+        player.events.onPreviousRequested
+            .sink { asset in
+                callback(.previousRequested(asset))
+            }
+            .store(in: &cancellables)
+
+        player.events.onNextRequested
+            .sink { asset in
+                callback(.nextRequested(asset))
             }
             .store(in: &cancellables)
 

@@ -3,6 +3,7 @@ import ProviderDocsView
 import CisumUIComponents
 import PluginAudio
 import PluginAudioScene
+import ProviderPlayback
 import ProviderScene
 import SwiftUI
 
@@ -26,24 +27,53 @@ public actor AudioPlayModePlugin: SuperPlugin {
     }
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
+    nonisolated(unsafe) private var viewModel: AudioPlayModeViewModel?
+    nonisolated(unsafe) private var observer: AudioPlayModeObserver?
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
         guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
             throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
         }
+        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
+        }
         sceneBox.scene = scene
+        installState(scene: scene, playback: playback)
     }
 
     @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
         sceneBox.scene = nil
+        observer?.cancel()
+        observer = nil
+        viewModel = nil
     }
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
-        let scene = sceneBox.scene
-        return AnyView(AudioPlayModePluginRootView(scene: scene, content: content))
+        return AnyView(AudioPlayModePluginRootView(content: content))
+    }
+
+    @MainActor
+    private func installState(scene: any SceneProviding, playback: any PlaybackProviding) {
+        guard viewModel == nil else { return }
+        let viewModel = AudioPlayModeViewModel(
+            sort: { currentURL in
+                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+                    throw AudioPluginError.hostNotConfigured
+                }
+                await repo.sort(currentURL, reason: "PlayModeChanged")
+            },
+            shuffle: { currentURL in
+                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+                    throw AudioPluginError.hostNotConfigured
+                }
+                try await repo.sortRandom(currentURL, reason: "PlayModeChanged", verbose: false)
+            }
+        )
+        self.viewModel = viewModel
+        observer = AudioPlayModeObserver(scene: scene, playback: playback, viewModel: viewModel)
     }
 
 

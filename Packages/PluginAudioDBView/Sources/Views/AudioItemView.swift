@@ -1,6 +1,5 @@
 import CisumUIComponents
 import Foundation
-import MagicPlayMan
 import OSLog
 import SwiftUI
 
@@ -126,7 +125,6 @@ struct AudioItemView: View, Equatable, SuperLog {
     nonisolated static let emoji = "🎵"
     nonisolated static let verbose = false
 
-    @EnvironmentObject var playMan: MagicPlayMan
     @EnvironmentObject var listViewModel: AudioListViewModel
     @LumiTheme private var appTheme
 
@@ -363,7 +361,7 @@ extension AudioItemView {
     /// 播放音频
     private func playAudio() {
         Task {
-            await playMan.play(url, reason: "Audio list context menu")
+            listViewModel.play(url)
             if Self.verbose {
                 os_log("\(Self.t)▶️ Playing audio: \(url.lastPathComponent)")
             }

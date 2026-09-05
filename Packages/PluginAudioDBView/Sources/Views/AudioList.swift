@@ -3,7 +3,6 @@ import OSLog
 import SwiftData
 import SwiftUI
 import PluginAudio
-import MagicPlayMan
 
 enum AudioListFileIdentity {
     static func canonicalIdentity(for url: URL) -> String {
@@ -189,7 +188,6 @@ struct AudioList: View, SuperLog {
     nonisolated static let verbose = false
 
     @EnvironmentObject var viewModel: AudioListViewModel
-    @EnvironmentObject var playManController: MagicPlayMan
     @LumiTheme private var appTheme
 
     var body: some View {
@@ -205,16 +203,11 @@ struct AudioList: View, SuperLog {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(appTheme.background.ignoresSafeArea())
         .onAppear {
-            viewModel.bind(playMan: playManController)
             viewModel.handleOnAppear()
         }
         // 用户选择变化 → 触发播放（View 只转发意图）。
         .onChange(of: viewModel.selection) { _, newValue in
             viewModel.select(newValue)
-        }
-        // 播放器资产变化 → 同步选中项（本地派生状态，经 ViewModel 处理）。
-        .onChange(of: playManController.asset) { _, newValue in
-            viewModel.handleAssetChanged(url: newValue)
         }
     }
 

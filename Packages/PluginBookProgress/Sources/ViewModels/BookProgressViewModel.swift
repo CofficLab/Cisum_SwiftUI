@@ -3,6 +3,7 @@ import MagicAlert
 import MagicPlayMan
 import OSLog
 import PluginBook
+import ProviderPlayback
 import ProviderScene
 import SwiftUI
 
@@ -18,7 +19,6 @@ final class BookProgressViewModel: ObservableObject {
     private static let tag = "📖"
 
     private weak var playMan: MagicPlayMan?
-    private var playbackSubscriptionID: UUID?
     private var restoreGeneration = 0
     private var currentScene: AppScene?
     private let targetScene: AppScene
@@ -73,24 +73,13 @@ final class BookProgressViewModel: ObservableObject {
 
         restoreBookProgress()
 
-        guard playbackSubscriptionID == nil, let playMan else { return }
-
-        playbackSubscriptionID = playMan.subscribe(
-            name: "BookProgressPlugin",
-            onCurrentURLChanged: { [weak self] url in
-                self?.handleCurrentURLChanged(url)
-            }
-        )
+        guard playMan != nil else { return }
     }
 
     private func deactivateProgress() {
         restoreGeneration += 1
 
-        guard let playbackSubscriptionID, let playMan else { return }
-
         persistCurrentProgress(reason: "deactivateProgress")
-        playMan.unsubscribe(playbackSubscriptionID)
-        self.playbackSubscriptionID = nil
     }
 
     // MARK: - Restore
@@ -239,6 +228,17 @@ final class BookProgressViewModel: ObservableObject {
         guard let playMan, playMan.state == .paused else { return }
 
         persistCurrentProgress(reason: "handlePlayManStateChanged")
+    }
+
+    func handlePlaybackEvent(_ event: PlaybackProvidingEvent) {
+        switch event {
+        case .stateChanged(let state):
+            handlePlayManStateChanged(state == .playing)
+        case .assetChanged(let url):
+            handleCurrentURLChanged(url)
+        default:
+            break
+        }
     }
 
     func handleBookDBDeleted(deletedURLs: [URL]) {

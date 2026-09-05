@@ -1,7 +1,6 @@
 import Combine
 import Foundation
 import MagicAlert
-import MagicPlayMan
 import OSLog
 import PluginAudio
 import ProviderPlayback
@@ -36,7 +35,7 @@ final class AudioListViewModel: ObservableObject {
     /// 内核播放服务解析器：文件点击经 `kernel.playback`（`PlaybackProviding`）播放，
     /// 将其设置为当前文件，而不是直接调用播放引擎。
     private let playbackProvider: @MainActor () -> (any PlaybackProviding)?
-    private weak var playMan: MagicPlayMan?
+    private var currentAsset: URL?
     private let reasonTag: String
     private let isDesktop: Bool
 
@@ -63,18 +62,13 @@ final class AudioListViewModel: ObservableObject {
         #endif
     }
 
-    /// 由 View 注入当前播放器引用（EnvironmentObject），弱引用避免循环持有。
-    func bind(playMan: MagicPlayMan?) {
-        self.playMan = playMan
-    }
-
     // MARK: - User intent
 
     /// 视图出现：加载首页并恢复当前播放选中项。
     func handleOnAppear() {
         loadInitial()
 
-        if let asset = playMan?.asset {
+        if let asset = currentAsset {
             setSelection(asset, reason: "handleOnAppear")
         }
     }
@@ -86,7 +80,7 @@ final class AudioListViewModel: ObservableObject {
             return
         }
 
-        guard !AudioListSelectionPolicy.representsSameAudio(url, playMan?.currentURL) else { return }
+        guard !AudioListSelectionPolicy.representsSameAudio(url, currentAsset) else { return }
 
         selectionGeneration += 1
         let generation = selectionGeneration
@@ -108,12 +102,20 @@ final class AudioListViewModel: ObservableObject {
 
     /// 播放器资产变化：同步选中项。
     func handleAssetChanged(url: URL?) {
+        currentAsset = url
         if let asset = url {
             if !AudioListSelectionPolicy.representsSameAudio(asset, selection) {
                 setSelection(asset, reason: reasonTag + ".handleAssetChanged")
             }
         } else {
             setSelection(nil, reason: reasonTag + ".handleAssetChanged")
+        }
+    }
+
+    /// 播放列表中的文件；具体播放引擎由内核 `PlaybackProviding` 提供。
+    func play(_ url: URL) {
+        Task { @MainActor in
+            await playbackProvider()?.play(url)
         }
     }
 
@@ -409,11 +411,11 @@ final class AudioListViewModel: ObservableObject {
         do {
             try await repo.deleteAudios(urlsToDelete)
             if AudioDeletePlaybackPolicy.shouldResetDirectlyAfterDelete(
-                currentURL: playMan?.currentURL,
+                currentURL: currentAsset,
                 deletedURLs: urlsToDelete,
                 isPlaybackControllerHandlingDeletion: true
             ) {
-                await playMan?.reset(reason: "Delete file")
+                await playbackProvider()?.reset()
             }
             for url in urlsToDelete {
                 alert_info(String(localized: "Deleted \(url.title)", bundle: .module))

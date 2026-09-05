@@ -2,6 +2,7 @@ import Foundation
 import MagicPlayMan
 import OSLog
 import PluginBook
+import ProviderPlayback
 import ProviderScene
 import SwiftUI
 
@@ -17,7 +18,6 @@ final class BookControlViewModel: ObservableObject {
     private static let tag = "⏭️"
 
     private weak var playMan: MagicPlayMan?
-    private var playbackSubscriptionID: UUID?
     private var controlGeneration = 0
     private var currentScene: AppScene?
     private let targetScene: AppScene
@@ -57,27 +57,25 @@ final class BookControlViewModel: ObservableObject {
             Self.log.debug("\(Self.tag)👀 View appeared, initializing audiobook playback controls")
         }
 
-        guard playbackSubscriptionID == nil, let playMan else { return }
-
-        playbackSubscriptionID = playMan.subscribe(
-            name: "BookControlPlugin",
-            onPreviousRequested: { [weak self] asset in
-                self?.handlePreviousRequested(asset)
-            },
-            onNextRequested: { [weak self] asset in
-                self?.handleNextRequested(asset)
-            }
-        )
+        guard playMan != nil else { return }
     }
 
     private func deactivateControl() {
         controlGeneration = BookControlPlaybackRequestPolicy.generationAfterDeactivation(controlGeneration)
         BookControlChapterCache.removeAll()
 
-        guard let playbackSubscriptionID, let playMan else { return }
+        _ = playMan
+    }
 
-        playMan.unsubscribe(playbackSubscriptionID)
-        self.playbackSubscriptionID = nil
+    func handlePlaybackEvent(_ event: PlaybackProvidingEvent) {
+        switch event {
+        case .previousRequested(let asset):
+            handlePreviousRequested(asset)
+        case .nextRequested(let asset):
+            handleNextRequested(asset)
+        default:
+            break
+        }
     }
 
     // MARK: - Navigation

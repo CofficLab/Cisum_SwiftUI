@@ -2,6 +2,7 @@ import KernelCore
 import ProviderDocsView
 import CisumUIComponents
 import PluginAudioScene
+import ProviderPlayback
 import ProviderScene
 import SwiftUI
 
@@ -33,13 +34,19 @@ public actor AudioLikePlugin: SuperPlugin {
         guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
             throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
         }
+        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
+        }
         sceneBox.scene = scene
-        installState()
+        installState(scene: scene, playback: playback)
     }
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
-        installState()
+        guard let scene = kernel.resolveProvider((any SceneProviding).self),
+              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
+        sceneBox.scene = scene
+        installState(scene: scene, playback: playback)
     }
 
     @MainActor
@@ -55,9 +62,8 @@ public actor AudioLikePlugin: SuperPlugin {
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
-        let scene = sceneBox.scene
         let viewModel = resolveViewModel()
-        return AnyView(AudioLikePluginRootView(scene: scene, viewModel: viewModel, content: content))
+        return AnyView(AudioLikePluginRootView(viewModel: viewModel, content: content))
     }
 
     @MainActor
@@ -81,10 +87,10 @@ public actor AudioLikePlugin: SuperPlugin {
     // MARK: - State assembly
 
     @MainActor
-    private func installState() {
+    private func installState(scene: any SceneProviding, playback: any PlaybackProviding) {
         guard viewModel == nil else { return }
         let viewModel = AudioLikeViewModel()
-        let observer = AudioLikeObserver(viewModel: viewModel)
+        let observer = AudioLikeObserver(scene: scene, playback: playback, viewModel: viewModel)
         self.viewModel = viewModel
         self.observer = observer
     }

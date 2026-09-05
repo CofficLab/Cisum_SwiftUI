@@ -1,4 +1,7 @@
 import Foundation
+import MagicPlayMan
+import ProviderPlayback
+import ProviderScene
 
 /// 音频进度的数据库删除与存储重置观察者（迁移 Phase 5）。
 ///
@@ -9,9 +12,24 @@ import Foundation
 final class AudioProgressObserver {
     private weak var viewModel: AudioProgressViewModel?
     private var tokens: [NSObjectProtocol] = []
+    private var sceneHandle: (any SceneProvidingObserverHandle)?
+    private var playbackHandle: (any PlaybackProvidingObserverHandle)?
+    private var currentScene: AppScene?
 
-    init(viewModel: AudioProgressViewModel, storageResetNotifications: [Notification.Name]) {
+    init(scene: any SceneProviding, playback: any PlaybackProviding, viewModel: AudioProgressViewModel, storageResetNotifications: [Notification.Name]) {
         self.viewModel = viewModel
+        viewModel.bind(playMan: playback as? MagicPlayMan)
+        currentScene = scene.currentScene
+        viewModel.handleSceneChange(from: nil, to: scene.currentScene)
+        sceneHandle = scene.addObserver { [weak self] event in
+            guard case .selectionChanged(let scene) = event else { return }
+            let previousScene = self?.currentScene
+            self?.currentScene = scene
+            self?.viewModel?.handleSceneChange(from: previousScene, to: scene)
+        }
+        playbackHandle = playback.addObserver { [weak self] event in
+            self?.viewModel?.handlePlaybackEvent(event)
+        }
         let center = NotificationCenter.default
 
         tokens.append(center.addObserver(forName: .dbDeleted, object: nil, queue: .main) { [weak self] notification in
@@ -27,6 +45,11 @@ final class AudioProgressObserver {
     }
 
     func cancel() {
+        sceneHandle?.cancel()
+        sceneHandle = nil
+        playbackHandle?.cancel()
+        playbackHandle = nil
+        currentScene = nil
         tokens.forEach { NotificationCenter.default.removeObserver($0) }
         tokens.removeAll()
     }

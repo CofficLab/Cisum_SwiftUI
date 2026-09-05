@@ -1,18 +1,15 @@
 import CisumUIComponents
-import ProviderScene
 import SwiftUI
 
 struct AudioDownloadPluginRootView<Content>: View where Content: View {
-    private let scene: (any SceneProviding)?
     private let content: Content
 
-    init(scene: (any SceneProviding)?, @ViewBuilder content: () -> Content) {
-        self.scene = scene
+    init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
 
     var body: some View {
-        AudioDownloadRootView(scene: scene) {
+        AudioDownloadRootView {
             content
         }
     }

@@ -1,5 +1,8 @@
 import Foundation
+import MagicPlayMan
 import PluginBook
+import ProviderPlayback
+import ProviderScene
 
 /// 书籍控制的数据库与存储重置观察者（迁移 Phase 5）。
 ///
@@ -10,9 +13,24 @@ import PluginBook
 final class BookControlObserver {
     private weak var viewModel: BookControlViewModel?
     private var tokens: [NSObjectProtocol] = []
+    private var sceneHandle: (any SceneProvidingObserverHandle)?
+    private var playbackHandle: (any PlaybackProvidingObserverHandle)?
 
-    init(viewModel: BookControlViewModel) {
+    init(
+        scene: any SceneProviding,
+        playback: any PlaybackProviding,
+        viewModel: BookControlViewModel
+    ) {
         self.viewModel = viewModel
+        viewModel.bind(playMan: playback as? MagicPlayMan)
+        viewModel.handleSceneChange(scene.currentScene)
+        sceneHandle = scene.addObserver { [weak self] event in
+            guard case .selectionChanged(let scene) = event else { return }
+            self?.viewModel?.handleSceneChange(scene)
+        }
+        playbackHandle = playback.addObserver { [weak self] event in
+            self?.viewModel?.handlePlaybackEvent(event)
+        }
         let center = NotificationCenter.default
 
         tokens.append(center.addObserver(forName: .bookDBDeleted, object: nil, queue: .main) { [weak self] notification in
@@ -31,6 +49,10 @@ final class BookControlObserver {
     }
 
     func cancel() {
+        sceneHandle?.cancel()
+        sceneHandle = nil
+        playbackHandle?.cancel()
+        playbackHandle = nil
         tokens.forEach { NotificationCenter.default.removeObserver($0) }
         tokens.removeAll()
     }

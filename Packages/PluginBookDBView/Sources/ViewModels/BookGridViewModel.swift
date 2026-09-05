@@ -1,7 +1,6 @@
 import Combine
 import Foundation
 import MagicAlert
-import MagicPlayMan
 import OSLog
 import PluginAudio
 import PluginBook
@@ -28,7 +27,7 @@ final class BookGridViewModel: ObservableObject {
     /// 最近一次播放状态更新的书籍 URL，供 `BookTile` 观察并重载封面。
     @Published var lastStateUpdatedURL: URL?
 
-    private weak var playMan: MagicPlayMan?
+    private var currentAsset: URL?
     /// 内核播放服务解析器：书籍/章节点击经 `kernel.playback`（`PlaybackProviding`）播放，
     /// 将其设置为当前文件，而不是直接调用播放引擎。
     private let playbackProvider: @MainActor () -> (any PlaybackProviding)?
@@ -47,8 +46,7 @@ final class BookGridViewModel: ObservableObject {
         self.playbackProvider = playbackProvider
     }
 
-    func bind(playMan: MagicPlayMan?, repo: BookRepo?, dbRoot: URL?, bookDisk: URL?) {
-        self.playMan = playMan
+    func bind(repo: BookRepo?, dbRoot: URL?, bookDisk: URL?) {
         self.repo = repo
         self.dbRoot = dbRoot
         self.bookDisk = bookDisk
@@ -59,7 +57,7 @@ final class BookGridViewModel: ObservableObject {
     func handleOnAppear() {
         isLoading = true
         scheduleUpdateBooksDebounced()
-        if let currentAsset = playMan?.asset {
+        if let currentAsset {
             updateSelectedBook(for: currentAsset)
         }
     }
@@ -83,6 +81,7 @@ final class BookGridViewModel: ObservableObject {
     }
 
     func handleAssetChanged(_ url: URL?) {
+        currentAsset = url
         if let url = url {
             updateSelectedBook(for: url)
         } else {
@@ -166,7 +165,7 @@ final class BookGridViewModel: ObservableObject {
 
         isLoading = false
 
-        if let currentAsset = playMan?.asset {
+        if let currentAsset {
             updateSelectedBook(for: currentAsset)
         } else if let currentSelection = selectedBookURL,
                   !BookGridSelectionPolicy.containsSelectedBook(currentSelection, in: newValue) {
@@ -213,9 +212,7 @@ final class BookGridViewModel: ObservableObject {
             return
         }
 
-        // 续播路径需要 `startTime`（从上次进度继续），`PlaybackProviding` 未暴露该参数，
-        // 因此仍经播放引擎（MagicPlayMan）发起，保留续播能力。
-        await playMan?.play(url, autoPlay: false, startTime: time, reason: reason)
+        await playbackProvider()?.play(url, startTime: time)
     }
 
     private func playBook(_ book: BookDTO, generation: Int) async {

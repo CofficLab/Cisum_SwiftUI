@@ -9,6 +9,9 @@ public enum PlaybackProvidingEvent {
     case durationChanged(TimeInterval)
     case playModeChanged(MagicPlayMode)
     case likedAssetsChanged(Set<URL>)
+    case likeStatusChanged(asset: URL, isLiked: Bool)
+    case previousRequested(URL)
+    case nextRequested(URL)
 }
 
 @MainActor
@@ -65,6 +68,9 @@ public protocol PlaybackProviding: AnyObject {
     /// 播放指定 URL。
     func play(_ url: URL) async
 
+    /// 播放指定 URL，并可从保存的时间点开始。
+    func play(_ url: URL, startTime: TimeInterval?) async
+
     /// 暂停。
     func pause()
 
@@ -86,6 +92,12 @@ public protocol PlaybackProviding: AnyObject {
     /// 设置播放模式。
     func setPlayMode(_ mode: MagicPlayMode)
 
+    /// 切换当前资源的喜欢状态。
+    func toggleCurrentLike()
+
+    /// 完全卸载当前资源并恢复空闲状态。
+    func reset() async
+
     /// 循环切换播放模式。
     func togglePlayMode()
 
@@ -94,6 +106,12 @@ public protocol PlaybackProviding: AnyObject {
 }
 
 public extension PlaybackProviding {
+    func play(_ url: URL, startTime: TimeInterval?) async {
+        await play(url)
+    }
+
+    func reset() async {}
+
     @discardableResult
     func addObserver(_ callback: @escaping (PlaybackProvidingEvent) -> Void) -> any PlaybackProvidingObserverHandle {
         NoopPlaybackProvidingObserverHandle()

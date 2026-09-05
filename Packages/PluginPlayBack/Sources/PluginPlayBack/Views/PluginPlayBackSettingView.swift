@@ -12,7 +12,6 @@ import SwiftUI
 /// - 「播放详情」：当前场景的活动播放状态，随播放引擎实时刷新
 ///   （`currentURL` / `isPlaying` / `duration` / `currentTime`）。
 struct PluginPlayBackSettingView: View {
-    @EnvironmentObject private var playMan: MagicPlayMan
     @ObservedObject private var viewModel: PluginPlayBackSettingsViewModel
     @LumiTheme private var theme
 
@@ -41,10 +40,10 @@ struct PluginPlayBackSettingView: View {
                     .font(.appCaption)
                     .foregroundStyle(.secondary)
             }
-            if playMan.currentURL != nil {
-                Text(playMan.isPlaying ? "Playing" : "Paused")
+            if viewModel.currentURL != nil {
+                Text(viewModel.isPlaying ? "Playing" : "Paused")
                     .font(.appCaption)
-                    .foregroundStyle(playMan.isPlaying ? theme.success : .secondary)
+                    .foregroundStyle(viewModel.isPlaying ? theme.success : .secondary)
             }
         }
     }
@@ -86,7 +85,7 @@ struct PluginPlayBackSettingView: View {
 
     private var playbackSection: some View {
         AppSettingsSection(title: "Playback Details") {
-            if playMan.currentURL != nil {
+            if viewModel.currentURL != nil {
                 infoCard
             } else {
                 emptyState
@@ -96,12 +95,12 @@ struct PluginPlayBackSettingView: View {
 
     private var infoCard: some View {
         VStack(alignment: .leading, spacing: 10) {
-            row(icon: "music.note", title: String(localized: "File Name", bundle: .module), value: playMan.currentURL?.lastPathComponent ?? "—")
-            row(icon: "folder", title: String(localized: "Path", bundle: .module), value: playMan.currentURL?.deletingLastPathComponent().path ?? "—")
+            row(icon: "music.note", title: String(localized: "File Name", bundle: .module), value: viewModel.currentURL?.lastPathComponent ?? "—")
+            row(icon: "folder", title: String(localized: "Path", bundle: .module), value: viewModel.currentURL?.deletingLastPathComponent().path ?? "—")
             row(icon: "internaldrive", title: String(localized: "Size", bundle: .module), value: fileSizeText)
-            row(icon: "timer", title: String(localized: "Duration", bundle: .module), value: Self.formatTime(playMan.duration))
-            row(icon: "clock", title: String(localized: "Played", bundle: .module), value: Self.formatTime(playMan.currentTime))
-            row(icon: "play.circle", title: String(localized: "Status", bundle: .module), value: playMan.state.description)
+            row(icon: "timer", title: String(localized: "Duration", bundle: .module), value: Self.formatTime(viewModel.duration))
+            row(icon: "clock", title: String(localized: "Played", bundle: .module), value: Self.formatTime(viewModel.currentTime))
+            row(icon: "play.circle", title: String(localized: "Status", bundle: .module), value: viewModel.state.description)
         }
         .padding(16)
         .background(
@@ -146,7 +145,7 @@ struct PluginPlayBackSettingView: View {
     }
 
     private var fileSizeText: String {
-        guard let url = playMan.currentURL,
+        guard let url = viewModel.currentURL,
               let attrs = try? FileManager.default.attributesOfItem(atPath: url.path),
               let size = attrs[.size] as? Int64 else {
             return "—"

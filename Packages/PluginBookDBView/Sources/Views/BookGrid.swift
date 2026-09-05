@@ -1,5 +1,4 @@
 import CisumUIComponents
-import MagicPlayMan
 import OSLog
 import PluginAudio
 import PluginBook
@@ -122,7 +121,6 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
     nonisolated static let verbose = false
 
     @Environment(\.bookDBViewDependencies) private var dependencies
-    @EnvironmentObject var man: MagicPlayMan
     @EnvironmentObject var viewModel: BookGridViewModel
 
     /// Total book count.
@@ -196,12 +194,9 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
         .onAppear {
             Task { @MainActor in
                 let repo = await dependencies.bookRepo()
-                viewModel.bind(playMan: man, repo: repo, dbRoot: dependencies.dbRoot, bookDisk: dependencies.bookDisk)
+                viewModel.bind(repo: repo, dbRoot: dependencies.dbRoot, bookDisk: dependencies.bookDisk)
                 viewModel.handleOnAppear()
             }
-        }
-        .onPlayManAssetChanged { url in
-            viewModel.handleAssetChanged(url)
         }
         .onDisappear {
             viewModel.handleOnDisappear()

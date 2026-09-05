@@ -2,6 +2,7 @@ import KernelCore
 import ProviderDocsView
 import CisumUIComponents
 import PluginBookScene
+import ProviderPlayback
 import ProviderScene
 import SwiftUI
 
@@ -33,13 +34,19 @@ public actor BookLikePlugin: SuperPlugin {
         guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
             throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
         }
+        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
+        }
         sceneBox.scene = scene
-        installState()
+        installState(scene: scene, playback: playback)
     }
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
-        installState()
+        guard let scene = kernel.resolveProvider((any SceneProviding).self),
+              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
+        sceneBox.scene = scene
+        installState(scene: scene, playback: playback)
     }
 
     @MainActor
@@ -55,8 +62,8 @@ public actor BookLikePlugin: SuperPlugin {
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
-        let scene = sceneBox.scene
-        return AnyView(BookLikePluginRootView(scene: scene, content: content))
+        let viewModel = resolveViewModel()
+        return AnyView(BookLikePluginRootView(viewModel: viewModel, content: content))
     }
 
     @MainActor
@@ -80,10 +87,10 @@ public actor BookLikePlugin: SuperPlugin {
     // MARK: - State assembly
 
     @MainActor
-    private func installState() {
+    private func installState(scene: any SceneProviding, playback: any PlaybackProviding) {
         guard likeViewModel == nil else { return }
         let viewModel = BookLikeViewModel()
-        let observer = BookLikeObserver(viewModel: viewModel)
+        let observer = BookLikeObserver(scene: scene, playback: playback, viewModel: viewModel)
         likeViewModel = viewModel
         likeObserver = observer
     }
@@ -100,8 +107,9 @@ public actor BookLikePlugin: SuperPlugin {
         if let likeViewModel {
             return likeViewModel
         }
-        installState()
-        return likeViewModel!
+        let viewModel = BookLikeViewModel()
+        likeViewModel = viewModel
+        return viewModel
     }
 
     private final class SceneBox {

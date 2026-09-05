@@ -47,6 +47,7 @@ public actor PluginPlayBack: SuperPlugin {
     /// 设置页 ViewModel 与场景观察者（onReady 时创建，设置页导航项注入同一实例）。
     nonisolated(unsafe) private var settingsViewModel: PluginPlayBackSettingsViewModel?
     nonisolated(unsafe) private var settingsSceneObserver: PlaybackSettingsSceneObserver?
+    nonisolated(unsafe) private var settingsPlaybackObserver: PlaybackSettingsPlaybackObserver?
 
     /// 播放状态变化监听句柄（记录当前文件到当前场景的磁盘槽位）。
     nonisolated(unsafe) private var observerHandle: (any PlaybackProvidingObserverHandle)?
@@ -97,6 +98,8 @@ public actor PluginPlayBack: SuperPlugin {
         sceneObserver = nil
         settingsSceneObserver?.cancel()
         settingsSceneObserver = nil
+        settingsPlaybackObserver?.cancel()
+        settingsPlaybackObserver = nil
         settingsViewModel = nil
         stateStore = nil
         magicPlayMan = nil
@@ -110,13 +113,15 @@ public actor PluginPlayBack: SuperPlugin {
         guard settingsSceneObserver == nil else { return }
         guard let viewModel = settingsViewModel ?? makeSettingsViewModel() else { return }
         let observer = PlaybackSettingsSceneObserver(provider: kernel.scene, viewModel: viewModel)
+        let playbackObserver = PlaybackSettingsPlaybackObserver(playback: kernel.playback, viewModel: viewModel)
         settingsSceneObserver = observer
+        settingsPlaybackObserver = playbackObserver
     }
 
     @MainActor
     private func makeSettingsViewModel() -> PluginPlayBackSettingsViewModel? {
         guard let store = stateStore else { return nil }
-        let viewModel = PluginPlayBackSettingsViewModel(store: store)
+        let viewModel = PluginPlayBackSettingsViewModel(store: store, playback: magicPlayMan)
         settingsViewModel = viewModel
         return viewModel
     }
@@ -128,7 +133,6 @@ public actor PluginPlayBack: SuperPlugin {
     /// （`currentURL` / `isPlaying` / `duration` / `currentTime`）。
     @MainActor
     public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
-        guard let player = magicPlayMan else { return nil }
         let viewModel = settingsViewModel ?? makeSettingsViewModel()
         guard let viewModel else { return nil }
         return PluginSettingNavigationItem(
@@ -139,7 +143,6 @@ public actor PluginPlayBack: SuperPlugin {
             order: Self.metadata.order,
             destination: AnyView(
                 PluginPlayBackSettingView(viewModel: viewModel)
-                    .environmentObject(player)
             )
         )
     }

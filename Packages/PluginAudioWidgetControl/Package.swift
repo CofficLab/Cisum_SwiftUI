@@ -20,6 +20,7 @@ let package = Package(
         .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
         .package(path: "../PluginAudio"),
         .package(path: "../MagicPlayMan"),
+        .package(name: "ProviderPlayback", path: "../ProviderPlayback"),
     ],
     targets: [
         .target(
@@ -30,6 +31,7 @@ let package = Package(
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
                 .product(name: "PluginAudio", package: "PluginAudio"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
+                .product(name: "ProviderPlayback", package: "ProviderPlayback"),
             ],
             path: ".",
             sources: ["Sources"],

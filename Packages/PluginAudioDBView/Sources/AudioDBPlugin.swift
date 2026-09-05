@@ -1,7 +1,6 @@
 import KernelCore
 import ProviderDocsView
 import CisumUIComponents
-import MagicPlayMan
 import PluginAudio
 import ProviderPlayback
 import ProviderScene
@@ -25,6 +24,8 @@ public actor AudioDBPlugin: SuperPlugin {
     nonisolated(unsafe) private var rootViewModel: AudioDBRootViewModel?
     nonisolated(unsafe) private var dbViewModel: AudioDBViewModel?
     nonisolated(unsafe) private var databaseObserver: AudioDatabaseObserver?
+    nonisolated(unsafe) private var playbackObserver: AudioDBPlaybackObserver?
+    nonisolated(unsafe) private var settingPlaybackObserver: AudioDBPlaybackObserver?
     nonisolated(unsafe) private var sceneState: AudioDBSceneState?
     nonisolated(unsafe) private var sceneObserver: AudioDBSceneObserver?
 
@@ -110,6 +111,7 @@ public actor AudioDBPlugin: SuperPlugin {
             audioRepo: audioRepoProvider,
             playbackProvider: playbackProvider
         )
+        settingPlaybackObserver = AudioDBPlaybackObserver(playback: kernel?.playback, viewModel: settingList)
         return PluginSettingNavigationItem(
             id: "audiodb",
             title: String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), bundle: .module),
@@ -164,11 +166,13 @@ public actor AudioDBPlugin: SuperPlugin {
         )
         let db = AudioDBViewModel()
         let observer = AudioDatabaseObserver(list: list, root: root, db: db)
+        let playbackObserver = AudioDBPlaybackObserver(playback: kernel.playback, viewModel: list)
 
         listViewModel = list
         rootViewModel = root
         dbViewModel = db
         databaseObserver = observer
+        self.playbackObserver = playbackObserver
 
         _ = resolveSceneState()
     }
@@ -180,6 +184,10 @@ public actor AudioDBPlugin: SuperPlugin {
         sceneState = nil
         databaseObserver?.cancel()
         databaseObserver = nil
+        playbackObserver?.cancel()
+        playbackObserver = nil
+        settingPlaybackObserver?.cancel()
+        settingPlaybackObserver = nil
         listViewModel = nil
         rootViewModel = nil
         dbViewModel = nil
@@ -278,8 +286,6 @@ private struct AudioDBPluginRootView<Content>: View where Content: View {
     @Environment(\.demoMode) private var isDemoMode
     @Environment(\.appIsImporting) private var isImporting
     @Environment(\.showAudioDBViewAction) private var showDBView
-    @EnvironmentObject private var playMan: MagicPlayMan
-
     let listViewModel: AudioListViewModel
     let rootViewModel: AudioDBRootViewModel
     let dbViewModel: AudioDBViewModel
@@ -320,9 +326,6 @@ private struct AudioDBPluginRootView<Content>: View where Content: View {
             .environmentObject(listViewModel)
             .environmentObject(rootViewModel)
             .environmentObject(dbViewModel)
-            .onAppear {
-                listViewModel.bind(playMan: playMan)
-            }
         } else {
             // 场景不是音乐库：下掉 AudioDB root view 外壳，直接透传内容区。
             content
@@ -354,8 +357,6 @@ private struct AudioDBPluginRootView<Content>: View where Content: View {
 private struct AudioDBPluginTabView: View {
     @Environment(\.appIsImporting) private var isImporting
     @Environment(\.showAudioDBViewAction) private var showDBView
-    @EnvironmentObject private var playMan: MagicPlayMan
-
     let listViewModel: AudioListViewModel
     let rootViewModel: AudioDBRootViewModel
     let dbViewModel: AudioDBViewModel
@@ -390,9 +391,6 @@ private struct AudioDBPluginTabView: View {
             .environmentObject(listViewModel)
             .environmentObject(rootViewModel)
             .environmentObject(dbViewModel)
-            .onAppear {
-                listViewModel.bind(playMan: playMan)
-            }
     }
 
     private var dependencies: AudioDBDependencies {

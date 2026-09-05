@@ -1,7 +1,7 @@
 import CoreFoundation
 import Foundation
-import MagicPlayMan
 import OSLog
+import ProviderPlayback
 
 /// Widget 控制命令的集中状态容器（迁移 Phase 4）。
 ///
@@ -13,7 +13,7 @@ final class AudioWidgetControlViewModel: ObservableObject {
     private static let verbose = false
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "AudioWidgetControl")
 
-    private weak var playMan: MagicPlayMan?
+    private var playback: (any PlaybackProviding)?
     private var navigationTask: Task<Void, Never>?
 
     private let nextAsset: AudioWidgetAdjacentAssetProvider
@@ -22,19 +22,17 @@ final class AudioWidgetControlViewModel: ObservableObject {
     private let lastAsset: AudioWidgetLastAssetProvider
 
     init(
+        playback: (any PlaybackProviding)?,
         nextAsset: @escaping AudioWidgetAdjacentAssetProvider,
         previousAsset: @escaping AudioWidgetAdjacentAssetProvider,
         firstAsset: @escaping AudioWidgetFirstAssetProvider,
         lastAsset: @escaping AudioWidgetLastAssetProvider
     ) {
+        self.playback = playback
         self.nextAsset = nextAsset
         self.previousAsset = previousAsset
         self.firstAsset = firstAsset
         self.lastAsset = lastAsset
-    }
-
-    func bind(playMan: MagicPlayMan?) {
-        self.playMan = playMan
     }
 
     func handleWidgetCommands() {
@@ -75,44 +73,44 @@ final class AudioWidgetControlViewModel: ObservableObject {
     }
 
     private func handlePlayPause(count: Int) {
-        guard let playMan else { return }
+        guard let playback else { return }
         switch AudioWidgetPlaybackRequestPolicy.playPauseAction(
-            currentState: playMan.state,
+            currentState: playback.state,
             commandCount: count
         ) {
         case .play:
-            playMan.playCurrent(reason: "Widget")
+            playback.toggle()
         case .pause:
-            playMan.pause(reason: "Widget")
+            playback.pause()
         case .none:
             break
         }
     }
 
     private func handleNext(count: Int) {
-        guard let playMan else { return }
+        guard let playback else { return }
         enqueueNavigationTask { [weak self] in
             guard let self else { return }
             for _ in 0..<count {
-                guard let asset = playMan.currentAsset else { return }
+                guard let asset = playback.currentURL else { return }
 
                 do {
                     if let next = try await self.nextAsset(asset, Self.verbose) {
                         guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
                             requestedAsset: asset,
-                            currentAsset: playMan.currentAsset
+                            currentAsset: playback.currentURL
                         ) else {
                             return
                         }
-                        await playMan.play(next, autoPlay: true, reason: "Widget.Next")
-                    } else if playMan.playMode == .repeatAll, let first = try await self.firstAsset() {
+                        await playback.play(next)
+                    } else if playback.playMode == .repeatAll, let first = try await self.firstAsset() {
                         guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
                             requestedAsset: asset,
-                            currentAsset: playMan.currentAsset
+                            currentAsset: playback.currentURL
                         ) else {
                             return
                         }
-                        await playMan.play(first, autoPlay: true, reason: "Widget.Loop")
+                        await playback.play(first)
                     }
                 } catch {
                     Self.log.error("Failed to get next asset: \(error.localizedDescription)")
@@ -123,29 +121,29 @@ final class AudioWidgetControlViewModel: ObservableObject {
     }
 
     private func handlePrevious(count: Int) {
-        guard let playMan else { return }
+        guard let playback else { return }
         enqueueNavigationTask { [weak self] in
             guard let self else { return }
             for _ in 0..<count {
-                guard let asset = playMan.currentAsset else { return }
+                guard let asset = playback.currentURL else { return }
 
                 do {
                     if let previous = try await self.previousAsset(asset, Self.verbose) {
                         guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
                             requestedAsset: asset,
-                            currentAsset: playMan.currentAsset
+                            currentAsset: playback.currentURL
                         ) else {
                             return
                         }
-                        await playMan.play(previous, autoPlay: true, reason: "Widget.Previous")
-                    } else if playMan.playMode == .repeatAll, let last = try await self.lastAsset() {
+                        await playback.play(previous)
+                    } else if playback.playMode == .repeatAll, let last = try await self.lastAsset() {
                         guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
                             requestedAsset: asset,
-                            currentAsset: playMan.currentAsset
+                            currentAsset: playback.currentURL
                         ) else {
                             return
                         }
-                        await playMan.play(last, autoPlay: true, reason: "Widget.RepeatAllPrevious")
+                        await playback.play(last)
                     }
                 } catch {
                     Self.log.error("Failed to get previous asset: \(error.localizedDescription)")

@@ -2,6 +2,7 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import PluginAudio
+import ProviderPlayback
 import SwiftUI
 
 public actor AudioWidgetControlPlugin: SuperPlugin {
@@ -27,7 +28,7 @@ public actor AudioWidgetControlPlugin: SuperPlugin {
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
-        installState()
+        installState(kernel: kernel)
     }
 
     @MainActor
@@ -51,9 +52,11 @@ public actor AudioWidgetControlPlugin: SuperPlugin {
     // MARK: - State assembly
 
     @MainActor
-    private func installState() {
+    private func installState(kernel: CisumKernel? = nil) {
         guard widgetViewModel == nil else { return }
+        let playback = kernel?.playback
         let viewModel = AudioWidgetControlViewModel(
+            playback: playback,
             nextAsset: { current, verbose in
                 guard let repo = await AudioPlugin.getAudioRepoAsync() else {
                     throw AudioPluginError.hostNotConfigured

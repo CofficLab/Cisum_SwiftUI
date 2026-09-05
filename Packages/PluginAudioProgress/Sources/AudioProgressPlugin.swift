@@ -3,6 +3,7 @@ import ProviderDocsView
 import CisumUIComponents
 import PluginAudio
 import PluginAudioScene
+import ProviderPlayback
 import ProviderScene
 import SwiftUI
 
@@ -35,13 +36,19 @@ public actor AudioProgressPlugin: SuperPlugin, SuperLog {
         guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
             throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
         }
+        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
+        }
         sceneBox.scene = scene
-        installState()
+        installState(scene: scene, playback: playback)
     }
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
-        installState()
+        guard let scene = kernel.resolveProvider((any SceneProviding).self),
+              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
+        sceneBox.scene = scene
+        installState(scene: scene, playback: playback)
     }
 
     @MainActor
@@ -57,17 +64,16 @@ public actor AudioProgressPlugin: SuperPlugin, SuperLog {
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
-        let scene = sceneBox.scene
         let viewModel = resolveViewModel()
-        return AnyView(AudioProgressPluginRootView(scene: scene, viewModel: viewModel, content: content))
+        return AnyView(AudioProgressPluginRootView(viewModel: viewModel, content: content))
     }
 
     // MARK: - State assembly
 
     @MainActor
-    private func installState() {
-        guard progressViewModel == nil else { return }
-        let viewModel = AudioProgressViewModel(
+    private func installState(scene: any SceneProviding, playback: any PlaybackProviding) {
+        guard progressObserver == nil else { return }
+        let viewModel = progressViewModel ?? AudioProgressViewModel(
             audioScene: .music,
             audioRepo: { await AudioPlugin.getAudioRepoAsync() },
             saveWidgetData: { title, artist, isPlaying, coverArt in
@@ -75,6 +81,8 @@ public actor AudioProgressPlugin: SuperPlugin, SuperLog {
             }
         )
         let observer = AudioProgressObserver(
+            scene: scene,
+            playback: playback,
             viewModel: viewModel,
             storageResetNotifications: [Notification.Name("storageLocationDidReset")]
         )
@@ -94,7 +102,14 @@ public actor AudioProgressPlugin: SuperPlugin, SuperLog {
         if let progressViewModel {
             return progressViewModel
         }
-        installState()
+        let viewModel = AudioProgressViewModel(
+            audioScene: .music,
+            audioRepo: { await AudioPlugin.getAudioRepoAsync() },
+            saveWidgetData: { title, artist, isPlaying, coverArt in
+                AudioProgressHost.saveWidgetData(title: title, artist: artist, isPlaying: isPlaying, coverArt: coverArt)
+            }
+        )
+        progressViewModel = viewModel
         return progressViewModel!
     }
 

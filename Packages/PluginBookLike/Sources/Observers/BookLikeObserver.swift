@@ -1,4 +1,7 @@
 import Foundation
+import MagicPlayMan
+import ProviderPlayback
+import ProviderScene
 
 /// 书籍喜欢状态变化观察者（迁移 Phase 5）。
 ///
@@ -8,15 +11,31 @@ import Foundation
 final class BookLikeObserver {
     private weak var viewModel: BookLikeViewModel?
     private var token: NSObjectProtocol?
+    private var sceneHandle: (any SceneProvidingObserverHandle)?
+    private var playbackHandle: (any PlaybackProvidingObserverHandle)?
 
-    init(viewModel: BookLikeViewModel) {
+    init(scene: any SceneProviding, playback: any PlaybackProviding, viewModel: BookLikeViewModel) {
         self.viewModel = viewModel
+        viewModel.bind(playMan: playback as? MagicPlayMan)
+        viewModel.handleSceneChange(scene.currentScene)
+        sceneHandle = scene.addObserver { [weak self] event in
+            guard case .selectionChanged(let scene) = event else { return }
+            self?.viewModel?.handleSceneChange(scene)
+        }
+        playbackHandle = playback.addObserver { [weak self] event in
+            guard case .likeStatusChanged(let asset, let isLiked) = event else { return }
+            self?.viewModel?.handleLikeStatusChanged(asset: asset, liked: isLiked)
+        }
         token = NotificationCenter.default.addObserver(forName: .BookLikeStatusChanged, object: nil, queue: .main) { [weak self] _ in
             Task { @MainActor in self?.viewModel?.handleLikeStatusChanged() }
         }
     }
 
     func cancel() {
+        sceneHandle?.cancel()
+        sceneHandle = nil
+        playbackHandle?.cancel()
+        playbackHandle = nil
         if let token {
             NotificationCenter.default.removeObserver(token)
         }

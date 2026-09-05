@@ -1,11 +1,9 @@
 import AVFoundation
 import Foundation
 import CisumUIComponents
-import MagicPlayMan
 import OSLog
 import PluginAudio
 import PluginAudioLike
-import ProviderScene
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
@@ -95,38 +93,19 @@ enum AudioProgressPersistencePolicy {
 }
 
 public struct AudioProgressRootView<Content>: View where Content: View {
-    @EnvironmentObject var man: MagicPlayMan
     @ObservedObject private var viewModel: AudioProgressViewModel
 
     private var content: Content
-    private let scene: (any SceneProviding)?
-    private let audioScene: AppScene
 
     init(
-        scene: (any SceneProviding)?,
-        audioScene: AppScene,
         viewModel: AudioProgressViewModel,
         @ViewBuilder content: () -> Content
     ) {
-        self.scene = scene
-        self.audioScene = audioScene
         self.viewModel = viewModel
         self.content = content()
     }
 
     public var body: some View {
         content
-            .onAppear {
-                viewModel.bind(playMan: man)
-                viewModel.handleSceneChange(from: nil, to: scene?.currentScene)
-            }
-            .onDisappear {
-                viewModel.handleOnDisappear()
-            }
-            .onChange(of: scene?.currentScene) { oldScene, newScene in
-                viewModel.handleSceneChange(from: oldScene, to: newScene)
-            }
-            .onPlayManStateChanged(viewModel.handlePlayManStateChanged)
-            .onPlayManAssetChanged(viewModel.handlePlayManAssetChanged)
     }
 }

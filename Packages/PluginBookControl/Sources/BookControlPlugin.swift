@@ -2,6 +2,7 @@ import KernelCore
 import ProviderDocsView
 import CisumUIComponents
 import PluginBookScene
+import ProviderPlayback
 import ProviderScene
 import SwiftUI
 
@@ -32,13 +33,19 @@ public actor BookControlPlugin: SuperPlugin {
         guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
             throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
         }
+        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
+        }
         sceneBox.scene = scene
-        installState()
+        installState(scene: scene, playback: playback)
     }
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
-        installState()
+        guard let scene = kernel.resolveProvider((any SceneProviding).self),
+              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
+        sceneBox.scene = scene
+        installState(scene: scene, playback: playback)
     }
 
     @MainActor
@@ -54,18 +61,17 @@ public actor BookControlPlugin: SuperPlugin {
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
-        let scene = sceneBox.scene
         let viewModel = resolveViewModel()
-        return AnyView(BookControlPluginRootView(scene: scene, viewModel: viewModel, content: content))
+        return AnyView(BookControlPluginRootView(viewModel: viewModel, content: content))
     }
 
     // MARK: - State assembly
 
     @MainActor
-    private func installState() {
-        guard controlViewModel == nil else { return }
-        let viewModel = BookControlViewModel(targetScene: .audiobooks)
-        let observer = BookControlObserver(viewModel: viewModel)
+    private func installState(scene: any SceneProviding, playback: any PlaybackProviding) {
+        guard controlObserver == nil else { return }
+        let viewModel = controlViewModel ?? BookControlViewModel(targetScene: .audiobooks)
+        let observer = BookControlObserver(scene: scene, playback: playback, viewModel: viewModel)
         controlViewModel = viewModel
         controlObserver = observer
     }
@@ -82,8 +88,9 @@ public actor BookControlPlugin: SuperPlugin {
         if let controlViewModel {
             return controlViewModel
         }
-        installState()
-        return controlViewModel!
+        let viewModel = BookControlViewModel(targetScene: .audiobooks)
+        controlViewModel = viewModel
+        return viewModel
     }
 
     private final class SceneBox {
