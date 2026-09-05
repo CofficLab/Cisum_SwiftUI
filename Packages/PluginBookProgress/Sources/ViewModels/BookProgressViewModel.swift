@@ -1,5 +1,6 @@
 import Foundation
 import MagicAlert
+import MagicKit
 import MagicPlayMan
 import OSLog
 import PluginBook
@@ -16,7 +17,7 @@ import SwiftUI
 /// `BookProgressObserver` 通过事件回写，外部播放操作通过
 /// `BookProgressPlaybackCapability` 执行。
 @MainActor
-final class BookProgressViewModel: ObservableObject {
+final class BookProgressViewModel: ObservableObject, SuperLog {
     private static let verbose = true
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "BookProgress")
     private static let tag = "📖"

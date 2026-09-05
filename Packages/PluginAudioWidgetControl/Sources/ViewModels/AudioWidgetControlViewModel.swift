@@ -1,5 +1,6 @@
 import CoreFoundation
 import Foundation
+import MagicKit
 import OSLog
 
 /// Widget 控制命令的集中状态容器（迁移 Phase 4）。
@@ -8,7 +9,7 @@ import OSLog
 /// 命令；取代原 `AudioWidgetControlRootView` 内的 `@State navigationTask`
 /// 与全部命令处理逻辑。
 @MainActor
-final class AudioWidgetControlViewModel: ObservableObject {
+final class AudioWidgetControlViewModel: ObservableObject, SuperLog {
     private static let verbose = false
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "AudioWidgetControl")
 

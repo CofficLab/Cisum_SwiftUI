@@ -1,7 +1,8 @@
 import Foundation
+import MagicKit
 import OSLog
 
-public actor AudioJobScheduler {
+public actor AudioJobScheduler: SuperLog {
     public static let shared = AudioJobScheduler()
 
     public nonisolated static let verbose = true

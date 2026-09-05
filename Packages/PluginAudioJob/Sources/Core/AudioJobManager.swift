@@ -1,7 +1,8 @@
 import Foundation
+import MagicKit
 import OSLog
 
-public actor AudioJobManager {
+public actor AudioJobManager: SuperLog {
     public static let shared = AudioJobManager()
 
     public nonisolated static let verbose = false

@@ -30,13 +30,13 @@ import OSLog
 /// ```
 public protocol SuperLog {
     /// 获取实现者的标识 emoji
-    static var emoji: String { get }
+    nonisolated static var emoji: String { get }
     
     /// 获取带有线程信息的完整前缀
-    static var t: String { get }
+    nonisolated static var t: String { get }
     
     /// 获取实现者的类型名称
-    static var author: String { get }
+    nonisolated static var author: String { get }
 }
 
 public extension SuperLog {

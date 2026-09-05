@@ -15,6 +15,7 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(path: "../MagicKit"),
         .package(path: "../CisumUIComponents"),
         .package(path: "../MagicPlayMan"),
         .package(path: "../KernelCore"),
@@ -26,6 +27,7 @@ let package = Package(
         .target(
             name: "PluginAudioDownload",
             dependencies: [
+                .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
                 .product(name: "KernelCore", package: "KernelCore"),

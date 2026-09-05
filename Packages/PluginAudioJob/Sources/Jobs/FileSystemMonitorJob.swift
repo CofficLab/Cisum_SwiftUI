@@ -1,9 +1,10 @@
 @preconcurrency import Combine
 import Foundation
 import CisumUIComponents
+import MagicKit
 import OSLog
 
-public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
+public final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
     public typealias DiskProvider = @Sendable () async -> URL?
     public typealias SyncItems = @Sendable (_ items: [URL], _ isFirst: Bool) async -> Void
     public typealias DeleteItems = @Sendable (_ urls: [URL]) async throws -> Void

@@ -1,10 +1,11 @@
 import Foundation
 import MagicAlert
+import MagicKit
 import OSLog
 import ProviderScene
 
 @MainActor
-final class AudioDownloadViewModel {
+final class AudioDownloadViewModel: SuperLog {
     private static let verbose = true
     private let playbackCapability: (any AudioDownloadPlaybackCapability)?
     private var currentScene: AppScene?

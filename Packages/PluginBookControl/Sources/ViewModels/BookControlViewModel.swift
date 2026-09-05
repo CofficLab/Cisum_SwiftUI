@@ -1,4 +1,5 @@
 import Foundation
+import MagicKit
 import MagicPlayMan
 import OSLog
 import PluginBook
@@ -15,7 +16,7 @@ import SwiftUI
 /// `BookControlObserver` 通过 `apply...` 方法回写，外部播放操作通过
 /// `BookControlPlaybackCapability` 执行。
 @MainActor
-final class BookControlViewModel: ObservableObject {
+final class BookControlViewModel: ObservableObject, SuperLog {
     private static let verbose = false
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "BookControl")
     private static let tag = "⏭️"

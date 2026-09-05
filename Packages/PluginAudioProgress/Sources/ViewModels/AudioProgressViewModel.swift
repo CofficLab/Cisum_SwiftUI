@@ -1,5 +1,6 @@
 import AVFoundation
 import Foundation
+import MagicKit
 import MagicPlayMan
 import OSLog
 import PluginAudio
@@ -20,7 +21,7 @@ import WidgetKit
 /// `AudioProgressObserver` 通过事件回写，外部播放操作通过
 /// `AudioProgressPlaybackCapability` 执行。
 @MainActor
-final class AudioProgressViewModel: ObservableObject {
+final class AudioProgressViewModel: ObservableObject, SuperLog {
     private static let verbose = false
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "AudioProgress")
     private static let tag = "💾"

@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import MagicAlert
+import MagicKit
 import MagicPlayMan
 import OSLog
 import ProviderScene
@@ -15,10 +16,9 @@ import ProviderScene
 /// `AudioControlObserver` 通过 `apply...` 方法回写，外部播放操作通过
 /// `AudioControlPlaybackCapability` 执行。
 @MainActor
-final class AudioControlViewModel: ObservableObject {
+final class AudioControlViewModel: ObservableObject, SuperLog {
     private static let verbose = true
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "AudioControl")
-    private static let author = "AudioControlViewModel"
 
     private let playbackCapability: (any AudioControlPlaybackCapability)?
     private var controlGeneration = 0

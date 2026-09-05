@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import MagicAlert
+import MagicKit
 import OSLog
 import PluginAudio
 import PluginBook
@@ -14,7 +15,7 @@ import SwiftUI
 /// `@State` 与事件 handler。由 `BookDBPlugin` 入口持有并注入
 /// `BookDatabaseObserver`；View 只展示与转发意图。
 @MainActor
-final class BookGridViewModel: ObservableObject {
+final class BookGridViewModel: ObservableObject, SuperLog {
     @Published private(set) var books: [BookDTO] = []
     @Published private(set) var bookURLIndex: [URL: BookDTO] = [:]
     @Published private(set) var isLoading = true

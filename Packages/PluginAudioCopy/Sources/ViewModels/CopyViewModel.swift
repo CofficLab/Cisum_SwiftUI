@@ -2,6 +2,7 @@
 import Combine
 import Foundation
 import MagicAlert
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
@@ -12,7 +13,7 @@ import SwiftUI
 /// （任务列表/选中/删除）的状态，取代两个 View 各自的 `@State` 与
 /// `.onCopyTask*` 直接订阅。由 `AudioCopyService` 静态持有并共享。
 @MainActor
-final class CopyViewModel: ObservableObject {
+final class CopyViewModel: ObservableObject, SuperLog {
     // CopyStateView 状态
     @Published var showCopying = false
     @Published private(set) var taskCount: Int = 0

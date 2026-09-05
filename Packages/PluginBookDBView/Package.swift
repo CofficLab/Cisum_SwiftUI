@@ -16,6 +16,7 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(path: "../MagicKit"),
         .package(path: "../CisumUIComponents"),
         .package(path: "../KernelCore"),
         .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
@@ -31,6 +32,7 @@ let package = Package(
         .target(
             name: "PluginBookDBView",
             dependencies: [
+                .product(name: "MagicKit", package: "MagicKit"),
                 "CisumUIComponents",
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
