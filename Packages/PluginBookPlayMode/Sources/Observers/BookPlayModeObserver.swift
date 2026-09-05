@@ -15,7 +15,8 @@ final class BookPlayModeObserver {
             self?.viewModel?.handleSceneChange(scene)
         }
         playbackHandle = playback.addObserver { [weak self] event in
-            self?.viewModel?.handlePlaybackEvent(event)
+            guard case .playModeChanged(let mode) = event else { return }
+            self?.viewModel?.handlePlayModeChanged(mode)
         }
     }
 

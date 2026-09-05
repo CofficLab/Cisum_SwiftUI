@@ -2,7 +2,6 @@ import Foundation
 import Combine
 import MagicAlert
 import MagicPlayMan
-import ProviderPlayback
 import ProviderScene
 
 typealias BookPlayModeLoadAction = @MainActor () async -> MagicPlayMode
@@ -36,8 +35,8 @@ final class BookPlayModeViewModel: ObservableObject {
         else { generation += 1; isActive = false }
     }
 
-    func handlePlaybackEvent(_ event: PlaybackProvidingEvent) {
-        guard case .playModeChanged(let mode) = event, isActive else { return }
+    func handlePlayModeChanged(_ mode: MagicPlayMode) {
+        guard isActive else { return }
         generation += 1
         let requestGeneration = generation
         Task { @MainActor [weak self] in
