@@ -26,7 +26,10 @@ struct KernelRootView: View {
 
                     rootContent
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .frame(minWidth: 350, minHeight: 250)
+                        .frame(
+                            minWidth: CisumPlayerLayout.minimumWindowWidth,
+                            minHeight: CisumPlayerLayout.minimumWindowHeight
+                        )
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)

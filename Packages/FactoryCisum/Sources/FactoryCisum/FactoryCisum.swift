@@ -97,6 +97,8 @@ public enum CisumBuilder: SuperLog {
         // 2.5 注册视图 Provider（对齐 Lumi：视图区域各自为独立的 Provider 契约，
         // 默认实现在此注册进内核；Factory 组装时只做 resolveProvider + 注入 + makeRootView）
         registerViewProviders(into: kernel)
+        kernel.resolveProvider((any RootViewProviding).self)?
+            .setContentViewVisible(appState.isDBViewVisible)
 
         // 4. 订阅插件变更
         subscribeToPluginChanges(kernel: kernel)

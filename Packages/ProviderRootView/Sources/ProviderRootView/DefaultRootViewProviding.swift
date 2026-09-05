@@ -12,7 +12,7 @@ public final class DefaultRootViewProviding: RootViewProviding {
     public private(set) var contentView: AnyView?
     public private(set) var statusView: AnyView?
     public private(set) var toolbarContent: AnyView?
-    public private(set) var isContentViewVisible = true
+    public private(set) var isContentViewVisible = false
     private let eventObservers = KernelEventObserverStore<RootViewProvidingEvent>()
 
     private let kernel: CisumKernel

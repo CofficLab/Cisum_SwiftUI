@@ -1,4 +1,5 @@
 import MagicPlayMan
+import CisumUIComponents
 import SwiftUI
 
 /// 播放控制区域：封面、标题、状态、进度条和底部操作按钮。
@@ -22,7 +23,7 @@ struct ControlView: View {
             HStack(spacing: 0) {
                 VStack(spacing: 0) {
                     if heroView != nil {
-                        heroArea
+                        heroArea(for: geometry)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
 
@@ -54,14 +55,21 @@ struct ControlView: View {
             .padding(.horizontal, 0)
             .frame(maxHeight: .infinity)
         }
-        .ignoresSafeArea(edges: .horizontal)
-        .frame(minHeight: 250)
+        #if os(macOS)
+            .ignoresSafeArea(edges: .horizontal)
+        #else
+            .ignoresSafeArea()
+        #endif
+        .frame(minHeight: CisumPlayerLayout.controlMinimumHeight)
     }
 
     @ViewBuilder
-    private var heroArea: some View {
+    private func heroArea(for geometry: GeometryProxy) -> some View {
         if let heroView {
-            heroView
+            heroView.environment(
+                \.rightAlbumVisible,
+                shouldShowRightAlbum(geometry)
+            )
         }
     }
 
@@ -98,17 +106,15 @@ struct ControlView: View {
     }
 
     private func stateHeight(for geometry: GeometryProxy) -> CGFloat {
-        if geometry.size.height <= 250 { return 24 }
-        if geometry.size.height <= 450 { return 36 }
-        return 48
+        CisumPlayerLayout.stateHeight(for: geometry.size.height)
     }
 
     private func buttonHeight(for geometry: GeometryProxy) -> CGFloat {
-        min(geometry.size.width / 5, 900, geometry.size.height / 4)
+        CisumPlayerLayout.controlButtonHeight(width: geometry.size.width, height: geometry.size.height)
     }
 
     private func shouldShowRightAlbum(_ geometry: GeometryProxy) -> Bool {
-        geometry.size.width > 768
+        CisumPlayerLayout.shouldShowRightAlbum(width: geometry.size.width)
     }
 }
 

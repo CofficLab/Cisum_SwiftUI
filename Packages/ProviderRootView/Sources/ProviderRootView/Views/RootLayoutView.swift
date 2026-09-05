@@ -18,6 +18,7 @@ struct RootLayoutView: View {
 
     init(provider: DefaultRootViewProviding, kernel: CisumKernel) {
         _viewModel = ObservedObject(wrappedValue: RootLayoutViewModel(provider: provider))
+        _isDetailVisible = State(initialValue: provider.isContentViewVisible)
         self.provider = provider
         self.kernel = kernel
     }
@@ -30,11 +31,18 @@ struct RootLayoutView: View {
                 themeRegistry.chromeTheme.makeGlobalBackground(proxy: geometry)
 
                 VStack(spacing: 0) {
-                    controlArea
-                        .frame(height: isDetailVisible ? 250 : geometry.size.height)
+                    if isDetailVisible {
+                        controlArea
+                            .frame(height: CisumPlayerLayout.controlMinimumHeight)
+                    } else {
+                        controlArea
+                            .frame(maxHeight: .infinity)
+                    }
 
                     if isDetailVisible {
                         contentArea
+                            .frame(minHeight: CisumPlayerLayout.contentMinimumHeight, maxHeight: .infinity)
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
 
                     statusArea
@@ -107,6 +115,14 @@ struct RootLayoutView: View {
     private func handleOnAppear() {
         rememberedHeight = windowHeight()
         isDetailVisible = isContentVisible
+
+        if isContentVisible, rememberedHeight > 0,
+           CisumPlayerLayout.needsExpandedWindow(for: rememberedHeight) {
+            autoResizing = true
+            setWindowHeight(
+                CisumPlayerLayout.controlMinimumHeight + CisumPlayerLayout.contentMinimumHeight
+            )
+        }
     }
 
     private func handleContentViewVisibilityChange(_ newValue: Bool, geometry: GeometryProxy) {
@@ -114,12 +130,14 @@ struct RootLayoutView: View {
             isDetailVisible = newValue
         }
 
-        if !newValue, geometry.size.height != rememberedHeight, rememberedHeight > 0 {
+        if !newValue, abs(geometry.size.height - rememberedHeight) > 0.5, rememberedHeight > 0 {
             autoResizing = true
             setWindowHeight(rememberedHeight)
-        } else if newValue, geometry.size.height - 250 <= 200 {
+        } else if newValue, CisumPlayerLayout.needsExpandedWindow(for: geometry.size.height) {
             autoResizing = true
-            setWindowHeight(450)
+            setWindowHeight(
+                CisumPlayerLayout.controlMinimumHeight + CisumPlayerLayout.contentMinimumHeight
+            )
         }
     }
 
@@ -129,14 +147,18 @@ struct RootLayoutView: View {
         }
         autoResizing = false
 
-        if newHeight <= 270 {
+        if newHeight <= CisumPlayerLayout.collapsedWindowThresholdHeight {
             provider.hideContentView()
         }
     }
 
     private func windowHeight() -> CGFloat {
         #if os(macOS)
-            NSApplication.shared.windows.first?.frame.height ?? 0
+            let window = NSApplication.shared.keyWindow
+                ?? NSApplication.shared.mainWindow
+                ?? NSApplication.shared.windows.first(where: { $0.isVisible && $0.canBecomeKey })
+                ?? NSApplication.shared.windows.first
+            return window?.frame.height ?? 0
         #else
             0
         #endif
@@ -144,7 +166,11 @@ struct RootLayoutView: View {
 
     private func setWindowHeight(_ height: CGFloat) {
         #if os(macOS)
-            guard let window = NSApplication.shared.windows.first else { return }
+            guard height.isFinite,
+                  let window = NSApplication.shared.keyWindow
+                    ?? NSApplication.shared.mainWindow
+                    ?? NSApplication.shared.windows.first(where: { $0.isVisible && $0.canBecomeKey })
+                    ?? NSApplication.shared.windows.first else { return }
             var frame = window.frame
             frame.origin.y += frame.height - height
             frame.size.height = height

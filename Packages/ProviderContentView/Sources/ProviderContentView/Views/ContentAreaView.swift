@@ -14,14 +14,21 @@ struct ContentAreaView: View {
 
     var body: some View {
         Group {
-            if isDemoMode {
-                customTabView
-            } else {
-                regularTabView
-            }
+            #if os(macOS)
+                macTabView
+            #else
+                if isDemoMode {
+                    customTabView
+                } else {
+                    regularTabView
+                }
+            #endif
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(appTheme.background)
+        .onChange(of: tabs.map(\.id)) { _, _ in
+            selectedTab = 0
+        }
         .onChange(of: tabs.count) { _, newCount in
             if selectedTab >= newCount { selectedTab = max(0, newCount - 1) }
         }
@@ -89,6 +96,64 @@ struct ContentAreaView: View {
             } else {
                 EmptyTabView()
             }
+        }
+    }
+
+    /// macOS kept the 3.10 player-style tab strip instead of the system
+    /// bottom-tab presentation. ViewThatFits keeps the centered treatment at
+    /// normal widths while allowing the tabs to scroll in a narrow window.
+    private var macTabView: some View {
+        VStack(spacing: 0) {
+            macTabBar
+                .padding(6)
+            Divider()
+
+            if let tab = tabs[safe: selectedTab] {
+                tab.content
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .clipped()
+            } else {
+                EmptyTabView()
+            }
+        }
+    }
+
+    private var macTabBar: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 8) {
+                Spacer(minLength: 0)
+                macTabButtons
+                Spacer(minLength: 0)
+            }
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    macTabButtons
+                }
+            }
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    @ViewBuilder
+    private var macTabButtons: some View {
+        ForEach(Array(tabs.enumerated()), id: \.offset) { index, tab in
+            Button {
+                withAnimation { selectedTab = index }
+            } label: {
+                Label(tab.title, systemImage: "music.note")
+                    .font(.caption)
+                    .lineLimit(1)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .foregroundStyle(selectedTab == index ? appTheme.textPrimary : appTheme.textSecondary)
+                    .background(
+                        selectedTab == index ? appTheme.primary : appTheme.elevatedSurface,
+                        in: RoundedRectangle(cornerRadius: 6)
+                    )
+            }
+            .buttonStyle(.plain)
+            .help(tab.title)
         }
     }
 }

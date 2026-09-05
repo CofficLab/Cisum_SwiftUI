@@ -24,6 +24,10 @@ private struct DemoModeKey: EnvironmentKey {
     static let defaultValue = false
 }
 
+private struct RightAlbumVisibleKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
 private struct AppIsImportingKey: EnvironmentKey {
     static let defaultValue: Binding<Bool> = .constant(false)
 }
@@ -61,6 +65,14 @@ public extension EnvironmentValues {
     var demoMode: Bool {
         get { self[DemoModeKey.self] }
         set { self[DemoModeKey.self] = newValue }
+    }
+
+    /// Whether the parent control layout is currently rendering the right album.
+    /// The left hero uses this to avoid rendering a duplicate cover while keeping
+    /// the title visible, matching the legacy 3.10 layout.
+    var rightAlbumVisible: Bool {
+        get { self[RightAlbumVisibleKey.self] }
+        set { self[RightAlbumVisibleKey.self] = newValue }
     }
 
     var appIsImporting: Binding<Bool> {
