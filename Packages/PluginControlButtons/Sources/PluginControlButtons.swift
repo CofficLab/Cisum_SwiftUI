@@ -34,10 +34,16 @@ public actor ControlButtonsPlugin: SuperPlugin {
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
+        // 只保存 kernel 引用；跨插件 Provider 依赖在 onReady 阶段组装。
+    }
+
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
         guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
             throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
         }
-        let viewModel = ControlButtonsViewModel()
+        let capability = ControlButtonsPlaybackCapabilityAdapter(playback: playback)
+        let viewModel = ControlButtonsViewModel(playbackCapability: capability)
         self.viewModel = viewModel
         observer = ControlButtonsObserver(playback: playback, viewModel: viewModel)
     }
@@ -53,7 +59,7 @@ public actor ControlButtonsPlugin: SuperPlugin {
     @MainActor
     public func addControlButtonsView() -> AnyView? {
         AnyView(
-            ControlButtonsView(viewModel: viewModel ?? ControlButtonsViewModel()) { [weak self] in
+            ControlButtonsView(viewModel: viewModel ?? ControlButtonsViewModel(playbackCapability: nil)) { [weak self] in
                 guard let kernel = self?.kernel else { return }
                 kernel.resolveProvider((any RootViewProviding).self)?.toggleContentView()
             }

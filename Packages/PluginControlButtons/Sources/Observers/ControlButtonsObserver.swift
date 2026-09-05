@@ -7,9 +7,15 @@ final class ControlButtonsObserver {
 
     init(playback: any PlaybackProviding, viewModel: ControlButtonsViewModel) {
         self.viewModel = viewModel
-        viewModel.bind(playback: playback)
         handle = playback.addObserver { [weak self] event in
-            self?.viewModel?.handlePlaybackEvent(event)
+            guard let self else { return }
+            switch event {
+            case .stateChanged(let state):
+                self.viewModel?.applyStateChanged(state)
+            case .playModeChanged(let mode):
+                self.viewModel?.applyPlayModeChanged(mode)
+            default: break
+            }
         }
     }
 
