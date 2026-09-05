@@ -38,17 +38,20 @@ public actor BookDBPlugin: SuperPlugin {
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
         self.kernel = kernel
-        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
-        }
-        sceneBox.scene = scene
-        installState()
+        // 跨插件 Provider（Scene / Playback）在 onReady 中解析，
+        // 不假设其他插件已完成 Provider 注册。
+    }
+
+    /// 所有 Provider 插件完成 onBoot 后再组装依赖它们的 ViewModel 与 Observer。
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
+        installState(kernel: kernel)
     }
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
         self.kernel = kernel
-        installState()
+        installState(kernel: kernel)
     }
 
     @MainActor
@@ -183,11 +186,15 @@ public actor BookDBPlugin: SuperPlugin {
     }
 
     @MainActor
-    private func installState() {
+    private func installState(kernel: CisumKernel) {
         guard gridViewModel == nil else { return }
+
+        guard let scene = kernel.resolveProvider((any SceneProviding).self) else { return }
+        sceneBox.scene = scene
+
         let viewModel = BookGridViewModel(playbackProvider: playbackProvider)
         let observer = BookDatabaseObserver(viewModel: viewModel)
-        let playbackObserver = BookDBPlaybackObserver(playback: kernel?.playback, viewModel: viewModel)
+        let playbackObserver = BookDBPlaybackObserver(playback: kernel.playback, viewModel: viewModel)
         gridViewModel = viewModel
         databaseObserver = observer
         self.playbackObserver = playbackObserver
