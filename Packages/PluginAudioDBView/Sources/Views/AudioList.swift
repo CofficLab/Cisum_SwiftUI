@@ -205,15 +205,11 @@ struct AudioList: View, SuperLog {
         .onAppear {
             viewModel.handleOnAppear()
         }
-        // 用户选择变化 → 触发播放（View 只转发意图）。
-        .onChange(of: viewModel.selection) { _, newValue in
-            viewModel.select(newValue)
-        }
     }
 
     /// Audio list view.
     private var audioListView: some View {
-        List(selection: $viewModel.selection) {
+        List(selection: viewModel.selectionBinding) {
             Section(header: HStack {
                 Text("Total \(viewModel.totalCount.description)", bundle: .module)
                 Spacer()

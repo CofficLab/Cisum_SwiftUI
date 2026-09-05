@@ -3,7 +3,6 @@ import Foundation
 import MagicAlert
 import OSLog
 import PluginAudio
-import ProviderPlayback
 import SwiftUI
 
 /// 音频库列表的加载状态容器（迁移 Phase 2）。
@@ -17,8 +16,8 @@ import SwiftUI
 /// 本 ViewModel 仅调用它们，保证行为不变。
 @MainActor
 final class AudioListViewModel: ObservableObject {
-    /// 当前选中项；internal set 以支持 `List(selection:)` 绑定。
-    @Published var selection: URL?
+    /// 当前选中项；由外部播放事件和用户选择共同驱动，但只有用户选择会发出播放命令。
+    @Published private(set) var selection: URL?
     @Published private(set) var urls: [URL] = []
     @Published private(set) var isLoading = false
     @Published private(set) var isLoadingMore = false
@@ -32,21 +31,20 @@ final class AudioListViewModel: ObservableObject {
     private var selectionGeneration = 0
 
     private let audioRepoProvider: @MainActor () async -> AudioRepo?
-    /// 内核播放服务解析器：文件点击经 `kernel.playback`（`PlaybackProviding`）播放，
-    /// 将其设置为当前文件，而不是直接调用播放引擎。
-    private let playbackProvider: @MainActor () -> (any PlaybackProviding)?
+    /// AudioDB 所需的最小播放能力；不让 ViewModel 反向访问 Kernel。
+    private let playbackCapability: (any AudioPlaybackCapability)?
     private var currentAsset: URL?
     private let reasonTag: String
     private let isDesktop: Bool
 
     init(
         audioRepo: @escaping @MainActor () async -> AudioRepo?,
-        playbackProvider: @escaping @MainActor () -> (any PlaybackProviding)? = { nil },
+        playbackCapability: (any AudioPlaybackCapability)? = nil,
         reasonTag: String = "AudioListViewModel",
         isDesktop: Bool? = nil
     ) {
         self.audioRepoProvider = audioRepo
-        self.playbackProvider = playbackProvider
+        self.playbackCapability = playbackCapability
         self.reasonTag = reasonTag
         self.isDesktop = isDesktop ?? Self.defaultIsDesktop
     }
@@ -69,17 +67,30 @@ final class AudioListViewModel: ObservableObject {
         loadInitial()
 
         if let asset = currentAsset {
-            setSelection(asset, reason: "handleOnAppear")
+            setSelection(asset)
         }
     }
 
-    /// 用户选中某一项：触发播放。
-    func select(_ url: URL?) {
+    /// 将列表选中写操作转换为用户意图；外部播放同步不会经过这里。
+    var selectionBinding: Binding<URL?> {
+        Binding(
+            get: { [weak self] in self?.selection },
+            set: { [weak self] url in self?.userSelected(url) }
+        )
+    }
+
+    /// 用户选中某一项：更新选中状态并请求内核播放。
+    func userSelected(_ url: URL?) {
         guard let url, !isLoading else {
             selectionGeneration += 1
             return
         }
 
+        guard urls.contains(where: { AudioListSelectionPolicy.representsSameAudio($0, url) }) else {
+            return
+        }
+
+        selection = url
         guard !AudioListSelectionPolicy.representsSameAudio(url, currentAsset) else { return }
 
         selectionGeneration += 1
@@ -95,27 +106,19 @@ final class AudioListViewModel: ObservableObject {
             ) else {
                 return
             }
-            // 经内核播放服务（PlaybackProviding）播放，将该文件设置为当前文件。
-            await self.playbackProvider()?.play(url)
+            await self.playbackCapability?.play(url)
         }
     }
 
-    /// 播放器资产变化：同步选中项。
-    func handleAssetChanged(url: URL?) {
+    /// 播放器资产变化：只同步选中项，不再次发出播放命令。
+    func applyExternalPlayback(url: URL?) {
         currentAsset = url
         if let asset = url {
             if !AudioListSelectionPolicy.representsSameAudio(asset, selection) {
-                setSelection(asset, reason: reasonTag + ".handleAssetChanged")
+                setSelection(asset)
             }
         } else {
-            setSelection(nil, reason: reasonTag + ".handleAssetChanged")
-        }
-    }
-
-    /// 播放列表中的文件；具体播放引擎由内核 `PlaybackProviding` 提供。
-    func play(_ url: URL) {
-        Task { @MainActor in
-            await playbackProvider()?.play(url)
+            setSelection(nil)
         }
     }
 
@@ -403,7 +406,7 @@ final class AudioListViewModel: ObservableObject {
 
     // MARK: - Helpers
 
-    private func setSelection(_ newValue: URL?, reason: String) {
+    private func setSelection(_ newValue: URL?) {
         selection = newValue
     }
 
@@ -415,7 +418,7 @@ final class AudioListViewModel: ObservableObject {
                 deletedURLs: urlsToDelete,
                 isPlaybackControllerHandlingDeletion: true
             ) {
-                await playbackProvider()?.reset()
+                await playbackCapability?.reset()
             }
             for url in urlsToDelete {
                 alert_info(String(localized: "Deleted \(url.title)", bundle: .module))

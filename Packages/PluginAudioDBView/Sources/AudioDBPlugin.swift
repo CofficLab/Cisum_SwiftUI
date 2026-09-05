@@ -1,6 +1,5 @@
 import KernelCore
 import ProviderDocsView
-import CisumUIComponents
 import PluginAudio
 import ProviderPlayback
 import ProviderScene
@@ -44,6 +43,14 @@ public actor AudioDBPlugin: SuperPlugin {
             throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
         }
         sceneBox.scene = scene
+    }
+
+    /// 所有 Provider 插件完成 onBoot 后再组装依赖它们的 ViewModel 与 Observer。
+    ///
+    /// `PluginPlayBack` 同样在 onBoot 注册 PlaybackProviding，因此 AudioDB 不能
+    /// 在自己的 onBoot 中假设播放服务已经存在。
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
         installState(kernel: kernel)
     }
 
@@ -107,11 +114,12 @@ public actor AudioDBPlugin: SuperPlugin {
         // 设置页使用独立的 AudioListViewModel，避免与主窗口内容区（AudioList）
         // 共享同一实例——否则设置页 onAppear 触发 handleOnAppear() 重载时，
         // 共享状态变化会传播到主窗口 contentview，导致其闪动。
+        let playback = kernel?.playback
         let settingList = AudioListViewModel(
             audioRepo: audioRepoProvider,
-            playbackProvider: playbackProvider
+            playbackCapability: makePlaybackCapability(from: playback)
         )
-        settingPlaybackObserver = AudioDBPlaybackObserver(playback: kernel?.playback, viewModel: settingList)
+        settingPlaybackObserver = AudioDBPlaybackObserver(playback: playback, viewModel: settingList)
         return PluginSettingNavigationItem(
             id: "audiodb",
             title: String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), bundle: .module),
@@ -156,9 +164,10 @@ public actor AudioDBPlugin: SuperPlugin {
     private func installState(kernel: CisumKernel) {
         guard listViewModel == nil else { return }
 
+        guard let playback = kernel.playback else { return }
         let list = AudioListViewModel(
             audioRepo: audioRepoProvider,
-            playbackProvider: playbackProvider
+            playbackCapability: makePlaybackCapability(from: playback)
         )
         let root = AudioDBRootViewModel(
             audioRepo: audioRepoProvider,
@@ -166,7 +175,7 @@ public actor AudioDBPlugin: SuperPlugin {
         )
         let db = AudioDBViewModel()
         let observer = AudioDatabaseObserver(list: list, root: root, db: db)
-        let playbackObserver = AudioDBPlaybackObserver(playback: kernel.playback, viewModel: list)
+        let playbackObserver = AudioDBPlaybackObserver(playback: playback, viewModel: list)
 
         listViewModel = list
         rootViewModel = root
@@ -216,12 +225,13 @@ public actor AudioDBPlugin: SuperPlugin {
         return try? AudioRepo(container: container, disk: disk, reason: "AudioDBPlugin")
     }
 
-    /// 内核播放服务解析器：文件点击经 `kernel.playback`（`PlaybackProviding`）播放。
+    /// 将内核能力收窄后注入 ViewModel；ViewModel 不持有 Kernel。
     @MainActor
-    private var playbackProvider: @MainActor () -> (any PlaybackProviding)? {
-        { @MainActor [weak self] in
-            self?.kernel?.playback
-        }
+    private func makePlaybackCapability(
+        from playback: (any PlaybackProviding)?
+    ) -> (any AudioPlaybackCapability)? {
+        guard let playback else { return nil }
+        return AudioPlaybackCapabilityAdapter(playback: playback)
     }
 
     /// 仓库路径解析诊断（错误视图展示）。
@@ -257,7 +267,7 @@ public actor AudioDBPlugin: SuperPlugin {
         }
         let list = AudioListViewModel(
             audioRepo: audioRepoProvider,
-            playbackProvider: playbackProvider
+            playbackCapability: makePlaybackCapability(from: kernel?.playback)
         )
         let root = AudioDBRootViewModel(audioRepo: audioRepoProvider, showDBView: {})
         let db = AudioDBViewModel()
@@ -279,138 +289,5 @@ public actor AudioDBPlugin: SuperPlugin {
 
     private final class SceneBox {
         weak var scene: (any SceneProviding)?
-    }
-}
-
-private struct AudioDBPluginRootView<Content>: View where Content: View {
-    @Environment(\.demoMode) private var isDemoMode
-    @Environment(\.appIsImporting) private var isImporting
-    @Environment(\.showAudioDBViewAction) private var showDBView
-    let listViewModel: AudioListViewModel
-    let rootViewModel: AudioDBRootViewModel
-    let dbViewModel: AudioDBViewModel
-    @ObservedObject var sceneState: AudioDBSceneState
-
-    private let audioRepo: @MainActor @Sendable () async -> AudioRepo?
-    private let audioDisk: @MainActor @Sendable () -> URL?
-    private let audioDiagnostics: @MainActor @Sendable () -> AudioStorageDiagnostics
-
-    private let content: Content
-
-    init(
-        listViewModel: AudioListViewModel,
-        rootViewModel: AudioDBRootViewModel,
-        dbViewModel: AudioDBViewModel,
-        sceneState: AudioDBSceneState,
-        audioRepo: @escaping @MainActor @Sendable () async -> AudioRepo?,
-        audioDisk: @escaping @MainActor @Sendable () -> URL?,
-        audioDiagnostics: @escaping @MainActor @Sendable () -> AudioStorageDiagnostics,
-        @ViewBuilder content: () -> Content
-    ) {
-        self.listViewModel = listViewModel
-        self.rootViewModel = rootViewModel
-        self.dbViewModel = dbViewModel
-        self.sceneState = sceneState
-        self.audioRepo = audioRepo
-        self.audioDisk = audioDisk
-        self.audioDiagnostics = audioDiagnostics
-        self.content = content()
-    }
-
-    var body: some View {
-        if sceneState.isMusicScene {
-            AudioDBRootView(isDemoMode: isDemoMode) {
-                content
-            }
-            .environment(\.audioDBDependencies, dependencies)
-            .environmentObject(listViewModel)
-            .environmentObject(rootViewModel)
-            .environmentObject(dbViewModel)
-        } else {
-            // 场景不是音乐库：下掉 AudioDB root view 外壳，直接透传内容区。
-            content
-        }
-    }
-
-    private var dependencies: AudioDBDependencies {
-        AudioDBDependencies(
-            audioRepo: audioRepo,
-            audioDisk: audioDisk,
-            audioDiagnostics: audioDiagnostics,
-            supportedExtensions: AudioPluginInfo.supportedExtensions,
-            isDesktop: Self.isDesktop,
-            isNotDesktop: !Self.isDesktop,
-            showDBView: showDBView,
-            isImporting: isImporting
-        )
-    }
-
-    private static var isDesktop: Bool {
-        #if os(macOS)
-            true
-        #else
-            false
-        #endif
-    }
-}
-
-private struct AudioDBPluginTabView: View {
-    @Environment(\.appIsImporting) private var isImporting
-    @Environment(\.showAudioDBViewAction) private var showDBView
-    let listViewModel: AudioListViewModel
-    let rootViewModel: AudioDBRootViewModel
-    let dbViewModel: AudioDBViewModel
-
-    private let audioRepo: @MainActor @Sendable () async -> AudioRepo?
-    private let audioDisk: @MainActor @Sendable () -> URL?
-    private let audioDiagnostics: @MainActor @Sendable () -> AudioStorageDiagnostics
-
-    let demoMode: Bool
-
-    init(
-        listViewModel: AudioListViewModel,
-        rootViewModel: AudioDBRootViewModel,
-        dbViewModel: AudioDBViewModel,
-        audioRepo: @escaping @MainActor @Sendable () async -> AudioRepo?,
-        audioDisk: @escaping @MainActor @Sendable () -> URL?,
-        audioDiagnostics: @escaping @MainActor @Sendable () -> AudioStorageDiagnostics,
-        demoMode: Bool
-    ) {
-        self.listViewModel = listViewModel
-        self.rootViewModel = rootViewModel
-        self.dbViewModel = dbViewModel
-        self.audioRepo = audioRepo
-        self.audioDisk = audioDisk
-        self.audioDiagnostics = audioDiagnostics
-        self.demoMode = demoMode
-    }
-
-    var body: some View {
-        AudioDBView(isDemoMode: demoMode)
-            .environment(\.audioDBDependencies, dependencies)
-            .environmentObject(listViewModel)
-            .environmentObject(rootViewModel)
-            .environmentObject(dbViewModel)
-    }
-
-    private var dependencies: AudioDBDependencies {
-        AudioDBDependencies(
-            audioRepo: audioRepo,
-            audioDisk: audioDisk,
-            audioDiagnostics: audioDiagnostics,
-            supportedExtensions: AudioPluginInfo.supportedExtensions,
-            isDesktop: Self.isDesktop,
-            isNotDesktop: !Self.isDesktop,
-            showDBView: showDBView,
-            isImporting: isImporting
-        )
-    }
-
-    private static var isDesktop: Bool {
-        #if os(macOS)
-            true
-        #else
-            false
-        #endif
     }
 }

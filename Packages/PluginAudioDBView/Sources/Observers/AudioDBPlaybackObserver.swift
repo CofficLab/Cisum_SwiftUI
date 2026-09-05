@@ -8,10 +8,10 @@ final class AudioDBPlaybackObserver {
 
     init(playback: (any PlaybackProviding)?, viewModel: AudioListViewModel) {
         self.viewModel = viewModel
-        viewModel.handleAssetChanged(url: playback?.currentURL)
+        viewModel.applyExternalPlayback(url: playback?.currentURL)
         handle = playback?.addObserver { [weak self] event in
             guard case .assetChanged(let url) = event else { return }
-            self?.viewModel?.handleAssetChanged(url: url)
+            self?.viewModel?.applyExternalPlayback(url: url)
         }
     }
 

@@ -361,7 +361,7 @@ extension AudioItemView {
     /// 播放音频
     private func playAudio() {
         Task {
-            listViewModel.play(url)
+            listViewModel.userSelected(url)
             if Self.verbose {
                 os_log("\(Self.t)▶️ Playing audio: \(url.lastPathComponent)")
             }
