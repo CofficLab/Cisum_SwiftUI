@@ -2,7 +2,6 @@ import Foundation
 import MagicPlayMan
 import OSLog
 import PluginBook
-import ProviderPlayback
 import ProviderScene
 import SwiftUI
 
@@ -60,17 +59,6 @@ final class BookControlViewModel: ObservableObject {
     private func deactivateControl() {
         controlGeneration = BookControlPlaybackRequestPolicy.generationAfterDeactivation(controlGeneration)
         BookControlChapterCache.removeAll()
-    }
-
-    func handlePlaybackEvent(_ event: PlaybackProvidingEvent) {
-        switch event {
-        case .previousRequested(let asset):
-            handlePreviousRequested(asset)
-        case .nextRequested(let asset):
-            handleNextRequested(asset)
-        default:
-            break
-        }
     }
 
     // MARK: - Navigation

@@ -26,7 +26,15 @@ final class BookControlObserver {
             self?.viewModel?.handleSceneChange(scene)
         }
         playbackHandle = playback.addObserver { [weak self] event in
-            self?.viewModel?.handlePlaybackEvent(event)
+            guard let self else { return }
+            switch event {
+            case .previousRequested(let asset):
+                self.viewModel?.handlePreviousRequested(asset)
+            case .nextRequested(let asset):
+                self.viewModel?.handleNextRequested(asset)
+            default:
+                break
+            }
         }
         let center = NotificationCenter.default
 
