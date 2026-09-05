@@ -1,6 +1,4 @@
 import Foundation
-import MagicPlayMan
-import PluginBook
 import ProviderPlayback
 import ProviderScene
 
@@ -18,7 +16,6 @@ final class BookProgressObserver {
 
     init(scene: any SceneProviding, playback: any PlaybackProviding, viewModel: BookProgressViewModel) {
         self.viewModel = viewModel
-        viewModel.bind(playMan: playback as? MagicPlayMan)
         currentScene = scene.currentScene
         viewModel.handleSceneChange(scene.currentScene)
         sceneHandle = scene.addObserver { [weak self] event in

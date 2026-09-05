@@ -12,13 +12,17 @@ import SwiftUI
 /// 持有播放订阅、恢复代际与场景激活状态，统一处理进度恢复、URL变化持久化、
 /// 暂停保存与删除清理；取代原 `BookProgressRootView` 内的全部
 /// `@State` 与事件 handler。由 `BookProgressPlugin` 入口持有。
+///
+/// ViewModel 不直接持有 Kernel 或具体 Provider：外部播放状态由
+/// `BookProgressObserver` 通过事件回写，外部播放操作通过
+/// `BookProgressPlaybackCapability` 执行。
 @MainActor
 final class BookProgressViewModel: ObservableObject {
     private static let verbose = true
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "BookProgress")
     private static let tag = "📖"
 
-    private weak var playMan: MagicPlayMan?
+    private let playbackCapability: (any BookProgressPlaybackCapability)?
     private var restoreGeneration = 0
     private var currentScene: AppScene?
     private let targetScene: AppScene
@@ -31,6 +35,7 @@ final class BookProgressViewModel: ObservableObject {
 
     init(
         targetScene: AppScene,
+        playbackCapability: (any BookProgressPlaybackCapability)?,
         currentBookURL: @escaping BookProgressURLProvider,
         currentBookTime: @escaping BookProgressTimeProvider,
         storeCurrentBookURL: @escaping BookProgressStoreCurrentURL,
@@ -38,15 +43,12 @@ final class BookProgressViewModel: ObservableObject {
         saveBookState: @escaping BookProgressSaveBookState
     ) {
         self.targetScene = targetScene
+        self.playbackCapability = playbackCapability
         self.currentBookURL = currentBookURL
         self.currentBookTime = currentBookTime
         self.storeCurrentBookURL = storeCurrentBookURL
         self.storeCurrentBookTime = storeCurrentBookTime
         self.saveBookState = saveBookState
-    }
-
-    func bind(playMan: MagicPlayMan?) {
-        self.playMan = playMan
     }
 
     var shouldActivateProgress: Bool {
@@ -73,7 +75,7 @@ final class BookProgressViewModel: ObservableObject {
 
         restoreBookProgress()
 
-        guard playMan != nil else { return }
+        guard playbackCapability != nil else { return }
     }
 
     private func deactivateProgress() {
@@ -85,8 +87,8 @@ final class BookProgressViewModel: ObservableObject {
     // MARK: - Restore
 
     private func restoreBookProgress() {
-        guard let playMan else { return }
-        let startingAsset = playMan.currentAsset
+        guard let playback = playbackCapability else { return }
+        let startingAsset = playback.currentAsset
         restoreGeneration += 1
         let generation = restoreGeneration
 
@@ -112,15 +114,15 @@ final class BookProgressViewModel: ObservableObject {
 
                 guard BookProgressPersistencePolicy.shouldApplyRestoreResult(
                     startingAsset: startingAsset,
-                    currentAsset: playMan.currentAsset
+                    currentAsset: playback.currentAsset
                 ) else { return }
 
                 if BookProgressPersistencePolicy.shouldPlayRestoredAsset(
                     restoredAsset: url,
-                    currentAsset: playMan.currentAsset
+                    currentAsset: playback.currentAsset
                 ) {
                     guard isCurrentRestoreRequest(generation) else { return }
-                    await playMan.play(url, autoPlay: false, startTime: currentBookTime(), reason: "restoreBookProgress")
+                    await playback.play(url, autoPlay: false, startTime: currentBookTime(), reason: "restoreBookProgress")
                 }
 
                 if Self.verbose {
@@ -146,7 +148,7 @@ final class BookProgressViewModel: ObservableObject {
 
     func handleCurrentURLChanged(_ url: URL?) {
         guard shouldActivateProgress else { return }
-        guard let playMan else { return }
+        guard let playback = playbackCapability else { return }
 
         let storedURL = currentBookURL()
 
@@ -173,7 +175,7 @@ final class BookProgressViewModel: ObservableObject {
         Task {
             guard BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
                 requestedURL: snapshot.currentURL,
-                currentAsset: playMan.currentAsset,
+                currentAsset: playback.currentAsset,
                 currentGeneration: restoreGeneration,
                 requestGeneration: generation,
                 isSceneActive: shouldActivateProgress
@@ -200,7 +202,7 @@ final class BookProgressViewModel: ObservableObject {
                     try await url.download(reason: "BookProgressViewModel")
                     guard BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
                         requestedURL: snapshot.currentURL,
-                        currentAsset: playMan.currentAsset,
+                        currentAsset: playback.currentAsset,
                         currentGeneration: restoreGeneration,
                         requestGeneration: generation,
                         isSceneActive: shouldActivateProgress
@@ -211,7 +213,7 @@ final class BookProgressViewModel: ObservableObject {
                 } catch {
                     guard BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
                         requestedURL: snapshot.currentURL,
-                        currentAsset: playMan.currentAsset,
+                        currentAsset: playback.currentAsset,
                         currentGeneration: restoreGeneration,
                         requestGeneration: generation,
                         isSceneActive: shouldActivateProgress
@@ -224,8 +226,7 @@ final class BookProgressViewModel: ObservableObject {
     }
 
     func handlePlayManStateChanged(_ isPlaying: Bool) {
-        guard shouldActivateProgress else { return }
-        guard let playMan, playMan.state == .paused else { return }
+        guard shouldActivateProgress, let playback = playbackCapability, playback.state == .paused else { return }
 
         persistCurrentProgress(reason: "handlePlayManStateChanged")
     }
@@ -252,15 +253,15 @@ final class BookProgressViewModel: ObservableObject {
     }
 
     private func persistCurrentProgress(reason: String) {
-        guard let playMan else { return }
+        guard let playback = playbackCapability else { return }
         guard BookProgressPersistencePolicy.shouldPersistPlaybackProgress(
-            currentURL: playMan.currentAsset,
+            currentURL: playback.currentAsset,
             bookDisk: BookPlugin.getBookDisk()
         ) else { return }
 
         guard let snapshot = BookProgressPersistencePolicy.snapshot(
-            currentURL: playMan.currentAsset,
-            currentTime: playMan.currentTime,
+            currentURL: playback.currentAsset,
+            currentTime: playback.currentTime,
             trigger: .playbackPositionChanged
         ) else { return }
 

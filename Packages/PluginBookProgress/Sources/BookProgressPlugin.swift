@@ -20,6 +20,7 @@ public actor BookProgressPlugin: SuperPlugin {
     )
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
+    nonisolated(unsafe) private weak var kernel: CisumKernel?
     nonisolated(unsafe) private var progressViewModel: BookProgressViewModel?
     nonisolated(unsafe) private var progressObserver: BookProgressObserver?
 
@@ -33,22 +34,21 @@ public actor BookProgressPlugin: SuperPlugin {
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
-        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
-        }
-        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
-        }
-        sceneBox.scene = scene
-        installState(scene: scene, playback: playback)
+        self.kernel = kernel
+        // 跨插件 Provider（Scene / Playback）在 onReady 中解析，
+        // 不假设其他插件已完成 Provider 注册。
+    }
+
+    /// 所有 Provider 插件完成 onBoot 后再组装依赖它们的 ViewModel 与 Observer。
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
+        installState(kernel: kernel)
     }
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
-        guard let scene = kernel.resolveProvider((any SceneProviding).self),
-              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
-        sceneBox.scene = scene
-        installState(scene: scene, playback: playback)
+        self.kernel = kernel
+        installState(kernel: kernel)
     }
 
     @MainActor
@@ -70,11 +70,18 @@ public actor BookProgressPlugin: SuperPlugin {
 
     // MARK: - State assembly
 
+    /// 创建并持有播放进度 ViewModel 与观察者（幂等）。
     @MainActor
-    private func installState(scene: any SceneProviding, playback: any PlaybackProviding) {
+    private func installState(kernel: CisumKernel) {
         guard progressViewModel == nil else { return }
+
+        guard let scene = kernel.resolveProvider((any SceneProviding).self),
+              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
+        sceneBox.scene = scene
+
         let viewModel = BookProgressViewModel(
             targetScene: .audiobooks,
+            playbackCapability: makePlaybackCapability(from: playback),
             currentBookURL: { BookSettingRepo.getCurrent() },
             currentBookTime: { BookSettingRepo.getCurrentTime() },
             storeCurrentBookURL: { BookSettingRepo.storeCurrent($0) },
@@ -110,6 +117,8 @@ public actor BookProgressPlugin: SuperPlugin {
         progressViewModel = nil
     }
 
+    /// 返回当前持有的 ViewModel；若尚未安装（启动前或插件被禁用），
+    /// 提供临时实例保证 View 贡献可用。
     @MainActor
     private func resolveViewModel() -> BookProgressViewModel {
         if let progressViewModel {
@@ -117,6 +126,7 @@ public actor BookProgressPlugin: SuperPlugin {
         }
         let viewModel = BookProgressViewModel(
             targetScene: .audiobooks,
+            playbackCapability: makePlaybackCapability(from: kernel?.playback),
             currentBookURL: { BookSettingRepo.getCurrent() },
             currentBookTime: { BookSettingRepo.getCurrentTime() },
             storeCurrentBookURL: { BookSettingRepo.storeCurrent($0) },
@@ -125,6 +135,15 @@ public actor BookProgressPlugin: SuperPlugin {
         )
         progressViewModel = viewModel
         return viewModel
+    }
+
+    /// 将内核能力收窄后注入 ViewModel；ViewModel 不持有 Kernel。
+    @MainActor
+    private func makePlaybackCapability(
+        from playback: (any PlaybackProviding)?
+    ) -> (any BookProgressPlaybackCapability)? {
+        guard let playback else { return nil }
+        return BookProgressPlaybackCapabilityAdapter(playback: playback)
     }
 
     private final class SceneBox {
