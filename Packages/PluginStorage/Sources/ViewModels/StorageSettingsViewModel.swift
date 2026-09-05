@@ -1,8 +1,11 @@
 import Combine
 import Foundation
+import MagicKit
 
 @MainActor
-final class StorageSettingsViewModel: ObservableObject {
+final class StorageSettingsViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     @Published private(set) var location: StoragePluginLocation?
     @Published private(set) var isICloudAvailable = false
     @Published private(set) var isLocalStorageAvailable = false

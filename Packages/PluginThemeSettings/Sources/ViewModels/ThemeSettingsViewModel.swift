@@ -1,9 +1,12 @@
 import Combine
 import Foundation
 import LumiUI
+import MagicKit
 
 @MainActor
-final class ThemeSettingsViewModel: ObservableObject {
+final class ThemeSettingsViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     @Published private(set) var themes: [LumiUIThemeContribution] = []
     @Published private(set) var currentThemeID = ""
 

@@ -4,6 +4,7 @@ import MagicAlert
 import OSLog
 import ProviderScene
 import SwiftUI
+import MagicKit
 
 /// 喜欢列表加载闭包（由插件入口组装本地仓库）。
 typealias BookLikeLoadProvider = @MainActor () -> [BookLikeItem]
@@ -21,7 +22,9 @@ typealias BookLikeSaveProvider = @MainActor (_ liked: Bool, _ url: URL) -> Void
 /// ViewModel 不直接持有 Kernel 或具体 Provider：播放服务可用性通过
 /// `BookLikePlaybackCapability` 表达，本地喜欢仓库由插件入口组装为闭包注入。
 @MainActor
-final class BookLikeViewModel: ObservableObject {
+final class BookLikeViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     @Published private(set) var likedBooks: [BookLikeItem] = []
     @Published private(set) var isLoading = true
 

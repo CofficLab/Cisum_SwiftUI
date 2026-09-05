@@ -1,6 +1,7 @@
 import Foundation
 import MagicPlayMan
 import ProviderScene
+import MagicKit
 
 /// 场景监听器：订阅 `SceneProviding` 的场景切换事件，驱动「场景 + 文件」的
 /// 当前播放记录恢复。
@@ -13,7 +14,9 @@ import ProviderScene
 ///
 /// 场景无历史记录时不干预当前播放（保持播放引擎现状）。
 @MainActor
-final class PlaybackSceneObserver {
+final class PlaybackSceneObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var player: MagicPlayMan?
     private let store: PlaybackStateStore
     private var handle: (any SceneProvidingObserverHandle)?

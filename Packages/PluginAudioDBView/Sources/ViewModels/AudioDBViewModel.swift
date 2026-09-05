@@ -1,11 +1,14 @@
 import Foundation
+import MagicKit
 
 /// 音频数据库视图的排序 UI 状态容器（迁移 Phase 2）。
 ///
 /// 排序开始/完成事件由 `AudioDatabaseObserver` 驱动；View 只读
 /// `isSorting` / `sortMode` 做 UI 表现，不再直接订阅数据库排序通知。
 @MainActor
-final class AudioDBViewModel: ObservableObject {
+final class AudioDBViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     @Published private(set) var isSorting = false
     @Published private(set) var sortMode: SortMode = .none
 

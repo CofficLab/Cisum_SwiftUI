@@ -1,8 +1,11 @@
 import Combine
 import MagicPlayMan
+import MagicKit
 
 @MainActor
-final class ControlButtonsViewModel: ObservableObject {
+final class ControlButtonsViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     @Published private(set) var isPlaying = false
     @Published private(set) var playMode: MagicPlayMode = .sequence
 

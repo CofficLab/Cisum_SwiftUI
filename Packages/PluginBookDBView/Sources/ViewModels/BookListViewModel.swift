@@ -2,6 +2,7 @@ import Combine
 import Foundation
 import PluginBook
 import SwiftUI
+import MagicKit
 
 /// 书籍库列表的轻量加载容器（设置页专用）。
 ///
@@ -9,7 +10,9 @@ import SwiftUI
 /// onAppear 触发的重载不会传播到主窗口内容区，避免其闪动。仅负责加载
 /// 书籍列表与总数，不处理播放/选中态。
 @MainActor
-final class BookListViewModel: ObservableObject {
+final class BookListViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     @Published private(set) var books: [BookDTO] = []
     @Published private(set) var isLoading = false
     @Published private(set) var totalCount = 0

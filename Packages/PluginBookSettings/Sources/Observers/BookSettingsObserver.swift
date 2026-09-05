@@ -1,5 +1,6 @@
 import Foundation
 import PluginBook
+import MagicKit
 
 /// 书籍设置的存储位置变化观察者（迁移 Phase 5）。
 ///
@@ -7,7 +8,9 @@ import PluginBook
 /// 转发到 `BookSettingsViewModel`；取代原
 /// `BookSettingsStorageChangeModifier` 的多通知 `.onReceive`。
 @MainActor
-final class BookSettingsObserver {
+final class BookSettingsObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: BookSettingsViewModel?
     private var tokens: [NSObjectProtocol] = []
 

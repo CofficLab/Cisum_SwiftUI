@@ -1,9 +1,12 @@
 import MagicPlayMan
 import SwiftUI
+import MagicKit
 
 /// 播放封面区域的状态；播放变化由 Observer 转发，媒体视图由 Capability 提供。
 @MainActor
-final class PlaybackHeroViewModel: ObservableObject {
+final class PlaybackHeroViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     @Published private(set) var currentURL: URL?
     @Published private(set) var state: PlaybackState
 

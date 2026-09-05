@@ -1,7 +1,10 @@
 import ProviderStorage
+import MagicKit
 
 @MainActor
-final class StorageProvidingObserver {
+final class StorageProvidingObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: StorageSettingsViewModel?
     private var handle: (any StorageProvidingObserverHandle)?
 

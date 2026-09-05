@@ -1,5 +1,6 @@
 import CoreFoundation
 import Foundation
+import MagicKit
 
 /// Widget 控制命令的集中观察者（迁移 Phase 4）。
 ///
@@ -8,7 +9,9 @@ import Foundation
 /// 处理命令；取代原 `AudioWidgetControlRootView` 的
 /// `setupWidgetCommandListener()` + `.onReceive` 直接订阅。
 @MainActor
-final class AudioWidgetCommandObserver {
+final class AudioWidgetCommandObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: AudioWidgetControlViewModel?
     private var token: NSObjectProtocol?
     private var darwinRegistered = false

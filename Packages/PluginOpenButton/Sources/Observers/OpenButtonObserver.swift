@@ -1,8 +1,11 @@
 import Foundation
 import ProviderPlayback
+import MagicKit
 
 @MainActor
-final class OpenButtonObserver {
+final class OpenButtonObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: OpenButtonViewModel?
     private var handle: (any PlaybackProvidingObserverHandle)?
 

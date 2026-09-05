@@ -1,8 +1,11 @@
 import Foundation
 import ProviderPlayback
+import MagicKit
 
 @MainActor
-final class LikeButtonObserver {
+final class LikeButtonObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: LikeButtonViewModel?
     private var handle: (any PlaybackProvidingObserverHandle)?
 

@@ -1,8 +1,11 @@
 import ProviderPlayback
+import MagicKit
 
 /// 播放进度观察者：订阅 `PlaybackProviding` 并更新插件 ViewModel。
 @MainActor
-final class PlaybackProgressObserver {
+final class PlaybackProgressObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: PlaybackProgressViewModel?
     private var handle: (any PlaybackProvidingObserverHandle)?
 

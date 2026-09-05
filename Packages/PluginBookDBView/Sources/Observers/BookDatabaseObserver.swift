@@ -1,5 +1,6 @@
 import Foundation
 import PluginBook
+import MagicKit
 
 /// 书籍数据库事件的集中观察者（迁移 Phase 3）。
 ///
@@ -7,7 +8,9 @@ import PluginBook
 /// `BookGridViewModel`；取代 `BookGrid` 的 `onBookDB*` 修饰符与
 /// `BookTile` 的 `.onReceive(.bookStateUpdated)` 直接订阅。
 @MainActor
-final class BookDatabaseObserver {
+final class BookDatabaseObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: BookGridViewModel?
     private var tokens: [NSObjectProtocol] = []
 

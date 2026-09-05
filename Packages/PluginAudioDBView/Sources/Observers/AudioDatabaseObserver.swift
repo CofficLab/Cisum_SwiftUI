@@ -1,5 +1,6 @@
 import Foundation
 import PluginAudio
+import MagicKit
 
 /// 音频数据库事件的集中观察者（迁移 Phase 2）。
 ///
@@ -7,7 +8,9 @@ import PluginAudio
 /// `AudioDBRootViewModel` 与 `AudioDBViewModel`；取代各 View 直接
 /// `.onReceive(NotificationCenter...)` 的订阅。
 @MainActor
-final class AudioDatabaseObserver {
+final class AudioDatabaseObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var listViewModel: AudioListViewModel?
     private weak var rootViewModel: AudioDBRootViewModel?
     private weak var dbViewModel: AudioDBViewModel?

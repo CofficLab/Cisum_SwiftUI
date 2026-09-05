@@ -15,6 +15,7 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(path: "../MagicKit"),
         .package(path: "../CisumUIComponents"),
         .package(name: "KernelCore", path: "../KernelCore"),
         .package(name: "MagicPlayMan", path: "../MagicPlayMan"),
@@ -26,6 +27,7 @@ let package = Package(
         .target(
             name: "PluginControlButtons",
             dependencies: [
+                .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),

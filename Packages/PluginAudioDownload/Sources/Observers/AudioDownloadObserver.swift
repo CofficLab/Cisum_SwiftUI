@@ -1,8 +1,11 @@
 import ProviderPlayback
 import ProviderScene
+import MagicKit
 
 @MainActor
-final class AudioDownloadObserver {
+final class AudioDownloadObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: AudioDownloadViewModel?
     private var sceneHandle: (any SceneProvidingObserverHandle)?
     private var playbackHandle: (any PlaybackProvidingObserverHandle)?

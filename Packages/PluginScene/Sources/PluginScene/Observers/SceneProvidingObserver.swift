@@ -1,7 +1,10 @@
 import ProviderScene
+import MagicKit
 
 @MainActor
-final class SceneProvidingObserver {
+final class SceneProvidingObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: SceneSettingsViewModel?
     private var handle: (any SceneProvidingObserverHandle)?
 

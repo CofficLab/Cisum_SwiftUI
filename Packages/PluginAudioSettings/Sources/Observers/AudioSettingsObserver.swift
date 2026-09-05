@@ -1,5 +1,6 @@
 import Foundation
 import PluginAudio
+import MagicKit
 
 /// 音频设置的存储位置变化观察者（迁移 Phase 5）。
 ///
@@ -7,7 +8,9 @@ import PluginAudio
 /// 转发到 `AudioSettingsViewModel`；取代原
 /// `AudioSettingsStorageChangeModifier` 的多通知 `.onReceive`。
 @MainActor
-final class AudioSettingsObserver {
+final class AudioSettingsObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: AudioSettingsViewModel?
     private var tokens: [NSObjectProtocol] = []
 

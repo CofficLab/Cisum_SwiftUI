@@ -1,4 +1,5 @@
 import Foundation
+import MagicKit
 
 /// 商店交易事件的集中观察者（迁移 Phase 4）。
 ///
@@ -6,7 +7,9 @@ import Foundation
 /// `StoreViewModel.updatePurchaseInfo()`；取代原 `StoreSetting`
 /// 的两个 `.onReceive` 直接订阅。
 @MainActor
-final class StoreObserver {
+final class StoreObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: StoreViewModel?
     private var tokens: [NSObjectProtocol] = []
 

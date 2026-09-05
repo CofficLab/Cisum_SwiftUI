@@ -1,13 +1,16 @@
 import Foundation
 import ProviderPlayback
 import ProviderScene
+import MagicKit
 
 /// 书籍喜欢状态变化观察者（迁移 Phase 5）。
 ///
 /// 订阅 `.BookLikeStatusChanged` 通知，转发到 `BookLikeViewModel`；
 /// 取代原 `BookLikeSettingsView` 的 `.onReceive` 直接订阅。
 @MainActor
-final class BookLikeObserver {
+final class BookLikeObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: BookLikeViewModel?
     private var token: NSObjectProtocol?
     private var sceneHandle: (any SceneProvidingObserverHandle)?

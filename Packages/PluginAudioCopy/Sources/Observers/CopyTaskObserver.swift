@@ -1,5 +1,6 @@
 #if os(macOS)
 import Foundation
+import MagicKit
 
 /// 复制任务事件的集中观察者（迁移 Phase 4）。
 ///
@@ -7,7 +8,9 @@ import Foundation
 /// 通知，转发到 `CopyViewModel`；取代 `CopyStateView` 与 `CopyList`
 /// 的 `.onCopyTask*` 直接订阅。
 @MainActor
-final class CopyTaskObserver {
+final class CopyTaskObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: CopyViewModel?
     private var tokens: [NSObjectProtocol] = []
 

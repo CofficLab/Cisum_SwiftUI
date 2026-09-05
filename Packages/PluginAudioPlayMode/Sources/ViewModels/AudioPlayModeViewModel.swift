@@ -4,6 +4,7 @@ import MagicAlert
 import MagicPlayMan
 import OSLog
 import ProviderScene
+import MagicKit
 
 typealias AudioPlayModeSortAction = @MainActor (_ currentURL: URL?) async throws -> Void
 typealias AudioPlayModeShuffleAction = @MainActor (_ currentURL: URL?) async throws -> Void
@@ -11,7 +12,9 @@ typealias AudioPlayModeLoadAction = @MainActor () async -> MagicPlayMode
 typealias AudioPlayModeStoreAction = @MainActor (_ rawValue: String, _ shortName: String) async -> Void
 
 @MainActor
-final class AudioPlayModeViewModel: ObservableObject {
+final class AudioPlayModeViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "AudioPlayMode")
     private let playbackCapability: (any AudioPlayModePlaybackCapability)?
     private let targetScene: AppScene

@@ -1,12 +1,15 @@
 import Foundation
 import PluginAudio
+import MagicKit
 
 /// 音频数据库根视图的状态容器（迁移 Phase 2）。
 ///
 /// 集中 `AudioDBRootView` 的仓库可用性检查逻辑；由插件入口持有并注入
 /// `AudioDatabaseObserver`，View 只发起检查意图，不再直接读取 Repository。
 @MainActor
-final class AudioDBRootViewModel: ObservableObject {
+final class AudioDBRootViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     private let audioRepoProvider: @MainActor () async -> AudioRepo?
     private let showDBViewAction: @MainActor () -> Void
 

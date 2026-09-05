@@ -1,6 +1,7 @@
 import Foundation
 import ProviderPlayback
 import ProviderScene
+import MagicKit
 
 /// 书籍控制的数据库与存储重置观察者（迁移 Phase 5）。
 ///
@@ -8,7 +9,9 @@ import ProviderScene
 /// 存储重置通知，转发到 `BookControlViewModel`；取代原
 /// `BookControlRootView` 的四个 `.onReceive` 直接订阅。
 @MainActor
-final class BookControlObserver {
+final class BookControlObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: BookControlViewModel?
     private var tokens: [NSObjectProtocol] = []
     private var sceneHandle: (any SceneProvidingObserverHandle)?

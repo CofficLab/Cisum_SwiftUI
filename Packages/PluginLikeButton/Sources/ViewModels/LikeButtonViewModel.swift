@@ -1,8 +1,11 @@
 import Combine
 import Foundation
+import MagicKit
 
 @MainActor
-final class LikeButtonViewModel: ObservableObject {
+final class LikeButtonViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     @Published private(set) var hasAsset = false
     @Published private(set) var isLiked = false
     private let playbackCapability: (any LikeButtonPlaybackCapability)?

@@ -1,6 +1,7 @@
 import Foundation
 import MagicPlayMan
 import ProviderScene
+import MagicKit
 
 /// 播放设置页的场景化 ViewModel：维护当前场景与各场景最近播放文件。
 ///
@@ -8,7 +9,9 @@ import ProviderScene
 /// 不再只展示单一全局当前文件，而是按场景展示：每个场景各自记住上次播放的文件。
 /// 场景切换由 `PlaybackSettingsSceneObserver` 转发到 `handleSceneChanged(_:)`。
 @MainActor
-final class PluginPlayBackSettingsViewModel: ObservableObject {
+final class PluginPlayBackSettingsViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     /// 所有内置场景（固定顺序，即 `AppScene.allCases`）。
     let scenes: [AppScene] = AppScene.allCases
 

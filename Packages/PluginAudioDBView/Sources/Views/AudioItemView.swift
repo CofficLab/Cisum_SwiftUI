@@ -149,7 +149,7 @@ struct AudioItemView: View, Equatable, SuperLog {
 
 extension AudioItemView {
     var body: some View {
-        AppListRow(action: playAudio) {
+        AppListRow(isSelected: listViewModel.selection == url, action: playAudio) {
             HStack(alignment: .center, spacing: 12) {
                 // 头像部分
                 url.makeAvatarView(verbose: Self.verbose)

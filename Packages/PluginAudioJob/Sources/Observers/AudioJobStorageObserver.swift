@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import PluginAudio
+import MagicKit
 
 /// 音频后台任务的存储位置变化观察者（迁移 Phase 4）。
 ///
@@ -9,7 +10,9 @@ import PluginAudio
 /// `AudioJobNotificationObserverHolder.shared.cancellables` 的
 /// Combine 订阅。
 @MainActor
-final class AudioJobStorageObserver {
+final class AudioJobStorageObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private var cancellables: Set<AnyCancellable> = []
     private let onChange: () -> Void
 

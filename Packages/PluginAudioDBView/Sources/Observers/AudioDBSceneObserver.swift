@@ -1,4 +1,5 @@
 import ProviderScene
+import MagicKit
 
 /// 场景监听器：订阅 `SceneProviding` 的场景切换事件，驱动 root view 外壳显隐。
 ///
@@ -6,7 +7,9 @@ import ProviderScene
 /// 置为 false，`AudioDBPluginRootView` 随之把自己的 root view 外壳下掉、直接
 /// 透传内容区；切回音乐库时恢复外壳。
 @MainActor
-final class AudioDBSceneObserver {
+final class AudioDBSceneObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private let sceneState: AudioDBSceneState
     private var handle: (any SceneProvidingObserverHandle)?
 

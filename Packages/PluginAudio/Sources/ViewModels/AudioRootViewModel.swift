@@ -1,6 +1,7 @@
 import Foundation
 import OSLog
 import SwiftData
+import MagicKit
 
 /// 音频容器加载的内部错误（迁移 Phase 2，原位于 `AudioRootView`）。
 enum AudioContainerLoadError: Error {
@@ -14,7 +15,9 @@ enum AudioContainerLoadError: Error {
 /// 集中管理音频容器初始化、错误与存储变化信号；由插件入口持有并注入
 /// `AudioStorageObserver`，View 只观察本 ViewModel，不再直接订阅存储通知。
 @MainActor
-final class AudioRootViewModel: ObservableObject {
+final class AudioRootViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     @Published private(set) var error: AudioPluginError?
     @Published private(set) var container: ModelContainer?
     @Published private(set) var isInitializing = true

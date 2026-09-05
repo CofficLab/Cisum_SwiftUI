@@ -1,6 +1,7 @@
 import Foundation
 import ProviderPlayback
 import ProviderScene
+import MagicKit
 
 /// 音频进度的数据库删除与存储重置观察者（迁移 Phase 5）。
 ///
@@ -8,7 +9,9 @@ import ProviderScene
 /// `AudioProgressViewModel`；取代原 `AudioProgressRootView` 的
 /// `.onReceive` 与 `AudioProgressStorageResetModifier`。
 @MainActor
-final class AudioProgressObserver {
+final class AudioProgressObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: AudioProgressViewModel?
     private var tokens: [NSObjectProtocol] = []
     private var sceneHandle: (any SceneProvidingObserverHandle)?

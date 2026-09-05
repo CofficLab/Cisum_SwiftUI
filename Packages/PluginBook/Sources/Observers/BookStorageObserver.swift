@@ -1,5 +1,6 @@
 import Foundation
 import ProviderStorage
+import MagicKit
 
 /// 书籍存储位置变化的集中观察者（迁移 Phase 3）。
 ///
@@ -7,7 +8,9 @@ import ProviderStorage
 /// 重新初始化容器；取代原 `BookRootView` 的 `BookStorageChangeModifier`
 /// 多通知 `.onReceive` 订阅。
 @MainActor
-final class BookStorageObserver {
+final class BookStorageObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: BookRootViewModel?
     private var handle: (any StorageProvidingObserverHandle)?
 

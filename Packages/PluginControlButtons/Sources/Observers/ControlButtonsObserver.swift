@@ -1,7 +1,10 @@
 import ProviderPlayback
+import MagicKit
 
 @MainActor
-final class ControlButtonsObserver {
+final class ControlButtonsObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: ControlButtonsViewModel?
     private var handle: (any PlaybackProvidingObserverHandle)?
 

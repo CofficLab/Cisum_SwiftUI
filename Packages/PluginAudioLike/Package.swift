@@ -15,6 +15,7 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(path: "../MagicKit"),
         .package(path: "../CisumUIComponents"),
         .package(path: "../PluginAudioScene"),
         .package(path: "../MagicPlayMan"),
@@ -27,6 +28,7 @@ let package = Package(
         .target(
             name: "PluginAudioLike",
             dependencies: [
+                .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "PluginAudioScene", package: "PluginAudioScene"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),

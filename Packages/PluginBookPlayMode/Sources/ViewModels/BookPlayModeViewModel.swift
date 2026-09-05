@@ -3,12 +3,15 @@ import Combine
 import MagicAlert
 import MagicPlayMan
 import ProviderScene
+import MagicKit
 
 typealias BookPlayModeLoadAction = @MainActor () async -> MagicPlayMode
 typealias BookPlayModeStoreAction = @MainActor (_ mode: MagicPlayMode) async -> Void
 
 @MainActor
-final class BookPlayModeViewModel: ObservableObject {
+final class BookPlayModeViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     private let playbackCapability: (any BookPlayModePlaybackCapability)?
     private let targetScene: AppScene
     private let loadPlayMode: BookPlayModeLoadAction

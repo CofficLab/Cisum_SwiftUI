@@ -1,9 +1,12 @@
 import Combine
 import Foundation
 import ProviderScene
+import MagicKit
 
 @MainActor
-final class SceneSettingsViewModel: ObservableObject {
+final class SceneSettingsViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     @Published private(set) var scenes: [AppScene] = []
     @Published private(set) var currentScene: AppScene?
 

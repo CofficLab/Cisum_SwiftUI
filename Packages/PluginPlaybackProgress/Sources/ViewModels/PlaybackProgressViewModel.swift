@@ -1,9 +1,12 @@
 import Foundation
 import SwiftUI
+import MagicKit
 
 /// 播放进度的显示状态；外部播放变化只通过 Observer 写入。
 @MainActor
-final class PlaybackProgressViewModel: ObservableObject {
+final class PlaybackProgressViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     @Published private(set) var currentTime: TimeInterval = 0
     @Published private(set) var duration: TimeInterval = 0
 

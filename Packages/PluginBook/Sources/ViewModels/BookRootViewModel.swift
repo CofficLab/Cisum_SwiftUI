@@ -3,6 +3,7 @@ import Foundation
 import OSLog
 import SwiftData
 import SwiftUI
+import MagicKit
 
 /// 书籍根容器的集中状态（迁移 Phase 3）。
 ///
@@ -10,7 +11,9 @@ import SwiftUI
 /// `BookRootView` 内的 `BookRepoState` + `initAll()` 逻辑。
 /// 由 `BookPlugin` 入口持有并注入 `BookStorageObserver`。
 @MainActor
-final class BookRootViewModel: ObservableObject {
+final class BookRootViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     @Published private(set) var repo: BookRepo?
     @Published private(set) var container: ModelContainer?
     @Published private(set) var error: Error?

@@ -1,9 +1,12 @@
 import ProviderScene
+import MagicKit
 
 /// 设置页场景监听器：订阅 `SceneProviding` 的场景切换事件，驱动
 /// `PluginPlayBackSettingsViewModel` 的当前场景高亮与各场景文件列表联动。
 @MainActor
-final class PlaybackSettingsSceneObserver {
+final class PlaybackSettingsSceneObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: PluginPlayBackSettingsViewModel?
     private var handle: (any SceneProvidingObserverHandle)?
 

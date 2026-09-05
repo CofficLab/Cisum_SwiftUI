@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import OSLog
+import MagicKit
 
 /// 商店设置视图的状态容器（迁移 Phase 4）。
 ///
@@ -8,7 +9,9 @@ import OSLog
 /// `updatePurchaseInfo()`；取代原 `StoreSetting` 内的全部
 /// `@State` 与 `.onReceive` 订阅。
 @MainActor
-final class StoreViewModel: ObservableObject {
+final class StoreViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     @Published var showBuySheet = false
     @Published var showRestoreSheet = false
     @Published private(set) var purchaseInfo: PurchaseInfo = .none

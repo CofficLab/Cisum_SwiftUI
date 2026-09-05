@@ -1,6 +1,7 @@
 import Foundation
 import ProviderPlayback
 import ProviderScene
+import MagicKit
 
 /// 音频控制的数据库删除与存储重置观察者（迁移 Phase 5）。
 ///
@@ -8,7 +9,9 @@ import ProviderScene
 /// `AudioControlViewModel`；取代原 `AudioControlRootView` 的
 /// 两个 `.onReceive` 直接订阅。
 @MainActor
-final class AudioControlObserver {
+final class AudioControlObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: AudioControlViewModel?
     private var tokens: [NSObjectProtocol] = []
     private var sceneHandle: (any SceneProvidingObserverHandle)?

@@ -15,6 +15,7 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(path: "../MagicKit"),
         .package(path: "../CisumUIComponents"),
         .package(name: "KernelCore", path: "../KernelCore"),
         .package(name: "ProviderPlayback", path: "../ProviderPlayback"),
@@ -24,6 +25,7 @@ let package = Package(
         .target(
             name: "PluginPlaybackProgress",
             dependencies: [
+                .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderPlayback", package: "ProviderPlayback"),

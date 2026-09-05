@@ -12,6 +12,7 @@ let package = Package(
         .library(name: "PluginPlayBack", targets: ["PluginPlayBack"]),
     ],
     dependencies: [
+        .package(path: "../MagicKit"),
         .package(path: "../CisumUIComponents"),
         .package(name: "KernelCore", path: "../KernelCore"),
         .package(name: "MagicPlayMan", path: "../MagicPlayMan"),
@@ -24,6 +25,7 @@ let package = Package(
         .target(
             name: "PluginPlayBack",
             dependencies: [
+                .product(name: "MagicKit", package: "MagicKit"),
                 "CisumUIComponents",
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),

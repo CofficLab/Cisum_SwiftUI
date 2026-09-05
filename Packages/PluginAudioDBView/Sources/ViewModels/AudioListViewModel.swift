@@ -4,6 +4,7 @@ import MagicAlert
 import OSLog
 import PluginAudio
 import SwiftUI
+import MagicKit
 
 /// 音频库列表的加载状态容器（迁移 Phase 2）。
 ///
@@ -15,7 +16,9 @@ import SwiftUI
 /// （`AudioListLoadPolicy` / `AudioListDeletionPolicy` / `AudioListSelectionPolicy`），
 /// 本 ViewModel 仅调用它们，保证行为不变。
 @MainActor
-final class AudioListViewModel: ObservableObject {
+final class AudioListViewModel: ObservableObject, SuperLog {
+    nonisolated static let verbose = false
+
     /// 当前选中项；由外部播放事件和用户选择共同驱动，但只有用户选择会发出播放命令。
     @Published private(set) var selection: URL?
     @Published private(set) var urls: [URL] = []

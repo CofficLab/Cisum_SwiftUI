@@ -1,7 +1,10 @@
 import ProviderTheme
+import MagicKit
 
 @MainActor
-final class ThemeProvidingObserver {
+final class ThemeProvidingObserver: SuperLog {
+    nonisolated static let verbose = false
+
     private weak var viewModel: ThemeSettingsViewModel?
     private var handle: (any ThemeProvidingObserverHandle)?
 
