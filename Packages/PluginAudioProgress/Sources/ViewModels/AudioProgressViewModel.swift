@@ -147,15 +147,30 @@ final class AudioProgressViewModel: ObservableObject, SuperLog {
             }
 
             if let asset = assetTarget {
+                let currentAsset = playback.currentAsset
+
+                // 恢复文件已被并发加载（如 PlaybackSceneObserver 的场景恢复，
+                // 或用户已手动加载同一文件）：只补进度位置，不重复加载，
+                // 避免「无 startTime 的重载」把已恢复的进度清零。
+                if AudioProgressPersistencePolicy.representsSameFile(asset, currentAsset) {
+                    guard isCurrentRestoreRequest(generation) else { return }
+                    if timeTarget > 0 {
+                        playback.seek(to: timeTarget)
+                    }
+                    guard isCurrentRestoreRequest(generation) else { return }
+                    playback.setLike(liked, reason: "AudioProgressViewModel.restorePlaybackData.seekOnly")
+                    return
+                }
+
                 guard AudioProgressPersistencePolicy.shouldApplyRestoreResult(
                     startingAsset: startingAsset,
-                    currentAsset: playback.currentAsset
+                    currentAsset: currentAsset
                 ) else { return }
 
                 let reason = "AudioProgressViewModel.restorePlaybackData"
                 if AudioProgressPersistencePolicy.shouldPlayRestoredAsset(
                     restoredAsset: asset,
-                    currentAsset: playback.currentAsset
+                    currentAsset: currentAsset
                 ) {
                     guard isCurrentRestoreRequest(generation) else { return }
                     await playback.play(asset, autoPlay: false, startTime: timeTarget, reason: reason)

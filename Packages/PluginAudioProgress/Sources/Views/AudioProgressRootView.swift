@@ -80,7 +80,7 @@ enum AudioProgressPersistencePolicy {
         currentAsset == nil
     }
 
-    private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
+    static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
         switch (lhs, rhs) {
         case (.none, .none):
             return true

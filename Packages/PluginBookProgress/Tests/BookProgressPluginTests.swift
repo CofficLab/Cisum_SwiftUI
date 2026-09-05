@@ -1,7 +1,7 @@
 import Foundation
-import BookPlugin
+import PluginBook
 import SwiftData
-@testable import BookProgressPlugin
+@testable import PluginBookProgress
 import Testing
 
 @Test func pluginInfoExportsRegistrationMetadata() {

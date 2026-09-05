@@ -21,6 +21,9 @@ protocol BookProgressPlaybackCapability: AnyObject {
 
     /// 播放指定 URL（可指定起始时间，不自动开始）。
     func play(_ url: URL, autoPlay: Bool, startTime: TimeInterval, reason: String) async
+
+    /// 跳转到指定进度（秒）。恢复文件已被并发加载时，用 seek 补进度而非重载。
+    func seek(to time: TimeInterval)
 }
 
 /// 将内核的 `PlaybackProviding` 适配成 BookProgress 的播放能力。
@@ -42,5 +45,9 @@ final class BookProgressPlaybackCapabilityAdapter: BookProgressPlaybackCapabilit
 
     func play(_ url: URL, autoPlay: Bool, startTime: TimeInterval, reason: String) async {
         await playback.play(url, startTime: startTime)
+    }
+
+    func seek(to time: TimeInterval) {
+        playback.seek(toTime: time)
     }
 }

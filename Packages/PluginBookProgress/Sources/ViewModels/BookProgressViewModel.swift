@@ -112,14 +112,31 @@ final class BookProgressViewModel: ObservableObject, SuperLog {
                     return
                 }
 
+                let currentAsset = playback.currentAsset
+
+                // 恢复文件已被并发加载（如 PlaybackSceneObserver 的场景恢复，
+                // 或用户已手动加载同一文件）：只补进度位置，不重复加载，
+                // 避免「无 startTime 的重载」把已恢复的进度清零。
+                if BookProgressFileLocationIdentity.representsSameFile(url, currentAsset) {
+                    guard isCurrentRestoreRequest(generation) else { return }
+                    let time = currentBookTime() ?? 0
+                    if time > 0 {
+                        playback.seek(to: time)
+                    }
+                    if Self.verbose {
+                        Self.log.debug("\(Self.tag)✅ Restored audiobook progress (seek only): \(url.lastPathComponent) @ \(time)s")
+                    }
+                    return
+                }
+
                 guard BookProgressPersistencePolicy.shouldApplyRestoreResult(
                     startingAsset: startingAsset,
-                    currentAsset: playback.currentAsset
+                    currentAsset: currentAsset
                 ) else { return }
 
                 if BookProgressPersistencePolicy.shouldPlayRestoredAsset(
                     restoredAsset: url,
-                    currentAsset: playback.currentAsset
+                    currentAsset: currentAsset
                 ) {
                     guard isCurrentRestoreRequest(generation) else { return }
                     await playback.play(url, autoPlay: false, startTime: currentBookTime() ?? 0, reason: "restoreBookProgress")

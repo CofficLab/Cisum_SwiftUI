@@ -22,6 +22,9 @@ protocol AudioProgressPlaybackCapability: AnyObject {
     /// 播放指定 URL（可指定起始时间，不自动开始）。
     func play(_ url: URL, autoPlay: Bool, startTime: TimeInterval, reason: String) async
 
+    /// 跳转到指定进度（秒）。恢复文件已被并发加载时，用 seek 补进度而非重载。
+    func seek(to time: TimeInterval)
+
     /// 设置喜欢状态。
     func setLike(_ liked: Bool, reason: String)
 }
@@ -45,6 +48,10 @@ final class AudioProgressPlaybackCapabilityAdapter: AudioProgressPlaybackCapabil
 
     func play(_ url: URL, autoPlay: Bool, startTime: TimeInterval, reason: String) async {
         await playback.play(url, startTime: startTime)
+    }
+
+    func seek(to time: TimeInterval) {
+        playback.seek(toTime: time)
     }
 
     func setLike(_ liked: Bool, reason: String) {

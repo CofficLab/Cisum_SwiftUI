@@ -10,9 +10,9 @@ import MagicKit
 /// 播放文件从单一全局记录升级为按场景分槽：每个场景各自记住上次播放的文件。
 /// 本观察者负责：
 /// - 场景切换时加载新场景上次播放的文件（`autoPlay: false`，仅加载不自动播放）；
+/// - 场景切换时停止旧场景的播放：目标场景无历史记录时显式 `stop()`，
+///   避免切到有声书场景后音乐仍在播放；
 /// - 持有 `currentScene`，供插件在播放文件变化时写入对应场景的槽位。
-///
-/// 场景无历史记录时不干预当前播放（保持播放引擎现状）。
 @MainActor
 final class PlaybackSceneObserver: SuperLog {
     nonisolated static let verbose = false
@@ -20,6 +20,9 @@ final class PlaybackSceneObserver: SuperLog {
     private weak var player: MagicPlayMan?
     private let store: PlaybackStateStore
     private var handle: (any SceneProvidingObserverHandle)?
+
+    /// 恢复代际：快速连续切换场景时，仅最新一次恢复生效。
+    private var restoreGeneration = 0
 
     /// 当前激活场景；文件落盘时用它定位场景槽位。
     private(set) var currentScene: AppScene?
@@ -49,14 +52,31 @@ final class PlaybackSceneObserver: SuperLog {
     private func restore(_ scene: AppScene?) {
         currentScene = scene
         guard let scene, let player else { return }
-        guard let url = store.loadCurrentFile(for: scene) else { return }
 
-        // 同一文件无需重载，避免切换场景时无谓的重新加载。
-        if let current = player.currentURL, current.absoluteString == url.absoluteString {
+        restoreGeneration += 1
+        let generation = restoreGeneration
+
+        guard let url = store.loadCurrentFile(for: scene) else {
+            // 目标场景无历史记录：显式停止当前播放，而不是保持引擎现状，
+            // 避免切到有声书场景后音乐仍在播放。
+            // 用 stop() 而非 reset()：保留 currentURL、不触发 assetChanged(nil)，
+            // 不清除任何场景槽位，切回原场景时仍可按槽位恢复。
+            Task { @MainActor in
+                guard generation == self.restoreGeneration else { return }
+                await player.stop(reason: "PluginPlayBack.sceneSwitch.noHistory")
+            }
             return
         }
 
         Task { @MainActor in
+            guard generation == self.restoreGeneration else { return }
+
+            // 恢复期间文件已被并发加载（如 BookProgressViewModel 的进度恢复
+            // 带 startTime 先完成加载），不再重载，避免把已恢复的进度清零。
+            if let current = player.currentURL, current.absoluteString == url.absoluteString {
+                return
+            }
+
             await player.play(url, autoPlay: false, reason: "PluginPlayBack.sceneRestore")
         }
     }
