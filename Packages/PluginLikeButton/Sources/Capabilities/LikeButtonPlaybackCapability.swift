@@ -1,5 +1,6 @@
 import Foundation
 import ProviderPlayback
+import MagicKit
 
 /// LikeButton 需要的最小播放能力边界。
 ///
@@ -22,7 +23,9 @@ protocol LikeButtonPlaybackCapability: AnyObject {
 
 /// 将内核的 `PlaybackProviding` 适配成 LikeButton 的播放能力。
 @MainActor
-final class LikeButtonPlaybackCapabilityAdapter: LikeButtonPlaybackCapability {
+final class LikeButtonPlaybackCapabilityAdapter: LikeButtonPlaybackCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {

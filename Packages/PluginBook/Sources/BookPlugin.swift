@@ -4,8 +4,11 @@ import CisumUIComponents
 import Foundation
 import ProviderStorage
 import SwiftUI
+import MagicKit
 
-public actor BookPlugin: SuperPlugin {
+public actor BookPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = BookPlugin()
     public static let metadata = PluginMetadata(
         displayName: BookPluginInfo.title,

@@ -3,8 +3,11 @@ import ProviderDocsView
 import CisumUIComponents
 import ProviderScene
 import SwiftUI
+import MagicKit
 
-public actor BookScenePlugin: SuperPlugin {
+public actor BookScenePlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = BookScenePlugin()
     public static let metadata = PluginMetadata(
         displayName: BookScenePluginInfo.title,

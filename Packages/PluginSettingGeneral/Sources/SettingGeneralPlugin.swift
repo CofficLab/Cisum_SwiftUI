@@ -2,13 +2,16 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import SwiftUI
+import MagicKit
 
 /// 设置 - 通用 插件（复刻 Lumi `PluginSettingGeneral`）。
 ///
 /// 在设置窗口注册「通用」导航入口（gearshape，order 1 排最前），详情展示
 /// 应用信息与说明书浏览器。说明书浏览器读取内核 `DocsViewProviding`
 /// 贡献的 manual 条目。
-public actor SettingGeneralPlugin: SuperPlugin {
+public actor SettingGeneralPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = SettingGeneralPlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: "General Settings", bundle: .module),

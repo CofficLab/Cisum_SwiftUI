@@ -1,5 +1,6 @@
 import Foundation
 import ProviderPlayback
+import MagicKit
 
 /// AudioLike 需要的最小播放能力边界。
 ///
@@ -13,7 +14,9 @@ protocol AudioLikePlaybackCapability: AnyObject {
 
 /// 将内核的 `PlaybackProviding` 适配成 AudioLike 的播放能力。
 @MainActor
-final class AudioLikePlaybackCapabilityAdapter: AudioLikePlaybackCapability {
+final class AudioLikePlaybackCapabilityAdapter: AudioLikePlaybackCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {

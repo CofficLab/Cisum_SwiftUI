@@ -3,9 +3,12 @@ import KernelCore
 import ProviderDocsView
 import ProviderPlayback
 import SwiftUI
+import MagicKit
 
 /// 播放进度插件：向播放控制区注入进度条视图（`setProgressView`）。
-public actor PlaybackProgressPlugin: SuperPlugin {
+public actor PlaybackProgressPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = PlaybackProgressPlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: "Playback Progress", bundle: .module),

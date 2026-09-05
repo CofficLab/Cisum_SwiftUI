@@ -1,5 +1,6 @@
 import Foundation
 import ProviderPlayback
+import MagicKit
 
 /// 有声书库需要的最小播放能力。
 ///
@@ -12,7 +13,9 @@ protocol BookDBPlaybackCapability: AnyObject {
 
 /// 将内核播放 Provider 适配成有声书库的播放能力。
 @MainActor
-final class BookDBPlaybackCapabilityAdapter: BookDBPlaybackCapability {
+final class BookDBPlaybackCapabilityAdapter: BookDBPlaybackCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {

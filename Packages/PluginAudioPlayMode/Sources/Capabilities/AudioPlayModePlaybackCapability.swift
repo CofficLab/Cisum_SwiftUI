@@ -1,6 +1,7 @@
 import Foundation
 import MagicPlayMan
 import ProviderPlayback
+import MagicKit
 
 /// AudioPlayMode 需要的最小播放能力边界。
 ///
@@ -20,7 +21,9 @@ protocol AudioPlayModePlaybackCapability: AnyObject {
 
 /// 将内核的 `PlaybackProviding` 适配成 AudioPlayMode 的播放能力。
 @MainActor
-final class AudioPlayModePlaybackCapabilityAdapter: AudioPlayModePlaybackCapability {
+final class AudioPlayModePlaybackCapabilityAdapter: AudioPlayModePlaybackCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {

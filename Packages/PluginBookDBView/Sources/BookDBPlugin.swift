@@ -7,8 +7,11 @@ import ProviderPlayback
 import ProviderScene
 import ProviderStorage
 import SwiftUI
+import MagicKit
 
-public actor BookDBPlugin: SuperPlugin {
+public actor BookDBPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = BookDBPlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), bundle: .module),

@@ -2,8 +2,11 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import SwiftUI
+import MagicKit
 
-public actor ThemeGraphiteBlackPlugin: SuperPlugin {
+public actor ThemeGraphiteBlackPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = ThemeGraphiteBlackPlugin()
     public static let metadata = PluginMetadata(
         displayName: GraphiteBlackTheme().displayName,

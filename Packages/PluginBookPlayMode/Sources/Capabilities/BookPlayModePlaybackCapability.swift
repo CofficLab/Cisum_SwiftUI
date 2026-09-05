@@ -1,6 +1,7 @@
 import Foundation
 import MagicPlayMan
 import ProviderPlayback
+import MagicKit
 
 /// BookPlayMode 需要的最小播放能力边界。
 ///
@@ -17,7 +18,9 @@ protocol BookPlayModePlaybackCapability: AnyObject {
 
 /// 将内核的 `PlaybackProviding` 适配成 BookPlayMode 的播放能力。
 @MainActor
-final class BookPlayModePlaybackCapabilityAdapter: BookPlayModePlaybackCapability {
+final class BookPlayModePlaybackCapabilityAdapter: BookPlayModePlaybackCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {

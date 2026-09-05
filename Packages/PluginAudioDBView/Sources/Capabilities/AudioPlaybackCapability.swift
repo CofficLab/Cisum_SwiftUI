@@ -1,5 +1,6 @@
 import Foundation
 import ProviderPlayback
+import MagicKit
 
 /// AudioDB 能够发出的播放能力。
 ///
@@ -13,7 +14,9 @@ protocol AudioPlaybackCapability: AnyObject {
 
 /// 将内核的 `PlaybackProviding` 适配成 AudioDB 的播放能力。
 @MainActor
-final class AudioPlaybackCapabilityAdapter: AudioPlaybackCapability {
+final class AudioPlaybackCapabilityAdapter: AudioPlaybackCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {

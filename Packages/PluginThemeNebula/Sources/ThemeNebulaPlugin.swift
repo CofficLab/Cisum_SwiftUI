@@ -2,8 +2,11 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import SwiftUI
+import MagicKit
 
-public actor ThemeNebulaPlugin: SuperPlugin {
+public actor ThemeNebulaPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = ThemeNebulaPlugin()
     public static let metadata = PluginMetadata(
         displayName: NebulaTheme().displayName,

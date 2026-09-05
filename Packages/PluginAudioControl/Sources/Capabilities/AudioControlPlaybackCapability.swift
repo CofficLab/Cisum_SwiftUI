@@ -1,6 +1,7 @@
 import Foundation
 import MagicPlayMan
 import ProviderPlayback
+import MagicKit
 
 /// AudioControl 能够发出的最小播放命令边界。
 ///
@@ -24,7 +25,9 @@ protocol AudioControlPlaybackCapability: AnyObject {
 
 /// 将内核的 `PlaybackProviding` 适配成 AudioControl 的播放能力。
 @MainActor
-final class AudioControlPlaybackCapabilityAdapter: AudioControlPlaybackCapability {
+final class AudioControlPlaybackCapabilityAdapter: AudioControlPlaybackCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {

@@ -2,8 +2,11 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import SwiftUI
+import MagicKit
 
-public actor ThemeSunsetPlugin: SuperPlugin {
+public actor ThemeSunsetPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = ThemeSunsetPlugin()
     public static let metadata = PluginMetadata(
         displayName: SunsetTheme().displayName,

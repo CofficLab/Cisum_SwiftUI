@@ -2,8 +2,11 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import SwiftUI
+import MagicKit
 
-public actor SystemPlugin: SuperPlugin {
+public actor SystemPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = SystemPlugin()
     public static let metadata = PluginMetadata(
         displayName: ResetPluginInfo.title,

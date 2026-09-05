@@ -4,6 +4,7 @@ import CisumUIComponents
 import Foundation
 import ProviderScene
 import SwiftUI
+import MagicKit
 
 /// 场景 Provider 插件。
 ///
@@ -15,7 +16,9 @@ import SwiftUI
 /// 入口在 `onReady` 创建并持有长期存在的 `SceneSettingsViewModel` 与
 /// `SceneProvidingObserver`，设置导航项注入同一个 ViewModel；View 不自行创建
 /// 状态对象、也不直接读取 Provider。
-public actor ScenePlugin: SuperPlugin {
+public actor ScenePlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = ScenePlugin()
     public static let metadata = PluginMetadata(
         id: "scene",

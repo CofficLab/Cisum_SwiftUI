@@ -5,8 +5,11 @@ import PluginBookScene
 import ProviderPlayback
 import ProviderScene
 import SwiftUI
+import MagicKit
 
-public actor BookPlayModePlugin: SuperPlugin {
+public actor BookPlayModePlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = BookPlayModePlugin()
     public static let metadata = PluginMetadata(
         displayName: BookPlayModePluginInfo.title,

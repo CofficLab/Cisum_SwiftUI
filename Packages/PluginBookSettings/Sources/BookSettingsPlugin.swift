@@ -3,8 +3,11 @@ import KernelCore
 import ProviderDocsView
 import PluginBook
 import SwiftUI
+import MagicKit
 
-public actor BookSettingsPlugin: SuperPlugin {
+public actor BookSettingsPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = BookSettingsPlugin()
     public static let metadata = PluginMetadata(
         displayName: BookSettingsPluginInfo.title,

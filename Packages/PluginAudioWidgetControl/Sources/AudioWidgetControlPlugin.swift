@@ -4,8 +4,11 @@ import ProviderDocsView
 import PluginAudio
 import ProviderPlayback
 import SwiftUI
+import MagicKit
 
-public actor AudioWidgetControlPlugin: SuperPlugin {
+public actor AudioWidgetControlPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = AudioWidgetControlPlugin()
     public static let metadata = PluginMetadata(
         displayName: AudioWidgetControlPluginInfo.title,

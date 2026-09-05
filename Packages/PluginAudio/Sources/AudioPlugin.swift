@@ -5,8 +5,11 @@ import Foundation
 import PluginAudioLike
 import ProviderStorage
 import SwiftUI
+import MagicKit
 
-public actor AudioPlugin: SuperPlugin {
+public actor AudioPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = AudioPlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: String.LocalizationValue(AudioPluginInfo.titleKey), bundle: .module),

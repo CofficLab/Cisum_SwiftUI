@@ -1,5 +1,6 @@
 import Foundation
 import ProviderPlayback
+import MagicKit
 
 /// 音频自动下载所需的最小播放能力。
 ///
@@ -11,7 +12,9 @@ protocol AudioDownloadPlaybackCapability: AnyObject {
 
 /// 将内核播放 Provider 收窄成自动下载能力。
 @MainActor
-final class AudioDownloadPlaybackCapabilityAdapter: AudioDownloadPlaybackCapability {
+final class AudioDownloadPlaybackCapabilityAdapter: AudioDownloadPlaybackCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private weak var playback: (any PlaybackProviding)?
 
     init(playback: any PlaybackProviding) {

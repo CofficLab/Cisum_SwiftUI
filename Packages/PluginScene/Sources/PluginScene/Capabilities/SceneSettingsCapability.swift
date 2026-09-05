@@ -1,4 +1,5 @@
 import ProviderScene
+import MagicKit
 
 /// 场景设置与切换视图需要的最小场景能力。
 ///
@@ -13,7 +14,9 @@ protocol SceneSettingsCapability: AnyObject {
 
 /// 将内核场景 Provider 收窄成设置与切换视图所需的能力。
 @MainActor
-final class SceneSettingsCapabilityAdapter: SceneSettingsCapability {
+final class SceneSettingsCapabilityAdapter: SceneSettingsCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private weak var scene: (any SceneProviding)?
 
     init(scene: any SceneProviding) {

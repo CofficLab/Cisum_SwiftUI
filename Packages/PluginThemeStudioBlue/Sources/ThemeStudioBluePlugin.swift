@@ -2,8 +2,11 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import SwiftUI
+import MagicKit
 
-public actor ThemeStudioBluePlugin: SuperPlugin {
+public actor ThemeStudioBluePlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = ThemeStudioBluePlugin()
     public static let metadata = PluginMetadata(
         displayName: StudioBlueTheme().displayName,

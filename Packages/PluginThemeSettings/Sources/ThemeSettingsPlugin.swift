@@ -3,6 +3,7 @@ import KernelCore
 import ProviderDocsView
 import ProviderTheme
 import SwiftUI
+import MagicKit
 
 /// 主题设置插件（对齐 Lumi `ThemePackPlugin` 的设置入口范式）。
 ///
@@ -15,7 +16,9 @@ import SwiftUI
 /// 入口在 `onBoot` 创建并持有长期存在的 `ThemeSettingsViewModel` 与
 /// `ThemeProvidingObserver`，设置导航项注入同一个 ViewModel；View 不自行创建
 /// 状态对象。
-public actor ThemeSettingsPlugin: SuperPlugin {
+public actor ThemeSettingsPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = ThemeSettingsPlugin()
     public static let metadata = PluginMetadata(
         displayName: ThemeSettingsPluginInfo.title,

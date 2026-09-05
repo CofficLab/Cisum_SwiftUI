@@ -2,8 +2,11 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import Foundation
+import MagicKit
 
-public actor FileLogPlugin: SuperPlugin {
+public actor FileLogPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = FileLogPlugin()
     public static let metadata = PluginMetadata(
         displayName: FileLogPluginInfo.title,

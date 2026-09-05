@@ -1,6 +1,7 @@
 import Foundation
 import MagicPlayMan
 import ProviderPlayback
+import MagicKit
 
 /// Widget 控制所需的最小播放能力。
 ///
@@ -19,7 +20,9 @@ protocol AudioWidgetPlaybackCapability: AnyObject {
 
 /// 将内核播放 Provider 收窄成 Widget 控制插件所需的能力。
 @MainActor
-final class AudioWidgetPlaybackCapabilityAdapter: AudioWidgetPlaybackCapability {
+final class AudioWidgetPlaybackCapabilityAdapter: AudioWidgetPlaybackCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {

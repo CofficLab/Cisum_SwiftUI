@@ -3,8 +3,11 @@ import KernelCore
 import ProviderDocsView
 import ProviderPlayback
 import SwiftUI
+import MagicKit
 
-public actor OpenButtonPlugin: SuperPlugin {
+public actor OpenButtonPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = OpenButtonPlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: "Open Current", bundle: .module),

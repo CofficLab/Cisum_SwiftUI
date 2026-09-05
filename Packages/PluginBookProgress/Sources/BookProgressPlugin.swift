@@ -8,8 +8,11 @@ import ProviderPlayback
 import ProviderScene
 import SwiftData
 import SwiftUI
+import MagicKit
 
-public actor BookProgressPlugin: SuperPlugin {
+public actor BookProgressPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = BookProgressPlugin()
     public static let metadata = PluginMetadata(
         displayName: BookProgressPluginInfo.title,

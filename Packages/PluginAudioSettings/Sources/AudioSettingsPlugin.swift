@@ -3,8 +3,11 @@ import KernelCore
 import ProviderDocsView
 import PluginAudio
 import SwiftUI
+import MagicKit
 
-public actor AudioSettingsPlugin: SuperPlugin {
+public actor AudioSettingsPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = AudioSettingsPlugin()
     public static let metadata = PluginMetadata(
         displayName: AudioSettingsPluginInfo.title,

@@ -2,8 +2,11 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import SwiftUI
+import MagicKit
 
-public actor ThemeOceanPlugin: SuperPlugin {
+public actor ThemeOceanPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = ThemeOceanPlugin()
     public static let metadata = PluginMetadata(
         displayName: OceanTheme().displayName,

@@ -1,5 +1,6 @@
 import KernelCore
 import ProviderPluginManaging
+import MagicKit
 
 /// 插件管理页面需要的最小管理能力。
 ///
@@ -16,7 +17,9 @@ protocol PluginManagementCapability: AnyObject {
 
 /// 将内核插件管理 Provider 收窄成设置页所需的能力。
 @MainActor
-final class PluginManagementCapabilityAdapter: PluginManagementCapability {
+final class PluginManagementCapabilityAdapter: PluginManagementCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private weak var manager: (any PluginManaging)?
 
     init(manager: any PluginManaging) {

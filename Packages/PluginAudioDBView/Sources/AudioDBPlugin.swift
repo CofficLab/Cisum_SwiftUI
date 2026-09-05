@@ -5,8 +5,11 @@ import ProviderPlayback
 import ProviderScene
 import ProviderStorage
 import SwiftUI
+import MagicKit
 
-public actor AudioDBPlugin: SuperPlugin {
+public actor AudioDBPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = AudioDBPlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), bundle: .module),

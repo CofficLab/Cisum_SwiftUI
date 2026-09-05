@@ -2,8 +2,11 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import SwiftUI
+import MagicKit
 
-public actor StorePlugin: SuperPlugin {
+public actor StorePlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = StorePlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: String.LocalizationValue(StorePluginInfo.titleKey), bundle: .module),

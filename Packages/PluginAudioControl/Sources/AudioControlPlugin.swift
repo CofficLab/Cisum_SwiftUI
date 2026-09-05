@@ -6,8 +6,11 @@ import PluginAudioScene
 import ProviderPlayback
 import ProviderScene
 import SwiftUI
+import MagicKit
 
-public actor AudioControlPlugin: SuperPlugin {
+public actor AudioControlPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = AudioControlPlugin()
     public static let metadata = PluginMetadata(
         displayName: AudioControlPluginInfo.title,

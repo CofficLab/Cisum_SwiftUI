@@ -1,6 +1,7 @@
 import CisumUIComponents
 import LumiUI
 import ProviderTheme
+import MagicKit
 
 /// 主题设置页面需要的最小主题能力。
 ///
@@ -15,7 +16,9 @@ protocol ThemeSettingsCapability: AnyObject {
 
 /// 将内核主题 Provider 收窄成主题设置能力。
 @MainActor
-final class ThemeSettingsCapabilityAdapter: ThemeSettingsCapability {
+final class ThemeSettingsCapabilityAdapter: ThemeSettingsCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private weak var theme: (any ThemeProviding)?
 
     init(theme: any ThemeProviding) {

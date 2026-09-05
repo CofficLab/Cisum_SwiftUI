@@ -5,8 +5,11 @@ import PluginAudioScene
 import ProviderPlayback
 import ProviderScene
 import SwiftUI
+import MagicKit
 
-public actor AudioLikePlugin: SuperPlugin {
+public actor AudioLikePlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = AudioLikePlugin()
     public static let metadata = PluginMetadata(
         displayName: AudioLikePluginInfo.title,

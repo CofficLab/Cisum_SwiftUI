@@ -1,5 +1,6 @@
 import Foundation
 import ProviderPlayback
+import MagicKit
 
 /// 播放进度视图需要的最小播放能力。
 ///
@@ -14,7 +15,9 @@ protocol PlaybackProgressCapability: AnyObject {
 
 /// 将内核播放 Provider 收窄成播放进度能力。
 @MainActor
-final class PlaybackProgressCapabilityAdapter: PlaybackProgressCapability {
+final class PlaybackProgressCapabilityAdapter: PlaybackProgressCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private weak var playback: (any PlaybackProviding)?
 
     init(playback: any PlaybackProviding) {

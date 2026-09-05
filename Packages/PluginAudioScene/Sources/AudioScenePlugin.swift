@@ -3,8 +3,11 @@ import ProviderDocsView
 import CisumUIComponents
 import ProviderScene
 import SwiftUI
+import MagicKit
 
-public actor AudioScenePlugin: SuperPlugin {
+public actor AudioScenePlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = AudioScenePlugin()
     public static let metadata = PluginMetadata(
         displayName: AudioScenePluginInfo.title,

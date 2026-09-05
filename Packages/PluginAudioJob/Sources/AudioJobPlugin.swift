@@ -4,8 +4,11 @@ import ProviderDocsView
 import Foundation
 import OSLog
 import PluginAudio
+import MagicKit
 
-public actor AudioJobPlugin: SuperPlugin {
+public actor AudioJobPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = AudioJobPlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: "Audio Jobs", bundle: .module),

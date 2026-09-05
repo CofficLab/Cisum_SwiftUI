@@ -1,5 +1,6 @@
 import Foundation
 import ProviderPlayback
+import MagicKit
 
 /// OpenButton 需要的最小播放能力边界。
 ///
@@ -13,7 +14,9 @@ protocol OpenButtonPlaybackCapability: AnyObject {
 
 /// 将内核的 `PlaybackProviding` 适配成 OpenButton 的播放能力。
 @MainActor
-final class OpenButtonPlaybackCapabilityAdapter: OpenButtonPlaybackCapability {
+final class OpenButtonPlaybackCapabilityAdapter: OpenButtonPlaybackCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {

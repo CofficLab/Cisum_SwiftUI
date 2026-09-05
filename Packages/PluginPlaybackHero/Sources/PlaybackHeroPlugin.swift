@@ -3,9 +3,12 @@ import KernelCore
 import ProviderDocsView
 import ProviderPlayback
 import SwiftUI
+import MagicKit
 
 /// 播放封面插件：向播放控制区注入封面/标题区视图（`setHeroView`）。
-public actor PlaybackHeroPlugin: SuperPlugin {
+public actor PlaybackHeroPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = PlaybackHeroPlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: "Playback Cover", bundle: .module),

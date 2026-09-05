@@ -2,8 +2,11 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import SwiftUI
+import MagicKit
 
-public actor ThemeDaylightSilverPlugin: SuperPlugin {
+public actor ThemeDaylightSilverPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = ThemeDaylightSilverPlugin()
     public static let metadata = PluginMetadata(
         displayName: DaylightSilverTheme().displayName,

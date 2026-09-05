@@ -1,6 +1,7 @@
 import Foundation
 import MagicPlayMan
 import ProviderPlayback
+import MagicKit
 
 /// BookProgress 能够发出的最小播放命令边界。
 ///
@@ -24,7 +25,9 @@ protocol BookProgressPlaybackCapability: AnyObject {
 
 /// 将内核的 `PlaybackProviding` 适配成 BookProgress 的播放能力。
 @MainActor
-final class BookProgressPlaybackCapabilityAdapter: BookProgressPlaybackCapability {
+final class BookProgressPlaybackCapabilityAdapter: BookProgressPlaybackCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {

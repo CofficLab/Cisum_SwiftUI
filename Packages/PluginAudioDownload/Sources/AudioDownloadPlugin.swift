@@ -4,8 +4,11 @@ import CisumUIComponents
 import ProviderPlayback
 import ProviderScene
 import SwiftUI
+import MagicKit
 
-public actor AudioDownloadPlugin: SuperPlugin {
+public actor AudioDownloadPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = AudioDownloadPlugin()
     public static let metadata = PluginMetadata(
         displayName: AudioDownloadPluginInfo.title,

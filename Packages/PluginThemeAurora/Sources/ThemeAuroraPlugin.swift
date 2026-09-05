@@ -2,8 +2,11 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import SwiftUI
+import MagicKit
 
-public actor ThemeAuroraPlugin: SuperPlugin {
+public actor ThemeAuroraPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = ThemeAuroraPlugin()
     public static let metadata = PluginMetadata(
         displayName: AuroraTheme().displayName,

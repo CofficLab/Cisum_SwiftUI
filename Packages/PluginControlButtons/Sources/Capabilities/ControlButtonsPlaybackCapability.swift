@@ -1,6 +1,7 @@
 import Foundation
 import MagicPlayMan
 import ProviderPlayback
+import MagicKit
 
 /// ControlButtons 能够发出的最小播放命令边界。
 ///
@@ -30,7 +31,9 @@ protocol ControlButtonsPlaybackCapability: AnyObject {
 
 /// 将内核的 `PlaybackProviding` 适配成 ControlButtons 的播放能力。
 @MainActor
-final class ControlButtonsPlaybackCapabilityAdapter: ControlButtonsPlaybackCapability {
+final class ControlButtonsPlaybackCapabilityAdapter: ControlButtonsPlaybackCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {

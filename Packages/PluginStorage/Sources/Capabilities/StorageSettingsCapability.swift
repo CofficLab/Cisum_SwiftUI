@@ -1,5 +1,6 @@
 import Foundation
 import ProviderStorage
+import MagicKit
 
 /// 存储设置页面需要的最小存储能力。
 ///
@@ -18,7 +19,9 @@ protocol StorageSettingsCapability: AnyObject {
 
 /// 将内核存储 Provider 收窄成设置页面所需的能力。
 @MainActor
-final class StorageSettingsCapabilityAdapter: StorageSettingsCapability {
+final class StorageSettingsCapabilityAdapter: StorageSettingsCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private weak var storage: (any StorageProviding)?
 
     init(storage: any StorageProviding) {

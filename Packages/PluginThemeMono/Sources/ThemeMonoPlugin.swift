@@ -2,8 +2,11 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import SwiftUI
+import MagicKit
 
-public actor ThemeMonoPlugin: SuperPlugin {
+public actor ThemeMonoPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = ThemeMonoPlugin()
     public static let metadata = PluginMetadata(
         displayName: MonoTheme().displayName,

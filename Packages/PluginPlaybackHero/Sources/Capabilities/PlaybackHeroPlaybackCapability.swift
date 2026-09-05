@@ -2,6 +2,7 @@ import Foundation
 import MagicPlayMan
 import ProviderPlayback
 import SwiftUI
+import MagicKit
 
 /// PlaybackHero 能够发出的最小播放能力边界。
 ///
@@ -25,7 +26,9 @@ protocol PlaybackHeroPlaybackCapability: AnyObject {
 
 /// 将内核的 `PlaybackProviding` 适配成 PlaybackHero 的播放能力。
 @MainActor
-final class PlaybackHeroPlaybackCapabilityAdapter: PlaybackHeroPlaybackCapability {
+final class PlaybackHeroPlaybackCapabilityAdapter: PlaybackHeroPlaybackCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {

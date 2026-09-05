@@ -2,8 +2,11 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import SwiftUI
+import MagicKit
 
-public actor ThemeMidnightPlugin: SuperPlugin {
+public actor ThemeMidnightPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = ThemeMidnightPlugin()
     public static let metadata = PluginMetadata(
         displayName: MidnightTheme().displayName,

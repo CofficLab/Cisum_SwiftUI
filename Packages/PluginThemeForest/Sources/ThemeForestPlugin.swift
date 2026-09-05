@@ -2,8 +2,11 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import SwiftUI
+import MagicKit
 
-public actor ThemeForestPlugin: SuperPlugin {
+public actor ThemeForestPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = ThemeForestPlugin()
     public static let metadata = PluginMetadata(
         displayName: ForestTheme().displayName,

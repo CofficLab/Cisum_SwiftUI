@@ -3,8 +3,11 @@ import KernelCore
 import ProviderDocsView
 import ProviderPlayback
 import SwiftUI
+import MagicKit
 
-public actor LikeButtonPlugin: SuperPlugin {
+public actor LikeButtonPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
     public static let shared = LikeButtonPlugin()
     public static let metadata = PluginMetadata(
         displayName: String(localized: "Like Button", bundle: .module),

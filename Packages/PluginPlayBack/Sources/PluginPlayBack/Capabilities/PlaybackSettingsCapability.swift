@@ -1,6 +1,7 @@
 import Foundation
 import MagicPlayMan
 import ProviderPlayback
+import MagicKit
 
 /// 播放设置页需要的最小播放状态能力。
 ///
@@ -17,7 +18,9 @@ protocol PlaybackSettingsCapability: AnyObject {
 
 /// 将内核播放 Provider 收窄成设置页所需的状态能力。
 @MainActor
-final class PlaybackSettingsCapabilityAdapter: PlaybackSettingsCapability {
+final class PlaybackSettingsCapabilityAdapter: PlaybackSettingsCapability, SuperLog {
+    nonisolated static let verbose = false
+
     private weak var playback: (any PlaybackProviding)?
 
     init(playback: any PlaybackProviding) {

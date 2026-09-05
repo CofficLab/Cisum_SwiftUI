@@ -3,9 +3,12 @@ import KernelCore
 import ProviderDocsView
 import PluginAudio
 import SwiftUI
+import MagicKit
 
 #if os(macOS)
-    public actor CopyPlugin: SuperPlugin {
+    public actor CopyPlugin: SuperPlugin, SuperLog {
+    nonisolated static let verbose = false
+
         public static let shared = CopyPlugin()
         public static let metadata = PluginMetadata(
             displayName: String(localized: "Copy", bundle: .module),
