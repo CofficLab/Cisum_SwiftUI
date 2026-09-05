@@ -25,7 +25,6 @@ public actor ControlButtonsPlugin: SuperPlugin {
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
-        self.kernel = kernel
         if let docs = kernel.docs {
             docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { PluginControlButtonsAboutView() })
             docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { PluginControlButtonsManualView() })
@@ -34,11 +33,14 @@ public actor ControlButtonsPlugin: SuperPlugin {
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
-        // 只保存 kernel 引用；跨插件 Provider 依赖在 onReady 阶段组装。
+        self.kernel = kernel
+        // 跨插件 Provider 依赖在 onReady 阶段组装。
     }
 
     @MainActor
     public func onReady(kernel: CisumKernel) async throws {
+        self.kernel = kernel
+        teardownState()
         guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
             throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
         }
@@ -49,10 +51,27 @@ public actor ControlButtonsPlugin: SuperPlugin {
     }
 
     @MainActor
+    public func onEnable(kernel: CisumKernel) async throws {
+        self.kernel = kernel
+        guard viewModel == nil else { return }
+        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
+            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
+        }
+        let capability = ControlButtonsPlaybackCapabilityAdapter(playback: playback)
+        let viewModel = ControlButtonsViewModel(playbackCapability: capability)
+        self.viewModel = viewModel
+        observer = ControlButtonsObserver(playback: playback, viewModel: viewModel)
+    }
+
+    @MainActor
+    public func onDisable(kernel: CisumKernel) async throws {
+        teardownState()
+    }
+
+    @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
-        observer?.cancel()
-        observer = nil
-        viewModel = nil
+        teardownState()
+        self.kernel = nil
     }
 
     /// 向 `ControlViewProviding` 注入播放控制按钮组。
@@ -64,5 +83,12 @@ public actor ControlButtonsPlugin: SuperPlugin {
                 kernel.resolveProvider((any RootViewProviding).self)?.toggleContentView()
             }
         )
+    }
+
+    @MainActor
+    private func teardownState() {
+        observer?.cancel()
+        observer = nil
+        viewModel = nil
     }
 }
