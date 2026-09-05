@@ -17,6 +17,7 @@ public actor BookControlPlugin: SuperPlugin {
     )
 
     nonisolated(unsafe) private let sceneBox = SceneBox()
+    nonisolated(unsafe) private weak var kernel: CisumKernel?
     nonisolated(unsafe) private var controlViewModel: BookControlViewModel?
     nonisolated(unsafe) private var controlObserver: BookControlObserver?
 
@@ -30,22 +31,21 @@ public actor BookControlPlugin: SuperPlugin {
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
-        guard let scene = kernel.resolveProvider((any SceneProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
-        }
-        guard let playback = kernel.resolveProvider((any PlaybackProviding).self) else {
-            throw CisumKernelError.serviceNotAvailable(service: "PlaybackProviding")
-        }
-        sceneBox.scene = scene
-        installState(scene: scene, playback: playback)
+        self.kernel = kernel
+        // 跨插件 Provider（Scene / Playback）在 onReady 中解析，
+        // 不假设其他插件已完成 Provider 注册。
+    }
+
+    /// 所有 Provider 插件完成 onBoot 后再组装依赖它们的 ViewModel 与 Observer。
+    @MainActor
+    public func onReady(kernel: CisumKernel) async throws {
+        installState(kernel: kernel)
     }
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
-        guard let scene = kernel.resolveProvider((any SceneProviding).self),
-              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
-        sceneBox.scene = scene
-        installState(scene: scene, playback: playback)
+        self.kernel = kernel
+        installState(kernel: kernel)
     }
 
     @MainActor
@@ -67,10 +67,19 @@ public actor BookControlPlugin: SuperPlugin {
 
     // MARK: - State assembly
 
+    /// 创建并持有播放控制 ViewModel 与观察者（幂等）。
     @MainActor
-    private func installState(scene: any SceneProviding, playback: any PlaybackProviding) {
-        guard controlObserver == nil else { return }
-        let viewModel = controlViewModel ?? BookControlViewModel(targetScene: .audiobooks)
+    private func installState(kernel: CisumKernel) {
+        guard controlViewModel == nil else { return }
+
+        guard let scene = kernel.resolveProvider((any SceneProviding).self),
+              let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
+        sceneBox.scene = scene
+
+        let viewModel = BookControlViewModel(
+            targetScene: .audiobooks,
+            playbackCapability: makePlaybackCapability(from: playback)
+        )
         let observer = BookControlObserver(scene: scene, playback: playback, viewModel: viewModel)
         controlViewModel = viewModel
         controlObserver = observer
@@ -83,14 +92,28 @@ public actor BookControlPlugin: SuperPlugin {
         controlViewModel = nil
     }
 
+    /// 返回当前持有的 ViewModel；若尚未安装（启动前或插件被禁用），
+    /// 提供临时实例保证 View 贡献可用。
     @MainActor
     private func resolveViewModel() -> BookControlViewModel {
         if let controlViewModel {
             return controlViewModel
         }
-        let viewModel = BookControlViewModel(targetScene: .audiobooks)
+        let viewModel = BookControlViewModel(
+            targetScene: .audiobooks,
+            playbackCapability: makePlaybackCapability(from: kernel?.playback)
+        )
         controlViewModel = viewModel
         return viewModel
+    }
+
+    /// 将内核能力收窄后注入 ViewModel；ViewModel 不持有 Kernel。
+    @MainActor
+    private func makePlaybackCapability(
+        from playback: (any PlaybackProviding)?
+    ) -> (any BookControlPlaybackCapability)? {
+        guard let playback else { return nil }
+        return BookControlPlaybackCapabilityAdapter(playback: playback)
     }
 
     private final class SceneBox {

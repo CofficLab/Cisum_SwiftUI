@@ -1,6 +1,4 @@
 import Foundation
-import MagicPlayMan
-import PluginBook
 import ProviderPlayback
 import ProviderScene
 
@@ -22,7 +20,6 @@ final class BookControlObserver {
         viewModel: BookControlViewModel
     ) {
         self.viewModel = viewModel
-        viewModel.bind(playMan: playback as? MagicPlayMan)
         viewModel.handleSceneChange(scene.currentScene)
         sceneHandle = scene.addObserver { [weak self] event in
             guard case .selectionChanged(let scene) = event else { return }
