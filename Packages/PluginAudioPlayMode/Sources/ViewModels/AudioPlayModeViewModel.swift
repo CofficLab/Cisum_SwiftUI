@@ -45,8 +45,7 @@ final class AudioPlayModeViewModel: ObservableObject {
         else { generation += 1; isActive = false }
     }
 
-    func handlePlaybackEvent(_ event: PlaybackProvidingEvent) {
-        guard case .playModeChanged(let mode) = event else { return }
+    func applyPlayModeChanged(_ mode: MagicPlayMode) {
         handlePlayModeChanged(mode)
     }
 
@@ -55,10 +54,10 @@ final class AudioPlayModeViewModel: ObservableObject {
         isActive = true
         let requestGeneration = generation
         Task { @MainActor [weak self] in
-            guard let self, let playback = playbackCapability else { return }
+            guard let self else { return }
             let storedMode = await loadPlayMode()
-            guard self.isActive, self.generation == requestGeneration, storedMode != playback.playMode else { return }
-            playback.setPlayMode(storedMode)
+            guard self.isActive, self.generation == requestGeneration, storedMode != playbackCapability.playMode else { return }
+            playbackCapability.setPlayMode(storedMode)
         }
     }
 
@@ -74,8 +73,8 @@ final class AudioPlayModeViewModel: ObservableObject {
             await storePlayMode(modeRawValue, mode.shortName)
         }
         Task { @MainActor [weak self] in
-            guard let self, let playback = playbackCapability, self.isActive, self.generation == requestGeneration,
-                  playback.playMode.rawValue == modeRawValue else { return }
+            guard let self, self.isActive, self.generation == requestGeneration,
+                  playbackCapability.playMode.rawValue == modeRawValue else { return }
             do {
                 switch mode {
                 case .loop: alert_info(String(localized: "Repeat One", bundle: .module))

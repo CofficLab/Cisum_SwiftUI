@@ -1,6 +1,6 @@
 import MagicPlayMan
 import Testing
-@testable import AudioPlayModePlugin
+@testable import PluginAudioPlayMode
 
 @Test func pluginInfoExportsRegistrationMetadata() {
     #expect(AudioPlayModePluginInfo.iconName == "repeat")
