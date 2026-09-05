@@ -122,7 +122,7 @@ final class BookProgressViewModel: ObservableObject {
                     currentAsset: playback.currentAsset
                 ) {
                     guard isCurrentRestoreRequest(generation) else { return }
-                    await playback.play(url, autoPlay: false, startTime: currentBookTime(), reason: "restoreBookProgress")
+                    await playback.play(url, autoPlay: false, startTime: currentBookTime() ?? 0, reason: "restoreBookProgress")
                 }
 
                 if Self.verbose {

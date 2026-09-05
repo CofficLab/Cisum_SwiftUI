@@ -13,7 +13,7 @@ protocol BookProgressPlaybackCapability: AnyObject {
     var currentAsset: URL? { get }
 
     /// 当前播放状态。
-    var state: MagicPlayState { get }
+    var state: PlaybackState { get }
 
     /// 当前播放进度（秒）。
     var currentTime: TimeInterval { get }
@@ -33,11 +33,11 @@ final class BookProgressPlaybackCapabilityAdapter: BookProgressPlaybackCapabilit
 
     var currentAsset: URL? { playback.currentURL }
 
-    var state: MagicPlayState { playback.state }
+    var state: PlaybackState { playback.state }
 
     var currentTime: TimeInterval { playback.currentTime }
 
     func play(_ url: URL, autoPlay: Bool, startTime: TimeInterval, reason: String) async {
-        await playback.play(url, autoPlay: autoPlay, startTime: startTime, reason: reason)
+        await playback.play(url, startTime: startTime)
     }
 }
