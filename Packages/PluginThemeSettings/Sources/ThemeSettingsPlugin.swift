@@ -4,11 +4,6 @@ import ProviderDocsView
 import ProviderTheme
 import SwiftUI
 
-@MainActor
-enum ThemeSettingsPluginEvent {
-    case providerChanged(ThemeProvidingEvent)
-}
-
 /// 主题设置插件（对齐 Lumi `ThemePackPlugin` 的设置入口范式）。
 ///
 /// Lumi 的 `ThemePackPlugin` 在设置窗口注册独立的「外观」（paintpalette，
@@ -69,7 +64,7 @@ public actor ThemeSettingsPlugin: SuperPlugin {
         // View 贡献可能在插件启动前被请求：保证返回一个稳定、长期存在的
         // ViewModel，而不是每次请求都重新创建。
         let viewModel = settingsViewModel ?? {
-            let viewModel = ThemeSettingsViewModel(theme: nil)
+            let viewModel = ThemeSettingsViewModel(capability: nil)
             settingsViewModel = viewModel
             return viewModel
         }()
@@ -89,7 +84,9 @@ public actor ThemeSettingsPlugin: SuperPlugin {
     private func installSettingsState(kernel: CisumKernel) {
         guard settingsViewModel == nil else { return }
         guard let theme = kernel.theme else { return }
-        let viewModel = ThemeSettingsViewModel(theme: theme)
+        let viewModel = ThemeSettingsViewModel(
+            capability: ThemeSettingsCapabilityAdapter(theme: theme)
+        )
         let observer = ThemeProvidingObserver(provider: theme, viewModel: viewModel)
         settingsViewModel = viewModel
         settingsObserver = observer

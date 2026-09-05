@@ -54,7 +54,9 @@ private func makeThemeService() -> ThemeService {
 @Test func themeObserverPerformsInitialSync() {
     let service = makeThemeService()
 
-    let viewModel = ThemeSettingsViewModel(theme: service)
+    let viewModel = ThemeSettingsViewModel(
+        capability: ThemeSettingsCapabilityAdapter(theme: service)
+    )
     let observer = ThemeProvidingObserver(provider: service, viewModel: viewModel)
     defer { observer.cancel() }
 
@@ -73,7 +75,9 @@ private func makeThemeService() -> ThemeService {
     )
     let service = ThemeService(contributionsProvider: { [contribution] })
 
-    let viewModel = ThemeSettingsViewModel(theme: service)
+    let viewModel = ThemeSettingsViewModel(
+        capability: ThemeSettingsCapabilityAdapter(theme: service)
+    )
     let observer = ThemeProvidingObserver(provider: service, viewModel: viewModel)
     defer { observer.cancel() }
 
@@ -84,7 +88,9 @@ private func makeThemeService() -> ThemeService {
 @MainActor
 @Test func themeObserverCancelStopsViewModelUpdates() {
     let service = makeThemeService()
-    let viewModel = ThemeSettingsViewModel(theme: service)
+    let viewModel = ThemeSettingsViewModel(
+        capability: ThemeSettingsCapabilityAdapter(theme: service)
+    )
     let observer = ThemeProvidingObserver(provider: service, viewModel: viewModel)
 
     #expect(viewModel.currentThemeID == "test-theme")
