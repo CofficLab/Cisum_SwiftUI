@@ -33,7 +33,7 @@ final class LikeButtonPlaybackCapabilityAdapter: LikeButtonPlaybackCapability {
 
     var currentURL: URL? { playback.currentURL }
 
-    var likedAssets: [URL] { playback.likedAssets }
+    var likedAssets: [URL] { Array(playback.likedAssets) }
 
     func toggleCurrentLike() {
         playback.toggleCurrentLike()
