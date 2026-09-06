@@ -7,6 +7,23 @@ import CisumUIComponents
 extension MagicPlayMan {
     /// 播放事件发布者
     public class PlaybackEvents: ObservableObject {
+        /// 导航请求的方向。
+        public enum NavigationDirection {
+            case previous
+            case next
+        }
+
+        /// 播放器无法发出上一首/下一首请求时的诊断信息。
+        public struct NavigationFailure {
+            public let direction: NavigationDirection
+            public let reason: String
+
+            public init(direction: NavigationDirection, reason: String) {
+                self.direction = direction
+                self.reason = reason
+            }
+        }
+
         /// 事件订阅者信息
         public struct Subscriber {
             let id: UUID
@@ -33,6 +50,7 @@ extension MagicPlayMan {
         public let onStateChanged = PassthroughSubject<PlaybackState, Never>()
         public let onPreviousRequested = PassthroughSubject<URL, Never>()
         public let onNextRequested = PassthroughSubject<URL, Never>()
+        public let onNavigationFailed = PassthroughSubject<NavigationFailure, Never>()
         public let onLikeStatusChanged = PassthroughSubject<(asset: URL, isLiked: Bool), Never>()
         public let onPlayModeChanged = PassthroughSubject<MagicPlayMode, Never>()
         public let onCurrentURLChanged = PassthroughSubject<URL?, Never>()
@@ -49,8 +67,22 @@ extension MagicPlayMan {
             return subscriber.id
         }
 
+        /// 注册一个接收上一首/下一首请求的外部导航处理器。
+        ///
+        /// 公开专用入口，供 `ProviderPlayback` 这类桥接层维护导航订阅状态；
+        /// 其他订阅者仍通过 `subscribe(...)` 注册，避免暴露内部订阅实现。
+        @discardableResult
+        public func addNavigationSubscriber(name: String) -> UUID {
+            addSubscriber(name: name, hasNavigationHandler: true)
+        }
+
         func removeSubscriber(id: UUID) {
             subscribers.removeAll { $0.id == id }
+        }
+
+        /// 撤销由 `addNavigationSubscriber(name:)` 返回的订阅。
+        public func removeNavigationSubscriber(id: UUID) {
+            removeSubscriber(id: id)
         }
 
         func getSubscriberInfo(id: UUID) -> Subscriber? {

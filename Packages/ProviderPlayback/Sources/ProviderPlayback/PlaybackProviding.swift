@@ -12,6 +12,7 @@ public enum PlaybackProvidingEvent {
     case likeStatusChanged(asset: URL, isLiked: Bool)
     case previousRequested(URL)
     case nextRequested(URL)
+    case navigationFailed(MagicPlayMan.PlaybackEvents.NavigationFailure)
 }
 
 @MainActor

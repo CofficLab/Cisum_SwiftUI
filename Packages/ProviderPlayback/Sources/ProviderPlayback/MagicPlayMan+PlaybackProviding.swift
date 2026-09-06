@@ -66,10 +66,14 @@ extension MagicPlayMan: PlaybackProviding {
 @MainActor
 private final class PlaybackObserver: PlaybackProvidingObserverHandle {
     private var cancellables: Set<AnyCancellable> = []
+    private weak var player: MagicPlayMan?
+    private let subscriberID: UUID
     private var cancelled = false
 
     init(player: MagicPlayMan, callback: @escaping (PlaybackProvidingEvent) -> Void) {
         let center = NotificationCenter.default
+        self.player = player
+        subscriberID = player.events.addNavigationSubscriber(name: "ProviderPlayback")
 
         player.events.onStateChanged
             .sink { state in
@@ -108,6 +112,12 @@ private final class PlaybackObserver: PlaybackProvidingObserverHandle {
             }
             .store(in: &cancellables)
 
+        player.events.onNavigationFailed
+            .sink { failure in
+                callback(.navigationFailed(failure))
+            }
+            .store(in: &cancellables)
+
         center.publisher(for: .playManTimeUpdate, object: player)
             .compactMap { notification -> (TimeInterval, Double)? in
                 guard let currentTime = notification.userInfo?["currentTime"] as? TimeInterval,
@@ -133,6 +143,8 @@ private final class PlaybackObserver: PlaybackProvidingObserverHandle {
         guard !cancelled else { return }
         cancelled = true
         cancellables.removeAll()
+        player?.events.removeNavigationSubscriber(id: subscriberID)
+        player = nil
     }
 
 }

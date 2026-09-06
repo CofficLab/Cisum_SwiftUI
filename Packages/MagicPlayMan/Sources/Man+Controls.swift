@@ -77,22 +77,27 @@ public extension MagicPlayMan {
     /// 播放下一首
     /// 根据导航订阅者决定播放行为
     func next() {
-        guard hasAsset else { return }
-
-        if events.hasNavigationSubscribers {
-            if self.verbose {
-                os_log("\(self.t)➡️ Next track requested")
-            }
-
-            // 如果有订阅者，发送请求下一首事件
-            if let currentAsset = currentURL {
-                events.onNextRequested.send(currentAsset)
-            }
-        } else {
-            if self.verbose {
-                os_log("\(self.t)➡️ No navigation subscribers")
-            }
+        guard hasAsset else {
+            reportNavigationFailure(.next, reason: "No media is currently loaded")
+            return
         }
+
+        guard let currentAsset = currentURL else {
+            reportNavigationFailure(.next, reason: "The current media URL is unavailable")
+            return
+        }
+
+        guard events.hasNavigationSubscribers else {
+            reportNavigationFailure(.next, reason: "No playback navigation subscriber is registered")
+            return
+        }
+
+        if self.verbose {
+            os_log("\(self.t)➡️ Next track requested: \(currentAsset.lastPathComponent)")
+        }
+
+        // 如果有订阅者，发送请求下一首事件
+        events.onNextRequested.send(currentAsset)
     }
 
     /// 暂停播放
@@ -217,14 +222,36 @@ public extension MagicPlayMan {
     /// 播放上一首
     /// 根据导航订阅者决定播放行为
     func previous() {
-        guard hasAsset else { return }
-
-        if events.hasNavigationSubscribers {
-            // 如果有订阅者，发送请求上一首事件
-            if let currentAsset = currentURL {
-                events.onPreviousRequested.send(currentAsset)
-            }
+        guard hasAsset else {
+            reportNavigationFailure(.previous, reason: "No media is currently loaded")
+            return
         }
+
+        guard let currentAsset = currentURL else {
+            reportNavigationFailure(.previous, reason: "The current media URL is unavailable")
+            return
+        }
+
+        guard events.hasNavigationSubscribers else {
+            reportNavigationFailure(.previous, reason: "No playback navigation subscriber is registered")
+            return
+        }
+
+        if self.verbose {
+            os_log("\(self.t)⬅️ Previous track requested: \(currentAsset.lastPathComponent)")
+        }
+
+        // 如果有订阅者，发送请求上一首事件
+        events.onPreviousRequested.send(currentAsset)
+    }
+
+    private func reportNavigationFailure(
+        _ direction: PlaybackEvents.NavigationDirection,
+        reason: String
+    ) {
+        let label = direction == .next ? "next" : "previous"
+        os_log(.error, "\(self.t)❌ Cannot navigate \(label): \(reason)")
+        events.onNavigationFailed.send(.init(direction: direction, reason: reason))
     }
 
     /// 跳转到指定时间
