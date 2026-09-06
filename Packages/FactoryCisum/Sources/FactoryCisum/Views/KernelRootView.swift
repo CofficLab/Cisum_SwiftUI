@@ -1,6 +1,7 @@
 import CisumUIComponents
 import Foundation
 import KernelCore
+import MagicKit
 import MagicPlayMan
 import SwiftUI
 
@@ -36,6 +37,7 @@ struct KernelRootView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .appThemedAppearance()
+        .withMagicToast()
 #if os(macOS)
         .overlay { ThemeWindowAppearanceBridge().allowsHitTesting(false) }
 #endif
@@ -43,6 +45,9 @@ struct KernelRootView: View {
             assembledContent = FactoryCisum.assembleMainView(kernel: kernel)
         }
         .onReceive(NotificationCenter.default.publisher(for: .cisumEnabledPluginsDidChange)) { _ in
+            contributionRevision += 1
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .cisumSceneDidChange)) { _ in
             contributionRevision += 1
         }
     }

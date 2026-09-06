@@ -46,6 +46,9 @@ public enum CisumKernelEvent: String, CaseIterable, Sendable {
     /// 音频数据库已更新。
     case audioDBUpdated = "com.coffic.cisum.audioDBUpdated"
 
+    /// 当前应用场景已变更。
+    case sceneDidChange = "com.coffic.cisum.sceneDidChange"
+
     // MARK: - Notification Name
 
     public var notificationName: Notification.Name {
@@ -68,6 +71,7 @@ extension Notification.Name {
     public static let cisumAppLifecycleDidChange = CisumKernelEvent.appLifecycleDidChange.notificationName
     public static let cisumAudioDBSynced = CisumKernelEvent.audioDBSynced.notificationName
     public static let cisumAudioDBUpdated = CisumKernelEvent.audioDBUpdated.notificationName
+    public static let cisumSceneDidChange = CisumKernelEvent.sceneDidChange.notificationName
 }
 
 // MARK: - NotificationCenter Convenience Subscriptions

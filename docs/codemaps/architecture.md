@@ -146,7 +146,6 @@ protocol SuperPlugin: Actor {
 | AudioPosterPlugin | - | Poster view |
 | AudioLikePlugin | - | Like/favorite management |
 | AudioPlayModePlugin | - | Play mode controls |
-| AudioControlPlugin | - | Playback controls |
 | AudioDownloadPlugin | - | Download management |
 | AudioJobPlugin | - | Background jobs |
 | AudioSettingsPlugin | - | Settings integration |
@@ -162,7 +161,7 @@ protocol SuperPlugin: Actor {
 | BookPosterPlugin | - | Poster view |
 | BookLikePlugin | - | Like/favorite management |
 | BookPlayModePlugin | - | Play mode controls |
-| BookControlPlugin | - | Playback controls |
+| BookControlButtonsPlugin | - | Book playback controls |
 | BookSettingsPlugin | - | Settings integration |
 
 #### 3. System Plugins (9 plugins)

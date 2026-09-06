@@ -207,7 +207,7 @@ NotificationCenter 不是禁止使用，而是禁止让 View 直接使用：
 
 ### Phase 3：迁移书籍主链路
 
-范围：`PluginBook`、`PluginBookDBView`、`PluginBookProgress`、`PluginBookLike`、`PluginBookPlayMode`、`PluginBookControl`、`PluginBookSettings`。
+范围：`PluginBook`、`PluginBookDBView`、`PluginBookProgress`、`PluginBookLike`、`PluginBookPlayMode`、`PluginBookControlButtons`、`PluginBookSettings`。
 
 任务：
 
@@ -345,4 +345,3 @@ public final class FooPlugin: SuperPlugin {
 - 初始快照、后续变化、异步结果和错误都经过同一个 ViewModel 状态流；
 - 启用/禁用、关闭/启动、设置窗口反复打开不会产生重复监听或旧状态覆盖；
 - 受影响包、集成测试和完整 App 构建通过，并完成上述手工验收矩阵。
-

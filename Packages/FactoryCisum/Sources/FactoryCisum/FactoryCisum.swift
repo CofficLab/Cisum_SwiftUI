@@ -192,15 +192,9 @@ public enum CisumBuilder: SuperLog {
         }
 
         if let control = kernel.resolveProvider((any ControlViewProviding).self) {
-            if let heroView = kernel.plugin?.getHeroView() {
-                control.setHeroView(heroView)
-            }
-            if let buttonsView = kernel.plugin?.getControlButtonsView() {
-                control.setControlButtonsView(buttonsView)
-            }
-            if let progressView = kernel.plugin?.getProgressView() {
-                control.setProgressView(progressView)
-            }
+            control.setHeroView(kernel.plugin?.getHeroView())
+            control.setControlButtonsView(kernel.plugin?.getControlButtonsView())
+            control.setProgressView(kernel.plugin?.getProgressView())
             root.setControlView(control.makeControlView())
         }
         if let content = kernel.resolveProvider((any ContentViewProviding).self) {
@@ -261,6 +255,7 @@ public enum CisumBuilder: SuperLog {
                 if let content = kernel.resolveProvider((any ContentViewProviding).self) {
                     refreshContentTabs(content, kernel: kernel)
                 }
+                NotificationCenter.default.post(name: .cisumSceneDidChange, object: nil)
             }
         }
         sceneObserverHandle = handle

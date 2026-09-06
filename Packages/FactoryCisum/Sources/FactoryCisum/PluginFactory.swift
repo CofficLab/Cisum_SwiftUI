@@ -1,7 +1,6 @@
 import CisumUIComponents
 import KernelCore
 import PluginAudio
-import PluginAudioControl
 import PluginAudioCopy
 import PluginAudioDBView
 import PluginAudioDemo
@@ -14,14 +13,14 @@ import PluginAudioScene
 import PluginAudioSettings
 import PluginAudioWidgetControl
 import PluginBook
-import PluginBookControl
+import PluginBookControlButtons
 import PluginBookDBView
 import PluginBookLike
 import PluginBookPlayMode
 import PluginBookProgress
 import PluginBookScene
 import PluginBookSettings
-import PluginControlButtons
+import PluginAudioControlButtons
 import PluginFileLog
 import PluginLikeButton
 import PluginOpenButton
@@ -73,7 +72,6 @@ public struct DefaultPluginFactory: PluginFactory {
 
     public func makePlugins() -> [any SuperPlugin] {
         var plugins: [any SuperPlugin] = [
-            AudioControlPlugin.shared,
             AudioDBPlugin.shared,
             AudioDemoPlugin.shared,
             AudioDownloadPlugin.shared,
@@ -85,7 +83,7 @@ public struct DefaultPluginFactory: PluginFactory {
             AudioScenePlugin.shared,
             AudioSettingsPlugin.shared,
             AudioWidgetControlPlugin.shared,
-            BookControlPlugin.shared,
+            BookControlButtonsPlugin.shared,
             BookDBPlugin.shared,
             BookLikePlugin.shared,
             BookPlayModePlugin.shared,
@@ -111,7 +109,7 @@ public struct DefaultPluginFactory: PluginFactory {
             SystemPlugin.shared,
             SettingGeneralPlugin.shared,
             PlaybackHeroPlugin.shared,
-            ControlButtonsPlugin.shared,
+            AudioControlButtonsPlugin.shared,
             PlaybackProgressPlugin.shared,
             ThemeAuroraPlugin.shared,
             ThemeCisumPlugin.shared,
