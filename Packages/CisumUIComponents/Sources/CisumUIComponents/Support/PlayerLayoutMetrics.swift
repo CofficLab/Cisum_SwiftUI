@@ -6,7 +6,9 @@ import CoreGraphics
 /// the compact control area is 250pt high, the content area needs 200pt, and
 /// the second album column appears once the window is wider than an iPad mini.
 public enum CisumPlayerLayout {
-    public static let minimumWindowWidth: CGFloat = 350
+    /// Keeps the two-column library layout usable: two 150pt tiles, their
+    /// 12pt gap, content padding, and the scroll bar still fit comfortably.
+    public static let minimumWindowWidth: CGFloat = 400
     public static let minimumWindowHeight: CGFloat = 250
     public static let defaultWindowSize = CGSize(width: minimumWindowWidth, height: 360)
 

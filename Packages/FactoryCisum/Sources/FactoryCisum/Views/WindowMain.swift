@@ -27,7 +27,16 @@ public struct WindowMain: View {
         }
         .appThemedAppearance()
 #if os(macOS)
-        .overlay { ThemeWindowAppearanceBridge().allowsHitTesting(false) }
+        .overlay {
+            ThemeWindowAppearanceBridge().allowsHitTesting(false)
+            MainWindowMinimumSizeBridge(
+                minimumSize: CGSize(
+                    width: CisumPlayerLayout.minimumWindowWidth,
+                    height: CisumPlayerLayout.minimumWindowHeight
+                )
+            )
+            .allowsHitTesting(false)
+        }
 #endif
         .task {
             await initializeKernel()

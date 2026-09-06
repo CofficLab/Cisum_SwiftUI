@@ -1,4 +1,5 @@
 import KernelCore
+import MagicKit
 import ProviderSettings
 import SwiftUI
 
@@ -32,6 +33,7 @@ public struct SettingsWindowHost: View {
                 )
             }
         }
+        .withMagicToast()
         .task {
             await initializeKernel()
         }
