@@ -41,6 +41,8 @@ jobs:
           echo "- **来源**: Xcode 配置文件中的版本号" >> $GITHUB_STEP_SUMMARY
 
       - name: Generate Changelog
+        env:
+          RELEASE_TAG: v${{ steps.version.outputs.version }}
         run: |
           chmod +x .github/scripts/generate-changelog.sh
           ./.github/scripts/generate-changelog.sh "${{ github.workspace }}-CHANGELOG.txt"

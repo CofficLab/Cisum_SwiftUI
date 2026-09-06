@@ -13,6 +13,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: 读取版本号
         id: version
@@ -40,6 +42,8 @@ jobs:
           echo "- **来源**: Xcode 配置文件" >> $GITHUB_STEP_SUMMARY
 
       - name: Generate Changelog
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag_name }}
         run: |
           chmod +x .github/scripts/generate-changelog.sh
           ./.github/scripts/generate-changelog.sh "${{ github.workspace }}-CHANGELOG.txt"
