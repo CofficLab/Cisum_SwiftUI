@@ -2,6 +2,7 @@ import CisumUIComponents
 import Foundation
 import ProviderAppState
 import ProviderAudioLibrary
+import ProviderAudioNavigation
 import ProviderCloud
 import ProviderDevice
 import ProviderPlayback
@@ -14,6 +15,11 @@ extension CisumKernelContainer {
     /// 音频库服务 —— 提供 AudioDB 所需的抽象音频库能力。
     public var audioLibrary: (any AudioLibraryProviding)? {
         resolveProvider(AudioLibraryProviding.self)
+    }
+
+    /// 音频曲目导航服务 —— 提供上一首、下一首以及首尾曲目查询。
+    public var audioTrackNavigation: (any AudioTrackNavigationProviding)? {
+        resolveProvider((any AudioTrackNavigationProviding).self)
     }
 
     /// 存储服务 —— 管理数据存储位置（iCloud / 本地 / 自定义）。

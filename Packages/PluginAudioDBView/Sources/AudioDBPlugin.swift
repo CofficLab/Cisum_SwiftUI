@@ -1,11 +1,13 @@
 import KernelCore
 import ProviderDocsView
+import ProviderAudioNavigation
 import PluginAudio
 import ProviderPlayback
 import ProviderScene
 import ProviderStorage
 import SwiftUI
 import MagicKit
+import OSLog
 
 public actor AudioDBPlugin: SuperPlugin, SuperLog {
     nonisolated static let verbose = false
@@ -30,6 +32,7 @@ public actor AudioDBPlugin: SuperPlugin, SuperLog {
     nonisolated(unsafe) private var settingPlaybackObserver: AudioDBPlaybackObserver?
     nonisolated(unsafe) private var sceneState: AudioDBSceneState?
     nonisolated(unsafe) private var sceneObserver: AudioDBSceneObserver?
+    nonisolated(unsafe) private var navigationProvider: (any AudioTrackNavigationProviding)?
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
@@ -46,6 +49,7 @@ public actor AudioDBPlugin: SuperPlugin, SuperLog {
             throw CisumKernelError.serviceNotAvailable(service: "SceneProviding")
         }
         sceneBox.scene = scene
+        installNavigationProvider(kernel: kernel)
     }
 
     /// 所有 Provider 插件完成 onBoot 后再组装依赖它们的 ViewModel 与 Observer。
@@ -54,24 +58,28 @@ public actor AudioDBPlugin: SuperPlugin, SuperLog {
     /// 在自己的 onBoot 中假设播放服务已经存在。
     @MainActor
     public func onReady(kernel: CisumKernel) async throws {
+        installNavigationProvider(kernel: kernel)
         installState(kernel: kernel)
     }
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
         self.kernel = kernel
+        installNavigationProvider(kernel: kernel)
         installState(kernel: kernel)
     }
 
     @MainActor
     public func onDisable(kernel: CisumKernel) async throws {
         teardownState()
+        removeNavigationProvider(from: kernel)
     }
 
     @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
         sceneBox.scene = nil
         teardownState()
+        removeNavigationProvider(from: kernel)
     }
 
     @MainActor
@@ -161,6 +169,83 @@ public actor AudioDBPlugin: SuperPlugin, SuperLog {
     }
 
     // MARK: - State assembly
+
+    /// 注册本插件提供的音频曲目导航服务。
+    ///
+    /// Provider 由插件定义文件组装；消费插件只依赖协议，不依赖
+    /// `AudioRepo` 或本插件的具体实现。
+    @MainActor
+    private func installNavigationProvider(kernel: CisumKernel) {
+        guard navigationProvider == nil else { return }
+        let repoProvider = audioRepoProvider
+        let provider = AudioTrackNavigationProvider(
+            nextURL: { current, verbose in
+                guard let repo = await repoProvider() else {
+                    os_log(.error, "\(Self.t)❌ Cannot find next audio: repository is unavailable")
+                    throw AudioPluginError.hostNotConfigured
+                }
+                do {
+                    let result = try await repo.getNextOf(current, verbose: verbose)
+                    if result == nil {
+                        os_log("\(Self.t)ℹ️ No next audio for current item: \(current?.lastPathComponent ?? "<none>")")
+                    }
+                    return result
+                } catch {
+                    os_log(.error, "\(Self.t)❌ Failed to resolve next audio: \(error.localizedDescription)")
+                    throw error
+                }
+            },
+            previousURL: { current, verbose in
+                guard let repo = await repoProvider() else {
+                    os_log(.error, "\(Self.t)❌ Cannot find previous audio: repository is unavailable")
+                    throw AudioPluginError.hostNotConfigured
+                }
+                do {
+                    let result = try await repo.getPrevOf(current, verbose: verbose)
+                    if result == nil {
+                        os_log("\(Self.t)ℹ️ No previous audio for current item: \(current?.lastPathComponent ?? "<none>")")
+                    }
+                    return result
+                } catch {
+                    os_log(.error, "\(Self.t)❌ Failed to resolve previous audio: \(error.localizedDescription)")
+                    throw error
+                }
+            },
+            firstURL: {
+                guard let repo = await repoProvider() else {
+                    os_log(.error, "\(Self.t)❌ Cannot find first audio: repository is unavailable")
+                    throw AudioPluginError.hostNotConfigured
+                }
+                do {
+                    return try await repo.getFirst()
+                } catch {
+                    os_log(.error, "\(Self.t)❌ Failed to resolve first audio: \(error.localizedDescription)")
+                    throw error
+                }
+            },
+            lastURL: {
+                guard let repo = await repoProvider() else {
+                    os_log(.error, "\(Self.t)❌ Cannot find last audio: repository is unavailable")
+                    throw AudioPluginError.hostNotConfigured
+                }
+                do {
+                    return try await repo.getLast()
+                } catch {
+                    os_log(.error, "\(Self.t)❌ Failed to resolve last audio: \(error.localizedDescription)")
+                    throw error
+                }
+            }
+        )
+        navigationProvider = provider
+        kernel.registerAudioTrackNavigation(provider)
+    }
+
+    @MainActor
+    private func removeNavigationProvider(from kernel: CisumKernel) {
+        guard navigationProvider != nil else { return }
+        kernel.unregisterProvider((any AudioTrackNavigationProviding).self)
+        navigationProvider = nil
+    }
 
     /// 创建并持有音频数据库的 ViewModel 与数据库观察者（幂等）。
     @MainActor
