@@ -3,8 +3,8 @@ import SwiftUI
 @testable import PluginBookControlButtons
 
 @Test func pluginInfoExportsRegistrationMetadata() {
-    #expect(BookControlPluginInfo.iconName == "playpause")
-    #expect(BookControlPluginInfo.order == 8)
+    #expect(BookControlButtonsPlugin.iconName == "playpause")
+    #expect(BookControlButtonsPlugin.order == 8)
 }
 
 @Test func repeatAllWrapsBookChapterNavigation() {

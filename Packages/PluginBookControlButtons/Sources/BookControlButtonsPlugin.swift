@@ -1,28 +1,40 @@
-import KernelCore
-import ProviderDocsView
 import CisumUIComponents
+import Foundation
+import KernelCore
+import MagicKit
 import OSLog
+import PluginBook
+import ProviderDocsView
 import ProviderPlayback
 import ProviderRootView
 import ProviderScene
 import SwiftUI
-import MagicKit
 
 public actor BookControlButtonsPlugin: SuperPlugin, SuperLog {
     nonisolated static let verbose = true
 
+    // MARK: - Plugin registration metadata
+
+    public static let title = String(localized: "Book Playback Control", bundle: .module)
+    public static let description = String(localized: "Book playback control, such as previous and next chapter", bundle: .module)
+    public nonisolated static let emoji = "🎮📚"
+    public static let iconName = "playpause"
+    public static let order = 8
+
     public static let shared = BookControlButtonsPlugin()
     public static let metadata = PluginMetadata(
-        displayName: BookControlPluginInfo.title,
-        description: BookControlPluginInfo.description,
-        iconName: BookControlPluginInfo.iconName,
-        order: BookControlPluginInfo.order,
+        displayName: title,
+        description: description,
+        iconName: iconName,
+        order: order,
         category: .playback,
     )
 
-    nonisolated(unsafe) private weak var kernel: CisumKernel?
-    nonisolated(unsafe) private var controlViewModel: BookControlViewModel?
-    nonisolated(unsafe) private var controlObserver: BookControlObserver?
+    private nonisolated(unsafe) weak var kernel: CisumKernel?
+    private nonisolated(unsafe) var controlViewModel: BookControlViewModel?
+    private nonisolated(unsafe) var sceneObserver: BookControlSceneObserver?
+    private nonisolated(unsafe) var playbackObserver: BookControlPlaybackObserver?
+    private nonisolated(unsafe) var notificationTokens: [NSObjectProtocol] = []
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
@@ -82,7 +94,7 @@ public actor BookControlButtonsPlugin: SuperPlugin, SuperLog {
 
     // MARK: - State assembly
 
-    /// 创建并持有播放控制 ViewModel 与观察者（幂等）。
+    /// 创建并持有播放控制 ViewModel、场景 / 播放观察者与数据库通知（幂等）。
     @MainActor
     private func installState(kernel: CisumKernel) {
         guard controlViewModel == nil else { return }
@@ -95,16 +107,40 @@ public actor BookControlButtonsPlugin: SuperPlugin, SuperLog {
             playbackCapability: makePlaybackCapability(from: playback),
             toastProvider: kernel.toast
         )
-        let observer = BookControlObserver(scene: scene, playback: playback, viewModel: viewModel)
+        sceneObserver = BookControlSceneObserver(scene: scene, viewModel: viewModel)
+        playbackObserver = BookControlPlaybackObserver(playback: playback, viewModel: viewModel)
+        installDatabaseObservers(viewModel: viewModel)
         controlViewModel = viewModel
-        controlObserver = observer
+    }
+
+    /// 订阅书籍数据库与存储重置通知，转发到 ViewModel。
+    @MainActor
+    private func installDatabaseObservers(viewModel: BookControlViewModel) {
+        let center = NotificationCenter.default
+        notificationTokens.append(center.addObserver(forName: .bookDBDeleted, object: nil, queue: .main) { [weak viewModel] notification in
+            let urls = notification.userInfo?["urls"] as? [URL] ?? []
+            Task { @MainActor in viewModel?.handleBookDBDeleted(deletedURLs: urls) }
+        })
+        notificationTokens.append(center.addObserver(forName: .bookDBSynced, object: nil, queue: .main) { [weak viewModel] _ in
+            Task { @MainActor in viewModel?.handleBookDBRefreshed() }
+        })
+        notificationTokens.append(center.addObserver(forName: .bookDBUpdated, object: nil, queue: .main) { [weak viewModel] _ in
+            Task { @MainActor in viewModel?.handleBookDBRefreshed() }
+        })
+        notificationTokens.append(center.addObserver(forName: Notification.Name("storageLocationDidReset"), object: nil, queue: .main) { [weak viewModel] _ in
+            Task { @MainActor in viewModel?.handleStorageLocationDidReset() }
+        })
     }
 
     @MainActor
     private func teardownState() {
         if Self.verbose { os_log("\(Self.t)🧹 teardownState") }
-        controlObserver?.cancel()
-        controlObserver = nil
+        sceneObserver?.cancel()
+        sceneObserver = nil
+        playbackObserver?.cancel()
+        playbackObserver = nil
+        notificationTokens.forEach { NotificationCenter.default.removeObserver($0) }
+        notificationTokens.removeAll()
         controlViewModel = nil
     }
 
@@ -132,5 +168,4 @@ public actor BookControlButtonsPlugin: SuperPlugin, SuperLog {
         guard let playback else { return nil }
         return BookControlPlaybackCapabilityAdapter(playback: playback)
     }
-
 }
