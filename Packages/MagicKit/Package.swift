@@ -29,9 +29,6 @@ let package = Package(
                "ZIPFoundation",
            ],
            path: ".",
-            exclude: [
-                "build",
-            ],
             sources: ["Sources"],
            resources: [.process("Resources")],
            swiftSettings: [

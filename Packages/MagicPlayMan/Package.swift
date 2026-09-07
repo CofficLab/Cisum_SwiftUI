@@ -25,7 +25,6 @@ let package = Package(
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
             ],
             path: ".",
-            exclude: ["build"],
             sources: ["Sources"],
             resources: [
                 .process("Resources"),
