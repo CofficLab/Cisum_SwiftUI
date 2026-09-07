@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import ProviderPlayback
 import MagicKit
 
@@ -14,15 +15,17 @@ protocol BookDBPlaybackCapability: AnyObject {
 /// 将内核播放 Provider 适配成有声书库的播放能力。
 @MainActor
 final class BookDBPlaybackCapabilityAdapter: BookDBPlaybackCapability, SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {
         self.playback = playback
+        if Self.verbose { os_log("\(Self.t)🔌 BookDBPlaybackCapabilityAdapter 初始化") }
     }
 
     func play(_ url: URL, startTime: TimeInterval?) async {
+        if Self.verbose { os_log("\(Self.t)▶️ play: \(url.lastPathComponent) @ \(startTime.map { "\($0)s" } ?? "开头")") }
         await playback.play(url, startTime: startTime)
     }
 }

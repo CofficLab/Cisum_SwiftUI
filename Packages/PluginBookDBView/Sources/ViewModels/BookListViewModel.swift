@@ -1,5 +1,6 @@
 import Combine
 import Foundation
+import OSLog
 import PluginBook
 import SwiftUI
 import MagicKit
@@ -11,7 +12,7 @@ import MagicKit
 /// 书籍列表与总数，不处理播放/选中态。
 @MainActor
 final class BookListViewModel: ObservableObject, SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     @Published private(set) var books: [BookDTO] = []
     @Published private(set) var isLoading = false
@@ -33,6 +34,7 @@ final class BookListViewModel: ObservableObject, SuperLog {
 
     /// 视图出现：加载书籍列表。
     func handleOnAppear() {
+        if Self.verbose { os_log("\(Self.t)📺 设置页加载书籍列表") }
         load()
     }
 
@@ -56,6 +58,7 @@ final class BookListViewModel: ObservableObject, SuperLog {
             self.books = books
             self.totalCount = books.count
             self.isLoading = false
+            if Self.verbose { os_log("\(Self.t)✅ 已加载 \(books.count) 本书") }
         }
     }
 }

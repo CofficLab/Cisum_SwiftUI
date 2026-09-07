@@ -36,7 +36,7 @@ final class BookGridViewModel: ObservableObject, SuperLog {
     private var playBookGeneration = 0
     private var updateBooksDebounceTask: Task<Void, Never>?
 
-    private static let verbose = false
+    private static let verbose = true
 
     init(playbackCapability: (any BookDBPlaybackCapability)? = nil) {
         self.playbackCapability = playbackCapability
@@ -68,6 +68,7 @@ final class BookGridViewModel: ObservableObject, SuperLog {
     // MARK: - User intents
 
     func handleBookTap(book: BookDTO) {
+        if Self.verbose { os_log("\(Self.t)👆 点击书籍: \(book.bookTitle)") }
         selectedBookURL = book.url
         playBookGeneration += 1
         let generation = playBookGeneration
@@ -208,6 +209,7 @@ final class BookGridViewModel: ObservableObject, SuperLog {
             return
         }
 
+        if Self.verbose { os_log("\(Self.t)▶️ 播放(\(reason)): \(url.lastPathComponent) @ \(time.map { "\($0)s" } ?? "开头")") }
         await playbackCapability?.play(url, startTime: time)
     }
 

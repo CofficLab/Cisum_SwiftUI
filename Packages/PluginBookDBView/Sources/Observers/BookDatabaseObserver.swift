@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import PluginBook
 import MagicKit
 
@@ -9,13 +10,14 @@ import MagicKit
 /// `BookTile` 的 `.onReceive(.bookStateUpdated)` 直接订阅。
 @MainActor
 final class BookDatabaseObserver: SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private weak var viewModel: BookGridViewModel?
     private var tokens: [NSObjectProtocol] = []
 
     init(viewModel: BookGridViewModel) {
         self.viewModel = viewModel
+        if Self.verbose { os_log("\(Self.t)👀 BookDatabaseObserver 初始化") }
 
         let center = NotificationCenter.default
         tokens.append(center.addObserver(forName: .bookDBSyncing, object: nil, queue: .main) { [weak self] _ in
@@ -43,6 +45,7 @@ final class BookDatabaseObserver: SuperLog {
     }
 
     func cancel() {
+        if Self.verbose { os_log("\(Self.t)🧹 BookDatabaseObserver 取消") }
         tokens.forEach { NotificationCenter.default.removeObserver($0) }
         tokens.removeAll()
     }
