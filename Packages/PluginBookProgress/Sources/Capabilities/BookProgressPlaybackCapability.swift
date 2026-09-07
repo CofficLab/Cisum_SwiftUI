@@ -1,5 +1,6 @@
 import Foundation
 import MagicPlayMan
+import OSLog
 import ProviderPlayback
 import MagicKit
 
@@ -29,12 +30,13 @@ protocol BookProgressPlaybackCapability: AnyObject {
 /// 将内核的 `PlaybackProviding` 适配成 BookProgress 的播放能力。
 @MainActor
 final class BookProgressPlaybackCapabilityAdapter: BookProgressPlaybackCapability, SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {
         self.playback = playback
+        if Self.verbose { os_log("\(Self.t)🔌 BookProgressPlaybackCapabilityAdapter 初始化") }
     }
 
     var currentAsset: URL? { playback.currentURL }
@@ -44,10 +46,12 @@ final class BookProgressPlaybackCapabilityAdapter: BookProgressPlaybackCapabilit
     var currentTime: TimeInterval { playback.currentTime }
 
     func play(_ url: URL, autoPlay: Bool, startTime: TimeInterval, reason: String) async {
+        if Self.verbose { os_log("\(Self.t)▶️ play(\(reason)): \(url.lastPathComponent) @ \(startTime)s") }
         await playback.play(url, startTime: startTime)
     }
 
     func seek(to time: TimeInterval) {
+        if Self.verbose { os_log("\(Self.t)⏩ seek -> \(time)s") }
         playback.seek(toTime: time)
     }
 }

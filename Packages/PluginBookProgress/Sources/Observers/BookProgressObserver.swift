@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import ProviderPlayback
 import ProviderScene
 import MagicKit
@@ -9,7 +10,7 @@ import MagicKit
 /// 取代原 `BookProgressRootView` 的 `.onReceive` 直接订阅。
 @MainActor
 final class BookProgressObserver: SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private weak var viewModel: BookProgressViewModel?
     private var token: NSObjectProtocol?
@@ -19,6 +20,7 @@ final class BookProgressObserver: SuperLog {
 
     init(scene: any SceneProviding, playback: any PlaybackProviding, viewModel: BookProgressViewModel) {
         self.viewModel = viewModel
+        if Self.verbose { os_log("\(Self.t)👀 BookProgressObserver 初始化") }
         currentScene = scene.currentScene
         viewModel.handleSceneChange(scene.currentScene)
         sceneHandle = scene.addObserver { [weak self] event in
@@ -39,11 +41,15 @@ final class BookProgressObserver: SuperLog {
         }
         token = NotificationCenter.default.addObserver(forName: .bookDBDeleted, object: nil, queue: .main) { [weak self] notification in
             let urls = notification.userInfo?["urls"] as? [URL] ?? []
-            Task { @MainActor in self?.viewModel?.handleBookDBDeleted(deletedURLs: urls) }
+            Task { @MainActor in
+                if Self.verbose { os_log("\(Self.t)🗑️ 收到书籍删除通知: \(urls.count) 个") }
+                self?.viewModel?.handleBookDBDeleted(deletedURLs: urls)
+            }
         }
     }
 
     func cancel() {
+        if Self.verbose { os_log("\(Self.t)🧹 BookProgressObserver 取消") }
         sceneHandle?.cancel()
         sceneHandle = nil
         playbackHandle?.cancel()
