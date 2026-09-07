@@ -3,6 +3,7 @@ import Foundation
 import KernelCore
 import MagicKit
 import MagicPlayMan
+import PluginToast
 import SwiftUI
 
 /// Factory 根视图桥接层。
@@ -37,7 +38,6 @@ struct KernelRootView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .appThemedAppearance()
-        .withMagicToast()
 #if os(macOS)
         .overlay { ThemeWindowAppearanceBridge().allowsHitTesting(false) }
 #endif
@@ -75,6 +75,7 @@ struct KernelRootView: View {
                     FactoryCisum.mainKernel?.storage?.resetStorageLocation()
                 }
             })
+            .environment(\.toastProviding, kernel.toast)
             if let playMan = kernel.playback as? MagicPlayMan {
                 bridged.environmentObject(playMan)
             } else {

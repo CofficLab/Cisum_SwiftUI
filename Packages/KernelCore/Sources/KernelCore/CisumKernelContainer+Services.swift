@@ -8,6 +8,7 @@ import ProviderDevice
 import ProviderPlayback
 import ProviderStorage
 import ProviderTheme
+import ProviderToast
 
 // MARK: - Service Accessors
 
@@ -55,5 +56,10 @@ extension CisumKernelContainer {
     /// 设备数据服务 —— 设备信息访问。
     public var device: (any DeviceProviding)? {
         resolveProvider(DeviceProviding.self)
+    }
+
+    /// 全局消息、错误和加载状态提示服务。
+    public var toast: (any ToastProviding)? {
+        resolveProvider(ToastProviding.self)
     }
 }

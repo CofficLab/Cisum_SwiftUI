@@ -10,6 +10,7 @@ import ProviderDocsView
 import ProviderRootView
 import ProviderScene
 import ProviderSettings
+import ProviderToast
 import SwiftUI
 
 /// Cisum 应用组装工厂（Composition Root）。
@@ -90,13 +91,18 @@ public enum CisumBuilder: SuperLog {
         kernel.registerCloudService(CloudService())
         kernel.registerDeviceService(DeviceService())
         kernel.registerDocsService(DefaultDocsViewProviding())
+        // 提示 Provider 必须在插件 onBoot 前存在；ToastPlugin 随后替换为真实实现。
+        let defaultToast = DefaultToastProviding()
+        kernel.registerToastService(defaultToast)
+        CisumToastBridge.install(defaultToast)
+
+        // 视图 Provider 也要在插件 onBoot 前注册，供 ToastPlugin 挂载根覆盖层。
+        registerViewProviders(into: kernel)
 
         // 3. 启动内核（插件 onBoot 注册 Storage 等服务 → 校验 → onReady → 贡献聚合）
         try await kernel.startup()
 
-        // 2.5 注册视图 Provider（对齐 Lumi：视图区域各自为独立的 Provider 契约，
-        // 默认实现在此注册进内核；Factory 组装时只做 resolveProvider + 注入 + makeRootView）
-        registerViewProviders(into: kernel)
+        // 3.5 视图 Provider 已在启动前注册，确保根覆盖层可以参与 makeRootView。
         kernel.resolveProvider((any RootViewProviding).self)?
             .setContentViewVisible(appState.isDBViewVisible)
 

@@ -17,19 +17,24 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/chicio/ID3TagEditor", from: "4.5.0"),  // ID3 标签编辑器
         .package(url: "https://github.com/weichsel/ZIPFoundation.git", from: "0.9.19"),  // ZIP 文件处理库
-        .package(url: "https://github.com/nookery/MagicAlert.git", from: "1.0.0"),  // MagicAlert 通知库
+        .package(path: "../ProviderToast"),
     ],
     // 编译目标（模块）
     targets: [
        .target(
            name: "MagicKit",
            dependencies: [
-               .product(name: "MagicAlert", package: "MagicAlert"),
+               .product(name: "ProviderToast", package: "ProviderToast"),
                "ID3TagEditor",
                "ZIPFoundation",
            ],
            path: ".",
-            exclude: ["build"],
+            exclude: [
+                "build",
+                "Sources/MagicKit/Icons.xcassets",
+                "Sources/MagicDemo/MagicDemo/Assets.xcassets",
+                "Sources/MagicDemo/MagicDemo/Preview Content",
+            ],
            sources: ["Sources"],
            resources: [.process("Resources")],
            swiftSettings: [

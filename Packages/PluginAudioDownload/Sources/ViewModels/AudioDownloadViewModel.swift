@@ -1,5 +1,4 @@
 import Foundation
-import MagicAlert
 import MagicKit
 import OSLog
 import ProviderScene

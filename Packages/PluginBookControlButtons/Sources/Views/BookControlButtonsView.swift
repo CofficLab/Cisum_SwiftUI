@@ -56,13 +56,6 @@ struct BookControlButtonsView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
         .buttonStyle(.plain)
-        .overlay {
-            if let error = viewModel.presentedError {
-                BookControlErrorView(error: error) {
-                    viewModel.dismissError()
-                }
-            }
-        }
     }
 
     private let buttonCount: CGFloat = 5

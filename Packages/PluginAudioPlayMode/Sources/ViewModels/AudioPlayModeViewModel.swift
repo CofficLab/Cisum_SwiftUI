@@ -1,6 +1,5 @@
 import Foundation
 import Combine
-import MagicAlert
 import MagicPlayMan
 import OSLog
 import ProviderScene

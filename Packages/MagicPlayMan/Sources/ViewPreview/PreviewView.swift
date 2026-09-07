@@ -87,7 +87,6 @@ public struct MagicPlayManPreviewView: View {
             toolbarView
 
             mainContentArea
-                .withMagicToast()
         }
         .onAppear {
             setupEventObservation()

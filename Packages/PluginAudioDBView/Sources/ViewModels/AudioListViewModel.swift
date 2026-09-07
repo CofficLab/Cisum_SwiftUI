@@ -1,6 +1,5 @@
 import Combine
 import Foundation
-import MagicAlert
 import OSLog
 import PluginAudio
 import SwiftUI

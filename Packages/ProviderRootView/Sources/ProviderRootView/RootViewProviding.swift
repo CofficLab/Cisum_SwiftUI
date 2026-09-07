@@ -7,6 +7,7 @@ public enum RootViewProvidingEvent {
     case statusViewChanged
     case toolbarContentChanged
     case contentViewVisibilityChanged
+    case overlaysChanged
 }
 
 @MainActor
@@ -32,6 +33,15 @@ public protocol RootViewProvidingObserverHandle: AnyObject {
 /// 通知（不依赖 `ObservableObject`）。
 @MainActor
 public protocol RootViewProviding: AnyObject {
+    /// 根视图叠层贡献；后注册项显示在更上层。
+    var overlays: [RootOverlayItem] { get }
+
+    /// 追加根视图叠层；相同 id 的贡献不会重复注册。
+    func addOverlays(_ overlays: [RootOverlayItem])
+
+    /// 撤回根视图叠层。
+    func removeOverlays(ids: Set<String>)
+
     /// 注入顶部播放控制区视图（传 `nil` 表示使用默认实现）。
     func setControlView(_ view: AnyView?)
 
@@ -72,6 +82,9 @@ public protocol RootViewProviding: AnyObject {
 }
 
 public extension RootViewProviding {
+    var overlays: [RootOverlayItem] { [] }
+    func addOverlays(_ overlays: [RootOverlayItem]) {}
+    func removeOverlays(ids: Set<String>) {}
     func setControlView(_ view: AnyView?) {}
     func setContentView(_ view: AnyView?) {}
     func setStatusView(_ view: AnyView?) {}
@@ -84,6 +97,24 @@ public extension RootViewProviding {
     @discardableResult
     func addObserver(_ callback: @escaping (RootViewProvidingEvent) -> Void) -> any RootViewProvidingObserverHandle {
         NoopRootViewProvidingObserverHandle()
+    }
+}
+
+/// 根视图覆盖层描述。插件只负责包装已有根视图，不需要知道根布局的具体实现。
+@MainActor
+public struct RootOverlayItem: Identifiable {
+    public let id: String
+    public let order: Int
+    public let wrap: @MainActor (AnyView) -> AnyView
+
+    public init<Content: View>(
+        id: String,
+        order: Int = 0,
+        @ViewBuilder wrap: @escaping @MainActor (AnyView) -> Content
+    ) {
+        self.id = id
+        self.order = order
+        self.wrap = { AnyView(wrap($0)) }
     }
 }
 

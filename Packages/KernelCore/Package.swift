@@ -26,6 +26,7 @@ let package = Package(
         .package(name: "ProviderPlayback", path: "../ProviderPlayback"),
         .package(name: "ProviderStorage", path: "../ProviderStorage"),
         .package(name: "ProviderTheme", path: "../ProviderTheme"),
+        .package(name: "ProviderToast", path: "../ProviderToast"),
     ],
     targets: [
         .target(
@@ -41,6 +42,7 @@ let package = Package(
                 .product(name: "ProviderPlayback", package: "ProviderPlayback"),
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
                 .product(name: "ProviderTheme", package: "ProviderTheme"),
+                .product(name: "ProviderToast", package: "ProviderToast"),
             ],
             path: ".",
             sources: ["Sources/KernelCore"],

@@ -58,6 +58,7 @@ public actor AudioControlButtonsPlugin: SuperPlugin {
         let viewModel = ControlButtonsViewModel(
             playbackCapability: capability,
             navigationCapability: navigationCapability,
+            toastProvider: kernel.toast,
             currentScene: scene.currentScene
         )
         self.viewModel = viewModel
@@ -80,6 +81,7 @@ public actor AudioControlButtonsPlugin: SuperPlugin {
         let viewModel = ControlButtonsViewModel(
             playbackCapability: capability,
             navigationCapability: navigationCapability,
+            toastProvider: kernel.toast,
             currentScene: scene.currentScene
         )
         self.viewModel = viewModel
@@ -101,8 +103,12 @@ public actor AudioControlButtonsPlugin: SuperPlugin {
     @MainActor
     public func addControlButtonsView() -> AnyView? {
         guard kernel?.scene?.currentScene == .music else { return nil }
+        let viewModel = viewModel ?? ControlButtonsViewModel(
+            playbackCapability: nil,
+            toastProvider: kernel?.toast
+        )
         return AnyView(
-            ControlButtonsView(viewModel: viewModel ?? ControlButtonsViewModel(playbackCapability: nil)) { [weak self] in
+            ControlButtonsView(viewModel: viewModel) { [weak self] in
                 guard let kernel = self?.kernel else { return }
                 kernel.resolveProvider((any RootViewProviding).self)?.toggleContentView()
             }

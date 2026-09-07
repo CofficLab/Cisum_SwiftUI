@@ -1,6 +1,5 @@
 #if os(macOS)
     import CisumUIComponents
-    import MagicAlert
     import MagicKit
     import OSLog
     import PluginAudio

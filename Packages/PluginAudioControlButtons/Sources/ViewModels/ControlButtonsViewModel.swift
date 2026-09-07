@@ -4,18 +4,7 @@ import MagicPlayMan
 import MagicKit
 import OSLog
 import ProviderScene
-
-struct ControlButtonsError: Identifiable, Equatable {
-    let id: UUID
-    let title: String
-    let message: String
-
-    init(id: UUID = UUID(), title: String, message: String) {
-        self.id = id
-        self.title = title
-        self.message = message
-    }
-}
+import ProviderToast
 
 /// 播放控制按钮的状态容器。
 ///
@@ -28,10 +17,9 @@ final class ControlButtonsViewModel: ObservableObject, SuperLog {
 
     @Published private(set) var isPlaying = false
     @Published private(set) var playMode: MagicPlayMode = .sequence
-    @Published private(set) var presentedError: ControlButtonsError?
-
     private let playbackCapability: (any ControlButtonsPlaybackCapability)?
     private let navigationCapability: (any ControlButtonsNavigationCapability)?
+    private let toastProvider: (any ToastProviding)?
     private let targetScene: AppScene
     private var currentScene: AppScene?
     private var controlGeneration = 0
@@ -39,11 +27,13 @@ final class ControlButtonsViewModel: ObservableObject, SuperLog {
     init(
         playbackCapability: (any ControlButtonsPlaybackCapability)?,
         navigationCapability: (any ControlButtonsNavigationCapability)? = nil,
+        toastProvider: (any ToastProviding)? = nil,
         targetScene: AppScene = .music,
         currentScene: AppScene? = nil
     ) {
         self.playbackCapability = playbackCapability
         self.navigationCapability = navigationCapability
+        self.toastProvider = toastProvider
         self.targetScene = targetScene
         self.currentScene = currentScene
         if let playbackCapability {
@@ -69,10 +59,6 @@ final class ControlButtonsViewModel: ObservableObject, SuperLog {
         if scene != targetScene {
             controlGeneration = ControlButtonsPlaybackRequestPolicy.generationAfterDeactivation(controlGeneration)
         }
-    }
-
-    func dismissError() {
-        presentedError = nil
     }
 
     func toggle() {
@@ -318,6 +304,6 @@ final class ControlButtonsViewModel: ObservableObject, SuperLog {
     }
 
     private func presentError(title: String, message: String) {
-        presentedError = ControlButtonsError(title: title, message: message)
+        toastProvider?.presentError(title: title, message: message)
     }
 }

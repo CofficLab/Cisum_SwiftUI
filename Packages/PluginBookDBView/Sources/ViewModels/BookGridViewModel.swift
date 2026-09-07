@@ -1,6 +1,5 @@
 import Combine
 import Foundation
-import MagicAlert
 import MagicKit
 import OSLog
 import PluginAudio

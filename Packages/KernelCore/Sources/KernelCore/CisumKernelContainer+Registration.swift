@@ -8,6 +8,7 @@ import ProviderDevice
 import ProviderPlayback
 import ProviderStorage
 import ProviderTheme
+import ProviderToast
 
 // MARK: - Service Registration
 
@@ -55,5 +56,10 @@ extension CisumKernelContainer {
     /// 注册设备数据服务。
     public func registerDeviceService(_ device: any DeviceProviding) {
         registerProvider(DeviceProviding.self, device)
+    }
+
+    /// 注册全局消息/错误/加载提示服务。
+    public func registerToastService(_ toast: any ToastProviding) {
+        registerProvider(ToastProviding.self, toast)
     }
 }

@@ -33,6 +33,7 @@ final class RootLayoutViewModel: ObservableObject, SuperLog {
             case .statusViewChanged: self?.statusView = provider.statusView
             case .toolbarContentChanged: self?.toolbarContent = provider.toolbarContent
             case .contentViewVisibilityChanged: self?.isContentViewVisible = provider.isContentViewVisible
+            case .overlaysChanged: break
             }
         }
     }

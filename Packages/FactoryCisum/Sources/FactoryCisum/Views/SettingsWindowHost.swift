@@ -1,6 +1,7 @@
 import KernelCore
 import MagicKit
 import ProviderSettings
+import PluginToast
 import SwiftUI
 
 /// Factory 的设置窗口接线视图。
@@ -24,16 +25,20 @@ public struct SettingsWindowHost: View {
             } else if let initializationError {
                 KernelErrorView(error: initializationError)
             } else if let kernel {
-                ProviderSettings.SettingsWindow(
+                let settings = ProviderSettings.SettingsWindow(
                     settings: kernel.plugin,
                     appState: kernel.appState,
                     theme: kernel.theme,
                     storage: kernel.storage,
                     scene: kernel.scene
                 )
+                if let center = kernel.toast as? ToastCenter {
+                    ToastOverlay(content: settings, center: center)
+                } else {
+                    settings
+                }
             }
         }
-        .withMagicToast()
         .task {
             await initializeKernel()
         }

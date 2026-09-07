@@ -84,7 +84,8 @@ public actor BookControlButtonsPlugin: SuperPlugin, SuperLog {
               let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
         let viewModel = BookControlViewModel(
             targetScene: .audiobooks,
-            playbackCapability: makePlaybackCapability(from: playback)
+            playbackCapability: makePlaybackCapability(from: playback),
+            toastProvider: kernel.toast
         )
         let observer = BookControlObserver(scene: scene, playback: playback, viewModel: viewModel)
         controlViewModel = viewModel
@@ -107,7 +108,8 @@ public actor BookControlButtonsPlugin: SuperPlugin, SuperLog {
         }
         let viewModel = BookControlViewModel(
             targetScene: .audiobooks,
-            playbackCapability: makePlaybackCapability(from: kernel?.playback)
+            playbackCapability: makePlaybackCapability(from: kernel?.playback),
+            toastProvider: kernel?.toast
         )
         controlViewModel = viewModel
         return viewModel

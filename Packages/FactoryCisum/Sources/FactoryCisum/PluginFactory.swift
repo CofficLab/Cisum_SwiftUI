@@ -24,6 +24,7 @@ import PluginAudioControlButtons
 import PluginFileLog
 import PluginLikeButton
 import PluginOpenButton
+import PluginToast
 import PluginPlayBack
 import PluginPlaybackHero
 import PluginPluginManager
@@ -103,6 +104,7 @@ public struct DefaultPluginFactory: PluginFactory {
             ScenePlugin.shared,
             LikeButtonPlugin.shared,
             OpenButtonPlugin.shared,
+            ToastPlugin.shared,
             PluginPluginManager.shared,
             StoragePlugin.shared,
             StorePlugin.shared,

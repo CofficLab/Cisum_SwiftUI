@@ -24,6 +24,7 @@ let package = Package(
         .package(path: "../ProviderScene"),
         .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
         .package(name: "ProviderRootView", path: "../ProviderRootView"),
+        .package(name: "ProviderToast", path: "../ProviderToast"),
     ],
     targets: [
         .target(
@@ -38,6 +39,7 @@ let package = Package(
                 .product(name: "ProviderScene", package: "ProviderScene"),
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
                 .product(name: "ProviderRootView", package: "ProviderRootView"),
+                .product(name: "ProviderToast", package: "ProviderToast"),
             ],
             path: ".",
             sources: ["Sources"],

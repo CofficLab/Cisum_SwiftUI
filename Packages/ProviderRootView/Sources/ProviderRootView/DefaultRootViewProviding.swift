@@ -12,6 +12,7 @@ public final class DefaultRootViewProviding: RootViewProviding {
     public private(set) var contentView: AnyView?
     public private(set) var statusView: AnyView?
     public private(set) var toolbarContent: AnyView?
+    public private(set) var overlays: [RootOverlayItem] = []
     public private(set) var isContentViewVisible = false
     private let eventObservers = KernelEventObserverStore<RootViewProvidingEvent>()
 
@@ -41,6 +42,22 @@ public final class DefaultRootViewProviding: RootViewProviding {
         eventObservers.send(.toolbarContentChanged)
     }
 
+    public func addOverlays(_ newOverlays: [RootOverlayItem]) {
+        for overlay in newOverlays where !overlays.contains(where: { $0.id == overlay.id }) {
+            overlays.append(overlay)
+        }
+        overlays.sort { $0.order < $1.order }
+        eventObservers.send(.overlaysChanged)
+    }
+
+    public func removeOverlays(ids: Set<String>) {
+        let oldCount = overlays.count
+        overlays.removeAll { ids.contains($0.id) }
+        if overlays.count != oldCount {
+            eventObservers.send(.overlaysChanged)
+        }
+    }
+
     public func setContentViewVisible(_ visible: Bool) {
         guard isContentViewVisible != visible else { return }
         isContentViewVisible = visible
@@ -55,7 +72,11 @@ public final class DefaultRootViewProviding: RootViewProviding {
     }
 
     public func makeRootView() -> AnyView {
-        AnyView(RootLayoutView(provider: self, kernel: kernel))
+        var root = AnyView(RootLayoutView(provider: self, kernel: kernel))
+        for overlay in overlays {
+            root = overlay.wrap(root)
+        }
+        return root
     }
 }
 

@@ -53,13 +53,6 @@ struct ControlButtonsView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
         .buttonStyle(.plain)
-        .overlay {
-            if let error = viewModel.presentedError {
-                ControlButtonsErrorView(error: error) {
-                    viewModel.dismissError()
-                }
-            }
-        }
     }
 
     private let buttonCount: CGFloat = 5

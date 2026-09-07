@@ -4,19 +4,8 @@ import MagicPlayMan
 import OSLog
 import PluginBook
 import ProviderScene
+import ProviderToast
 import SwiftUI
-
-struct BookControlError: Identifiable, Equatable {
-    let id: UUID
-    let title: String
-    let message: String
-
-    init(id: UUID = UUID(), title: String, message: String) {
-        self.id = id
-        self.title = title
-        self.message = message
-    }
-}
 
 /// 书籍播放控制的集中状态容器（迁移 Phase 5）。
 ///
@@ -36,14 +25,19 @@ final class BookControlViewModel: ObservableObject, SuperLog {
     private let playbackCapability: (any BookControlPlaybackCapability)?
     @Published private(set) var isPlaying = false
     @Published private(set) var playMode: MagicPlayMode = .sequence
-    @Published private(set) var presentedError: BookControlError?
+    private let toastProvider: (any ToastProviding)?
     private var controlGeneration = 0
     private var currentScene: AppScene?
     private let targetScene: AppScene
 
-    init(targetScene: AppScene, playbackCapability: (any BookControlPlaybackCapability)?) {
+    init(
+        targetScene: AppScene,
+        playbackCapability: (any BookControlPlaybackCapability)?,
+        toastProvider: (any ToastProviding)? = nil
+    ) {
         self.targetScene = targetScene
         self.playbackCapability = playbackCapability
+        self.toastProvider = toastProvider
         if let playbackCapability {
             isPlaying = playbackCapability.isPlaying
             playMode = playbackCapability.playMode
@@ -71,10 +65,6 @@ final class BookControlViewModel: ObservableObject, SuperLog {
 
     func applyPlayModeChanged(_ mode: MagicPlayMode) {
         playMode = mode
-    }
-
-    func dismissError() {
-        presentedError = nil
     }
 
     func toggle() {
@@ -305,6 +295,6 @@ final class BookControlViewModel: ObservableObject, SuperLog {
     }
 
     private func presentError(title: String, message: String) {
-        presentedError = BookControlError(title: title, message: message)
+        toastProvider?.presentError(title: title, message: message)
     }
 }
