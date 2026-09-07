@@ -6,6 +6,10 @@ import ProviderScene
 ///
 /// 场景为 Provider 内置的固定枚举（`AppScene.allCases`），不再从插件
 /// `addSceneItem()` 贡献中收集，因此本实现不再依赖 `BuiltinPluginManager`。
+///
+/// ## 存储目录（对齐 GitOK）
+/// 由调用方通过 `StorageProviding.pluginDataDirectory(for: pluginID)` 解析，
+/// 目录名即插件 ID，文件落盘到 `<pluginDataDirectory>/current-scene.json`。
 @MainActor
 public final class SceneService: ObservableObject, SceneProviding {
     private struct PersistedScene: Codable {
@@ -15,16 +19,18 @@ public final class SceneService: ObservableObject, SceneProviding {
 
     private static let legacySceneKey = "currentSceneName"
     private static let legacyPluginIDKey = "currentPluginID"
-    private static let persistenceDirectoryName = "Cisum"
     private static let persistenceFileName = "current-scene.json"
 
-    private let persistenceURL: URL?
+    private let persistenceURL: URL
     private var observers: [WeakObserver] = []
 
     @Published public private(set) var currentScene: AppScene?
 
-    public init(persistenceURL: URL? = nil) {
-        self.persistenceURL = persistenceURL ?? Self.defaultPersistenceURL()
+    /// - Parameter pluginDataDirectory: 插件专属数据目录
+    ///   （由 `StorageProviding.pluginDataDirectory(for: pluginID)` 解析得到）。
+    public init(pluginDataDirectory: URL) {
+        self.persistenceURL = pluginDataDirectory
+            .appendingPathComponent(Self.persistenceFileName, isDirectory: false)
         self.currentScene = nil
     }
 
@@ -88,16 +94,8 @@ public final class SceneService: ObservableObject, SceneProviding {
         }
     }
 
-    private static func defaultPersistenceURL() -> URL? {
-        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)
-            .first?
-            .appendingPathComponent(Self.persistenceDirectoryName, isDirectory: true)
-            .appendingPathComponent(Self.persistenceFileName, isDirectory: false)
-    }
-
     private func loadPersistedSceneName() -> String? {
-        guard let persistenceURL,
-              let data = try? Data(contentsOf: persistenceURL),
+        guard let data = try? Data(contentsOf: persistenceURL),
               let persisted = try? JSONDecoder().decode(PersistedScene.self, from: data) else {
             return nil
         }
@@ -113,14 +111,12 @@ public final class SceneService: ObservableObject, SceneProviding {
         let persisted = PersistedScene(sceneName: scene.rawValue, pluginID: nil)
         let data = try JSONEncoder().encode(persisted)
 
-        if let persistenceURL {
-            let directory = persistenceURL.deletingLastPathComponent()
-            try FileManager.default.createDirectory(
-                at: directory,
-                withIntermediateDirectories: true
-            )
-            try data.write(to: persistenceURL, options: .atomic)
-        }
+        let directory = persistenceURL.deletingLastPathComponent()
+        try FileManager.default.createDirectory(
+            at: directory,
+            withIntermediateDirectories: true
+        )
+        try data.write(to: persistenceURL, options: .atomic)
 
         // 保留旧版键，便于从旧版本升级后继续恢复，也让已有调用方保持兼容。
         UserDefaults.standard.set(scene.rawValue, forKey: Self.legacySceneKey)

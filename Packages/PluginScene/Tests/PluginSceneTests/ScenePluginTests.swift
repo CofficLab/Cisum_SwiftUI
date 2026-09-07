@@ -67,17 +67,19 @@ struct ScenePluginTests {
 
     @Test
     func exposesFixedBuiltInScenes() {
-        let service = SceneService()
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("PluginSceneTests-\(UUID().uuidString)", isDirectory: true)
+        let service = SceneService(pluginDataDirectory: tempDir)
 
         #expect(service.scenes == AppScene.allCases)
         #expect(service.scenes == [.music, .audiobooks])
     }
 
-    private func makePersistenceURL() throws -> URL {
+    private func makePluginDataDirectory() throws -> URL {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("PluginSceneTests-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        return directory.appendingPathComponent("current-scene.json")
+        return directory
     }
 
     private func clearLegacyPersistence() {
@@ -89,28 +91,30 @@ struct ScenePluginTests {
 
     @Test
     func persistsAndRestoresCurrentSceneFromDisk() throws {
-        let persistenceURL = try makePersistenceURL()
-        defer { try? FileManager.default.removeItem(at: persistenceURL.deletingLastPathComponent()) }
+        let pluginDir = try makePluginDataDirectory()
+        defer { try? FileManager.default.removeItem(at: pluginDir) }
+        let fileURL = pluginDir.appendingPathComponent("current-scene.json")
 
-        let first = SceneService(persistenceURL: persistenceURL)
+        let first = SceneService(pluginDataDirectory: pluginDir)
         first.restoreCurrentScene()
         first.setCurrentScene(.audiobooks)
 
-        let second = SceneService(persistenceURL: persistenceURL)
+        let second = SceneService(pluginDataDirectory: pluginDir)
         second.restoreCurrentScene()
 
         #expect(second.currentScene == .audiobooks)
-        #expect(FileManager.default.fileExists(atPath: persistenceURL.path))
+        #expect(FileManager.default.fileExists(atPath: fileURL.path))
     }
 
     @Test
     func fallsBackToFirstSceneWhenPersistedSceneIsUnknown() throws {
-        let persistenceURL = try makePersistenceURL()
-        defer { try? FileManager.default.removeItem(at: persistenceURL.deletingLastPathComponent()) }
+        let pluginDir = try makePluginDataDirectory()
+        defer { try? FileManager.default.removeItem(at: pluginDir) }
+        let fileURL = pluginDir.appendingPathComponent("current-scene.json")
         let data = Data(#"{"sceneName":"不存在","pluginID":null}"#.utf8)
-        try data.write(to: persistenceURL)
+        try data.write(to: fileURL)
 
-        let service = SceneService(persistenceURL: persistenceURL)
+        let service = SceneService(pluginDataDirectory: pluginDir)
         service.restoreCurrentScene()
 
         #expect(service.currentScene == .music)
@@ -118,13 +122,13 @@ struct ScenePluginTests {
 
     @Test
     func notifiesObserversAfterSceneChangesAndSupportsCancellation() throws {
-        let persistenceURL = try makePersistenceURL()
+        let pluginDir = try makePluginDataDirectory()
         clearLegacyPersistence()
         defer {
             clearLegacyPersistence()
-            try? FileManager.default.removeItem(at: persistenceURL.deletingLastPathComponent())
+            try? FileManager.default.removeItem(at: pluginDir)
         }
-        let service = SceneService(persistenceURL: persistenceURL)
+        let service = SceneService(pluginDataDirectory: pluginDir)
         var observedScenes: [AppScene?] = []
         let handle = service.addObserver { event in
             if case let .selectionChanged(scene) = event {
@@ -147,13 +151,13 @@ struct ScenePluginTests {
 
     @Test
     func observerPerformsInitialSyncBeforeInstallingListener() throws {
-        let persistenceURL = try makePersistenceURL()
+        let pluginDir = try makePluginDataDirectory()
         clearLegacyPersistence()
         defer {
             clearLegacyPersistence()
-            try? FileManager.default.removeItem(at: persistenceURL.deletingLastPathComponent())
+            try? FileManager.default.removeItem(at: pluginDir)
         }
-        let service = SceneService(persistenceURL: persistenceURL)
+        let service = SceneService(pluginDataDirectory: pluginDir)
         service.restoreCurrentScene()
         service.setCurrentScene(.audiobooks)
 
@@ -170,13 +174,13 @@ struct ScenePluginTests {
 
     @Test
     func observerForwardsProviderEventsToViewModel() throws {
-        let persistenceURL = try makePersistenceURL()
+        let pluginDir = try makePluginDataDirectory()
         clearLegacyPersistence()
         defer {
             clearLegacyPersistence()
-            try? FileManager.default.removeItem(at: persistenceURL.deletingLastPathComponent())
+            try? FileManager.default.removeItem(at: pluginDir)
         }
-        let service = SceneService(persistenceURL: persistenceURL)
+        let service = SceneService(pluginDataDirectory: pluginDir)
         service.restoreCurrentScene()
 
         let viewModel = SceneSettingsViewModel(
@@ -191,13 +195,13 @@ struct ScenePluginTests {
 
     @Test
     func observerCancelStopsViewModelUpdates() throws {
-        let persistenceURL = try makePersistenceURL()
+        let pluginDir = try makePluginDataDirectory()
         clearLegacyPersistence()
         defer {
             clearLegacyPersistence()
-            try? FileManager.default.removeItem(at: persistenceURL.deletingLastPathComponent())
+            try? FileManager.default.removeItem(at: pluginDir)
         }
-        let service = SceneService(persistenceURL: persistenceURL)
+        let service = SceneService(pluginDataDirectory: pluginDir)
         service.restoreCurrentScene()
 
         let viewModel = SceneSettingsViewModel(

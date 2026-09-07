@@ -50,7 +50,12 @@ public actor ScenePlugin: SuperPlugin, SuperLog {
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
         self.kernel = kernel
-        kernel.registerSceneService(SceneService())
+        if let storage = kernel.storage {
+            let pluginDir = storage.pluginDataDirectory(for: self.id)
+            kernel.registerSceneService(SceneService(pluginDataDirectory: pluginDir))
+        } else {
+            kernel.registerSceneService(SceneService(pluginDataDirectory: FileManager.default.temporaryDirectory))
+        }
     }
 
     @MainActor
