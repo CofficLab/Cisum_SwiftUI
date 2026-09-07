@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import ProviderPlayback
 import ProviderScene
 import MagicKit
@@ -9,7 +10,7 @@ import MagicKit
 /// 取代原 `BookLikeSettingsView` 的 `.onReceive` 直接订阅。
 @MainActor
 final class BookLikeObserver: SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private weak var viewModel: BookLikeViewModel?
     private var token: NSObjectProtocol?
@@ -18,6 +19,7 @@ final class BookLikeObserver: SuperLog {
 
     init(scene: any SceneProviding, playback: any PlaybackProviding, viewModel: BookLikeViewModel) {
         self.viewModel = viewModel
+        if Self.verbose { os_log("\(Self.t)👀 BookLikeObserver 初始化") }
         viewModel.handleSceneChange(scene.currentScene)
         sceneHandle = scene.addObserver { [weak self] event in
             guard case .selectionChanged(let scene) = event else { return }
@@ -33,6 +35,7 @@ final class BookLikeObserver: SuperLog {
     }
 
     func cancel() {
+        if Self.verbose { os_log("\(Self.t)🧹 BookLikeObserver 取消") }
         sceneHandle?.cancel()
         sceneHandle = nil
         playbackHandle?.cancel()

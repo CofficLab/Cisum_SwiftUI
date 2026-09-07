@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import ProviderPlayback
 import MagicKit
 
@@ -15,12 +16,13 @@ protocol BookLikePlaybackCapability: AnyObject {
 /// 将内核的 `PlaybackProviding` 适配成 BookLike 的播放能力。
 @MainActor
 final class BookLikePlaybackCapabilityAdapter: BookLikePlaybackCapability, SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {
         self.playback = playback
+        if Self.verbose { os_log("\(Self.t)🔌 BookLikePlaybackCapabilityAdapter 初始化") }
     }
 
     var isAvailable: Bool { true }

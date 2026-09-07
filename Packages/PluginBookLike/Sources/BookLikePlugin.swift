@@ -2,13 +2,14 @@ import KernelCore
 import ProviderDocsView
 import CisumUIComponents
 import PluginBookScene
+import OSLog
 import ProviderPlayback
 import ProviderScene
 import SwiftUI
 import MagicKit
 
 public actor BookLikePlugin: SuperPlugin, SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     public static let shared = BookLikePlugin()
     public static let metadata = PluginMetadata(
@@ -27,6 +28,7 @@ public actor BookLikePlugin: SuperPlugin, SuperLog {
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
+        if Self.verbose { os_log("\(Self.t)🔌 onRegister") }
         if let docs = kernel.docs {
             docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookLikePluginAboutView() })
             docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookLikePluginManualView() })
@@ -36,6 +38,7 @@ public actor BookLikePlugin: SuperPlugin, SuperLog {
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
         self.kernel = kernel
+        if Self.verbose { os_log("\(Self.t)🚀 onBoot") }
         // 跨插件 Provider（Scene / Playback）在 onReady 中解析，
         // 不假设其他插件已完成 Provider 注册。
     }
@@ -43,22 +46,26 @@ public actor BookLikePlugin: SuperPlugin, SuperLog {
     /// 所有 Provider 插件完成 onBoot 后再组装依赖它们的 ViewModel 与 Observer。
     @MainActor
     public func onReady(kernel: CisumKernel) async throws {
+        if Self.verbose { os_log("\(Self.t)🟢 onReady") }
         installState(kernel: kernel)
     }
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
         self.kernel = kernel
+        if Self.verbose { os_log("\(Self.t)✅ onEnable") }
         installState(kernel: kernel)
     }
 
     @MainActor
     public func onDisable(kernel: CisumKernel) async throws {
+        if Self.verbose { os_log("\(Self.t)⏹️ onDisable") }
         teardownState()
     }
 
     @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
+        if Self.verbose { os_log("\(Self.t)🛑 onShutdown") }
         sceneBox.scene = nil
         teardownState()
     }
@@ -97,6 +104,7 @@ public actor BookLikePlugin: SuperPlugin, SuperLog {
         guard let scene = kernel.resolveProvider((any SceneProviding).self),
               let playback = kernel.resolveProvider((any PlaybackProviding).self) else { return }
         sceneBox.scene = scene
+        if Self.verbose { os_log("\(Self.t)🔧 installState") }
 
         let viewModel = BookLikeViewModel(
             playbackCapability: makePlaybackCapability(from: playback),
@@ -110,6 +118,7 @@ public actor BookLikePlugin: SuperPlugin, SuperLog {
 
     @MainActor
     private func teardownState() {
+        if Self.verbose { os_log("\(Self.t)🧹 teardownState") }
         likeObserver?.cancel()
         likeObserver = nil
         likeViewModel = nil

@@ -22,7 +22,7 @@ typealias BookLikeSaveProvider = @MainActor (_ liked: Bool, _ url: URL) -> Void
 /// `BookLikePlaybackCapability` 表达，本地喜欢仓库由插件入口组装为闭包注入。
 @MainActor
 final class BookLikeViewModel: ObservableObject, SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     @Published private(set) var likedBooks: [BookLikeItem] = []
     @Published private(set) var isLoading = true
@@ -64,6 +64,7 @@ final class BookLikeViewModel: ObservableObject, SuperLog {
 
     func handleLikeStatusChanged(asset: URL, liked: Bool) {
         guard isActive else { return }
+        if Self.verbose { os_log("\(Self.t)❤️/💔 喜欢状态变更: \(asset.lastPathComponent) -> \(liked)") }
 
         saveLikeStatus(liked, asset)
         handleLikeStatusChanged()
@@ -74,6 +75,7 @@ final class BookLikeViewModel: ObservableObject, SuperLog {
     func reloadLikedBooks() {
         likedBooks = loadLikedBooks()
         isLoading = false
+        if Self.verbose { os_log("\(Self.t)📖 喜欢列表已加载: \(self.likedBooks.count) 本") }
     }
 
     // MARK: - Like activation
@@ -83,10 +85,12 @@ final class BookLikeViewModel: ObservableObject, SuperLog {
         guard playbackCapability?.isAvailable == true else { return }
 
         isActive = true
+        if Self.verbose { os_log("\(Self.t)🟢 喜欢保存已激活") }
         // Playback events are adapted by BookLikeObserver.
     }
 
     private func deactivateLike() {
+        if Self.verbose { os_log("\(Self.t)⏹️ 喜欢保存已停用") }
         isActive = false
     }
 }
