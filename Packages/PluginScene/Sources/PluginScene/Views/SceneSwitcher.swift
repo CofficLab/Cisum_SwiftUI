@@ -86,7 +86,7 @@ private struct PostersView: View {
                 )
             )
         }
-        selectedID = items.first?.id ?? ""
+        selectedID = viewModel.currentScene?.id ?? items.first?.id ?? ""
     }
 
     private static func sceneTitle(_ scene: AppScene) -> String {
