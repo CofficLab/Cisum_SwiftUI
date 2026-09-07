@@ -1,5 +1,5 @@
 {
-  "originHash" : "21b773721bf7c4e0f8f509af1eb46527533b1e62c41db6107e5818b5fbc711b2",
+  "originHash" : "548955e6eb2e1fa19afab26d801315457c56fe5bf18c1f4a6df92f739c9a4bc5",
   "pins" : [
     {
       "identity" : "id3tageditor",
@@ -8,15 +8,6 @@
       "state" : {
         "revision" : "3ccc31eafae0ded1fea8c9acd5e7ef7dfdbf1e8e",
         "version" : "4.6.0"
-      }
-    },
-    {
-      "identity" : "magicalert",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/nookery/MagicAlert.git",
-      "state" : {
-        "revision" : "c01ea99ac87530ecc804f082c9311d884bc53418",
-        "version" : "1.0.1"
       }
     },
     {

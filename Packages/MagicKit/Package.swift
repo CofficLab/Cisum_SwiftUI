@@ -31,11 +31,8 @@ let package = Package(
            path: ".",
             exclude: [
                 "build",
-                "Sources/MagicKit/Icons.xcassets",
-                "Sources/MagicDemo/MagicDemo/Assets.xcassets",
-                "Sources/MagicDemo/MagicDemo/Preview Content",
             ],
-           sources: ["Sources"],
+            sources: ["Sources"],
            resources: [.process("Resources")],
            swiftSettings: [
                .enableExperimentalFeature("StrictConcurrency=minimal"),
