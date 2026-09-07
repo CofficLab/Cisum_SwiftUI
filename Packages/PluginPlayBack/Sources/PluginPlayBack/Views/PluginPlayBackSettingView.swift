@@ -32,8 +32,6 @@ struct PluginPlayBackSettingView: View {
 
     private var header: some View {
         HStack(alignment: .firstTextBaseline) {
-            Text("Current File")
-                .font(.appTitle)
             Spacer()
             if let scene = viewModel.currentScene {
                 Text(scene.displayName)

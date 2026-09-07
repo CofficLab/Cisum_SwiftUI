@@ -77,8 +77,6 @@ struct BookDBSettingView: View {
 
     private var header: some View {
         HStack(alignment: .firstTextBaseline) {
-            Text("Audiobook Repository", bundle: .module)
-                .font(.appTitle)
             Spacer()
             Text("Total \(viewModel.totalCount.description)", bundle: .module)
                 .font(.appCaption)

@@ -92,8 +92,6 @@ struct AudioDBSettingView: View, SuperLog {
 
     private var header: some View {
         HStack(alignment: .firstTextBaseline) {
-            Text("Audio Repository", bundle: .module)
-                .font(.appTitle)
             Spacer()
             Text("Total \(viewModel.totalCount.description)", bundle: .module)
                 .font(.appCaption)
