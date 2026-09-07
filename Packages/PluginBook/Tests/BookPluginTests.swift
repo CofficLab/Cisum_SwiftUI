@@ -1,4 +1,4 @@
-@testable import BookPlugin
+@testable import PluginBook
 import Foundation
 import Testing
 import SwiftData
@@ -573,6 +573,32 @@ private actor CoverLoaderProbe {
     )
 
     #expect(!BookRepo.isDisplayableLibraryItem(emptyFolder, libraryRoot: root))
+}
+
+@MainActor
+@Test func bookRepoWaitsForInitialDiskSyncBeforeReturningBooks() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let bookURL = root.appendingPathComponent("book.m4b")
+    try Data("audio".utf8).write(to: bookURL)
+
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let repo = try BookRepo(
+        disk: root,
+        db: BookDB(container, reason: "bookRepoWaitsForInitialDiskSyncBeforeReturningBooks")
+    )
+
+    let books = await repo.getAll(reason: "bookRepoWaitsForInitialDiskSyncBeforeReturningBooks")
+
+    #expect(books.count == 1)
+    #expect(BookPathContainment.representsSameFile(books[0].url, bookURL))
 }
 
 @Test func bookDBFullSyncInsertsBooksInStablePathOrder() async throws {

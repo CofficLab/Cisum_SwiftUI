@@ -14,6 +14,8 @@ public class BookRepo: ObservableObject, SuperEvent, SuperLog {
     private let verbose: Bool = false
     private var monitor: Cancellable?
     private nonisolated let coverRepo: BookCoverRepo
+    private var initialSyncCompleted = false
+    private var initialSyncWaiters: [CheckedContinuation<Void, Never>] = []
 
     // MARK: - State
 
@@ -59,9 +61,14 @@ public class BookRepo: ObservableObject, SuperEvent, SuperLog {
         return monitoredDisk.onDirChange(
             verbose: self.verbose,
             caller: self.className,
-            onChange: { items, isFirst, _ in
+            onChange: { items, isFirst, error in
                 if await Self.verbose {
                     os_log("\(self.t) Disk changed, with items \(items.count)")
+                }
+                if let error {
+                    os_log(.error, "\(self.t) Directory scan failed: \(error.localizedDescription)")
+                    await self.completeInitialSyncIfNeeded()
+                    return
                 }
                 if !isFirst, let lastTime = UserDefaults.standard.object(forKey: "BookLastUpdateTime") as? Date {
                     let now = Date()
@@ -89,6 +96,36 @@ public class BookRepo: ObservableObject, SuperEvent, SuperLog {
 extension BookRepo {
     private func sync(_ items: [URL], isFirst: Bool) async {
         await self.db.sync(items, isFirst: isFirst)
+        if isFirst {
+            completeInitialSyncIfNeeded()
+        }
+    }
+
+    /// Wait until the directory monitor has finished its first full sync.
+    ///
+    /// The monitor starts its initial scan asynchronously during init. Without
+    /// waiting here, a first database read can race that scan and incorrectly
+    /// render the empty-repository state.
+    private func waitForInitialSync() async {
+        guard !initialSyncCompleted else { return }
+
+        await withCheckedContinuation { continuation in
+            if initialSyncCompleted {
+                continuation.resume()
+            } else {
+                initialSyncWaiters.append(continuation)
+            }
+        }
+    }
+
+    private func completeInitialSyncIfNeeded() {
+        guard !initialSyncCompleted else { return }
+
+        initialSyncCompleted = true
+
+        let waiters = initialSyncWaiters
+        initialSyncWaiters.removeAll()
+        waiters.forEach { $0.resume() }
     }
 
     public func syncImportedItems(_ items: [URL]) async throws {
@@ -130,6 +167,8 @@ extension BookRepo {
         if verbose {
             os_log("\(self.t)📚 获取所有书籍集合 - 来源: \(reason)")
         }
+
+        await waitForInitialSync()
         
         do {
             // 获取所有书籍的数据传输对象，只保留顶层书籍，包含文件夹书和单文件书。
