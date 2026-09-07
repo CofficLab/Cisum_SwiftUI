@@ -123,7 +123,7 @@ enum AudioItemFileActionPolicy {
 /// 用于在 AudioList 中展示单个音频文件
 struct AudioItemView: View, Equatable, SuperLog {
     nonisolated static let emoji = "🎵"
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     @EnvironmentObject var listViewModel: AudioListViewModel
     @LumiTheme private var appTheme
@@ -360,11 +360,10 @@ extension AudioItemView {
 
     /// 播放音频
     private func playAudio() {
+        os_log("[AudioDBPlayback] 🖱️ row action fired: %{public}s", url.lastPathComponent)
         Task {
             listViewModel.userSelected(url)
-            if Self.verbose {
-                os_log("\(Self.t)▶️ Playing audio: \(url.lastPathComponent)")
-            }
+            os_log("[AudioDBPlayback] ✅ row action forwarded to AudioListViewModel: %{public}s", url.lastPathComponent)
         }
     }
 

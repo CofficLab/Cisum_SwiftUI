@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import MagicPlayMan
+import OSLog
 
 /// 将 `MagicPlayMan` 桥接为内核的 `PlaybackProviding`。
 ///
@@ -18,7 +19,9 @@ extension MagicPlayMan: PlaybackProviding {
     public var isPlaying: Bool { playing }
 
     public func play(_ url: URL) async {
+        os_log("[AudioDBPlayback] ProviderPlayback.play entered: %{public}s", url.path)
         await play(url, reason: "PlaybackProviding")
+        os_log("[AudioDBPlayback] ProviderPlayback.play returned: %{public}s", url.lastPathComponent)
     }
 
     public func play(_ url: URL, startTime: TimeInterval?) async {
@@ -77,12 +80,14 @@ private final class PlaybackObserver: PlaybackProvidingObserverHandle {
 
         player.events.onStateChanged
             .sink { state in
+                os_log("[AudioDBPlayback] ProviderPlayback event.stateChanged: %{public}s", String(describing: state))
                 callback(.stateChanged(state))
             }
             .store(in: &cancellables)
 
         player.events.onCurrentURLChanged
             .sink { url in
+                os_log("[AudioDBPlayback] ProviderPlayback event.assetChanged: %{public}s", url?.path ?? "nil")
                 callback(.assetChanged(url))
             }
             .store(in: &cancellables)

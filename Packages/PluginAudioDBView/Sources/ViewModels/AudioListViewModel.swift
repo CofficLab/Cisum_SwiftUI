@@ -17,7 +17,7 @@ import MagicKit
 /// 本 ViewModel 仅调用它们，保证行为不变。
 @MainActor
 final class AudioListViewModel: ObservableObject, SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     /// 当前选中项；由外部播放事件和用户选择共同驱动，但只有用户选择会发出播放命令。
     @Published private(set) var selection: URL?
@@ -79,6 +79,7 @@ final class AudioListViewModel: ObservableObject, SuperLog {
         Binding(
             get: { [weak self] in self?.selection },
             set: { [weak self] url in
+                os_log("[AudioDBPlayback] 🖱️ List.selection setter: %{public}s", url?.lastPathComponent ?? "nil")
                 // List may invoke the binding setter while SwiftUI is updating
                 // the view hierarchy. Defer the published-state mutation until
                 // that update has completed.
@@ -91,20 +92,34 @@ final class AudioListViewModel: ObservableObject, SuperLog {
 
     /// 用户选中某一项：更新选中状态并请求内核播放。
     func userSelected(_ url: URL?) {
+        os_log(
+            "[AudioDBPlayback] 1/5 userSelected url=%{public}s loading=%{public}s displayed=%{public}d",
+            url?.lastPathComponent ?? "nil",
+            isLoading ? "true" : "false",
+            urls.count
+        )
+
         guard let url, !isLoading else {
+            os_log(.error, "[AudioDBPlayback] 2/5 selection rejected: url is nil or list is loading")
             selectionGeneration += 1
             return
         }
 
         guard urls.contains(where: { AudioListSelectionPolicy.representsSameAudio($0, url) }) else {
+            os_log(.error, "[AudioDBPlayback] 2/5 selection rejected: url is not in displayed list: %{public}s", url.path)
             return
         }
 
         selection = url
-        guard !AudioListSelectionPolicy.representsSameAudio(url, currentAsset) else { return }
+        os_log("[AudioDBPlayback] 2/5 selection accepted: %{public}s", url.lastPathComponent)
+        guard !AudioListSelectionPolicy.representsSameAudio(url, currentAsset) else {
+            os_log("[AudioDBPlayback] 3/5 same asset already loaded; playback command skipped: %{public}s", url.lastPathComponent)
+            return
+        }
 
         selectionGeneration += 1
         let generation = selectionGeneration
+        os_log("[AudioDBPlayback] 3/5 scheduling playback request generation=%{public}d: %{public}s", generation, url.lastPathComponent)
 
         Task { @MainActor in
             guard AudioListSelectionPolicy.shouldApplySelection(
@@ -114,14 +129,31 @@ final class AudioListViewModel: ObservableObject, SuperLog {
                 selection: selection,
                 displayedURLs: urls
             ) else {
+                os_log(
+                    .error,
+                    "[AudioDBPlayback] 4/5 playback request discarded generation=%{public}d currentGeneration=%{public}d selected=%{public}s displayed=%{public}s",
+                    generation,
+                    selectionGeneration,
+                    selection?.lastPathComponent ?? "nil",
+                    urls.contains(where: { AudioListSelectionPolicy.representsSameAudio($0, url) }) ? "true" : "false"
+                )
                 return
             }
-            await self.playbackCapability?.play(url)
+
+            guard let playbackCapability = self.playbackCapability else {
+                os_log(.error, "[AudioDBPlayback] 4/5 playback capability is missing; cannot play: %{public}s", url.path)
+                return
+            }
+
+            os_log("[AudioDBPlayback] 4/5 calling AudioPlaybackCapability.play: %{public}s", url.path)
+            await playbackCapability.play(url)
+            os_log("[AudioDBPlayback] 5/5 AudioPlaybackCapability.play returned: %{public}s", url.lastPathComponent)
         }
     }
 
     /// 播放器资产变化：只同步选中项，不再次发出播放命令。
     func applyExternalPlayback(url: URL?) {
+        os_log("[AudioDBPlayback] 🔄 external playback asset changed: %{public}s", url?.path ?? "nil")
         currentAsset = url
         if let asset = url {
             if !AudioListSelectionPolicy.representsSameAudio(asset, selection) {

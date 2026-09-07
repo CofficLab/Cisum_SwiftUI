@@ -1,4 +1,5 @@
 import CisumUIComponents
+import OSLog
 import PluginAudio
 import SwiftUI
 #if os(macOS)
@@ -291,5 +292,12 @@ struct AudioDBSettingView: View {
             Spacer()
         }
         .padding(.vertical, 2)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            os_log(
+                "[AudioDBPlayback] 🖱️ settings repository row tapped (view-only; no playback action): %{public}s",
+                url.path
+            )
+        }
     }
 }
