@@ -78,7 +78,14 @@ final class AudioListViewModel: ObservableObject, SuperLog {
     var selectionBinding: Binding<URL?> {
         Binding(
             get: { [weak self] in self?.selection },
-            set: { [weak self] url in self?.userSelected(url) }
+            set: { [weak self] url in
+                // List may invoke the binding setter while SwiftUI is updating
+                // the view hierarchy. Defer the published-state mutation until
+                // that update has completed.
+                DispatchQueue.main.async {
+                    self?.userSelected(url)
+                }
+            }
         )
     }
 
