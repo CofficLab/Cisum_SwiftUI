@@ -5,7 +5,7 @@ import OSLog
 
 public actor BookPlayModeStore: SuperLog {
     public static let emoji = "💾"
-    public static let verbose = false
+    public static let verbose = true
 
     public static let shared = BookPlayModeStore()
 
@@ -14,10 +14,12 @@ public actor BookPlayModeStore: SuperLog {
     private init() {}
 
     public func getPlayMode() -> MagicPlayMode {
-        Self.resolvedPlayMode(
+        let mode = Self.resolvedPlayMode(
             localRawValue: UserDefaults.standard.string(forKey: Self.playModeKey),
             cloudRawValue: NSUbiquitousKeyValueStore.default.string(forKey: Self.playModeKey)
         )
+        if Self.verbose { os_log("\(self.t)📖 读取播放模式: \(mode.shortName)") }
+        return mode
     }
 
     static func resolvedPlayMode(localRawValue: String?, cloudRawValue: String?) -> MagicPlayMode {

@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 import MagicPlayMan
+import OSLog
 import ProviderScene
 import MagicKit
 
@@ -9,7 +10,7 @@ typealias BookPlayModeStoreAction = @MainActor (_ mode: MagicPlayMode) async -> 
 
 @MainActor
 final class BookPlayModeViewModel: ObservableObject, SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private let playbackCapability: (any BookPlayModePlaybackCapability)?
     private let targetScene: AppScene
@@ -39,6 +40,7 @@ final class BookPlayModeViewModel: ObservableObject, SuperLog {
 
     func handlePlayModeChanged(_ mode: MagicPlayMode) {
         guard isActive else { return }
+        if Self.verbose { os_log("\(Self.t)🔄 播放模式变更: \(mode.shortName)") }
         generation += 1
         let requestGeneration = generation
         Task { @MainActor [weak self] in
@@ -55,11 +57,13 @@ final class BookPlayModeViewModel: ObservableObject, SuperLog {
     private func activate() {
         guard !isActive, currentScene == targetScene, let playbackCapability else { return }
         isActive = true
+        if Self.verbose { os_log("\(Self.t)🟢 播放模式视图激活") }
         let requestGeneration = generation
         Task { @MainActor [weak self] in
             guard let self else { return }
             let storedMode = await loadPlayMode()
             guard self.isActive, self.generation == requestGeneration, storedMode != playbackCapability.playMode else { return }
+            if Self.verbose { os_log("\(Self.t)🔄 恢复播放模式: \(storedMode.shortName)") }
             playbackCapability.setPlayMode(storedMode)
         }
     }

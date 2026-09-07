@@ -1,10 +1,11 @@
+import OSLog
 import ProviderPlayback
 import ProviderScene
 import MagicKit
 
 @MainActor
 final class BookPlayModeObserver: SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private weak var viewModel: BookPlayModeViewModel?
     private var sceneHandle: (any SceneProvidingObserverHandle)?
@@ -12,6 +13,7 @@ final class BookPlayModeObserver: SuperLog {
 
     init(scene: any SceneProviding, playback: any PlaybackProviding, viewModel: BookPlayModeViewModel) {
         self.viewModel = viewModel
+        if Self.verbose { os_log("\(Self.t)👀 BookPlayModeObserver 初始化") }
         viewModel.handleSceneChange(scene.currentScene)
         sceneHandle = scene.addObserver { [weak self] event in
             guard case .selectionChanged(let scene) = event else { return }
@@ -24,6 +26,7 @@ final class BookPlayModeObserver: SuperLog {
     }
 
     func cancel() {
+        if Self.verbose { os_log("\(Self.t)🧹 BookPlayModeObserver 取消") }
         sceneHandle?.cancel()
         sceneHandle = nil
         playbackHandle?.cancel()
