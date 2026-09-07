@@ -29,7 +29,8 @@ let package = Package(
                "ZIPFoundation",
            ],
            path: ".",
-            sources: ["Sources"],
+            exclude: ["build"],
+           sources: ["Sources"],
            resources: [.process("Resources")],
            swiftSettings: [
                .enableExperimentalFeature("StrictConcurrency=minimal"),
