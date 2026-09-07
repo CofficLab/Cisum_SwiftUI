@@ -790,3 +790,70 @@ import UniformTypeIdentifiers
     #expect(item?.iconName == BookDBPluginInfo.iconName)
     #expect(item?.order == BookDBPlugin.metadata.order)
 }
+
+// MARK: - Book tree builder
+
+@Test func bookTreeBuilderBuildsNestedDirectoryStructure() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    let bookA = root.appendingPathComponent("Book A", isDirectory: true)
+    let bookB = root.appendingPathComponent("Book B", isDirectory: true)
+    let disc1 = bookB.appendingPathComponent("Disc 1", isDirectory: true)
+    try FileManager.default.createDirectory(at: bookA, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: disc1, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: bookA.appendingPathComponent("01.m4b"))
+    try Data("audio".utf8).write(to: disc1.appendingPathComponent("track.mp3"))
+    try Data("audio".utf8).write(to: root.appendingPathComponent("bonus.m4b"))
+
+    let children = BookTreeBuilder.buildRootChildren(from: root)
+
+    // 目录优先，再文件；同层按名称本地化排序。
+    #expect(children.map(\.name) == ["Book A", "Book B", "bonus.m4b"])
+    #expect(children.map(\.isDirectory) == [true, true, false])
+
+    let bookBNode = try #require(children.first { $0.name == "Book B" })
+    #expect(bookBNode.children?.map(\.name) == ["Disc 1"])
+    #expect(bookBNode.childCount == 1)
+    #expect(bookBNode.isExpandable)
+
+    let disc1Node = try #require(bookBNode.children?.first)
+    #expect(disc1Node.children?.map(\.name) == ["track.mp3"])
+    #expect(disc1Node.isExpandable)
+
+    let fileNode = try #require(children.first { $0.name == "bonus.m4b" })
+    #expect(fileNode.isDirectory == false)
+    #expect(fileNode.childCount == 0)
+    #expect(!fileNode.isExpandable)
+}
+
+@Test func bookTreeBuilderSkipsHiddenAndUnsupportedFiles() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: root.appendingPathComponent("chapter.m4b"))
+    try Data("hidden".utf8).write(to: root.appendingPathComponent(".hidden.m4b"))
+    try Data("notes".utf8).write(to: root.appendingPathComponent("notes.txt"))
+    try Data("cover".utf8).write(to: root.appendingPathComponent("cover.jpg"))
+
+    let children = BookTreeBuilder.buildRootChildren(from: root)
+
+    #expect(children.map(\.name) == ["chapter.m4b"])
+    #expect(BookTreeBuilder.isSupportedAudioFile(root.appendingPathComponent("Chapter.M4B")))
+    #expect(!BookTreeBuilder.isSupportedAudioFile(root.appendingPathComponent("notes.txt")))
+}
+
+@Test func bookTreeBuilderReturnsEmptyForMissingRoot() {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+
+    #expect(BookTreeBuilder.buildRootChildren(from: root).isEmpty)
+}
+
