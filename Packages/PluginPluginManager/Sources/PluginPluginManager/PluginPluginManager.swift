@@ -14,7 +14,9 @@ import SwiftUI
 /// `onRegister` 中贡献关于页与说明书。
 public actor PluginPluginManager: SuperPlugin {
     public static let shared = PluginPluginManager()
+    public static let pluginID = "com.coffic.cisum.plugin.plugin-manager"
     public static let metadata = PluginMetadata(
+        id: pluginID,
         displayName: String(localized: "Plugin Manager", bundle: .module),
         description: String(localized: "Manages all registered plugins.", bundle: .module),
         iconName: "puzzlepiece.extension",
@@ -54,10 +56,11 @@ public actor PluginPluginManager: SuperPlugin {
         self.kernel = kernel
 
         // 注入插件启用状态持久化存储：onBoot 阶段从内核的 StorageProviding
-        // 解析数据库根目录，状态落盘到 `<databaseRoot>/PluginManager/`。
+        // 解析插件专属数据目录（目录名 = 插件 ID，对齐 GitOK 规律）。
         // 本插件为 alwaysOn，先于所有可配置插件的启用判断完成注入。
         if let storage = kernel.storage {
-            kernel.stateStore = PluginManagerStateStore(rootDirectory: storage.databaseRoot)
+            let pluginDir = storage.pluginDataDirectory(for: Self.pluginID)
+            kernel.stateStore = PluginManagerStateStore(pluginDataDirectory: pluginDir)
         }
 
         installState(kernel: kernel)

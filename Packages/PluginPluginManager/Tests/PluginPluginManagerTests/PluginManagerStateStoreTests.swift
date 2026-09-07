@@ -6,27 +6,26 @@ import Testing
 
 @MainActor
 struct PluginManagerStateStoreTests {
-    private func makeRootDirectory() -> URL {
+    private func makePluginDataDirectory() -> URL {
         FileManager.default.temporaryDirectory
             .appendingPathComponent("cisum-plugin-state-\(UUID().uuidString)", isDirectory: true)
     }
 
     @Test
-    func storePersistsOverridesToPluginManagerSubdirectoryPlist() throws {
-        let root = makeRootDirectory()
-        let store = PluginManagerStateStore(rootDirectory: root)
+    func storePersistsOverridesToPluginDataDirectoryPlist() throws {
+        let pluginDir = makePluginDataDirectory()
+        let store = PluginManagerStateStore(pluginDataDirectory: pluginDir)
 
         store.setOverride(true, for: "plugin.alpha")
         store.setOverride(false, for: "plugin.beta")
 
-        // 文件落在 <rootDirectory>/PluginManager/plugin-enabled-overrides.plist
-        let fileURL = root
-            .appendingPathComponent("PluginManager", isDirectory: true)
+        // 文件落在 <pluginDataDirectory>/plugin-enabled-overrides.plist
+        let fileURL = pluginDir
             .appendingPathComponent("plugin-enabled-overrides.plist")
         #expect(FileManager.default.fileExists(atPath: fileURL.path))
 
         // 新实例（模拟重启）能从磁盘重载
-        let reloaded = PluginManagerStateStore(rootDirectory: root)
+        let reloaded = PluginManagerStateStore(pluginDataDirectory: pluginDir)
         #expect(reloaded.override(for: "plugin.alpha") == true)
         #expect(reloaded.override(for: "plugin.beta") == false)
         #expect(reloaded.override(for: "plugin.gamma") == nil)
@@ -34,21 +33,21 @@ struct PluginManagerStateStoreTests {
 
     @Test
     func clearOverrideRemovesEntryAndPersists() throws {
-        let root = makeRootDirectory()
-        let store = PluginManagerStateStore(rootDirectory: root)
+        let pluginDir = makePluginDataDirectory()
+        let store = PluginManagerStateStore(pluginDataDirectory: pluginDir)
         store.setOverride(true, for: "plugin.alpha")
 
         store.clearOverride(for: "plugin.alpha")
         #expect(store.override(for: "plugin.alpha") == nil)
 
-        let reloaded = PluginManagerStateStore(rootDirectory: root)
+        let reloaded = PluginManagerStateStore(pluginDataDirectory: pluginDir)
         #expect(reloaded.override(for: "plugin.alpha") == nil)
     }
 
     @Test
     func resetClearsAllOverrides() throws {
-        let root = makeRootDirectory()
-        let store = PluginManagerStateStore(rootDirectory: root)
+        let pluginDir = makePluginDataDirectory()
+        let store = PluginManagerStateStore(pluginDataDirectory: pluginDir)
         store.setOverride(true, for: "plugin.alpha")
         store.setOverride(false, for: "plugin.beta")
 
@@ -69,8 +68,8 @@ struct PluginManagerStateStoreTests {
 
         defer { UserDefaults.standard.removeObject(forKey: legacyKey) }
 
-        let root = makeRootDirectory()
-        let store = PluginManagerStateStore(rootDirectory: root)
+        let pluginDir = makePluginDataDirectory()
+        let store = PluginManagerStateStore(pluginDataDirectory: pluginDir)
 
         // 迁移后旧 key 被清除
         #expect(store.override(for: "plugin.legacy") == false)
