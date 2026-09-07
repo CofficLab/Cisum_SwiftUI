@@ -35,7 +35,6 @@ struct BookList: View, SuperLog, SuperThread {
     }
 
     var body: some View {
-//        os_log("\(self.t)开始渲染")
         return List(displayableBooks) { item in
             BookTile(url: item.url, title: item.bookTitle, childCount: item.childCount)
         }
