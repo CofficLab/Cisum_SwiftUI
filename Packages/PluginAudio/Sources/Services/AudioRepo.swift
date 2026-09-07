@@ -67,11 +67,19 @@ public class AudioRepo: ObservableObject, SuperLog, @unchecked Sendable {
     }
 
     public func getNextOf(_ url: URL?, verbose: Bool = false) async throws -> URL? {
-        try await db.getNextAudioURLOf(url, verbose: verbose)
+        guard let url, await db.hasAudio(url) else { return nil }
+        if let next = try await db.getNextAudioURLOf(url, verbose: verbose) {
+            return next
+        }
+        return try await db.firstAudioURL()
     }
 
     public func getPrevOf(_ url: URL?, verbose: Bool = false) async throws -> URL? {
-        try await db.getPrevAudioURLOf(url, verbose: verbose)
+        guard let url, await db.hasAudio(url) else { return nil }
+        if let previous = try await db.getPrevAudioURLOf(url, verbose: verbose) {
+            return previous
+        }
+        return try await db.lastAudioURL()
     }
 
     public func getTotalCount() async -> Int {

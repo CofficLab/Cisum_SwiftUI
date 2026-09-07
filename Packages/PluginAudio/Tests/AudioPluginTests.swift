@@ -1,7 +1,7 @@
 import Testing
 import Foundation
 import SwiftData
-@testable import AudioPlugin
+@testable import PluginAudio
 
 @Test func audioPluginInfoExportsMetadata() {
     #expect(AudioPluginInfo.titleKey == "Music")
@@ -106,7 +106,7 @@ import SwiftData
 }
 
 @Test func missingStorageErrorKeepsStorageSetupGuidance() {
-    let presentation = AudioRootErrorPresentation.make(error: .initialization(reason: AudioRootErrorPresentation.storageMissingReason))
+    let presentation = AudioRootErrorPresentation.make(error: .initialization(reason: AudioContainerLoadError.storageMissingReason))
 
     #expect(presentation.title == "Storage Location Not Set")
     #expect(presentation.message == "Set the media library storage location first.")
@@ -151,6 +151,31 @@ import SwiftData
 
     let next = try await db.getNextAudioURLOf(second)
     #expect(next == nil)
+}
+
+@Test
+@MainActor
+func audioRepoNavigationWrapsAtAudioDBBoundaries() async throws {
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let context = ModelContext(container)
+    let repo = try AudioRepo(
+        container: container,
+        disk: URL(fileURLWithPath: "/tmp/cisum-audio-tests"),
+        reason: "audioRepoNavigationWrapsAtAudioDBBoundaries"
+    )
+
+    let first = URL(fileURLWithPath: "/tmp/cisum-audio-tests/first.mp3")
+    let middle = URL(fileURLWithPath: "/tmp/cisum-audio-tests/middle.mp3")
+    let last = URL(fileURLWithPath: "/tmp/cisum-audio-tests/last.mp3")
+    context.insert(AudioModel(first, order: 10))
+    context.insert(AudioModel(middle, order: 20))
+    context.insert(AudioModel(last, order: 30))
+    try context.save()
+
+    #expect(try await repo.getNextOf(last) == first)
+    #expect(try await repo.getPrevOf(first) == last)
 }
 
 @Test func audioDBNextOfSkipsSymlinkedDuplicateTrack() async throws {
