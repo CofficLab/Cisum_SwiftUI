@@ -1,5 +1,6 @@
 import Foundation
 import MagicPlayMan
+import OSLog
 import ProviderPlayback
 import MagicKit
 
@@ -35,12 +36,13 @@ protocol BookControlPlaybackCapability: AnyObject {
 /// 将内核的 `PlaybackProviding` 适配成 BookControl 的播放能力。
 @MainActor
 final class BookControlPlaybackCapabilityAdapter: BookControlPlaybackCapability, SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private let playback: any PlaybackProviding
 
     init(playback: any PlaybackProviding) {
         self.playback = playback
+        if Self.verbose { os_log("\(Self.t)🔌 BookControlPlaybackCapabilityAdapter 初始化") }
     }
 
     var currentURL: URL? { playback.currentURL }
@@ -50,18 +52,22 @@ final class BookControlPlaybackCapabilityAdapter: BookControlPlaybackCapability,
     var playMode: MagicPlayMode { playback.playMode }
 
     func toggle() {
+        if Self.verbose { os_log("\(Self.t)⏯️ toggle") }
         playback.toggle()
     }
 
     func togglePlayMode() {
+        if Self.verbose { os_log("\(Self.t)🔄 切换播放模式") }
         playback.togglePlayMode()
     }
 
     func play(_ url: URL, reason: String) async {
+        if Self.verbose { os_log("\(Self.t)▶️ play(\(reason)): \(url.lastPathComponent)") }
         await playback.play(url)
     }
 
     func reset(reason: String) async {
+        if Self.verbose { os_log("\(Self.t)🔄 reset(\(reason))") }
         await playback.reset()
     }
 }

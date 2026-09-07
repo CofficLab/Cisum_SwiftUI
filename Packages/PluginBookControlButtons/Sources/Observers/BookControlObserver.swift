@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import ProviderPlayback
 import ProviderScene
 import MagicKit
@@ -10,7 +11,7 @@ import MagicKit
 /// `BookControlRootView` 的四个 `.onReceive` 直接订阅。
 @MainActor
 final class BookControlObserver: SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private weak var viewModel: BookControlViewModel?
     private var tokens: [NSObjectProtocol] = []
@@ -23,6 +24,7 @@ final class BookControlObserver: SuperLog {
         viewModel: BookControlViewModel
     ) {
         self.viewModel = viewModel
+        if Self.verbose { os_log("\(Self.t)👀 BookControlObserver 初始化") }
         viewModel.handleSceneChange(scene.currentScene)
         sceneHandle = scene.addObserver { [weak self] event in
             guard case .selectionChanged(let scene) = event else { return }
@@ -61,6 +63,7 @@ final class BookControlObserver: SuperLog {
     }
 
     func cancel() {
+        if Self.verbose { os_log("\(Self.t)🧹 BookControlObserver 取消") }
         sceneHandle?.cancel()
         sceneHandle = nil
         playbackHandle?.cancel()
