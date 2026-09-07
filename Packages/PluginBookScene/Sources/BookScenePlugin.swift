@@ -7,7 +7,7 @@ import SwiftUI
 import MagicKit
 
 public actor BookScenePlugin: SuperPlugin, SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     public static let shared = BookScenePlugin()
     public static let metadata = PluginMetadata(

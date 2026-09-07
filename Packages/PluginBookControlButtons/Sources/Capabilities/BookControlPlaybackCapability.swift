@@ -36,7 +36,7 @@ protocol BookControlPlaybackCapability: AnyObject {
 /// 将内核的 `PlaybackProviding` 适配成 BookControl 的播放能力。
 @MainActor
 final class BookControlPlaybackCapabilityAdapter: BookControlPlaybackCapability, SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     private let playback: any PlaybackProviding
 

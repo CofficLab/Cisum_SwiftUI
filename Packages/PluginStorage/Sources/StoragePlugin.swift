@@ -8,7 +8,7 @@ import SwiftUI
 public actor StoragePlugin: SuperPlugin, SuperLog {
     public static let shared = StoragePlugin()
     public nonisolated static let emoji = "💾"
-    public static let verbose = true
+    public static let verbose = false
     public static let metadata = PluginMetadata(
         displayName: String(localized: String.LocalizationValue(StoragePluginInfo.titleKey), bundle: .module),
         description: String(localized: String.LocalizationValue(StoragePluginInfo.descriptionKey), bundle: .module),

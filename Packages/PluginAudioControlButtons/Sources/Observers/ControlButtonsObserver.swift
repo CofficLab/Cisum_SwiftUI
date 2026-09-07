@@ -7,7 +7,7 @@ import ProviderScene
 /// 订阅播放、场景和音频库外部事件，并把事件回写给 ViewModel。
 @MainActor
 final class ControlButtonsObserver: SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     private weak var viewModel: ControlButtonsViewModel?
     private var playbackHandle: (any PlaybackProvidingObserverHandle)?

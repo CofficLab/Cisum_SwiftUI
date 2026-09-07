@@ -29,7 +29,7 @@ public class MagicPlayMan: ObservableObject, SuperLog {
     internal var cache: AssetCache?
 
     /// 是否启用详细日志输出（实例级别）
-    internal var verbose: Bool = true
+    internal var verbose: Bool = false
 
     /// 日志记录器
     internal let logger = MagicLogger()

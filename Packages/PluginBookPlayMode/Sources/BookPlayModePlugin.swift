@@ -9,7 +9,7 @@ import SwiftUI
 import MagicKit
 
 public actor BookPlayModePlugin: SuperPlugin, SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     public static let shared = BookPlayModePlugin()
     public static let metadata = PluginMetadata(

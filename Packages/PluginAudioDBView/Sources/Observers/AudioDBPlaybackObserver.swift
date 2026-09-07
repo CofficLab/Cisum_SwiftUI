@@ -5,7 +5,7 @@ import OSLog
 /// 音频库播放状态观察者：将播放服务的当前资源变化转发给列表 ViewModel。
 @MainActor
 final class AudioDBPlaybackObserver: SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     private weak var viewModel: AudioListViewModel?
     private var handle: (any PlaybackProvidingObserverHandle)?

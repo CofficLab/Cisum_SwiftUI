@@ -7,7 +7,7 @@ import ProviderScene
 /// 激活 / 停用（`BookControlViewModel.handleSceneChange`）。
 @MainActor
 final class BookControlSceneObserver: SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     private weak var viewModel: BookControlViewModel?
     private var sceneHandle: (any SceneProvidingObserverHandle)?

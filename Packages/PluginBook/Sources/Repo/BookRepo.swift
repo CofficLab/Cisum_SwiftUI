@@ -7,11 +7,11 @@ import SwiftUI
 @MainActor
 public class BookRepo: ObservableObject, SuperEvent, SuperLog {
     public nonisolated static let emoji = "📖"
-    public static let verbose = true
+    public static let verbose = false
 
     private let db: BookDB
     private var disk: URL
-    private let verbose: Bool = true
+    private let verbose: Bool = false
     private var monitor: Cancellable?
     private nonisolated let coverRepo: BookCoverRepo
     private var initialSyncCompleted = false

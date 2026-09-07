@@ -131,7 +131,7 @@ extension BookDB {
 // MARK: Children
 
 extension BookDB {
-    func getChildren(_ url: URL, verbose: Bool = true) -> [BookModel] {
+    func getChildren(_ url: URL, verbose: Bool = false) -> [BookModel] {
         if verbose {
             os_log("\(self.t)GetChildren -> \(url.lastPathComponent)")
         }

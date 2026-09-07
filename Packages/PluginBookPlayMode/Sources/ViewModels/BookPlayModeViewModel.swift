@@ -10,7 +10,7 @@ typealias BookPlayModeStoreAction = @MainActor (_ mode: MagicPlayMode) async -> 
 
 @MainActor
 final class BookPlayModeViewModel: ObservableObject, SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     private let playbackCapability: (any BookPlayModePlaybackCapability)?
     private let targetScene: AppScene

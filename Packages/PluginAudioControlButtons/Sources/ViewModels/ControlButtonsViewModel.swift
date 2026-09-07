@@ -12,7 +12,7 @@ import ProviderToast
 /// 插件入口组装的 Capability 执行。ViewModel 不持有 Kernel 或具体 Provider。
 @MainActor
 final class ControlButtonsViewModel: ObservableObject, SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "ControlButtons")
 
     @Published private(set) var isPlaying = false

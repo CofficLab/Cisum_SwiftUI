@@ -11,7 +11,7 @@ import SwiftUI
 import MagicKit
 
 public actor BookProgressPlugin: SuperPlugin, SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     public static let shared = BookProgressPlugin()
     public static let metadata = PluginMetadata(

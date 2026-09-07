@@ -5,7 +5,7 @@ import ProviderScene
 
 @MainActor
 final class AudioDownloadViewModel: SuperLog {
-    private static let verbose = true
+    private static let verbose = false
     private let playbackCapability: (any AudioDownloadPlaybackCapability)?
     private var currentScene: AppScene?
     private var generation = 0

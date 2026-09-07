@@ -360,7 +360,7 @@ public extension String {
         !isEven
     }
 
-    func saveToFile(_ url: URL, verbose: Bool = true) throws {
+    func saveToFile(_ url: URL, verbose: Bool = false) throws {
         if verbose {
             os_log("保存到 -> \(url.relativePath)")
         }

@@ -7,7 +7,7 @@ import SwiftUI
 public actor WelcomePlugin: SuperPlugin, SuperLog {
     public static let shared = WelcomePlugin()
     public nonisolated static let emoji = WelcomePluginInfo.emoji
-    public static let verbose = true
+    public static let verbose = false
     public static let metadata = PluginMetadata(
         displayName: WelcomePluginInfo.title,
         description: WelcomePluginInfo.description,

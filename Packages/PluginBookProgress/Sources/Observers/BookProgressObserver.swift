@@ -10,7 +10,7 @@ import MagicKit
 /// 取代原 `BookProgressRootView` 的 `.onReceive` 直接订阅。
 @MainActor
 final class BookProgressObserver: SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     private weak var viewModel: BookProgressViewModel?
     private var token: NSObjectProtocol?

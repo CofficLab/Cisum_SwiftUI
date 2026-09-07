@@ -41,7 +41,7 @@ extension BookDB {
         }
     }
     
-//    func updateOnInserted(_ urls: [URL], verbose: Bool = true) {
+//    func updateOnInserted(_ urls: [URL], verbose: Bool = false) {
 //        for url in urls {
 //            if let book = self.findBook(url), book.parent == nil {
 //                // 更新Parent
@@ -98,7 +98,7 @@ extension BookDB {
 //        }
 //    }
 //
-    func updateParent(_ book: BookModel, verbose: Bool = true) {
+    func updateParent(_ book: BookModel, verbose: Bool = false) {
         guard let parentURL = book.parentBookURL else {
             if verbose {
                 os_log("\(self.t)UpdateBookParent for \(book.bookTitle) ignore because of no parentURL")

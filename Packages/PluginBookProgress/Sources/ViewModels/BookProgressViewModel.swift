@@ -17,7 +17,7 @@ import SwiftUI
 /// `BookProgressPlaybackCapability` 执行。
 @MainActor
 final class BookProgressViewModel: ObservableObject, SuperLog {
-    private static let verbose = true
+    private static let verbose = false
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "BookProgress")
     private static let tag = "📖"
 

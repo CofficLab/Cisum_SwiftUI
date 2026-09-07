@@ -60,7 +60,7 @@ public final actor SmartSync: SuperThread, SuperLog {
 
 extension SmartSync: CKSyncEngineDelegate {
     public func handleEvent(_ event: CKSyncEngine.Event, syncEngine: CKSyncEngine) async {
-        let verbose = true
+        let verbose = false
 
         switch event {
         case let .stateUpdate(event):
@@ -204,7 +204,7 @@ extension SmartSync: CKSyncEngineDelegate {
     }
 
     func reset() {
-        let verbose = true
+        let verbose = false
 
         if verbose {
             os_log("\(self.t)Reset SyncEngine")
@@ -222,7 +222,7 @@ extension SmartSync: CKSyncEngineDelegate {
     }
 
     public func deleteZone(zone: CKRecordZone) async throws {
-        let verbose = true
+        let verbose = false
 
         if verbose {
             os_log("\(self.t)🗑️ Delete Zone -> \(zone.zoneID.zoneName)")

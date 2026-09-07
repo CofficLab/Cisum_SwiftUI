@@ -5,7 +5,7 @@ import OSLog
 public actor AudioJobScheduler: SuperLog {
     public static let shared = AudioJobScheduler()
 
-    public nonisolated static let verbose = true
+    public nonisolated static let verbose = false
 
     private var isSetup = false
 

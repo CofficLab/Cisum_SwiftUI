@@ -11,7 +11,7 @@ import ProviderScene
 import SwiftUI
 
 public actor BookControlButtonsPlugin: SuperPlugin, SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     // MARK: - Plugin registration metadata
 

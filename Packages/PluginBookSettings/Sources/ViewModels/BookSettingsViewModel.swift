@@ -10,7 +10,7 @@ import MagicKit
 /// `BookSettingsStorageChangeModifier`。
 @MainActor
 final class BookSettingsViewModel: ObservableObject, SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     @Published private(set) var refreshToken = 0
 

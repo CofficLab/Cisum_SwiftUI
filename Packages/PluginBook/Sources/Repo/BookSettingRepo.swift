@@ -5,7 +5,7 @@ import SwiftUI
 
 public class BookSettingRepo: SuperLog {
     public nonisolated static let emoji = "🔊"
-    public nonisolated static let verbose = true
+    public nonisolated static let verbose = false
 
     /// 当前书籍URL的存储键
     public static let keyOfCurrentBookURL = "com.bookplugin.currentBookURL"

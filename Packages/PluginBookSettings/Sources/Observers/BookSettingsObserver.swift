@@ -10,7 +10,7 @@ import MagicKit
 /// `BookSettingsStorageChangeModifier` 的多通知 `.onReceive`。
 @MainActor
 final class BookSettingsObserver: SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     private weak var viewModel: BookSettingsViewModel?
     private var tokens: [NSObjectProtocol] = []

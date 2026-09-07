@@ -13,7 +13,7 @@ public extension URL {
     ///   - onProgress: 下载进度回调，progress 范围 0-1
     /// - Returns: 可用于取消监听的 AnyCancellable
     func onDownloading(
-        verbose: Bool = true,
+        verbose: Bool = false,
         caller: String,
         updateInterval: TimeInterval = 0.5,
         _ onProgress: @escaping (Double) -> Void

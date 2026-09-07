@@ -5,7 +5,7 @@ import MagicKit
 
 @MainActor
 final class BookPlayModeObserver: SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     private weak var viewModel: BookPlayModeViewModel?
     private var sceneHandle: (any SceneProvidingObserverHandle)?

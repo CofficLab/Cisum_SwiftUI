@@ -22,7 +22,7 @@ typealias BookLikeSaveProvider = @MainActor (_ liked: Bool, _ url: URL) -> Void
 /// `BookLikePlaybackCapability` 表达，本地喜欢仓库由插件入口组装为闭包注入。
 @MainActor
 final class BookLikeViewModel: ObservableObject, SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     @Published private(set) var likedBooks: [BookLikeItem] = []
     @Published private(set) var isLoading = true

@@ -341,7 +341,7 @@ public enum StoreService: SuperLog {
     ///   - `statuses`: Status array from the subscription group, mapped to `StoreSubscriptionStatusDTO`.
     ///   - `highestProduct`: Product for the current highest tier, when it can be determined.
     ///   - `highestStatus`: Status for the current highest tier, when it can be determined.
-    static func inspectSubscriptionStatus(_ reason: String, verbose: Bool = true) async throws -> (
+    static func inspectSubscriptionStatus(_ reason: String, verbose: Bool = false) async throws -> (
         subscriptions: [ProductDTO],
         statuses: [StoreSubscriptionStatusDTO],
         highestProduct: ProductDTO?,

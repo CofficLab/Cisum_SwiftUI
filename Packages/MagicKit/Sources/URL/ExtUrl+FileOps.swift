@@ -212,7 +212,7 @@ public extension URL {
     /// 复制当前文件到目标位置。
     func copyTo(
         _ destination: URL,
-        verbose: Bool = true,
+        verbose: Bool = false,
         caller: String,
         downloadProgress: ((Double) -> Void)? = nil
     ) async throws {
@@ -616,7 +616,7 @@ public extension URL {
 
     /// 自动判断并监听文件夹变化。
     func onDirChange(
-        verbose: Bool = true,
+        verbose: Bool = false,
         caller: String,
         onChange: @escaping @Sendable (_ files: [URL], _ isInitialFetch: Bool, _ error: Error?) async -> Void,
         onDeleted: @escaping @Sendable (_ urls: [URL]) -> Void = { _ in },

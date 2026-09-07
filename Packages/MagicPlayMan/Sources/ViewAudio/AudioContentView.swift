@@ -19,7 +19,7 @@ struct AudioContentView: View, SuperLog {
 
     @Environment(\.localization) private var loc
 
-    init(asset: MagicAsset, artwork: Image? = nil, defaultArtwork: Image? = nil, defaultArtworkBuilder: (() -> any View)? = nil, verbose: Bool = true) {
+    init(asset: MagicAsset, artwork: Image? = nil, defaultArtwork: Image? = nil, defaultArtworkBuilder: (() -> any View)? = nil, verbose: Bool = false) {
         self.asset = asset
         self.artwork = artwork
         self.defaultArtwork = defaultArtwork

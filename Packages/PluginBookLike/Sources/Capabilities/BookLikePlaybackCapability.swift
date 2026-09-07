@@ -16,7 +16,7 @@ protocol BookLikePlaybackCapability: AnyObject {
 /// 将内核的 `PlaybackProviding` 适配成 BookLike 的播放能力。
 @MainActor
 final class BookLikePlaybackCapabilityAdapter: BookLikePlaybackCapability, SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     private let playback: any PlaybackProviding
 

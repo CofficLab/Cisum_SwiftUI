@@ -126,7 +126,7 @@ public actor AudioControlButtonsPlugin: SuperPlugin {
 /// ControlButtons 所需的播放能力实现，由插件入口连接到内核 Provider。
 @MainActor
 private final class ControlButtonsPlaybackCapabilityAdapter: ControlButtonsPlaybackCapability, SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     private let playback: any PlaybackProviding
 

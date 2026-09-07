@@ -1111,7 +1111,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Returns: 删除后的下一个音频模型
     /// - Throws: 如果删除操作失败则抛出错误
     @discardableResult
-    func deleteAudios(ids: [AudioModel.ID], verbose: Bool = true) throws -> AudioModel? {
+    func deleteAudios(ids: [AudioModel.ID], verbose: Bool = false) throws -> AudioModel? {
         if verbose {
             os_log("\(self.t)🗑️ 数据库删除")
         }

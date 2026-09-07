@@ -5,7 +5,7 @@ import OSLog
 
 public actor BookPlayModeStore: SuperLog {
     public static let emoji = "💾"
-    public static let verbose = true
+    public static let verbose = false
 
     public static let shared = BookPlayModeStore()
 

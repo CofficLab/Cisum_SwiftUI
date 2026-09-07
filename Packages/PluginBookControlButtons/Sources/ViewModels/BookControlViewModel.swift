@@ -18,7 +18,7 @@ import SwiftUI
 /// `BookControlPlaybackCapability` 执行。
 @MainActor
 final class BookControlViewModel: ObservableObject, SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "BookControl")
     private static let tag = "⏭️"
 

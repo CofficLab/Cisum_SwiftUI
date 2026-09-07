@@ -42,7 +42,7 @@ import SwiftUI
 public enum CisumBuilder: SuperLog {
     nonisolated static let logger = Logger(subsystem: "com.coffic.cisum", category: "factory")
     nonisolated public static let emoji = "🏭"
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     // MARK: - Kernel Registry
 

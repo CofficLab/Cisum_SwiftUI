@@ -12,7 +12,7 @@ import MagicKit
 /// 由 `BookPlugin` 入口持有并注入 `BookStorageObserver`。
 @MainActor
 final class BookRootViewModel: ObservableObject, SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     @Published private(set) var repo: BookRepo?
     @Published private(set) var container: ModelContainer?
