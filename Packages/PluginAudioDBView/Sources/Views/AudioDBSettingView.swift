@@ -8,21 +8,28 @@ import SwiftUI
     import UIKit
 #endif
 
-/// 音频仓库设置页：展示音频库文件列表。
+/// 音频仓库设置页：以两种方式展示仓库内容。
 ///
-/// 复用 `AudioListViewModel` 作为数据源，以列表形式展示音频库内容
-/// （分页加载 + 总数统计），供用户在设置窗口中查看。
+/// 通过 `AppSegmentedControl` 在两种展示模式间切换：
+/// - 方式一（列表）：复用 `AudioListViewModel`，以列表形式展示音频库内容
+///   （分页加载 + 总数统计）。
+/// - 方式二（目录树）：复用 `AudioTreeViewModel`，以文件树形式展示仓库真实目录结构。
+///
 /// 右上角提供「打开仓库根目录」按钮，在 Finder 中打开音频仓库目录。
 ///
 /// 布局统一使用 LumiUI 组件（`AppSettingsContentScaffold` /
 /// `AppSettingSection` / `AppSettingRow` / `AppButton` / `AppEmptyState` /
-/// `AppErrorBanner`）；仓库路径不可用时直接展示错误视图与完整诊断链路。
+/// `AppSegmentedControl` / `AppErrorBanner`）；仓库路径不可用时直接展示错误视图与完整诊断链路。
 struct AudioDBSettingView: View, SuperLog {
     nonisolated static let emoji = "🎵"
 
     @EnvironmentObject var viewModel: AudioListViewModel
+    @EnvironmentObject var treeViewModel: AudioTreeViewModel
     @Environment(\.audioDBDependencies) private var deps
     @LumiTheme private var theme
+
+    /// 展示模式：0 = 音频列表（方式一，默认），1 = 目录树（方式二）。
+    @State private var displayMode = 0
 
     var body: some View {
         AppSettingsContentScaffold(scrollsContent: false, maxContentWidth: nil) {
@@ -35,7 +42,9 @@ struct AudioDBSettingView: View, SuperLog {
 
                     repositoryPathSection
 
-                    list
+                    modeSwitcher
+
+                    content
                         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                         .overlay {
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
@@ -47,6 +56,35 @@ struct AudioDBSettingView: View, SuperLog {
         }
         .onAppear {
             viewModel.handleOnAppear()
+        }
+        .onChange(of: displayMode) { _, newValue in
+            if newValue == 1 {
+                treeViewModel.handleOnAppear()
+            }
+        }
+    }
+
+    // MARK: - 展示模式切换（方式一：列表 / 方式二：目录树）
+
+    /// 方式一/方式二切换控件：两种模式共用同一内容容器与统计头部。
+    private var modeSwitcher: some View {
+        AppSegmentedControl(
+            [
+                String(localized: "List", bundle: .module),
+                String(localized: "Directory tree", bundle: .module),
+            ],
+            selection: $displayMode,
+            maxWidth: 280
+        )
+    }
+
+    /// 当前展示模式下的内容区。
+    @ViewBuilder
+    private var content: some View {
+        if displayMode == 0 {
+            list
+        } else {
+            AudioTreeView()
         }
     }
 

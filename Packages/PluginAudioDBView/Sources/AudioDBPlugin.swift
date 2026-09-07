@@ -119,7 +119,7 @@ public actor AudioDBPlugin: SuperPlugin, SuperLog {
         )
     }
 
-    /// 设置窗口入口：展示音频库文件列表。
+    /// 设置窗口入口：展示音频库文件列表（方式一）与目录树（方式二）。
     @MainActor
     public func addSettingNavigationItem() -> PluginSettingNavigationItem? {
         // 设置页使用独立的 AudioListViewModel，避免与主窗口内容区（AudioList）
@@ -130,6 +130,7 @@ public actor AudioDBPlugin: SuperPlugin, SuperLog {
             audioRepo: audioRepoProvider,
             playbackCapability: makePlaybackCapability(from: playback)
         )
+        let settingTree = AudioTreeViewModel(disk: audioDiskProvider)
         settingPlaybackObserver = AudioDBPlaybackObserver(playback: playback, viewModel: settingList)
         return PluginSettingNavigationItem(
             id: "audiodb",
@@ -140,6 +141,7 @@ public actor AudioDBPlugin: SuperPlugin, SuperLog {
             destination: AnyView(
                 AudioDBSettingView()
                     .environmentObject(settingList)
+                    .environmentObject(settingTree)
                     .environment(\.audioDBDependencies, settingDependencies)
             )
         )

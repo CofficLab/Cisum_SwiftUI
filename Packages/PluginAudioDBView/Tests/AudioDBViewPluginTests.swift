@@ -910,3 +910,70 @@ import UniformTypeIdentifiers
     #expect(AudioDBView.hasImportSourceAccess(missingFile, securityScopeGranted: true))
     #expect(!AudioDBView.hasImportSourceAccess(missingFile, securityScopeGranted: false))
 }
+
+// MARK: - Audio tree builder
+
+@Test func audioTreeBuilderBuildsNestedDirectoryStructure() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    let albumA = root.appendingPathComponent("Album A", isDirectory: true)
+    let albumB = root.appendingPathComponent("Album B", isDirectory: true)
+    let disc1 = albumB.appendingPathComponent("Disc 1", isDirectory: true)
+    try FileManager.default.createDirectory(at: albumA, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: disc1, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: albumA.appendingPathComponent("01.mp3"))
+    try Data("audio".utf8).write(to: disc1.appendingPathComponent("track.flac"))
+    try Data("audio".utf8).write(to: root.appendingPathComponent("bonus.mp3"))
+
+    let children = AudioTreeBuilder.buildRootChildren(from: root)
+
+    // 目录优先，再文件；同层按名称本地化排序。
+    #expect(children.map(\.name) == ["Album A", "Album B", "bonus.mp3"])
+    #expect(children.map(\.isDirectory) == [true, true, false])
+
+    let albumBNode = try #require(children.first { $0.name == "Album B" })
+    #expect(albumBNode.children?.map(\.name) == ["Disc 1"])
+    #expect(albumBNode.childCount == 1)
+    #expect(albumBNode.isExpandable)
+
+    let disc1Node = try #require(albumBNode.children?.first)
+    #expect(disc1Node.children?.map(\.name) == ["track.flac"])
+    #expect(disc1Node.isExpandable)
+
+    let fileNode = try #require(children.first { $0.name == "bonus.mp3" })
+    #expect(fileNode.isDirectory == false)
+    #expect(fileNode.childCount == 0)
+    #expect(!fileNode.isExpandable)
+}
+
+@Test func audioTreeBuilderSkipsHiddenAndUnsupportedFiles() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: root.appendingPathComponent("track.mp3"))
+    try Data("hidden".utf8).write(to: root.appendingPathComponent(".hidden.mp3"))
+    try Data("notes".utf8).write(to: root.appendingPathComponent("notes.txt"))
+    try Data("cover".utf8).write(to: root.appendingPathComponent("cover.jpg"))
+
+    let children = AudioTreeBuilder.buildRootChildren(from: root)
+
+    #expect(children.map(\.name) == ["track.mp3"])
+    #expect(AudioTreeBuilder.isSupportedAudioFile(root.appendingPathComponent("Track.MP3")))
+    #expect(!AudioTreeBuilder.isSupportedAudioFile(root.appendingPathComponent("notes.txt")))
+}
+
+@Test func audioTreeBuilderReturnsEmptyForMissingRoot() {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+
+    #expect(AudioTreeBuilder.buildRootChildren(from: root).isEmpty)
+}
+
