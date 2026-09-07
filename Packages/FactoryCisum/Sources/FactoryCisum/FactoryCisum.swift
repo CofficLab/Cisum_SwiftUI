@@ -113,14 +113,18 @@ public enum CisumBuilder: SuperLog {
         subscribeToSceneChanges(kernel: kernel)
 
         kernels.append(kernel)
-        logger.info("\(Self.t)Kernel created and started successfully")
+        if Self.verbose {
+            logger.info("\(Self.t)Kernel created and started successfully")
+        }
         return kernel
     }
 
     /// 创建主内核（幂等：首次调用以传入的 configuration 创建，后续调用返回已有实例）。
     public static func createMainKernel(configuration: FactoryCisumConfiguration) async throws -> CisumKernel {
         if let existing = mainKernel {
-            logger.info("\(Self.t)Main kernel already exists, returning existing instance")
+            if Self.verbose {
+                logger.info("\(Self.t)Main kernel already exists, returning existing instance")
+            }
             return existing
         }
         return try await createKernel(configuration: configuration)

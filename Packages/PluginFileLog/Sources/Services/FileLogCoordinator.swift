@@ -20,7 +20,7 @@ import OSLog
 /// FileLogCoordinator（OSLogStore 轮询）
 ///         │
 ///         ▼
-/// ~/Library/Application Support/com.yueyi.cisum/db_debug/FileLog/
+/// ~/Library/Application Support/com.yueyi.cisum/db_debug_v1/FileLog/
 ///   ├── 2026-05-26_10-36-00.log
 ///   ├── 2026-05-26_11-02-33.log
 ///   └── ...

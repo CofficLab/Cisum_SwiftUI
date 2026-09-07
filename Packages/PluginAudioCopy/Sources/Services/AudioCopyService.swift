@@ -132,8 +132,12 @@ public enum AudioCopyService {
     }
 
     private static func createDatabaseFile(name: String) throws -> URL {
-        let url = MagicApp.getDatabaseDirectory()
-            .appendingPathComponent(Self.dbDirName, isDirectory: true)
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1"
+        let majorVersion = version.split(separator: ".").first.flatMap { Int($0) } ?? 1
+        let env = Self.dbDirName(majorVersion: majorVersion)
+        let appSupport = MagicApp.getAppSpecificSupportDirectory()
+        let url = appSupport
+            .appendingPathComponent(env, isDirectory: true)
             .appendingPathComponent(name, isDirectory: true)
             .appendingPathComponent("\(name).db")
 
@@ -145,11 +149,11 @@ public enum AudioCopyService {
         return url
     }
 
-    private static var dbDirName: String {
+    private static func dbDirName(majorVersion: Int) -> String {
         #if DEBUG
-            "db_debug"
+            "db_debug_v\(majorVersion)"
         #else
-            "db_production"
+            "db_production_v\(majorVersion)"
         #endif
     }
 }

@@ -18,10 +18,12 @@ enum FileLogDirectory {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
             ?? FileManager.default.temporaryDirectory
         let bundleID = Bundle.main.bundleIdentifier ?? "com.yueyi.cisum"
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1"
+        let majorVersion = version.split(separator: ".").first.flatMap { Int($0) } ?? 1
         #if DEBUG
-            let env = "db_debug"
+            let env = "db_debug_v\(majorVersion)"
         #else
-            let env = "db_production"
+            let env = "db_production_v\(majorVersion)"
         #endif
         return appSupport
             .appendingPathComponent(bundleID, isDirectory: true)

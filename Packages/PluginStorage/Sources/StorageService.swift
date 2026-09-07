@@ -5,6 +5,11 @@ import ProviderStorage
 
 /// `StorageProviding` 的具体实现。
 ///
+/// 目录结构（对齐 Lumi/GitOK `DefaultStorageProvider`）：
+/// - 数据根目录：`~/Library/Application Support/<bundleID>/db_<debug|production>_v<majorVersion>/`
+/// - 插件数据目录：`<root>/<pluginID>/`（无 `Plugins/` 中间层）
+/// - 数据库文件：`<root>/<name>/<name>.db`
+///
 /// 吸收了旧版 `Config` 的存储位置逻辑（iCloud / 本地 / 自定义）与数据库目录
 /// 管理，成为存储能力的唯一数据源。保持向后兼容：
 /// - `UserDefaults` key `"StorageLocation"`（与旧版 `Config` 一致）。
@@ -13,21 +18,25 @@ import ProviderStorage
 public final class StorageService: ObservableObject, StorageProviding {
     private static let storageLocationKey = "StorageLocation"
 
-    private let dbDirName: String
+    /// 数据根目录名：`db_<debug|production>_v<majorVersion>`（对齐 Lumi/GitOK 命名规则）。
+    private let dataRootDirectoryName: String
 
     /// 缓存的数据库根目录（init 时尽力创建）。
     public let databaseRoot: URL
     private let eventObservers = KernelEventObserverStore<StorageProvidingEvent>()
 
     public init() {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1"
+        let majorVersion = Self.majorVersion(from: version)
+
         #if DEBUG
-            dbDirName = "db_debug"
+            dataRootDirectoryName = Self.dataRootDirectoryName(debug: true, majorVersion: majorVersion)
         #else
-            dbDirName = "db_production"
+            dataRootDirectoryName = Self.dataRootDirectoryName(debug: false, majorVersion: majorVersion)
         #endif
 
-        let root = MagicApp.getDatabaseDirectory()
-            .appendingPathComponent(dbDirName, isDirectory: true)
+        let root = MagicApp.getAppSpecificSupportDirectory()
+            .appendingPathComponent(dataRootDirectoryName, isDirectory: true)
         try? FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         databaseRoot = root
     }
@@ -106,6 +115,19 @@ public final class StorageService: ObservableObject, StorageProviding {
             },
             isDesktop: MagicApp.isDesktop
         )
+    }
+
+    // MARK: - 数据根目录命名（对齐 GitOK DefaultStorageProvider）
+
+    /// 数据根目录名：`db_<debug|production>_v<majorVersion>`。
+    static func dataRootDirectoryName(debug: Bool, majorVersion: Int) -> String {
+        let environment = debug ? "debug" : "production"
+        return "db_\(environment)_v\(majorVersion)"
+    }
+
+    /// 解析主版本号：`"5.3.1" -> 5`；无法解析时回退 1。
+    static func majorVersion(from versionString: String) -> Int {
+        versionString.split(separator: ".").first.flatMap { Int($0) } ?? 1
     }
 
     private static func ensureDirectory(at url: URL) throws {

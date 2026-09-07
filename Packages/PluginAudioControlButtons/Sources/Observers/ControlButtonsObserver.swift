@@ -16,7 +16,9 @@ final class ControlButtonsObserver: SuperLog {
 
     init(scene: any SceneProviding, playback: any PlaybackProviding, viewModel: ControlButtonsViewModel) {
         self.viewModel = viewModel
-        os_log("\(Self.t)👀 ControlButtons observer installed; scene=\(String(describing: scene.currentScene))")
+        if Self.verbose {
+            os_log("\(Self.t)👀 ControlButtons observer installed; scene=\(String(describing: scene.currentScene))")
+        }
         viewModel.handleSceneChange(scene.currentScene)
 
         sceneHandle = scene.addObserver { [weak self] event in

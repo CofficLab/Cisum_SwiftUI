@@ -22,18 +22,28 @@ final class AudioPlaybackCapabilityAdapter: AudioPlaybackCapability, SuperLog {
 
     init(playback: any PlaybackProviding) {
         self.playback = playback
-        os_log("\(Self.t)🚩 Capability adapter initialized")
+        if Self.verbose {
+            os_log("\(Self.t)🚩 Capability adapter initialized")
+        }
     }
 
     func play(_ url: URL) async {
-        os_log("\(Self.t)➡️ Capability adapter forwarding play: \(url.path)")
+        if Self.verbose {
+            os_log("\(Self.t)➡️ Capability adapter forwarding play: \(url.path)")
+        }
         await playback.play(url)
-        os_log("\(Self.t)✅ Capability adapter play completed: \(url.lastPathComponent)")
+        if Self.verbose {
+            os_log("\(Self.t)✅ Capability adapter play completed: \(url.lastPathComponent)")
+        }
     }
 
     func reset() async {
-        os_log("\(Self.t)➡️ Capability adapter forwarding reset")
+        if Self.verbose {
+            os_log("\(Self.t)➡️ Capability adapter forwarding reset")
+        }
         await playback.reset()
-        os_log("\(Self.t)✅ Capability adapter reset completed")
+        if Self.verbose {
+            os_log("\(Self.t)✅ Capability adapter reset completed")
+        }
     }
 }

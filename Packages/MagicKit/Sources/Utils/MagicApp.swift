@@ -170,10 +170,6 @@ public enum MagicApp {
                     getDocumentsDirectory().open()
                 }
 
-                Button("Open Database Directory") {
-                    getDatabaseDirectory().open()
-                }
-
                 Button("Open iCloud Documents") {
                     getCloudDocumentsDirectory()?.open()
                 }

@@ -78,7 +78,9 @@ final class AudioListViewModel: ObservableObject, SuperLog {
         Binding(
             get: { [weak self] in self?.selection },
             set: { [weak self] url in
-                os_log("\(Self.t)🖱️ List.selection setter: \(url?.lastPathComponent ?? "nil")")
+                if Self.verbose {
+                    os_log("\(Self.t)🖱️ List.selection setter: \(url?.lastPathComponent ?? "nil")")
+                }
                 // List may invoke the binding setter while SwiftUI is updating
                 // the view hierarchy. Defer the published-state mutation until
                 // that update has completed.
@@ -91,9 +93,11 @@ final class AudioListViewModel: ObservableObject, SuperLog {
 
     /// 用户选中某一项：更新选中状态并请求内核播放。
     func userSelected(_ url: URL?) {
-        os_log(
-            "\(Self.t)1/5 userSelected url=\(url?.lastPathComponent ?? "nil") loading=\(self.isLoading) displayed=\(self.urls.count)"
-        )
+        if Self.verbose {
+            os_log(
+                "\(Self.t)1/5 userSelected url=\(url?.lastPathComponent ?? "nil") loading=\(self.isLoading) displayed=\(self.urls.count)"
+            )
+        }
 
         guard let url, !isLoading else {
             os_log(.error, "\(Self.t)2/5 Selection rejected: URL is nil or list is loading")
@@ -107,15 +111,21 @@ final class AudioListViewModel: ObservableObject, SuperLog {
         }
 
         selection = url
-        os_log("\(Self.t)2/5 Selection accepted: \(url.lastPathComponent)")
+        if Self.verbose {
+            os_log("\(Self.t)2/5 Selection accepted: \(url.lastPathComponent)")
+        }
         guard !AudioListSelectionPolicy.representsSameAudio(url, currentAsset) else {
-            os_log("\(Self.t)3/5 Same asset already loaded; playback command skipped: \(url.lastPathComponent)")
+            if Self.verbose {
+                os_log("\(Self.t)3/5 Same asset already loaded; playback command skipped: \(url.lastPathComponent)")
+            }
             return
         }
 
         selectionGeneration += 1
         let generation = selectionGeneration
-        os_log("\(Self.t)3/5 Scheduling playback request generation=\(generation): \(url.lastPathComponent)")
+        if Self.verbose {
+            os_log("\(Self.t)3/5 Scheduling playback request generation=\(generation): \(url.lastPathComponent)")
+        }
 
         Task { @MainActor in
             guard AudioListSelectionPolicy.shouldApplySelection(
@@ -137,15 +147,21 @@ final class AudioListViewModel: ObservableObject, SuperLog {
                 return
             }
 
-            os_log("\(Self.t)4/5 Calling AudioPlaybackCapability.play: \(url.path)")
+            if Self.verbose {
+                os_log("\(Self.t)4/5 Calling AudioPlaybackCapability.play: \(url.path)")
+            }
             await playbackCapability.play(url)
-            os_log("\(Self.t)5/5 AudioPlaybackCapability.play returned: \(url.lastPathComponent)")
+            if Self.verbose {
+                os_log("\(Self.t)5/5 AudioPlaybackCapability.play returned: \(url.lastPathComponent)")
+            }
         }
     }
 
     /// 播放器资产变化：只同步选中项，不再次发出播放命令。
     func applyExternalPlayback(url: URL?) {
-        os_log("\(Self.t)🔄 External playback asset changed: \(url?.path ?? "nil")")
+        if Self.verbose {
+            os_log("\(Self.t)🔄 External playback asset changed: \(url?.path ?? "nil")")
+        }
         currentAsset = url
         if let asset = url {
             if !AudioListSelectionPolicy.representsSameAudio(asset, selection) {
