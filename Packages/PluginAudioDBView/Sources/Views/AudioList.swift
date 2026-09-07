@@ -233,6 +233,8 @@ struct AudioList: View, SuperLog {
                 ForEach(Array(viewModel.urls.enumerated()), id: \.element) { index, url in
                     AudioItemView(url)
                         .equatable() // Use Equatable to reduce unnecessary redraws.
+                        .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
                         .onAppear {
                             // Only check for more data when approaching the threshold.
@@ -259,6 +261,8 @@ struct AudioList: View, SuperLog {
                         Spacer()
                     }
                     .frame(height: 44)
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
                 }
             })
