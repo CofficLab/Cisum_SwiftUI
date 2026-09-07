@@ -10,6 +10,26 @@ struct BookTileLoadIdentity: Equatable {
     let stateRevision: Int
 }
 
+enum BookTileColorPolicy {
+    private static let offsetBasis: UInt64 = 14_695_981_039_346_656_037
+    private static let prime: UInt64 = 1_099_511_628_211
+
+    static func hue(for title: String) -> Double {
+        let hash = title.unicodeScalars.reduce(offsetBasis) { partialResult, scalar in
+            (partialResult ^ UInt64(scalar.value)) &* prime
+        }
+        return Double(hash % 360) / 360
+    }
+
+    static func background(for title: String, colorScheme: ColorScheme) -> Color {
+        Color(
+            hue: hue(for: title),
+            saturation: colorScheme == .dark ? 0.55 : 0.6,
+            brightness: colorScheme == .dark ? 0.42 : 0.72
+        )
+    }
+}
+
 enum BookTileStateRefreshPolicy {
     static func shouldReloadTile(bookURL: URL, updatedBookURL: URL?) -> Bool {
         guard let updatedBookURL else { return false }
@@ -38,7 +58,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
 
     @EnvironmentObject var viewModel: BookGridViewModel
     @Environment(\.bookDBViewDependencies) private var dependencies
-    @LumiTheme private var appTheme
+    @Environment(\.colorScheme) private var colorScheme
 
     @State private var lastPlayedTitle: String? = nil
     @State private var cover: Image? = nil
@@ -48,7 +68,6 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
     nonisolated static let emoji = "🖥️"
     private let verbose = false
     
-    private var hasCover: Bool { cover != nil }
     private var noCover: Bool { cover == nil }
     
     var url: URL
@@ -64,7 +83,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                     .frame(width: tileSize.width, height: tileSize.height)
                     .clipped()
             } else {
-                appTheme.elevatedSurface
+                BookTileColorPolicy.background(for: title, colorScheme: colorScheme)
             }
 
             HStack {
@@ -75,9 +94,11 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                     if noCover {
                         Text(title)
                             .font(.title3)
+                            .foregroundStyle(.white)
                             .multilineTextAlignment(.center)
                             .lineLimit(3)
                             .minimumScaleFactor(0.7)
+                            .shadow(color: .black.opacity(0.24), radius: 2, y: 1)
                             .padding(.horizontal, 10)
                     }
 
@@ -105,6 +126,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                 }
                 Spacer()
             }
+            .foregroundStyle(noCover ? Color.white : Color.primary)
         }
         .frame(width: tileSize.width)
         .frame(height: tileSize.height)

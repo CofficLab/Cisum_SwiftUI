@@ -9,6 +9,15 @@ import UniformTypeIdentifiers
     #expect(BookDBPluginInfo.iconName == "books.vertical")
 }
 
+@Test func bookTilePlaceholderColorIsStableAndTitleDependent() {
+    let title = "百年孤独"
+
+    #expect(BookTileColorPolicy.hue(for: title) == BookTileColorPolicy.hue(for: title))
+    #expect(BookTileColorPolicy.hue(for: title) != BookTileColorPolicy.hue(for: "三体"))
+    #expect(BookTileColorPolicy.hue(for: title) >= 0)
+    #expect(BookTileColorPolicy.hue(for: title) < 1)
+}
+
 @Test func folderImportRequiresPlayableFiles() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
