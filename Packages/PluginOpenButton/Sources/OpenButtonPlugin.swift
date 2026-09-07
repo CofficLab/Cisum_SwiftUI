@@ -1,9 +1,9 @@
 import CisumUIComponents
 import KernelCore
+import MagicKit
 import ProviderDocsView
 import ProviderPlayback
 import SwiftUI
-import MagicKit
 
 public actor OpenButtonPlugin: SuperPlugin, SuperLog {
     nonisolated static let verbose = false
@@ -13,13 +13,13 @@ public actor OpenButtonPlugin: SuperPlugin, SuperLog {
         displayName: String(localized: "Open Current", bundle: .module),
         description: OpenButtonPluginInfo.description,
         iconName: OpenButtonPluginInfo.iconName,
+        policy: .alwaysOn,
         category: .tool,
     )
 
-    nonisolated(unsafe) private weak var kernel: CisumKernel?
-    nonisolated(unsafe) private var viewModel: OpenButtonViewModel?
-    nonisolated(unsafe) private var observer: OpenButtonObserver?
-
+    private nonisolated(unsafe) weak var kernel: CisumKernel?
+    private nonisolated(unsafe) var viewModel: OpenButtonViewModel?
+    private nonisolated(unsafe) var observer: OpenButtonObserver?
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
