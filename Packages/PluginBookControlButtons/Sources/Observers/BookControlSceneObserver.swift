@@ -1,7 +1,7 @@
 import Foundation
+import MagicKit
 import OSLog
 import ProviderScene
-import MagicKit
 
 /// 场景观察者：订阅 `SceneProviding` 的场景切换事件，驱动书籍控制的
 /// 激活 / 停用（`BookControlViewModel.handleSceneChange`）。
@@ -18,13 +18,15 @@ final class BookControlSceneObserver: SuperLog {
         // Initial sync：先同步当前快照再安装监听，避免丢失监听安装前的状态。
         viewModel.handleSceneChange(scene.currentScene)
         sceneHandle = scene.addObserver { [weak self] event in
-            guard case .selectionChanged(let scene) = event else { return }
+            guard case let .selectionChanged(scene) = event else { return }
             self?.viewModel?.handleSceneChange(scene)
         }
     }
 
     func cancel() {
-        if Self.verbose { os_log("\(Self.t)🧹 BookControlSceneObserver 取消") }
+        if Self.verbose {
+            os_log("\(Self.t)🧹 BookControlSceneObserver 取消")
+        }
         sceneHandle?.cancel()
         sceneHandle = nil
     }

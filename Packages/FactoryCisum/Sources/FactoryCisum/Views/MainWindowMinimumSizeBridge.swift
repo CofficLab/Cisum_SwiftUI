@@ -13,19 +13,26 @@ struct MainWindowMinimumSizeBridge: NSViewRepresentable {
     static func apply(to window: NSWindow, minimumSize: CGSize) {
         guard minimumSize.width.isFinite, minimumSize.height.isFinite else { return }
 
-        window.contentMinSize = minimumSize
+        // Full-size content windows include the toolbar in their content rect.
+        // Reserve that inset so the player receives its full minimum height.
+        let currentContentSize = window.contentRect(forFrameRect: window.frame).size
+        let toolbarHeight = max(0, currentContentSize.height - window.contentLayoutRect.height)
+        let minimumContentSize = CGSize(
+            width: minimumSize.width,
+            height: minimumSize.height + toolbarHeight
+        )
+        window.contentMinSize = minimumContentSize
         window.minSize = window.frameRect(
-            forContentRect: NSRect(origin: .zero, size: minimumSize)
+            forContentRect: NSRect(origin: .zero, size: minimumContentSize)
         ).size
 
-        let currentContentSize = window.contentRect(forFrameRect: window.frame).size
-        guard currentContentSize.width < minimumSize.width
-            || currentContentSize.height < minimumSize.height else { return }
+        guard currentContentSize.width < minimumContentSize.width
+            || currentContentSize.height < minimumContentSize.height else { return }
 
         window.setContentSize(
             CGSize(
-                width: max(currentContentSize.width, minimumSize.width),
-                height: max(currentContentSize.height, minimumSize.height)
+                width: max(currentContentSize.width, minimumContentSize.width),
+                height: max(currentContentSize.height, minimumContentSize.height)
             )
         )
     }

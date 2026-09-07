@@ -24,7 +24,8 @@ struct ControlView: View {
                 VStack(spacing: 0) {
                     if heroView != nil {
                         heroArea(for: geometry)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: heroHeight(for: geometry), alignment: .top)
                     }
 
                     stateArea
@@ -33,7 +34,9 @@ struct ControlView: View {
 
                     if progressView != nil {
                         progressArea
-                            .padding()
+                            .frame(height: progressContentHeight)
+                            .padding(.horizontal)
+                            .padding(.vertical, progressVerticalPadding)
                     }
 
                     if controlButtonsView != nil {
@@ -109,9 +112,20 @@ struct ControlView: View {
         CisumPlayerLayout.stateHeight(for: geometry.size.height)
     }
 
+    private func heroHeight(for geometry: GeometryProxy) -> CGFloat {
+        let reservedHeight = stateHeight(for: geometry)
+            + (progressView == nil ? 0 : progressContentHeight + progressVerticalPadding * 2)
+            + (controlButtonsView == nil ? 0 : buttonHeight(for: geometry))
+
+        return max(0, geometry.size.height - reservedHeight)
+    }
+
     private func buttonHeight(for geometry: GeometryProxy) -> CGFloat {
         CisumPlayerLayout.controlButtonHeight(width: geometry.size.width, height: geometry.size.height)
     }
+
+    private let progressContentHeight: CGFloat = 18
+    private let progressVerticalPadding: CGFloat = 8
 
     private func shouldShowRightAlbum(_ geometry: GeometryProxy) -> Bool {
         CisumPlayerLayout.shouldShowRightAlbum(width: geometry.size.width)

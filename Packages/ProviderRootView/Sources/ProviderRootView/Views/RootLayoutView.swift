@@ -36,7 +36,12 @@ struct RootLayoutView: View {
                             .frame(height: CisumPlayerLayout.controlMinimumHeight)
                     } else {
                         controlArea
-                            .frame(maxHeight: .infinity)
+                            // The collapsed player owns the whole available
+                            // window height. A max-height proposal lets the
+                            // injected control view choose its ideal height,
+                            // which can put the bottom buttons outside the
+                            // window when the window is at its minimum size.
+                            .frame(width: geometry.size.width, height: geometry.size.height)
                     }
 
                     if isDetailVisible {
