@@ -50,16 +50,20 @@ public actor ScenePlugin: SuperPlugin, SuperLog {
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
         self.kernel = kernel
-        if let storage = kernel.storage {
-            let pluginDir = storage.pluginDataDirectory(for: self.id)
-            kernel.registerSceneService(SceneService(pluginDataDirectory: pluginDir))
-        } else {
-            kernel.registerSceneService(SceneService(pluginDataDirectory: FileManager.default.temporaryDirectory))
-        }
+        // onBoot 阶段 StoragePlugin 可能尚未启动（ScenePlugin order=-1000 优先），
+        // 先注册无持久化的 SceneService 保证下游插件可访问 SceneProviding。
+        kernel.registerSceneService(SceneService(pluginDataDirectory: nil))
     }
 
     @MainActor
     public func onReady(kernel: CisumKernel) async throws {
+        // onReady 在所有插件 onBoot 完成后执行，此时 StoragePlugin 已注入 storage。
+        // 用带持久化的 SceneService 替换临时实例，恢复上次场景。
+        if let storage = kernel.storage {
+            let pluginDir = storage.pluginDataDirectory(for: self.id)
+            let persisted = SceneService(pluginDataDirectory: pluginDir)
+            kernel.registerSceneService(persisted)
+        }
         kernel.scene?.restoreCurrentScene()
         installSettingsState(kernel: kernel)
     }

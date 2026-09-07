@@ -21,15 +21,16 @@ public final class SceneService: ObservableObject, SceneProviding {
     private static let legacyPluginIDKey = "currentPluginID"
     private static let persistenceFileName = "current-scene.json"
 
-    private let persistenceURL: URL
+    private let persistenceURL: URL?
     private var observers: [WeakObserver] = []
 
     @Published public private(set) var currentScene: AppScene?
 
     /// - Parameter pluginDataDirectory: 插件专属数据目录
     ///   （由 `StorageProviding.pluginDataDirectory(for: pluginID)` 解析得到）。
-    public init(pluginDataDirectory: URL) {
-        self.persistenceURL = pluginDataDirectory
+    ///   传 `nil` 时禁用磁盘持久化（仅内存态，用于 onBoot 阶段 Storage 尚未就绪时）。
+    public init(pluginDataDirectory: URL?) {
+        self.persistenceURL = pluginDataDirectory?
             .appendingPathComponent(Self.persistenceFileName, isDirectory: false)
         self.currentScene = nil
     }
@@ -95,7 +96,8 @@ public final class SceneService: ObservableObject, SceneProviding {
     }
 
     private func loadPersistedSceneName() -> String? {
-        guard let data = try? Data(contentsOf: persistenceURL),
+        guard let persistenceURL,
+              let data = try? Data(contentsOf: persistenceURL),
               let persisted = try? JSONDecoder().decode(PersistedScene.self, from: data) else {
             return nil
         }
@@ -108,6 +110,7 @@ public final class SceneService: ObservableObject, SceneProviding {
     }
 
     private func persistScene(_ scene: AppScene) throws {
+        guard let persistenceURL else { return }
         let persisted = PersistedScene(sceneName: scene.rawValue, pluginID: nil)
         let data = try JSONEncoder().encode(persisted)
 
