@@ -315,7 +315,7 @@ final class MagicPlayManAsyncTests: XCTestCase {
 
     // MARK: - Playback
 
-    func testUnplayableLocalMediaDoesNotBecomeCurrentAsset() async throws {
+    func testUnplayableLocalMediaRemainsCurrentSelection() async throws {
         let unplayable = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString)
             .appendingPathExtension("mp3")
@@ -328,7 +328,7 @@ final class MagicPlayManAsyncTests: XCTestCase {
         let man = MagicPlayMan()
         await man.play(unplayable, autoPlay: false, reason: "test")
 
-        XCTAssertNil(man.currentURL)
+        XCTAssertEqual(man.currentURL, unplayable)
         XCTAssertEqual(man.currentError, .invalidAsset)
     }
 
@@ -392,7 +392,7 @@ final class MagicPlayManAsyncTests: XCTestCase {
         ))
 
         XCTAssertNil(man.player.currentItem)
-        XCTAssertNil(man.currentURL)
+        XCTAssertEqual(man.currentURL, audio)
         XCTAssertEqual(man.currentTime, 0)
         XCTAssertEqual(man.duration, 0)
         XCTAssertEqual(man.progress, 0)

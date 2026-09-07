@@ -12,18 +12,18 @@ final class AudioDBPlaybackObserver: SuperLog {
 
     init(playback: (any PlaybackProviding)?, viewModel: AudioListViewModel) {
         self.viewModel = viewModel
-        os_log("[AudioDBPlayback] registering playback observer; playback available=%{public}s", playback == nil ? "false" : "true")
+        os_log("\(Self.t)🚩 Registering playback observer; playback available=\(playback != nil)")
         viewModel.applyExternalPlayback(url: playback?.currentURL)
         handle = playback?.addObserver { [weak self] event in
             guard case .assetChanged(let url) = event else { return }
-            os_log("[AudioDBPlayback] received assetChanged event: %{public}s", url?.path ?? "nil")
+            os_log("\(Self.t)📥 Received assetChanged event: \(url?.path ?? "nil")")
             self?.viewModel?.applyExternalPlayback(url: url)
         }
-        os_log("[AudioDBPlayback] playback observer registration completed")
+        os_log("\(Self.t)✅ Playback observer registration completed")
     }
 
     func cancel() {
-        os_log("[AudioDBPlayback] cancelling playback observer")
+        os_log("\(Self.t)🛑 Cancelling playback observer")
         handle?.cancel()
         handle = nil
     }

@@ -17,7 +17,9 @@ import SwiftUI
 /// 布局统一使用 LumiUI 组件（`AppSettingsContentScaffold` /
 /// `AppSettingSection` / `AppSettingRow` / `AppButton` / `AppEmptyState` /
 /// `AppErrorBanner`）；仓库路径不可用时直接展示错误视图与完整诊断链路。
-struct AudioDBSettingView: View {
+struct AudioDBSettingView: View, SuperLog {
+    nonisolated static let emoji = "🎵"
+
     @EnvironmentObject var viewModel: AudioListViewModel
     @Environment(\.audioDBDependencies) private var deps
     @LumiTheme private var theme
@@ -294,10 +296,7 @@ struct AudioDBSettingView: View {
         .padding(.vertical, 2)
         .contentShape(Rectangle())
         .onTapGesture {
-            os_log(
-                "[AudioDBPlayback] 🖱️ settings repository row tapped (view-only; no playback action): %{public}s",
-                url.path
-            )
+            os_log("\(Self.t)🖱️ Settings repository row tapped (view-only; no playback action): \(url.path)")
         }
     }
 }

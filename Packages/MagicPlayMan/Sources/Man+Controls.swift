@@ -148,8 +148,12 @@ public extension MagicPlayMan {
         _player.pause()
         setCurrentDownloadObservers(nil)
 
+        // 先记录用户请求的资源。即使后续校验或播放失败，调用方仍需要知道
+        // 用户最后选择的是哪个文件，以便列表 selection 和 Hero 标题保持稳定。
+        self.setCurrentURL(url)
+
         if let validationError = MagicPlayManPlaybackRequestPolicy.basicValidationError(for: url) {
-            await clearCurrentAssetAfterFailedPlayback(reason: reason + ".validation")
+            await resetPlayerItemAfterFailedPlayback(reason: reason + ".validation")
             setState(.failed(validationError), reason: reason + ".play")
             return
         }
@@ -159,21 +163,19 @@ public extension MagicPlayMan {
             do {
                 guard try await asset.load(.isPlayable) else {
                     guard isCurrentPlayRequest(requestGeneration) else { return }
-                    await clearCurrentAssetAfterFailedPlayback(reason: reason + ".unplayable")
+                    await resetPlayerItemAfterFailedPlayback(reason: reason + ".unplayable")
                     setState(.failed(.invalidAsset), reason: reason + ".play")
                     return
                 }
             } catch {
                 guard isCurrentPlayRequest(requestGeneration) else { return }
-                await clearCurrentAssetAfterFailedPlayback(reason: reason + ".unplayable")
+                await resetPlayerItemAfterFailedPlayback(reason: reason + ".unplayable")
                 setState(.failed(.invalidAsset), reason: reason + ".play")
                 return
             }
         }
 
         guard isCurrentPlayRequest(requestGeneration) else { return }
-
-        self.setCurrentURL(url)
 
         // 切换资源时清掉旧资源时长，避免新资源加载期间显示上一首的总时长。
         self.setDuration(0)
@@ -210,10 +212,10 @@ public extension MagicPlayMan {
     }
 
     @MainActor
-    func clearCurrentAssetAfterFailedPlayback(reason: String) async {
+    /// 清理失败的 AVPlayer item，但保留当前资源 URL 作为用户选择。
+    func resetPlayerItemAfterFailedPlayback(reason: String) async {
         setCurrentDownloadObservers(nil)
         _player.replaceCurrentItem(with: nil)
-        setCurrentURL(nil)
         setCurrentTime(0, reason: reason)
         setDuration(0)
         setProgress(0)

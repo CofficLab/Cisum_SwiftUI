@@ -79,7 +79,7 @@ final class AudioListViewModel: ObservableObject, SuperLog {
         Binding(
             get: { [weak self] in self?.selection },
             set: { [weak self] url in
-                os_log("[AudioDBPlayback] 🖱️ List.selection setter: %{public}s", url?.lastPathComponent ?? "nil")
+                os_log("\(Self.t)🖱️ List.selection setter: \(url?.lastPathComponent ?? "nil")")
                 // List may invoke the binding setter while SwiftUI is updating
                 // the view hierarchy. Defer the published-state mutation until
                 // that update has completed.
@@ -93,33 +93,30 @@ final class AudioListViewModel: ObservableObject, SuperLog {
     /// 用户选中某一项：更新选中状态并请求内核播放。
     func userSelected(_ url: URL?) {
         os_log(
-            "[AudioDBPlayback] 1/5 userSelected url=%{public}s loading=%{public}s displayed=%{public}d",
-            url?.lastPathComponent ?? "nil",
-            isLoading ? "true" : "false",
-            urls.count
+            "\(Self.t)1/5 userSelected url=\(url?.lastPathComponent ?? "nil") loading=\(self.isLoading) displayed=\(self.urls.count)"
         )
 
         guard let url, !isLoading else {
-            os_log(.error, "[AudioDBPlayback] 2/5 selection rejected: url is nil or list is loading")
+            os_log(.error, "\(Self.t)2/5 Selection rejected: URL is nil or list is loading")
             selectionGeneration += 1
             return
         }
 
         guard urls.contains(where: { AudioListSelectionPolicy.representsSameAudio($0, url) }) else {
-            os_log(.error, "[AudioDBPlayback] 2/5 selection rejected: url is not in displayed list: %{public}s", url.path)
+            os_log(.error, "\(Self.t)2/5 Selection rejected: URL is not in displayed list: \(url.path)")
             return
         }
 
         selection = url
-        os_log("[AudioDBPlayback] 2/5 selection accepted: %{public}s", url.lastPathComponent)
+        os_log("\(Self.t)2/5 Selection accepted: \(url.lastPathComponent)")
         guard !AudioListSelectionPolicy.representsSameAudio(url, currentAsset) else {
-            os_log("[AudioDBPlayback] 3/5 same asset already loaded; playback command skipped: %{public}s", url.lastPathComponent)
+            os_log("\(Self.t)3/5 Same asset already loaded; playback command skipped: \(url.lastPathComponent)")
             return
         }
 
         selectionGeneration += 1
         let generation = selectionGeneration
-        os_log("[AudioDBPlayback] 3/5 scheduling playback request generation=%{public}d: %{public}s", generation, url.lastPathComponent)
+        os_log("\(Self.t)3/5 Scheduling playback request generation=\(generation): \(url.lastPathComponent)")
 
         Task { @MainActor in
             guard AudioListSelectionPolicy.shouldApplySelection(
@@ -131,29 +128,25 @@ final class AudioListViewModel: ObservableObject, SuperLog {
             ) else {
                 os_log(
                     .error,
-                    "[AudioDBPlayback] 4/5 playback request discarded generation=%{public}d currentGeneration=%{public}d selected=%{public}s displayed=%{public}s",
-                    generation,
-                    selectionGeneration,
-                    selection?.lastPathComponent ?? "nil",
-                    urls.contains(where: { AudioListSelectionPolicy.representsSameAudio($0, url) }) ? "true" : "false"
+                    "\(Self.t)4/5 Playback request discarded generation=\(generation) currentGeneration=\(self.selectionGeneration) selected=\(self.selection?.lastPathComponent ?? "nil") displayed=\(self.urls.contains(where: { AudioListSelectionPolicy.representsSameAudio($0, url) }))"
                 )
                 return
             }
 
             guard let playbackCapability = self.playbackCapability else {
-                os_log(.error, "[AudioDBPlayback] 4/5 playback capability is missing; cannot play: %{public}s", url.path)
+                os_log(.error, "\(Self.t)4/5 Playback capability is missing; cannot play: \(url.path)")
                 return
             }
 
-            os_log("[AudioDBPlayback] 4/5 calling AudioPlaybackCapability.play: %{public}s", url.path)
+            os_log("\(Self.t)4/5 Calling AudioPlaybackCapability.play: \(url.path)")
             await playbackCapability.play(url)
-            os_log("[AudioDBPlayback] 5/5 AudioPlaybackCapability.play returned: %{public}s", url.lastPathComponent)
+            os_log("\(Self.t)5/5 AudioPlaybackCapability.play returned: \(url.lastPathComponent)")
         }
     }
 
     /// 播放器资产变化：只同步选中项，不再次发出播放命令。
     func applyExternalPlayback(url: URL?) {
-        os_log("[AudioDBPlayback] 🔄 external playback asset changed: %{public}s", url?.path ?? "nil")
+        os_log("\(Self.t)🔄 External playback asset changed: \(url?.path ?? "nil")")
         currentAsset = url
         if let asset = url {
             if !AudioListSelectionPolicy.representsSameAudio(asset, selection) {
