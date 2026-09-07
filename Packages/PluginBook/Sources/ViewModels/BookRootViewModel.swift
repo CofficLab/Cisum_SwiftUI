@@ -12,7 +12,7 @@ import MagicKit
 /// 由 `BookPlugin` 入口持有并注入 `BookStorageObserver`。
 @MainActor
 final class BookRootViewModel: ObservableObject, SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     @Published private(set) var repo: BookRepo?
     @Published private(set) var container: ModelContainer?
@@ -39,6 +39,7 @@ final class BookRootViewModel: ObservableObject, SuperLog {
         let generation = initGeneration
         isLoading = true
         error = nil
+        if Self.verbose { os_log("\(Self.t)🔄 reloadContainer #\(generation)") }
 
         Task {
             do {
@@ -49,6 +50,7 @@ final class BookRootViewModel: ObservableObject, SuperLog {
 
                 let disk = await self.bookDisk()
                 guard let disk else {
+                    if Self.verbose { os_log("\(Self.t)❌ reloadContainer: 未找到书籍磁盘") }
                     await MainActor.run {
                         self.setState(nil, container: nil, error: BookPluginError.initialization(reason: String(localized: "Disk not found", bundle: .module)), generation: generation)
                     }
@@ -57,11 +59,13 @@ final class BookRootViewModel: ObservableObject, SuperLog {
 
                 let db = BookDB(container, reason: "BookRootViewModel")
                 let repo = try BookRepo(disk: disk, db: db)
+                if Self.verbose { os_log("\(Self.t)✅ reloadContainer: 仓库就绪") }
 
                 await MainActor.run {
                     self.setState(repo, container: container, generation: generation)
                 }
             } catch {
+                os_log(.error, "\(Self.t)❌ reloadContainer 失败: \(error.localizedDescription)")
                 await MainActor.run {
                     self.setState(nil, container: nil, error: error, generation: generation)
                 }
@@ -71,6 +75,7 @@ final class BookRootViewModel: ObservableObject, SuperLog {
 
     /// 存储位置变化：发信号并重新加载。
     func handleStorageLocationChanged() {
+        if Self.verbose { os_log("\(Self.t)🔁 存储位置变化") }
         storageLocationDidChangeNotice = UUID()
         reloadContainer()
     }

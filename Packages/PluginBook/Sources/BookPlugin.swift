@@ -2,12 +2,13 @@ import KernelCore
 import ProviderDocsView
 import CisumUIComponents
 import Foundation
+import OSLog
 import ProviderStorage
 import SwiftUI
 import MagicKit
 
 public actor BookPlugin: SuperPlugin, SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     public static let shared = BookPlugin()
     public static let metadata = PluginMetadata(
@@ -23,6 +24,7 @@ public actor BookPlugin: SuperPlugin, SuperLog {
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
+        if Self.verbose { os_log("\(Self.t)🔌 onRegister") }
         if let docs = kernel.docs {
             docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookPluginAboutView() })
             docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookPluginManualView() })
@@ -38,7 +40,11 @@ public actor BookPlugin: SuperPlugin, SuperLog {
     /// `StorageProviding`，并安装根 ViewModel + Observer。
     @MainActor
     public func onReady(kernel: CisumKernel) async throws {
-        guard let storage = kernel.storage else { return }
+        if Self.verbose { os_log("\(Self.t)🟢 onReady") }
+        guard let storage = kernel.storage else {
+            os_log(.error, "\(Self.t)❌ onReady: storage 服务不可用")
+            return
+        }
         BookPluginHost.configure(
             dbRoot: { storage.databaseRoot },
             storageRoot: { storage.storageRoot },
@@ -49,6 +55,7 @@ public actor BookPlugin: SuperPlugin, SuperLog {
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
+        if Self.verbose { os_log("\(Self.t)✅ onEnable") }
         if let storage = kernel.storage {
             installRootState(storage: storage)
         }
@@ -56,17 +63,20 @@ public actor BookPlugin: SuperPlugin, SuperLog {
 
     @MainActor
     public func onDisable(kernel: CisumKernel) async throws {
+        if Self.verbose { os_log("\(Self.t)⏹️ onDisable") }
         teardownRootState()
     }
 
     @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
+        if Self.verbose { os_log("\(Self.t)🛑 onShutdown") }
         teardownRootState()
     }
 
     @MainActor
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         let viewModel = resolveRootViewModel()
+        if Self.verbose { os_log("\(Self.t)📺 addRootView") }
         return AnyView(BookRootView(viewModel: viewModel, content: content))
     }
 
@@ -83,6 +93,7 @@ public actor BookPlugin: SuperPlugin, SuperLog {
     /// 后台构造书籍仓库。dbRoot 与 disk 的解析仍在主线程完成，
     /// SwiftData 容器创建及仓库初始化放到 utility 任务，避免阻塞 UI。
     public static func getBookRepoAsync() async -> BookRepo? {
+        if Self.verbose { os_log("\(Self.t)📚 getBookRepoAsync") }
         let dbRoot = await MainActor.run { try? BookPluginHost.getDBRootDir() }
         guard let dbRoot else { return nil }
         let disk = await MainActor.run { Self.getBookDisk() }
@@ -103,6 +114,7 @@ public actor BookPlugin: SuperPlugin, SuperLog {
     @MainActor
     private func installRootState(storage: any StorageProviding) {
         guard rootViewModel == nil else { return }
+        if Self.verbose { os_log("\(Self.t)🔧 installRootState") }
         let viewModel = BookRootViewModel(
             dbRootURL: { try BookPluginHost.getDBRootDir() },
             bookDisk: { Self.getBookDisk() }
@@ -114,6 +126,7 @@ public actor BookPlugin: SuperPlugin, SuperLog {
 
     @MainActor
     private func teardownRootState() {
+        if Self.verbose { os_log("\(Self.t)🧹 teardownRootState") }
         rootObserver?.cancel()
         rootObserver = nil
         rootViewModel = nil

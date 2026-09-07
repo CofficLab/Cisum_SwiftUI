@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import ProviderStorage
 import MagicKit
 
@@ -9,13 +10,14 @@ import MagicKit
 /// 多通知 `.onReceive` 订阅。
 @MainActor
 final class BookStorageObserver: SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private weak var viewModel: BookRootViewModel?
     private var handle: (any StorageProvidingObserverHandle)?
 
     init(storage: any StorageProviding, viewModel: BookRootViewModel) {
         self.viewModel = viewModel
+        if Self.verbose { os_log("\(Self.t)👀 BookStorageObserver 初始化") }
 
         // Initial sync：先同步当前状态，再注册监听，防止丢事件。
         if storage.hasUsableStorageLocation {
@@ -28,6 +30,7 @@ final class BookStorageObserver: SuperLog {
             Task { @MainActor in
                 switch event {
                 case .locationChanged, .storageAvailabilityChanged:
+                    if Self.verbose { os_log("\(Self.t)🔁 收到存储事件: \(String(describing: event))") }
                     self?.viewModel?.handleStorageLocationChanged()
                 }
             }
@@ -35,6 +38,7 @@ final class BookStorageObserver: SuperLog {
     }
 
     func cancel() {
+        if Self.verbose { os_log("\(Self.t)🧹 BookStorageObserver 取消") }
         handle?.cancel()
         handle = nil
     }
