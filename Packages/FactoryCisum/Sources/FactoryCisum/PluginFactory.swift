@@ -32,6 +32,7 @@ import PluginPlaybackProgress
 import PluginReset
 import PluginScene
 import PluginSettingGeneral
+import PluginSettingsButton
 import PluginStorage
 import PluginStore
 import PluginThemeAurora
@@ -97,6 +98,7 @@ public struct DefaultPluginFactory: PluginFactory {
         #if os(macOS)
         plugins.append(CopyPlugin.shared)
         plugins.append(FileLogPlugin.shared)
+        plugins.append(SettingsButtonPlugin.shared)
         #endif
 
         plugins.append(contentsOf: [
