@@ -186,7 +186,6 @@ extension AudioItemView {
                 Spacer()
             }
         }
-        .tag(url as URL?)
         .task(id: url) {
             await loadFileSize()
         }

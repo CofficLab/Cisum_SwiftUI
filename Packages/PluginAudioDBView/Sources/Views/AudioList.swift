@@ -209,7 +209,7 @@ struct AudioList: View, SuperLog {
 
     /// Audio list view.
     private var audioListView: some View {
-        List(selection: viewModel.selectionBinding) {
+        List {
             Section(header: HStack {
                 Text("Total \(viewModel.totalCount.description)", bundle: .module)
                 Spacer()
@@ -229,7 +229,6 @@ struct AudioList: View, SuperLog {
                         .labelStyle(.iconOnly)
                 }
             }, content: {
-                // Use the URL as the ID so List selection works correctly.
                 ForEach(Array(viewModel.urls.enumerated()), id: \.element) { index, url in
                     AudioItemView(url)
                         .equatable() // Use Equatable to reduce unnecessary redraws.
@@ -268,6 +267,7 @@ struct AudioList: View, SuperLog {
             })
         }
         .listStyle(.plain)
+        .contentMargins(.horizontal, 0, for: .scrollContent)
         .scrollContentBackground(.hidden)
         .background(appTheme.background.ignoresSafeArea())
     }
