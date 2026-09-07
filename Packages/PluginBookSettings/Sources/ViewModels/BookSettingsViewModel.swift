@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import SwiftUI
 import MagicKit
 
@@ -9,11 +10,12 @@ import MagicKit
 /// `BookSettingsStorageChangeModifier`。
 @MainActor
 final class BookSettingsViewModel: ObservableObject, SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     @Published private(set) var refreshToken = 0
 
     func handleStorageLocationChanged() {
         refreshToken += 1
+        if Self.verbose { os_log("\(Self.t)🔁 存储位置变化，刷新令牌 → \(self.refreshToken)") }
     }
 }

@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import PluginBook
 import MagicKit
 
@@ -9,13 +10,14 @@ import MagicKit
 /// `BookSettingsStorageChangeModifier` 的多通知 `.onReceive`。
 @MainActor
 final class BookSettingsObserver: SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private weak var viewModel: BookSettingsViewModel?
     private var tokens: [NSObjectProtocol] = []
 
     init(viewModel: BookSettingsViewModel) {
         self.viewModel = viewModel
+        if Self.verbose { os_log("\(Self.t)👀 BookSettingsObserver 初始化") }
         for name in BookPluginHost.storageLocationDidChangeNotifications {
             tokens.append(NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
                 Task { @MainActor in self?.viewModel?.handleStorageLocationChanged() }
@@ -24,6 +26,7 @@ final class BookSettingsObserver: SuperLog {
     }
 
     func cancel() {
+        if Self.verbose { os_log("\(Self.t)🧹 BookSettingsObserver 取消") }
         tokens.forEach { NotificationCenter.default.removeObserver($0) }
         tokens.removeAll()
     }

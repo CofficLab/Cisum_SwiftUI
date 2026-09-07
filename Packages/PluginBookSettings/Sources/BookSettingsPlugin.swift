@@ -2,11 +2,12 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import PluginBook
+import OSLog
 import SwiftUI
 import MagicKit
 
 public actor BookSettingsPlugin: SuperPlugin, SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     public static let shared = BookSettingsPlugin()
     public static let metadata = PluginMetadata(
@@ -22,6 +23,7 @@ public actor BookSettingsPlugin: SuperPlugin, SuperLog {
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
+        if Self.verbose { os_log("\(Self.t)🔌 onRegister") }
         if let docs = kernel.docs {
             docs.addAbout(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookSettingsPluginAboutView() })
             docs.addManual(DocsEntry(id: self.id, name: Self.metadata.displayName) { BookSettingsPluginManualView() })
@@ -30,21 +32,25 @@ public actor BookSettingsPlugin: SuperPlugin, SuperLog {
 
     @MainActor
     public func onBoot(kernel: CisumKernel) async throws {
+        if Self.verbose { os_log("\(Self.t)🚀 onBoot") }
         installState()
     }
 
     @MainActor
     public func onEnable(kernel: CisumKernel) async throws {
+        if Self.verbose { os_log("\(Self.t)✅ onEnable") }
         installState()
     }
 
     @MainActor
     public func onDisable(kernel: CisumKernel) async throws {
+        if Self.verbose { os_log("\(Self.t)⏹️ onDisable") }
         teardownState()
     }
 
     @MainActor
     public func onShutdown(kernel: CisumKernel) async throws {
+        if Self.verbose { os_log("\(Self.t)🛑 onShutdown") }
         teardownState()
     }
 
@@ -66,6 +72,7 @@ public actor BookSettingsPlugin: SuperPlugin, SuperLog {
     @MainActor
     private func installState() {
         guard settingsViewModel == nil else { return }
+        if Self.verbose { os_log("\(Self.t)🔧 installState") }
         let viewModel = BookSettingsViewModel()
         let observer = BookSettingsObserver(viewModel: viewModel)
         settingsViewModel = viewModel
@@ -74,6 +81,7 @@ public actor BookSettingsPlugin: SuperPlugin, SuperLog {
 
     @MainActor
     private func teardownState() {
+        if Self.verbose { os_log("\(Self.t)🧹 teardownState") }
         settingsObserver?.cancel()
         settingsObserver = nil
         settingsViewModel = nil
