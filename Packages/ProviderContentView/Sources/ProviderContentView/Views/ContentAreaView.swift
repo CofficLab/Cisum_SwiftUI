@@ -14,15 +14,21 @@ struct ContentAreaView: View {
 
     var body: some View {
         Group {
-            #if os(macOS)
-                macTabView
-            #else
-                if isDemoMode {
-                    customTabView
-                } else {
-                    regularTabView
-                }
-            #endif
+            if tabs.count == 1, let tab = tabs.first {
+                tab.content
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .clipped()
+            } else {
+                #if os(macOS)
+                    macTabView
+                #else
+                    if isDemoMode {
+                        customTabView
+                    } else {
+                        regularTabView
+                    }
+                #endif
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(appTheme.background)
