@@ -27,6 +27,7 @@ public actor BookControlButtonsPlugin: SuperPlugin, SuperLog {
         description: description,
         iconName: iconName,
         order: order,
+        policy: .alwaysOn,
         category: .playback,
     )
 
