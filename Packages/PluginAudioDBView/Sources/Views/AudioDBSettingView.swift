@@ -1,6 +1,6 @@
 import CisumUIComponents
 import OSLog
-import PluginAudio
+import AudioLibraryCore
 import SwiftUI
 #if os(macOS)
     import AppKit

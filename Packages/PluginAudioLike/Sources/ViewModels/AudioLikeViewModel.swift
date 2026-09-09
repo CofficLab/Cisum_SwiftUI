@@ -3,6 +3,7 @@ import Foundation
 import OSLog
 import ProviderScene
 import MagicKit
+import AudioLikeCore
 
 /// 喜欢列表加载闭包（由插件入口组装本地仓库）。
 typealias AudioLikeLoadProvider = @MainActor () async -> [AudioLikeModel]

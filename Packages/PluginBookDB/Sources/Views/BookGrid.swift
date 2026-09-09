@@ -1,7 +1,7 @@
 import CisumUIComponents
 import OSLog
-import PluginAudio
-import PluginBook
+import AudioLibraryCore
+import ProviderBook
 import SwiftData
 import SwiftUI
 

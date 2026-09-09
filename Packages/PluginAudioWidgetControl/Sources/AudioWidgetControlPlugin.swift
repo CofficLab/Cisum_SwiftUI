@@ -1,7 +1,7 @@
 import CisumUIComponents
 import KernelCore
 import ProviderDocsView
-import PluginAudio
+import AudioLibraryCore
 import ProviderPlayback
 import SwiftUI
 import MagicKit
@@ -78,25 +78,25 @@ public actor AudioWidgetControlPlugin: SuperPlugin, SuperLog {
         let viewModel = AudioWidgetControlViewModel(
             playbackCapability: makePlaybackCapability(from: kernel?.playback),
             nextAsset: { current, verbose in
-                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+                guard let repo = await AudioPluginHost.getAudioRepoAsync() else {
                     throw AudioPluginError.hostNotConfigured
                 }
                 return try await repo.getNextOf(current, verbose: verbose)
             },
             previousAsset: { current, verbose in
-                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+                guard let repo = await AudioPluginHost.getAudioRepoAsync() else {
                     throw AudioPluginError.hostNotConfigured
                 }
                 return try await repo.getPrevOf(current, verbose: verbose)
             },
             firstAsset: {
-                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+                guard let repo = await AudioPluginHost.getAudioRepoAsync() else {
                     throw AudioPluginError.hostNotConfigured
                 }
                 return try await repo.getFirst()
             },
             lastAsset: {
-                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+                guard let repo = await AudioPluginHost.getAudioRepoAsync() else {
                     throw AudioPluginError.hostNotConfigured
                 }
                 return try await repo.getLast()

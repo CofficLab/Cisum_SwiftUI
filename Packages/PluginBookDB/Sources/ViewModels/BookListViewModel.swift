@@ -1,7 +1,7 @@
 import Combine
 import Foundation
 import OSLog
-import PluginBook
+import ProviderBook
 import SwiftUI
 import MagicKit
 

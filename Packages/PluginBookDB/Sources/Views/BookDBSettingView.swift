@@ -1,5 +1,5 @@
 import CisumUIComponents
-import PluginBook
+import ProviderBook
 import SwiftUI
 
 /// 有声书仓库设置页：以两种方式展示仓库内容。

@@ -3,8 +3,8 @@ import Foundation
 import MagicKit
 import MagicPlayMan
 import OSLog
-import PluginAudio
-import PluginAudioLike
+import AudioLibraryCore
+import AudioLikeCore
 import ProviderScene
 import SwiftUI
 import UniformTypeIdentifiers
@@ -201,7 +201,7 @@ final class AudioProgressViewModel: ObservableObject, SuperLog {
     private func isPlayableAudioURL(_ url: URL) -> Bool {
         FileManager.default.fileExists(atPath: url.path)
             && !url.isFolder
-            && AudioPlugin.supportedExtensions.contains(url.pathExtension.lowercased())
+            && AudioPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
     }
 
     // MARK: - Playback events
@@ -235,7 +235,7 @@ final class AudioProgressViewModel: ObservableObject, SuperLog {
             let urlToStore = AudioProgressPersistencePolicy.currentURLToStore(
                 url,
                 storedURL: storedURL,
-                supportedExtensions: AudioPlugin.supportedExtensions
+                supportedExtensions: AudioPluginInfo.supportedExtensions
             )
             AudioStateRepo.storeCurrent(urlToStore)
             if AudioProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(from: storedURL, to: urlToStore) {

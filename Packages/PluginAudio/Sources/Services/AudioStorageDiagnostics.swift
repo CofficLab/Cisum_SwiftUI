@@ -7,6 +7,28 @@ import ProviderStorage
 /// 快速定位「仓库路径拿不到」的原因（存储位置未设置 / iCloud 容器解析失败 /
 /// 本地目录解析失败等）。
 public struct AudioStorageDiagnostics: Sendable, Equatable {
+    public init(
+        storageLocationRaw: String?,
+        isICloudAvailable: Bool,
+        hasUsableStorageLocation: Bool,
+        cloudContainer: String?,
+        cloudDocuments: String?,
+        localDocuments: String?,
+        storageRoot: String?,
+        audioDisk: String?,
+        dbDirName: String
+    ) {
+        self.storageLocationRaw = storageLocationRaw
+        self.isICloudAvailable = isICloudAvailable
+        self.hasUsableStorageLocation = hasUsableStorageLocation
+        self.cloudContainer = cloudContainer
+        self.cloudDocuments = cloudDocuments
+        self.localDocuments = localDocuments
+        self.storageRoot = storageRoot
+        self.audioDisk = audioDisk
+        self.dbDirName = dbDirName
+    }
+
     /// 用户配置的存储位置原始值（`UserDefaults["StorageLocation"]`）。
     public let storageLocationRaw: String?
 

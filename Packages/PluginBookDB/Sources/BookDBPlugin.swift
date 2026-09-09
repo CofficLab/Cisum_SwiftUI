@@ -1,7 +1,7 @@
 import KernelCore
 import ProviderDocsView
 import OSLog
-import PluginBook
+import ProviderBook
 import ProviderPlayback
 import ProviderScene
 import ProviderStorage

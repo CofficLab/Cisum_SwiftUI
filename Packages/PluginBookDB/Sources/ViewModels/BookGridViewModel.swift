@@ -2,8 +2,8 @@ import Combine
 import Foundation
 import MagicKit
 import OSLog
-import PluginAudio
-import PluginBook
+import AudioLibraryCore
+import ProviderBook
 import SwiftData
 import SwiftUI
 
@@ -51,7 +51,7 @@ final class BookGridViewModel: ObservableObject, SuperLog {
     // MARK: - View lifecycle
 
     func handleOnAppear() {
-        if Self.verbose { os_log("\(Self.t)📋 handleOnAppear, repo: \(repo == nil ? "nil" : "available")") }
+        if Self.verbose { os_log("\(Self.t)📋 handleOnAppear, repo: \(self.repo == nil ? "nil" : "available")") }
         isLoading = true
         scheduleUpdateBooksDebounced()
         if let currentAsset {

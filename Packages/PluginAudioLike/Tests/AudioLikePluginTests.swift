@@ -1,5 +1,6 @@
 import Foundation
 @testable import PluginAudioLike
+@testable import AudioLikeCore
 import Testing
 
 private final class NotificationObserverToken: @unchecked Sendable {
@@ -21,7 +22,7 @@ func pluginExposesSettingsNavigationItem() {
     #expect(view == nil)
     #expect(item != nil)
     #expect(item?.id == "liked-audio")
-    #expect(item?.title == String(localized: "Liked audio", bundle: .module))
+    #expect(item?.title == String(localized: "Liked audio"))
 }
 
 @Test func audioLikeStatusNotificationIsDeliveredOnMainThread() async {

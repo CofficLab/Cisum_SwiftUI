@@ -29,7 +29,7 @@ let package = Package(
                 "CisumUIComponents",
                 "KernelCore",
                 "ProviderDocsView",
-                .product(name: "PluginAudio", package: "PluginAudio")
+                .product(name: "AudioLibraryCore", package: "PluginAudio")
             ],
             path: ".",
             sources: ["Sources"],

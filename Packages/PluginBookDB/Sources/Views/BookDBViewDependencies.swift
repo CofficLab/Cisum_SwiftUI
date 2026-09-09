@@ -1,5 +1,5 @@
 import Foundation
-import PluginBook
+import ProviderBook
 import SwiftUI
 
 /// 有声书仓库视图依赖：路径与仓库均由 `BookDBPlugin` 自持，

@@ -1,7 +1,6 @@
 import OSLog
 import SwiftData
 import SwiftUI
-import PluginDevice
 
 struct BtnChapters: View {
     @State var isPresented = false

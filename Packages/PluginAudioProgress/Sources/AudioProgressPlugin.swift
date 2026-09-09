@@ -1,8 +1,7 @@
 import KernelCore
 import ProviderDocsView
 import CisumUIComponents
-import PluginAudio
-import PluginAudioScene
+import AudioLibraryCore
 import ProviderPlayback
 import ProviderScene
 import SwiftUI
@@ -82,7 +81,7 @@ public actor AudioProgressPlugin: SuperPlugin, SuperLog {
         let viewModel = AudioProgressViewModel(
             audioScene: .music,
             playbackCapability: makePlaybackCapability(from: playback),
-            audioRepo: { await AudioPlugin.getAudioRepoAsync() },
+            audioRepo: { await AudioPluginHost.getAudioRepoAsync() },
             saveWidgetData: { title, artist, isPlaying, coverArt in
                 AudioProgressHost.saveWidgetData(title: title, artist: artist, isPlaying: isPlaying, coverArt: coverArt)
             }
@@ -114,7 +113,7 @@ public actor AudioProgressPlugin: SuperPlugin, SuperLog {
         let viewModel = AudioProgressViewModel(
             audioScene: .music,
             playbackCapability: makePlaybackCapability(from: kernel?.playback),
-            audioRepo: { await AudioPlugin.getAudioRepoAsync() },
+            audioRepo: { await AudioPluginHost.getAudioRepoAsync() },
             saveWidgetData: { title, artist, isPlaying, coverArt in
                 AudioProgressHost.saveWidgetData(title: title, artist: artist, isPlaying: isPlaying, coverArt: coverArt)
             }

@@ -2,7 +2,7 @@
     import CisumUIComponents
     import MagicKit
     import OSLog
-    import PluginAudio
+    import AudioLibraryCore
     import SwiftData
     import SwiftUI
     import UniformTypeIdentifiers

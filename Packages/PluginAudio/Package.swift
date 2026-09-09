@@ -10,6 +10,10 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "AudioLibraryCore",
+            targets: ["AudioLibraryCore"]
+        ),
+        .library(
             name: "PluginAudio",
             targets: ["PluginAudio"]
         )
@@ -24,24 +28,53 @@ let package = Package(
     ],
     targets: [
         .target(
+            name: "AudioLibraryCore",
+            dependencies: [
+                .product(name: "MagicKit", package: "MagicKit"),
+                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
+                .product(name: "ProviderStorage", package: "ProviderStorage"),
+                .product(name: "AudioLikeCore", package: "PluginAudioLike")
+            ],
+            path: ".",
+            sources: [
+                "Sources/Events",
+                "Sources/Extensions",
+                "Sources/Models",
+                "Sources/Services"
+            ],
+            resources: [
+                .process("Resources/Localizable.xcstrings")
+            ]
+        ),
+        .target(
             name: "PluginAudio",
             dependencies: [
+                "AudioLibraryCore",
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
-                .product(name: "PluginAudioLike", package: "PluginAudioLike"),
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
+                .product(name: "AudioLikeCore", package: "PluginAudioLike"),
             ],
             path: ".",
-            sources: ["Sources"],
+            sources: [
+                "Sources/AudioPlugin.swift",
+                "Sources/CoreExports.swift",
+                "Sources/Observers",
+                "Sources/ViewModels",
+                "Sources/Views"
+            ],
             resources: [
                 .process("Resources/Localizable.xcstrings")
             ]
         ),
         .testTarget(
             name: "AudioPluginTests",
-            dependencies: ["PluginAudio"],
+            dependencies: [
+                "PluginAudio",
+                "AudioLibraryCore"
+            ],
             path: "Tests"
         )
     ]

@@ -1,5 +1,5 @@
 import Foundation
-import PluginAudio
+import AudioLibraryCore
 import MagicKit
 
 /// 音频设置的存储位置变化观察者（迁移 Phase 5）。

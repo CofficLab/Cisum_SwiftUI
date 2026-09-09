@@ -1,5 +1,4 @@
 import CisumUIComponents
-import PluginAudioScene
 import SwiftUI
 
 struct AudioDemoAddButton: View {

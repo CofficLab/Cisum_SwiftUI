@@ -30,7 +30,7 @@ let package = Package(
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
-                .product(name: "PluginAudio", package: "PluginAudio"),
+                .product(name: "AudioLibraryCore", package: "PluginAudio"),
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
             path: ".",

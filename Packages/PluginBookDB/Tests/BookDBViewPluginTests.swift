@@ -1,7 +1,7 @@
 import Testing
 @testable import PluginBookDB
 import Foundation
-import PluginBook
+import ProviderBook
 import SwiftData
 import UniformTypeIdentifiers
 
@@ -856,4 +856,3 @@ import UniformTypeIdentifiers
 
     #expect(BookTreeBuilder.buildRootChildren(from: root).isEmpty)
 }
-

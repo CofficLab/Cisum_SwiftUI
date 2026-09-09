@@ -2,7 +2,7 @@ import Foundation
 import MagicKit
 import MagicPlayMan
 import OSLog
-import PluginBook
+import ProviderBook
 import ProviderScene
 import SwiftUI
 
@@ -157,7 +157,7 @@ final class BookProgressViewModel: ObservableObject, SuperLog {
     }
 
     private func isPlayableBookURL(_ url: URL) -> Bool {
-        BookProgressPersistencePolicy.shouldAcceptBookURL(url, bookDisk: BookPlugin.getBookDisk())
+        BookProgressPersistencePolicy.shouldAcceptBookURL(url, bookDisk: BookPluginHost.getBookDisk())
     }
 
     // MARK: - URL change & persistence
@@ -181,7 +181,7 @@ final class BookProgressViewModel: ObservableObject, SuperLog {
         }
 
         let url = snapshot.currentURL
-        let bookDisk = BookPlugin.getBookDisk()
+        let bookDisk = BookPluginHost.getBookDisk()
 
         if Self.verbose {
             Self.log.debug("\(Self.tag)📖 URL changed -> \(url.shortPath())")
@@ -261,7 +261,7 @@ final class BookProgressViewModel: ObservableObject, SuperLog {
         guard let playback = playbackCapability else { return }
         guard BookProgressPersistencePolicy.shouldPersistPlaybackProgress(
             currentURL: playback.currentAsset,
-            bookDisk: BookPlugin.getBookDisk()
+            bookDisk: BookPluginHost.getBookDisk()
         ) else { return }
 
         guard let snapshot = BookProgressPersistencePolicy.snapshot(
@@ -301,7 +301,7 @@ final class BookProgressViewModel: ObservableObject, SuperLog {
     }
 
     private func findBookForURL(_ url: URL) async -> URL? {
-        if let bookURL = BookProgressBookLookup.bookURL(for: url, bookDisk: BookPlugin.getBookDisk()) {
+        if let bookURL = BookProgressBookLookup.bookURL(for: url, bookDisk: BookPluginHost.getBookDisk()) {
             return bookURL
         }
 
@@ -320,6 +320,6 @@ final class BookProgressViewModel: ObservableObject, SuperLog {
     }
 
     private func bookRoot(containing url: URL) -> URL {
-        BookProgressBookRootResolver.bookRoot(containing: url, bookDisk: BookPlugin.getBookDisk())
+        BookProgressBookRootResolver.bookRoot(containing: url, bookDisk: BookPluginHost.getBookDisk())
     }
 }

@@ -29,6 +29,11 @@ let package = Package(
                "ZIPFoundation",
            ],
            path: ".",
+           exclude: [
+               "Sources/MagicKit/Icons.xcassets",
+               "Sources/MagicDemo/MagicDemo/Assets.xcassets",
+               "Sources/MagicDemo/MagicDemo/Preview Content"
+           ],
             sources: ["Sources"],
            resources: [.process("Resources")],
            swiftSettings: [

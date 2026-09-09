@@ -10,6 +10,10 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "AudioLikeCore",
+            targets: ["AudioLikeCore"]
+        ),
+        .library(
             name: "PluginAudioLike",
             targets: ["PluginAudioLike"]
         )
@@ -17,7 +21,6 @@ let package = Package(
     dependencies: [
         .package(path: "../MagicKit"),
         .package(path: "../CisumUIComponents"),
-        .package(path: "../PluginAudioScene"),
         .package(path: "../MagicPlayMan"),
         .package(path: "../KernelCore"),
         .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
@@ -26,11 +29,26 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "PluginAudioLike",
+            name: "AudioLikeCore",
             dependencies: [
                 .product(name: "MagicKit", package: "MagicKit"),
+                .product(name: "CisumUIComponents", package: "CisumUIComponents")
+            ],
+            path: ".",
+            sources: [
+                "Sources/Models/AudioLikeModel.swift",
+                "Sources/Services/AudioLikeRepo.swift"
+            ],
+            resources: [
+                .process("Resources/Localizable.xcstrings")
+            ]
+        ),
+        .target(
+            name: "PluginAudioLike",
+            dependencies: [
+                "AudioLikeCore",
+                .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
-                .product(name: "PluginAudioScene", package: "PluginAudioScene"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
@@ -38,14 +56,25 @@ let package = Package(
                 .product(name: "ProviderPlayback", package: "ProviderPlayback")
             ],
             path: ".",
-            sources: ["Sources"],
+            sources: [
+                "Sources/AudioLikePlugin.swift",
+                "Sources/Capabilities",
+                "Sources/Events",
+                "Sources/Models/AudioLikePluginInfo.swift",
+                "Sources/Observers",
+                "Sources/ViewModels",
+                "Sources/Views"
+            ],
             resources: [
                 .process("Resources/Localizable.xcstrings")
             ]
         ),
         .testTarget(
             name: "AudioLikePluginTests",
-            dependencies: ["PluginAudioLike"],
+            dependencies: [
+                "PluginAudioLike",
+                "AudioLikeCore"
+            ],
             path: "Tests"
         )
     ]

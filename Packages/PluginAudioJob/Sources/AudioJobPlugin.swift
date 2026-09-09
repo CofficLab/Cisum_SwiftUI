@@ -3,7 +3,7 @@ import KernelCore
 import ProviderDocsView
 import Foundation
 import OSLog
-import PluginAudio
+import AudioLibraryCore
 import MagicKit
 
 public actor AudioJobPlugin: SuperPlugin, SuperLog {
@@ -74,11 +74,11 @@ public actor AudioJobPlugin: SuperPlugin, SuperLog {
     private func makeFileSystemMonitorJob() -> FileSystemMonitorJob {
         FileSystemMonitorJob(
             diskProvider: {
-                await AudioPlugin.getAudioDisk()
+                await AudioPluginHost.getAudioDisk()
             },
             syncItems: { items, isFirst in
-                let disk = await AudioPlugin.getAudioDisk()
-                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+                let disk = await AudioPluginHost.getAudioDisk()
+                guard let repo = await AudioPluginHost.getAudioRepoAsync() else {
                     return
                 }
 
@@ -86,7 +86,7 @@ public actor AudioJobPlugin: SuperPlugin, SuperLog {
                 await repo.sync(items, verbose: FileSystemMonitorJob.verbose, isFirst: shouldFullSync)
             },
             deleteItems: { urls in
-                guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+                guard let repo = await AudioPluginHost.getAudioRepoAsync() else {
                     throw AudioPluginError.hostNotConfigured
                 }
 

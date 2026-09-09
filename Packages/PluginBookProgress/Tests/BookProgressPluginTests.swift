@@ -1,5 +1,5 @@
 import Foundation
-import PluginBook
+import ProviderBook
 import SwiftData
 @testable import PluginBookProgress
 import Testing

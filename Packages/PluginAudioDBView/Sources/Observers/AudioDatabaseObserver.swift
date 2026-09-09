@@ -1,5 +1,5 @@
 import Foundation
-import PluginAudio
+import AudioLibraryCore
 import MagicKit
 
 /// 音频数据库事件的集中观察者（迁移 Phase 2）。

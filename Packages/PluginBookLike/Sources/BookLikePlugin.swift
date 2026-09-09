@@ -1,7 +1,6 @@
 import KernelCore
 import ProviderDocsView
 import CisumUIComponents
-import PluginBookScene
 import OSLog
 import ProviderPlayback
 import ProviderScene

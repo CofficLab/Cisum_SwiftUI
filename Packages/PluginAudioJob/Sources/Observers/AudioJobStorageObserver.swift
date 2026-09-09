@@ -1,6 +1,6 @@
 import Combine
 import Foundation
-import PluginAudio
+import AudioLibraryCore
 import MagicKit
 
 /// 音频后台任务的存储位置变化观察者（迁移 Phase 4）。

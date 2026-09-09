@@ -1,7 +1,8 @@
 import KernelCore
 import ProviderDocsView
 import ProviderAudioNavigation
-import PluginAudio
+import ProviderAudioLibrary
+import AudioLibraryCore
 import ProviderPlayback
 import ProviderScene
 import ProviderStorage
@@ -33,6 +34,7 @@ public actor AudioDBPlugin: SuperPlugin, SuperLog {
     nonisolated(unsafe) private var sceneState: AudioDBSceneState?
     nonisolated(unsafe) private var sceneObserver: AudioDBSceneObserver?
     nonisolated(unsafe) private var navigationProvider: (any AudioTrackNavigationProviding)?
+    nonisolated(unsafe) private var libraryProvider: (any AudioLibraryProviding)?
 
     @MainActor
     public func onRegister(kernel: CisumKernel) async throws {
@@ -50,6 +52,7 @@ public actor AudioDBPlugin: SuperPlugin, SuperLog {
         }
         sceneBox.scene = scene
         installNavigationProvider(kernel: kernel)
+        installLibraryProvider(kernel: kernel)
     }
 
     /// 所有 Provider 插件完成 onBoot 后再组装依赖它们的 ViewModel 与 Observer。
@@ -59,6 +62,7 @@ public actor AudioDBPlugin: SuperPlugin, SuperLog {
     @MainActor
     public func onReady(kernel: CisumKernel) async throws {
         installNavigationProvider(kernel: kernel)
+        installLibraryProvider(kernel: kernel)
         installState(kernel: kernel)
     }
 
@@ -66,12 +70,14 @@ public actor AudioDBPlugin: SuperPlugin, SuperLog {
     public func onEnable(kernel: CisumKernel) async throws {
         self.kernel = kernel
         installNavigationProvider(kernel: kernel)
+        installLibraryProvider(kernel: kernel)
         installState(kernel: kernel)
     }
 
     @MainActor
     public func onDisable(kernel: CisumKernel) async throws {
         teardownState()
+        removeLibraryProvider(from: kernel)
         removeNavigationProvider(from: kernel)
     }
 
@@ -79,6 +85,7 @@ public actor AudioDBPlugin: SuperPlugin, SuperLog {
     public func onShutdown(kernel: CisumKernel) async throws {
         sceneBox.scene = nil
         teardownState()
+        removeLibraryProvider(from: kernel)
         removeNavigationProvider(from: kernel)
     }
 
@@ -247,6 +254,24 @@ public actor AudioDBPlugin: SuperPlugin, SuperLog {
         guard navigationProvider != nil else { return }
         kernel.unregisterProvider((any AudioTrackNavigationProviding).self)
         navigationProvider = nil
+    }
+
+    @MainActor
+    private func installLibraryProvider(kernel: CisumKernel) {
+        guard libraryProvider == nil else { return }
+        let provider = AudioLibraryProvider(
+            repoProvider: audioRepoProvider,
+            diskProvider: audioDiskProvider
+        )
+        libraryProvider = provider
+        kernel.registerAudioLibrary(provider)
+    }
+
+    @MainActor
+    private func removeLibraryProvider(from kernel: CisumKernel) {
+        guard libraryProvider != nil else { return }
+        kernel.unregisterProvider(AudioLibraryProviding.self)
+        libraryProvider = nil
     }
 
     /// 创建并持有音频数据库的 ViewModel 与数据库观察者（幂等）。

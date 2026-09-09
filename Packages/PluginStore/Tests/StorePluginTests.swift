@@ -1,7 +1,8 @@
 import Foundation
 import SwiftUI
 import Testing
-@testable import StorePlugin
+@testable import PluginStore
+@testable import StoreCore
 
 @Test func storeInfoExportsMetadata() {
     #expect(StorePluginInfo.titleKey == "Store")

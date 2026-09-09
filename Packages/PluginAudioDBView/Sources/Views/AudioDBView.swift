@@ -4,7 +4,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
-import PluginAudio
+import AudioLibraryCore
 
 // NSItemProvider is thread-safe by design but not yet marked Sendable by Apple.
 extension NSItemProvider: @retroactive @unchecked Sendable {}

@@ -1,5 +1,5 @@
 import CisumUIComponents
-import PluginBook
+import ProviderBook
 import SwiftUI
 
 /**

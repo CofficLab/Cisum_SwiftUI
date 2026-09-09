@@ -1,5 +1,5 @@
 import CisumUIComponents
-import PluginAudio
+import AudioLibraryCore
 import SwiftUI
 
 struct AudioSettingsPluginView: View {
@@ -11,7 +11,7 @@ struct AudioSettingsPluginView: View {
 
     var body: some View {
         AudioSettingsView(refreshToken: viewModel.refreshToken) {
-            AudioPlugin.getAudioDisk()
+            AudioPluginHost.getAudioDisk()
         }
     }
 }

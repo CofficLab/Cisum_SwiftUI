@@ -1,6 +1,6 @@
 import Foundation
 import CisumUIComponents
-import PluginBook
+import ProviderBook
 
 enum BookPlaybackOrdering {
     static func relativePath(_ url: URL, in root: URL) -> String {

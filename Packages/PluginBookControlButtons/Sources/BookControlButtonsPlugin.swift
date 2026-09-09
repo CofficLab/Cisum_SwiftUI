@@ -3,7 +3,7 @@ import Foundation
 import KernelCore
 import MagicKit
 import OSLog
-import PluginBook
+import ProviderBook
 import ProviderDocsView
 import ProviderPlayback
 import ProviderRootView

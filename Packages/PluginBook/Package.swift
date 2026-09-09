@@ -10,6 +10,10 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "ProviderBook",
+            targets: ["ProviderBook"]
+        ),
+        .library(
             name: "PluginBook",
             targets: ["PluginBook"]
         )
@@ -23,8 +27,32 @@ let package = Package(
     ],
     targets: [
         .target(
+            name: "ProviderBook",
+            dependencies: [
+                .product(name: "MagicKit", package: "MagicKit"),
+                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
+            ],
+            path: ".",
+    sources: [
+                    "Sources/BookProviding.swift",
+                    "Sources/BookConfig.swift",
+                "Sources/BookEvent.swift",
+                "Sources/BookPluginError.swift",
+                "Sources/BookPluginHost.swift",
+                "Sources/BookPluginInfo.swift",
+                "Sources/DB",
+                "Sources/DTO",
+                "Sources/Models",
+                "Sources/Repo",
+            ],
+            resources: [
+                .process("Resources/Localizable.xcstrings")
+            ]
+        ),
+        .target(
             name: "PluginBook",
             dependencies: [
+                "ProviderBook",
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "KernelCore", package: "KernelCore"),
@@ -32,14 +60,20 @@ let package = Package(
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
             ],
             path: ".",
-            sources: ["Sources"],
+            sources: [
+                "Sources/BookPlugin.swift",
+                "Sources/Observers",
+                "Sources/ViewModels",
+                "Sources/Views",
+                "Sources/ProviderExports.swift",
+            ],
             resources: [
                 .process("Resources/Localizable.xcstrings")
             ]
         ),
         .testTarget(
             name: "BookPluginTests",
-            dependencies: ["PluginBook"],
+            dependencies: ["PluginBook", "ProviderBook"],
             path: "Tests"
         )
     ]

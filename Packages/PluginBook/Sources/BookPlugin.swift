@@ -1,6 +1,7 @@
 import KernelCore
 import ProviderDocsView
 import CisumUIComponents
+import ProviderBook
 import Foundation
 import OSLog
 import ProviderStorage

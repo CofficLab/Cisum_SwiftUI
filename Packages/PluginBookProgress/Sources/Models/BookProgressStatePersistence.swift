@@ -1,4 +1,4 @@
-import PluginBook
+import ProviderBook
 import SwiftData
 import SwiftUI
 

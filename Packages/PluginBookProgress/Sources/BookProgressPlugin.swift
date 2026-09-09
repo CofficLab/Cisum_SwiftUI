@@ -2,8 +2,7 @@ import KernelCore
 import OSLog
 import ProviderDocsView
 import CisumUIComponents
-import PluginBook
-import PluginBookScene
+import ProviderBook
 import ProviderPlayback
 import ProviderScene
 import SwiftData

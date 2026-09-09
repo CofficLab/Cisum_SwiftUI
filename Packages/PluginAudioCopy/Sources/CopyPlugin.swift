@@ -1,7 +1,7 @@
 import CisumUIComponents
 import KernelCore
 import ProviderDocsView
-import PluginAudio
+import AudioLibraryCore
 import SwiftUI
 import MagicKit
 
@@ -43,10 +43,10 @@ import MagicKit
         private func configureService() {
             AudioCopyService.configure(
                 audioDiskProvider: {
-                    AudioPlugin.getAudioDisk()
+                    AudioPluginHost.getAudioDisk()
                 },
                 audioCountProvider: {
-                    guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+                    guard let repo = await AudioPluginHost.getAudioRepoAsync() else {
                         return 0
                     }
                     return await repo.getTotalCount()

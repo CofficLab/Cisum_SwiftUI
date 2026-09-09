@@ -1,6 +1,6 @@
 import CisumUIComponents
 import SwiftUI
-import PluginAudio
+import AudioLibraryCore
 
 struct AudioDBTips: View {
     enum Variant {

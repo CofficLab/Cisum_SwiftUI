@@ -1,4 +1,4 @@
-import PluginAudio
+import AudioLibraryCore
 import SwiftUI
 
 struct AudioDBPluginRootView<Content>: View where Content: View {

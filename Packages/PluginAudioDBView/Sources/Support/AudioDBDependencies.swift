@@ -1,4 +1,4 @@
-import PluginAudio
+import AudioLibraryCore
 import SwiftUI
 
 public struct AudioDBDependencies: @unchecked Sendable {

@@ -2,6 +2,7 @@ import Testing
 import Foundation
 import SwiftData
 @testable import PluginAudio
+@testable import AudioLibraryCore
 
 @Test func audioPluginInfoExportsMetadata() {
     #expect(AudioPluginInfo.titleKey == "Music")

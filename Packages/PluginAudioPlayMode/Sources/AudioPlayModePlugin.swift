@@ -1,8 +1,7 @@
 import KernelCore
 import ProviderDocsView
 import CisumUIComponents
-import PluginAudio
-import PluginAudioScene
+import AudioLibraryCore
 import ProviderPlayback
 import ProviderScene
 import SwiftUI
@@ -109,7 +108,7 @@ public actor AudioPlayModePlugin: SuperPlugin, SuperLog {
     @MainActor
     private func makeSortAction() -> AudioPlayModeSortAction {
         { @MainActor currentURL in
-            guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+            guard let repo = await AudioPluginHost.getAudioRepoAsync() else {
                 throw AudioPluginError.hostNotConfigured
             }
             await repo.sort(currentURL, reason: "PlayModeChanged")
@@ -119,7 +118,7 @@ public actor AudioPlayModePlugin: SuperPlugin, SuperLog {
     @MainActor
     private func makeShuffleAction() -> AudioPlayModeShuffleAction {
         { @MainActor currentURL in
-            guard let repo = await AudioPlugin.getAudioRepoAsync() else {
+            guard let repo = await AudioPluginHost.getAudioRepoAsync() else {
                 throw AudioPluginError.hostNotConfigured
             }
             try await repo.sortRandom(currentURL, reason: "PlayModeChanged", verbose: false)

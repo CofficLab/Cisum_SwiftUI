@@ -1,4 +1,5 @@
 @testable import PluginBook
+@testable import ProviderBook
 import Foundation
 import Testing
 import SwiftData

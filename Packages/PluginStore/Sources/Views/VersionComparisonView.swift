@@ -1,5 +1,5 @@
 import CisumUIComponents
-import PluginAudio
+import AudioLibraryCore
 import SwiftUI
 
 /// 版本对比视图：展示免费版与专业版的区别

@@ -1,7 +1,7 @@
 import Combine
 import Foundation
 import OSLog
-import PluginAudio
+import AudioLibraryCore
 import SwiftUI
 import MagicKit
 

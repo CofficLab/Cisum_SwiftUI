@@ -10,6 +10,10 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "StoreCore",
+            targets: ["StoreCore"]
+        ),
+        .library(
             name: "PluginStore",
             targets: ["PluginStore"]
         )
@@ -23,16 +27,39 @@ let package = Package(
     ],
     targets: [
         .target(
+            name: "StoreCore",
+            dependencies: [
+                .product(name: "MagicKit", package: "MagicKit"),
+                .product(name: "CisumUIComponents", package: "CisumUIComponents")
+            ],
+            path: ".",
+            sources: [
+                "Sources/DTO",
+                "Sources/Models",
+                "Sources/Services"
+            ],
+            resources: [
+                .process("Resources/Localizable.xcstrings")
+            ]
+        ),
+        .target(
             name: "PluginStore",
             dependencies: [
+                "StoreCore",
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
-                .product(name: "PluginAudio", package: "PluginAudio"),
+                .product(name: "AudioLibraryCore", package: "PluginAudio"),
             ],
             path: ".",
-            sources: ["Sources"],
+            sources: [
+                "Sources/StorePlugin.swift",
+                "Sources/StoreCoreExports.swift",
+                "Sources/Observers",
+                "Sources/ViewModels",
+                "Sources/Views"
+            ],
             resources: [
                 .process("Resources/Localizable.xcstrings"),
                 .process("Resources/Products.storekit")
@@ -40,7 +67,10 @@ let package = Package(
         ),
         .testTarget(
             name: "StorePluginTests",
-            dependencies: ["PluginStore"],
+            dependencies: [
+                "PluginStore",
+                "StoreCore"
+            ],
             path: "Tests"
         )
     ]

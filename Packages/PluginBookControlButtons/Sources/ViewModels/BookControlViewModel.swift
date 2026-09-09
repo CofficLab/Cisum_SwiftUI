@@ -2,7 +2,7 @@ import Foundation
 import MagicKit
 import MagicPlayMan
 import OSLog
-import PluginBook
+import ProviderBook
 import ProviderScene
 import ProviderToast
 import SwiftUI
@@ -130,7 +130,7 @@ final class BookControlViewModel: ObservableObject, SuperLog {
             Self.log.debug("\(Self.tag)⏮️ Previous chapter requested")
         }
 
-        let bookDisk = BookPlugin.getBookDisk()
+        let bookDisk = BookPluginHost.getBookDisk()
         guard BookControlPlaybackRequestPolicy.shouldNavigateBookAsset(asset, bookDisk: bookDisk) else {
             return
         }
@@ -172,7 +172,7 @@ final class BookControlViewModel: ObservableObject, SuperLog {
             Self.log.debug("\(Self.tag)⏭️ Next chapter requested")
         }
 
-        let bookDisk = BookPlugin.getBookDisk()
+        let bookDisk = BookPluginHost.getBookDisk()
         guard BookControlPlaybackRequestPolicy.shouldNavigateBookAsset(asset, bookDisk: bookDisk) else {
             return
         }
