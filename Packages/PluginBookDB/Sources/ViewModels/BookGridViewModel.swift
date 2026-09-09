@@ -51,6 +51,7 @@ final class BookGridViewModel: ObservableObject, SuperLog {
     // MARK: - View lifecycle
 
     func handleOnAppear() {
+        if Self.verbose { os_log("\(Self.t)📋 handleOnAppear, repo: \(repo == nil ? "nil" : "available")") }
         isLoading = true
         scheduleUpdateBooksDebounced()
         if let currentAsset {
@@ -125,8 +126,11 @@ final class BookGridViewModel: ObservableObject, SuperLog {
     // MARK: - Data loading
 
     private func updateBooks(generation: Int) {
-        guard let currentRepo = repo else { return }
-
+        guard let currentRepo = repo else {
+            if Self.verbose { os_log("\(Self.t)⚠️ updateBooks: repo is nil") }
+            return
+        }
+        if Self.verbose { os_log("\(Self.t)🔄 updateBooks gen=\(generation)") }
         Task.detached(priority: .background) { [weak self] in
             let books = await currentRepo.getAll(reason: "BookGridViewModel")
             await self?.setBooks(books, generation: generation)
@@ -134,6 +138,7 @@ final class BookGridViewModel: ObservableObject, SuperLog {
     }
 
     private func scheduleUpdateBooksDebounced(delay seconds: Double = 0.25) {
+        if Self.verbose { os_log("\(Self.t)📅 scheduleUpdateBooksDebounced") }
         updateBooksDebounceTask?.cancel()
         updateBooksGeneration = BookGridUpdatePolicy.nextGeneration(after: updateBooksGeneration)
         let generation = updateBooksGeneration
@@ -149,9 +154,11 @@ final class BookGridViewModel: ObservableObject, SuperLog {
             currentGeneration: updateBooksGeneration,
             resultGeneration: generation
         ) else {
+            if Self.verbose { os_log("\(Self.t)⚠️ setBooks: generation mismatch, skipped") }
             return
         }
 
+        if Self.verbose { os_log("\(Self.t)✅ setBooks: \(newValue.count) books loaded") }
         books = newValue
 
         var index: [URL: BookDTO] = [:]

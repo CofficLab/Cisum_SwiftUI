@@ -192,8 +192,10 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
             }
         }
         .onAppear {
+            if Self.verbose { os_log("\(Self.t)📖 BookGrid onAppear") }
             Task { @MainActor in
                 let repo = await dependencies.bookRepo()
+                if Self.verbose { os_log("\(Self.t)📖 BookGrid repo: \(repo == nil ? "nil" : "available")") }
                 viewModel.bind(repo: repo, dbRoot: dependencies.dbRoot, bookDisk: dependencies.bookDisk)
                 viewModel.handleOnAppear()
             }
