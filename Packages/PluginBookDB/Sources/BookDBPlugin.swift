@@ -1,6 +1,5 @@
 import KernelCore
 import ProviderDocsView
-import CisumUIComponents
 import OSLog
 import PluginBook
 import ProviderPlayback
@@ -239,18 +238,6 @@ public actor BookDBPlugin: SuperPlugin, SuperLog {
 
     private final class SceneBox {
         weak var scene: (any SceneProviding)?
-    }
-}
-
-private struct BookDBUnavailableView: View {
-    let errorDescription: String
-
-    var body: some View {
-        AppEmptyState(
-            icon: "exclamationmark.triangle",
-            title: String(localized: "Book repository is unavailable", bundle: .module),
-            description: String(localized: "Database location could not be opened: \(errorDescription)", bundle: .module)
-        )
     }
 }
 
