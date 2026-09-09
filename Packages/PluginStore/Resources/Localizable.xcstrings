@@ -814,6 +814,7 @@
       }
     },
     "Could not load products from the App Store" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3086,6 +3087,7 @@
       }
     },
     "Ultimate version" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
