@@ -14,7 +14,7 @@ import PluginAudioSettings
 import PluginAudioWidgetControl
 import PluginBook
 import PluginBookControlButtons
-import PluginBookDBView
+import PluginBookDB
 import PluginBookLike
 import PluginBookPlayMode
 import PluginBookProgress

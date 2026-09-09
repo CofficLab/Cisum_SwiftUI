@@ -1,5 +1,5 @@
 import Testing
-@testable import PluginBookDBView
+@testable import PluginBookDB
 import Foundation
 import PluginBook
 import SwiftData
