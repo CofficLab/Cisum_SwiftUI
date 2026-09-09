@@ -10,7 +10,7 @@ import MagicKit
 /// `BookTile` 的 `.onReceive(.bookStateUpdated)` 直接订阅。
 @MainActor
 final class BookDatabaseObserver: SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private weak var viewModel: BookGridViewModel?
     private var tokens: [NSObjectProtocol] = []

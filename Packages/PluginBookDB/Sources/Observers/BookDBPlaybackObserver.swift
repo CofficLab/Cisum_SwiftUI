@@ -5,7 +5,7 @@ import MagicKit
 /// 有声书库播放状态观察者：把当前章节变化转发到网格 ViewModel。
 @MainActor
 final class BookDBPlaybackObserver: SuperLog {
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private weak var viewModel: BookGridViewModel?
     private var handle: (any PlaybackProvidingObserverHandle)?

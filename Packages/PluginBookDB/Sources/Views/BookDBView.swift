@@ -11,7 +11,7 @@ extension NSItemProvider: @retroactive @unchecked Sendable {}
 
 public struct BookDBView: View, SuperLog, SuperThread {
     public nonisolated static let emoji = "🐘"
-    public nonisolated static let verbose = false
+    public nonisolated static let verbose = true
     
     @Environment(\.bookDBViewDependencies) private var dependencies
     @State private var isFileImporterPresented = false

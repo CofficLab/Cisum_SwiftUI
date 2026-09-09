@@ -36,7 +36,7 @@ final class BookGridViewModel: ObservableObject, SuperLog {
     private var playBookGeneration = 0
     private var updateBooksDebounceTask: Task<Void, Never>?
 
-    private static let verbose = false
+    private static let verbose = true
 
     init(playbackCapability: (any BookDBPlaybackCapability)? = nil) {
         self.playbackCapability = playbackCapability
