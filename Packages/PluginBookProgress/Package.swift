@@ -17,7 +17,7 @@ let package = Package(
     dependencies: [
         .package(path: "../MagicKit"),
         .package(path: "../CisumUIComponents"),
-        .package(path: "../PluginBook"),
+        .package(path: "../ProviderBook"),
         .package(path: "../MagicPlayMan"),
         .package(path: "../KernelCore"),
         .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
@@ -30,7 +30,7 @@ let package = Package(
             dependencies: [
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
-                .product(name: "ProviderBook", package: "PluginBook"),
+                .product(name: "ProviderBook", package: "ProviderBook"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
@@ -47,7 +47,7 @@ let package = Package(
             name: "BookProgressPluginTests",
             dependencies: [
                 "PluginBookProgress",
-                .product(name: "ProviderBook", package: "PluginBook")
+                .product(name: "ProviderBook", package: "ProviderBook"),
             ],
             path: "Tests"
         )

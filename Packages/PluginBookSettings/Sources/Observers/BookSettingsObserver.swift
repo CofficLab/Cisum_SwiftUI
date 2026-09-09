@@ -1,6 +1,7 @@
 import Foundation
 import OSLog
 import ProviderBook
+import ProviderBook
 import MagicKit
 
 /// 书籍设置的存储位置变化观察者（迁移 Phase 5）。

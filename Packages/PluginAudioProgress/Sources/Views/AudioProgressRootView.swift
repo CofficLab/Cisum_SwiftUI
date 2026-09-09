@@ -2,8 +2,8 @@ import AVFoundation
 import Foundation
 import CisumUIComponents
 import OSLog
-import AudioLibraryCore
-import AudioLikeCore
+import ProviderAudioLibrary
+import ProviderAudioLike
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers

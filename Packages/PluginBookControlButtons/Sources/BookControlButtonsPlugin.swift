@@ -4,6 +4,7 @@ import KernelCore
 import MagicKit
 import OSLog
 import ProviderBook
+import ProviderBook
 import ProviderDocsView
 import ProviderPlayback
 import ProviderRootView

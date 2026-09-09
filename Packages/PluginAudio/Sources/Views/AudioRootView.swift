@@ -1,5 +1,6 @@
 import Foundation
 import CisumUIComponents
+import ProviderAudioLibrary
 import SwiftData
 import SwiftUI
 

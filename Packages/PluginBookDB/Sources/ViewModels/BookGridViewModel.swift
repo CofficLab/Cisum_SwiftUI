@@ -2,7 +2,7 @@ import Combine
 import Foundation
 import MagicKit
 import OSLog
-import AudioLibraryCore
+import ProviderBook
 import ProviderBook
 import SwiftData
 import SwiftUI
@@ -20,7 +20,6 @@ final class BookGridViewModel: ObservableObject, SuperLog {
     @Published private(set) var isLoading = true
     @Published private(set) var isSyncing = false
     @Published var selectedBookURL: URL?
-    @Published var selection: AudioModel?
     @Published var syncingTotal = 0
     @Published var syncingCurrent = 0
     /// 最近一次播放状态更新的书籍 URL，供 `BookTile` 观察并重载封面。

@@ -3,6 +3,7 @@ import KernelCore
 import ProviderDocsView
 import SwiftUI
 import MagicKit
+import ProviderStore
 
 public actor StorePlugin: SuperPlugin, SuperLog {
     nonisolated static let verbose = false

@@ -10,10 +10,6 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "StoreCore",
-            targets: ["StoreCore"]
-        ),
-        .library(
             name: "PluginStore",
             targets: ["PluginStore"]
         )
@@ -21,41 +17,26 @@ let package = Package(
     dependencies: [
         .package(path: "../MagicKit"),
         .package(path: "../CisumUIComponents"),
+        .package(path: "../ProviderStore"),
+        .package(path: "../ProviderAudioLibrary"),
         .package(path: "../KernelCore"),
         .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
-        .package(path: "../PluginAudio"),
     ],
     targets: [
         .target(
-            name: "StoreCore",
-            dependencies: [
-                .product(name: "MagicKit", package: "MagicKit"),
-                .product(name: "CisumUIComponents", package: "CisumUIComponents")
-            ],
-            path: ".",
-            sources: [
-                "Sources/DTO",
-                "Sources/Models",
-                "Sources/Services"
-            ],
-            resources: [
-                .process("Resources/Localizable.xcstrings")
-            ]
-        ),
-        .target(
             name: "PluginStore",
             dependencies: [
-                "StoreCore",
+                .product(name: "ProviderStore", package: "ProviderStore"),
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
-                .product(name: "AudioLibraryCore", package: "PluginAudio"),
+                .product(name: "ProviderAudioLibrary", package: "ProviderAudioLibrary"),
             ],
             path: ".",
             sources: [
                 "Sources/StorePlugin.swift",
-                "Sources/StoreCoreExports.swift",
+                "Sources/ProviderStoreExports.swift",
                 "Sources/Observers",
                 "Sources/ViewModels",
                 "Sources/Views"
@@ -69,7 +50,7 @@ let package = Package(
             name: "StorePluginTests",
             dependencies: [
                 "PluginStore",
-                "StoreCore"
+                .product(name: "ProviderStore", package: "ProviderStore")
             ],
             path: "Tests"
         )

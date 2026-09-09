@@ -1,2 +1,2 @@
-@_exported import AudioLibraryCore
-@_exported import AudioLikeCore
+@_exported import ProviderAudioLibrary
+@_exported import ProviderAudioLike

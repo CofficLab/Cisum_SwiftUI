@@ -1,6 +1,6 @@
 import CisumUIComponents
 import SwiftUI
-import AudioLibraryCore
+import ProviderAudioLibrary
 
 struct AudioDBTips: View {
     enum Variant {

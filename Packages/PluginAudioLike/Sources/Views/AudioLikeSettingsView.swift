@@ -1,7 +1,7 @@
 import CisumUIComponents
 import SwiftData
 import SwiftUI
-import AudioLikeCore
+import ProviderAudioLike
 
 public struct AudioLikeSettingsView: View, SuperLog {
     public nonisolated static var emoji: String { "⚙️❤️" }

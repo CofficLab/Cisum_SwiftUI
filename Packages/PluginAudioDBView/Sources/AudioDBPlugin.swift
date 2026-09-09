@@ -2,7 +2,7 @@ import KernelCore
 import ProviderDocsView
 import ProviderAudioNavigation
 import ProviderAudioLibrary
-import AudioLibraryCore
+import ProviderAudioLibrary
 import ProviderPlayback
 import ProviderScene
 import ProviderStorage

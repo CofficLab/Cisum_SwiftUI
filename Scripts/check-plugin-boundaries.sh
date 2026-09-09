@@ -25,4 +25,10 @@ if rg -n '\.product\(name: "Plugin(Book|Audio|Store)' "${scope[@]}" \
   exit 1
 fi
 
+if rg -n '\.package\((name: "[^"]+", )?path: "\.\./Plugin(Book|Audio|Store)' "${scope[@]}" \
+  --glob 'Package.swift'; then
+  print -u2 'Plugin boundary violation: a feature package depends on another Plugin package.'
+  exit 1
+fi
+
 print 'Plugin boundary check passed.'

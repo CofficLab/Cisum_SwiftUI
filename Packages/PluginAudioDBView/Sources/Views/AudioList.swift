@@ -2,7 +2,7 @@ import CisumUIComponents
 import OSLog
 import SwiftData
 import SwiftUI
-import AudioLibraryCore
+import ProviderAudioLibrary
 
 enum AudioListFileIdentity {
     static func canonicalIdentity(for url: URL) -> String {

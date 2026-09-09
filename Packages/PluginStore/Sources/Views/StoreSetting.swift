@@ -3,6 +3,7 @@ import Foundation
 import OSLog
 import StoreKit
 import SwiftUI
+import ProviderStore
 
 enum StorePurchaseInfoLoadPolicy {
     static func shouldApplyResult(currentGeneration: Int, resultGeneration: Int) -> Bool {

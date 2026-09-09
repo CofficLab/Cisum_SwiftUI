@@ -1,7 +1,7 @@
 import CisumUIComponents
 import KernelCore
 import ProviderDocsView
-import AudioLibraryCore
+import ProviderAudioLibrary
 import SwiftUI
 import MagicKit
 

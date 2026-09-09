@@ -1,4 +1,4 @@
-import AudioLibraryCore
+import ProviderAudioLibrary
 import Combine
 import Foundation
 import ProviderAudioLibrary

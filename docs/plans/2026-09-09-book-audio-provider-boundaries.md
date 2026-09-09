@@ -4,7 +4,7 @@
 
 **Goal:** Remove compile-time dependencies between Cisum feature plugins in the book and audio domains while preserving current behavior and making Provider, Observer, and Capability boundaries explicit.
 
-**Architecture:** Split each domain package into a provider/core target and a plugin target within the existing SwiftPM package first, so the migration does not require moving the large SwiftData implementation in one step. Feature plugins will import `ProviderBook`, `AudioLibraryCore`, or `AudioLikeCore` plus the existing `Provider*` contracts; only `FactoryCisum` may assemble all plugin targets. Existing observers remain owned by their feature plugin, while external operations are exposed through the existing per-plugin capabilities and provider adapters.
+**Architecture:** Keep all cross-plugin domain contracts and shared implementations in `Provider*` packages, keep feature lifecycle/UI/Observers/Capabilities in `Plugin*` packages, and reserve `*Kit` packages for business-agnostic infrastructure. Only `FactoryCisum` may assemble all concrete plugin targets. Existing observers remain owned by their feature plugin, while external operations are exposed through the existing per-plugin capabilities and provider adapters.
 
 **Tech Stack:** Swift 6, Swift Package Manager, SwiftData, SwiftUI, KernelCore provider registry, Testing.
 
@@ -12,7 +12,7 @@
 
 Completed on 2026-09-09:
 
-- Book core was split into `ProviderBook`; audio library, audio-like, and store cores were split into `AudioLibraryCore`, `AudioLikeCore`, and `StoreCore`.
+- Book, audio library, audio-like, and store implementations now live in `ProviderBook`, `ProviderAudioLibrary`, `ProviderAudioLike`, and `ProviderStore`.
 - Book/audio feature packages now depend on neutral core/provider products instead of sibling `Plugin*` modules.
 - AudioDB registers the `ProviderAudioLibrary` adapter; storage observers and playback/copy capabilities remain owned by their respective feature plugins.
 - `Scripts/check-plugin-boundaries.sh` verifies the dependency rule and currently passes.
@@ -69,9 +69,9 @@ Completed on 2026-09-09:
 - Modify: `Packages/PluginAudioLike/Sources/Models/AudioLikeModel.swift`
 - Create: `Packages/PluginAudioLike/Sources/ProviderAudioLikeExports.swift`
 
-**Step 1: Add an `AudioLibraryCore` product/target for audio models, repositories, configuration, events, and storage diagnostics.**
+**Step 1: Consolidate audio models, repositories, configuration, events, and storage diagnostics in `ProviderAudioLibrary`.**
 
-**Step 2: Add an `AudioLikeCore` product/target for like models and persistence, and make `AudioLibraryCore` depend on this provider/core product rather than the `PluginAudioLike` target.**
+**Step 2: Move like models and persistence to `ProviderAudioLike`, and make `ProviderAudioLibrary` depend on this Provider rather than `PluginAudioLike`.**
 
 **Step 3: Restrict `PluginAudio` and `PluginAudioLike` targets to plugin lifecycle, observers, capabilities, view models, and views.**
 
@@ -90,9 +90,9 @@ Completed on 2026-09-09:
 - Modify: `Packages/PluginAudioLike/Package.swift` and sources
 - Modify: `Packages/PluginAudioDemo/Package.swift` and sources as needed
 
-**Step 1: Replace `import PluginAudio` with `import AudioLibraryCore` where data/repository APIs are still required.**
+**Step 1: Replace `import PluginAudio` with `import ProviderAudioLibrary` where data/repository APIs are still required.**
 
-**Step 2: Replace `import PluginAudioLike` with `import AudioLikeCore` where persistence APIs are required.**
+**Step 2: Replace `import PluginAudioLike` with `import ProviderAudioLike` where persistence APIs are required.**
 
 **Step 3: Remove all feature-plugin imports of other feature plugins, including unused scene imports.**
 

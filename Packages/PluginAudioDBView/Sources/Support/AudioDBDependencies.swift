@@ -1,4 +1,4 @@
-import AudioLibraryCore
+import ProviderAudioLibrary
 import SwiftUI
 
 public struct AudioDBDependencies: @unchecked Sendable {

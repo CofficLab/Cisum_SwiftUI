@@ -10,10 +10,6 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AudioLibraryCore",
-            targets: ["AudioLibraryCore"]
-        ),
-        .library(
             name: "PluginAudio",
             targets: ["PluginAudio"]
         )
@@ -21,41 +17,23 @@ let package = Package(
     dependencies: [
         .package(path: "../MagicKit"),
         .package(path: "../CisumUIComponents"),
+        .package(path: "../ProviderAudioLibrary"),
+        .package(path: "../ProviderAudioLike"),
         .package(path: "../KernelCore"),
         .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
-        .package(path: "../PluginAudioLike"),
         .package(path: "../ProviderStorage"),
     ],
     targets: [
         .target(
-            name: "AudioLibraryCore",
-            dependencies: [
-                .product(name: "MagicKit", package: "MagicKit"),
-                .product(name: "CisumUIComponents", package: "CisumUIComponents"),
-                .product(name: "ProviderStorage", package: "ProviderStorage"),
-                .product(name: "AudioLikeCore", package: "PluginAudioLike")
-            ],
-            path: ".",
-            sources: [
-                "Sources/Events",
-                "Sources/Extensions",
-                "Sources/Models",
-                "Sources/Services"
-            ],
-            resources: [
-                .process("Resources/Localizable.xcstrings")
-            ]
-        ),
-        .target(
             name: "PluginAudio",
             dependencies: [
-                "AudioLibraryCore",
+                .product(name: "ProviderAudioLibrary", package: "ProviderAudioLibrary"),
+                .product(name: "ProviderAudioLike", package: "ProviderAudioLike"),
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
                 .product(name: "ProviderStorage", package: "ProviderStorage"),
-                .product(name: "AudioLikeCore", package: "PluginAudioLike"),
             ],
             path: ".",
             sources: [
@@ -73,7 +51,7 @@ let package = Package(
             name: "AudioPluginTests",
             dependencies: [
                 "PluginAudio",
-                "AudioLibraryCore"
+                .product(name: "ProviderAudioLibrary", package: "ProviderAudioLibrary")
             ],
             path: "Tests"
         )

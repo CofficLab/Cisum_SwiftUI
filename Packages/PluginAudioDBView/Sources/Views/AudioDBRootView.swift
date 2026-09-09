@@ -2,7 +2,7 @@ import Foundation
 import CisumUIComponents
 import OSLog
 import SwiftUI
-import AudioLibraryCore
+import ProviderAudioLibrary
 
 public struct AudioDBRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { "🎵" }

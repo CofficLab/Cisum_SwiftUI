@@ -1,7 +1,7 @@
 import KernelCore
 import ProviderDocsView
 import CisumUIComponents
-import AudioLibraryCore
+import ProviderAudioLibrary
 import ProviderPlayback
 import ProviderScene
 import SwiftUI

@@ -3,6 +3,7 @@ import MagicKit
 import MagicPlayMan
 import OSLog
 import ProviderBook
+import ProviderBook
 import ProviderScene
 import ProviderToast
 import SwiftUI

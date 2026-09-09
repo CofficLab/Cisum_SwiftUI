@@ -3,8 +3,8 @@ import Foundation
 import MagicKit
 import MagicPlayMan
 import OSLog
-import AudioLibraryCore
-import AudioLikeCore
+import ProviderAudioLibrary
+import ProviderAudioLike
 import ProviderScene
 import SwiftUI
 import UniformTypeIdentifiers

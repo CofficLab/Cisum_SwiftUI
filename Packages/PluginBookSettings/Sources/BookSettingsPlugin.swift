@@ -2,6 +2,7 @@ import CisumUIComponents
 import KernelCore
 import ProviderDocsView
 import ProviderBook
+import ProviderBook
 import OSLog
 import SwiftUI
 import MagicKit

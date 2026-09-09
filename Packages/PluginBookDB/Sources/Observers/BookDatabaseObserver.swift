@@ -1,6 +1,7 @@
 import Foundation
 import OSLog
 import ProviderBook
+import ProviderBook
 import MagicKit
 
 /// 书籍数据库事件的集中观察者（迁移 Phase 3）。

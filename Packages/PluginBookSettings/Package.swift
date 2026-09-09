@@ -19,7 +19,7 @@ let package = Package(
         .package(path: "../CisumUIComponents"),
         .package(path: "../KernelCore"),
         .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
-        .package(path: "../PluginBook")
+        .package(path: "../ProviderBook"),
     ],
     targets: [
         .target(
@@ -29,7 +29,7 @@ let package = Package(
                 "CisumUIComponents",
                 "KernelCore",
                 "ProviderDocsView",
-                .product(name: "ProviderBook", package: "PluginBook")
+                .product(name: "ProviderBook", package: "ProviderBook"),
             ],
             path: ".",
             sources: ["Sources"],

@@ -2,8 +2,8 @@ import KernelCore
 import ProviderDocsView
 import CisumUIComponents
 import Foundation
-import AudioLibraryCore
-import AudioLikeCore
+import ProviderAudioLibrary
+import ProviderAudioLike
 import ProviderStorage
 import SwiftUI
 import MagicKit

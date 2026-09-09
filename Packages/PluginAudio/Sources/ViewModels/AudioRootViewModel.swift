@@ -2,6 +2,7 @@ import Foundation
 import OSLog
 import SwiftData
 import MagicKit
+import ProviderAudioLibrary
 
 /// 音频容器加载的内部错误（迁移 Phase 2，原位于 `AudioRootView`）。
 enum AudioContainerLoadError: Error {

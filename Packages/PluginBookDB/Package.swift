@@ -20,8 +20,7 @@ let package = Package(
         .package(path: "../CisumUIComponents"),
         .package(path: "../KernelCore"),
         .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
-        .package(path: "../PluginAudio"),
-        .package(path: "../PluginBook"),
+        .package(path: "../ProviderBook"),
         .package(name: "ProviderPlayback", path: "../ProviderPlayback"),
         .package(path: "../ProviderScene"),
         .package(path: "../ProviderStorage"),
@@ -34,8 +33,7 @@ let package = Package(
                 "CisumUIComponents",
                 .product(name: "KernelCore", package: "KernelCore"),
                 .product(name: "ProviderDocsView", package: "ProviderDocsView"),
-                .product(name: "AudioLibraryCore", package: "PluginAudio"),
-                .product(name: "ProviderBook", package: "PluginBook"),
+                .product(name: "ProviderBook", package: "ProviderBook"),
                 .product(name: "ProviderPlayback", package: "ProviderPlayback"),
                 "ProviderScene",
                 "ProviderStorage",
@@ -50,7 +48,7 @@ let package = Package(
             name: "BookDBViewPluginTests",
             dependencies: [
                 "PluginBookDB",
-                .product(name: "ProviderBook", package: "PluginBook")
+                .product(name: "ProviderBook", package: "ProviderBook"),
             ],
             path: "Tests"
         ),

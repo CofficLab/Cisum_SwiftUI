@@ -3,6 +3,7 @@ import CisumUIComponents
 import MagicPlayMan
 import OSLog
 import ProviderBook
+import ProviderBook
 import SwiftUI
 
 enum BookControlBookRootResolver {

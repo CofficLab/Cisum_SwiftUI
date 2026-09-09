@@ -2,6 +2,7 @@ import Foundation
 import OSLog
 import ProviderPlayback
 import ProviderScene
+import ProviderBook
 import MagicKit
 
 /// 书籍进度的数据库删除观察者（迁移 Phase 5）。

@@ -1,5 +1,5 @@
 import Foundation
-import AudioLikeCore
+import ProviderAudioLike
 
 public enum AudioPluginHost {
     public typealias DatabaseURLProvider = @MainActor (_ name: String) throws -> URL

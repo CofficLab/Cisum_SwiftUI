@@ -2,6 +2,7 @@ import Combine
 import Foundation
 import OSLog
 import ProviderBook
+import ProviderBook
 import SwiftUI
 import MagicKit
 

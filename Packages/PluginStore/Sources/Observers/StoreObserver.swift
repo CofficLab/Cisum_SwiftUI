@@ -1,5 +1,6 @@
 import Foundation
 import MagicKit
+import ProviderStore
 
 /// 商店交易事件的集中观察者（迁移 Phase 4）。
 ///

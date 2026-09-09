@@ -1,4 +1,5 @@
 import ProviderBook
+import ProviderBook
 import SwiftUI
 
 /// 有声书仓库设置页依赖：仓库路径 / 仓库均由 `BookDBPlugin` 自持

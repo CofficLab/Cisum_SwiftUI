@@ -2,6 +2,7 @@ import KernelCore
 import ProviderDocsView
 import OSLog
 import ProviderBook
+import ProviderBook
 import ProviderPlayback
 import ProviderScene
 import ProviderStorage

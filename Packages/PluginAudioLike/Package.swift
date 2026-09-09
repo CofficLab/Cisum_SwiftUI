@@ -10,10 +10,6 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AudioLikeCore",
-            targets: ["AudioLikeCore"]
-        ),
-        .library(
             name: "PluginAudioLike",
             targets: ["PluginAudioLike"]
         )
@@ -21,6 +17,7 @@ let package = Package(
     dependencies: [
         .package(path: "../MagicKit"),
         .package(path: "../CisumUIComponents"),
+        .package(path: "../ProviderAudioLike"),
         .package(path: "../MagicPlayMan"),
         .package(path: "../KernelCore"),
         .package(name: "ProviderDocsView", path: "../ProviderDocsView"),
@@ -29,24 +26,9 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "AudioLikeCore",
-            dependencies: [
-                .product(name: "MagicKit", package: "MagicKit"),
-                .product(name: "CisumUIComponents", package: "CisumUIComponents")
-            ],
-            path: ".",
-            sources: [
-                "Sources/Models/AudioLikeModel.swift",
-                "Sources/Services/AudioLikeRepo.swift"
-            ],
-            resources: [
-                .process("Resources/Localizable.xcstrings")
-            ]
-        ),
-        .target(
             name: "PluginAudioLike",
             dependencies: [
-                "AudioLikeCore",
+                .product(name: "ProviderAudioLike", package: "ProviderAudioLike"),
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "CisumUIComponents", package: "CisumUIComponents"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
@@ -73,7 +55,7 @@ let package = Package(
             name: "AudioLikePluginTests",
             dependencies: [
                 "PluginAudioLike",
-                "AudioLikeCore"
+                .product(name: "ProviderAudioLike", package: "ProviderAudioLike")
             ],
             path: "Tests"
         )

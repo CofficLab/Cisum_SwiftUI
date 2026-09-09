@@ -3,7 +3,7 @@ import KernelCore
 import ProviderDocsView
 import Foundation
 import OSLog
-import AudioLibraryCore
+import ProviderAudioLibrary
 import MagicKit
 
 public actor AudioJobPlugin: SuperPlugin, SuperLog {

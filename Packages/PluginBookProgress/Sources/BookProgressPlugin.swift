@@ -3,6 +3,7 @@ import OSLog
 import ProviderDocsView
 import CisumUIComponents
 import ProviderBook
+import ProviderBook
 import ProviderPlayback
 import ProviderScene
 import SwiftData

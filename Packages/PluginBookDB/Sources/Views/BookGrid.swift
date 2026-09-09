@@ -1,6 +1,6 @@
 import CisumUIComponents
 import OSLog
-import AudioLibraryCore
+import ProviderBook
 import ProviderBook
 import SwiftData
 import SwiftUI
